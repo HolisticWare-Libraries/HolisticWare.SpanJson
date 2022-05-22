@@ -53,9 +53,11 @@ namespace SpanJson.Linq
             int i = 0;
             foreach (JToken child in other)
             {
-                AddInternal(i, child, false);
+                _ = TryAddInternal(i, child, false);
                 i++;
             }
+
+            CopyAnnotations(this, other);
         }
 
         internal static IEnumerable CastMultiContent(IEnumerable content)
@@ -231,7 +233,7 @@ namespace SpanJson.Linq
 
         internal abstract int IndexOfItem(JToken item);
 
-        internal virtual void InsertItem(int index, JToken item, bool skipParentCheck)
+        internal virtual bool InsertItem(int index, JToken item, bool skipParentCheck)
         {
             IList<JToken> children = ChildrenTokens;
 
@@ -274,6 +276,8 @@ namespace SpanJson.Linq
             {
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
             }
+
+            return true;
         }
 
         internal virtual void RemoveItemAt(int index)
@@ -480,22 +484,27 @@ namespace SpanJson.Linq
         /// <param name="content">The content to be added.</param>
         public virtual void Add(object content)
         {
-            AddInternal(ChildrenTokens.Count, content, false);
+            _ = TryAddInternal(ChildrenTokens.Count, content, false);
+        }
+
+        internal bool TryAdd(object content)
+        {
+            return TryAddInternal(ChildrenTokens.Count, content, false);
         }
 
         internal void AddAndSkipParentCheck(JToken token)
         {
-            AddInternal(ChildrenTokens.Count, token, true);
+            _ = TryAddInternal(ChildrenTokens.Count, token, true);
         }
 
         /// <summary>Adds the specified content as the first children of this <see cref="JToken"/>.</summary>
         /// <param name="content">The content to be added.</param>
         public void AddFirst(object content)
         {
-            AddInternal(0, content, false);
+            _ = TryAddInternal(0, content, false);
         }
 
-        internal void AddInternal(int index, object content, bool skipParentCheck)
+        internal bool TryAddInternal(int index, object content, bool skipParentCheck)
         {
             if (IsMultiContent(content))
             {
@@ -504,15 +513,16 @@ namespace SpanJson.Linq
                 int multiIndex = index;
                 foreach (object c in enumerable)
                 {
-                    AddInternal(multiIndex, c, skipParentCheck);
+                    TryAddInternal(multiIndex, c, skipParentCheck);
                     multiIndex++;
                 }
+                return true;
             }
             else
             {
                 JToken item = CreateFromContent(content);
 
-                InsertItem(index, item, skipParentCheck);
+                return InsertItem(index, item, skipParentCheck);
             }
         }
 

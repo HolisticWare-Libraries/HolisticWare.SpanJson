@@ -4,15 +4,15 @@ namespace SpanJson.Linq.JsonPath
 {
     internal abstract class PathFilter
     {
-        public abstract IEnumerable<JToken> ExecuteFilter(JToken root, IEnumerable<JToken> current, bool errorWhenNoMatch);
+        public abstract IEnumerable<JToken> ExecuteFilter(JToken root, IEnumerable<JToken> current, JsonSelectSettings settings);
 
-        protected static JToken GetTokenIndex(JToken t, bool errorWhenNoMatch, int index)
+        protected static JToken GetTokenIndex(JToken t, JsonSelectSettings settings, int index)
         {
             if (t is JArray a)
             {
                 if ((uint)a.Count <= (uint)index)
                 {
-                    if (errorWhenNoMatch)
+                    if (settings?.ErrorWhenNoMatch ?? false)
                     {
                         ThrowHelper2.ThrowJsonException_Index_outside_the_bounds_of_JArray(index);
                     }
@@ -24,7 +24,7 @@ namespace SpanJson.Linq.JsonPath
             }
             else
             {
-                if (errorWhenNoMatch)
+                if (settings?.ErrorWhenNoMatch ?? false)
                 {
                     ThrowHelper2.ThrowJsonException_Index_not_valid_on(index, t);
                 }

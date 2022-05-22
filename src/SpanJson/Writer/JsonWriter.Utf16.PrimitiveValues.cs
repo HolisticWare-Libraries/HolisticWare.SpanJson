@@ -355,7 +355,7 @@
             ref char pinnableAddr = ref Utf16PinnableAddress;
 
             WriteUtf16DoubleQuote(ref pinnableAddr, ref pos);
-#if NETCOREAPP || NETSTANDARD_2_0_GREATER
+#if NET || NETCOREAPP || NETSTANDARD2_1_OR_GREATER
             value.TryFormat(Utf16FreeSpan, CombGuidFormatStringType.Comb32Digits, out int charsWritten);
             Debug.Assert(charsWritten == 32);
             pos += charsWritten;

@@ -4,7 +4,7 @@ using SpanJson.Shared;
 using SpanJson.Shared.Fixture;
 using Utf8Json.Resolvers;
 using Xunit;
-#if NETCOREAPP
+#if NET || NETCOREAPP
 using Jil;
 #endif
 
@@ -101,7 +101,7 @@ namespace SpanJson.Tests
             Assert.Equal(model, deserialized, GenericEqualityComparer.Default);
         }
 
-#if NETCOREAPP
+#if NET || NETCOREAPP
         [Theory]
         [MemberData(nameof(GetModels))]
         public void CanSerializeDeserializeAllWithJil(Type modelType)
@@ -141,7 +141,7 @@ namespace SpanJson.Tests
             Assert.Equal(model, deserialized, GenericEqualityComparer.Default);
         }
 
-#if NETCOREAPP
+#if NET || NETCOREAPP
         [Theory]
         [MemberData(nameof(GetModels))]
         public void CanSerializeDeserializeAllWithJilIncludeNull(Type modelType)

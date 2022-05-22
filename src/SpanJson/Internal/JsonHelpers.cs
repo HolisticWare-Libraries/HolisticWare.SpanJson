@@ -136,7 +136,7 @@ namespace SpanJson.Internal
         /// </summary>
         internal static bool TryAdd<TKey, TValue>(Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
         {
-#if DESKTOPCLR || NETSTANDARD2_0
+#if NETFRAMEWORK || NETSTANDARD2_0
             if (!dictionary.ContainsKey(key))
             {
                 dictionary[key] = value;

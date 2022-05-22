@@ -1,4 +1,4 @@
-﻿#if !NETCOREAPP_3_0_GREATER
+﻿#if !(NETCOREAPP3_0_OR_GREATER || NET)
 namespace SpanJson.Internal
 {
     using System;

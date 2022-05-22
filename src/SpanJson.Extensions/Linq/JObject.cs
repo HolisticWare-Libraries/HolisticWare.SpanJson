@@ -93,12 +93,12 @@ namespace SpanJson.Linq
             return _properties.IndexOfReference(item);
         }
 
-        internal override void InsertItem(int index, JToken item, bool skipParentCheck)
+        internal override bool InsertItem(int index, JToken item, bool skipParentCheck)
         {
             // don't add comments to JObject, no name to reference comment by
-            if (item is object && item.Type == JTokenType.Comment) { return; }
+            if (item is object && item.Type == JTokenType.Comment) { return false; }
 
-            base.InsertItem(index, item, skipParentCheck);
+            return base.InsertItem(index, item, skipParentCheck);
         }
 
         internal override void ValidateToken(JToken o, JToken existing)

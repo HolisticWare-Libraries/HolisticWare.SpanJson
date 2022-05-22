@@ -25,14 +25,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Numerics;
-using SpanJson.Linq.JsonPath;
-using Xunit;
-using SpanJson.Linq;
 using System.Linq;
-using Test = Xunit.FactAttribute;
+using System.Numerics;
+using System.Text;
+using System.Text.RegularExpressions;
+using SpanJson.Linq;
+using Xunit;
 using Assert = SpanJson.Tests.XUnitAssert;
+using Test = Xunit.FactAttribute;
 using TestCaseSource = Xunit.MemberDataAttribute;
 
 namespace SpanJson.Tests.JsonPath
@@ -56,6 +56,25 @@ namespace SpanJson.Tests.JsonPath
 
             var dd = jObj.SelectToken("$..[?(@.usingmem>21438)]");//null,21,438
             Assert.AreEqual(jObj, dd);
+        }
+
+        [Test]
+        public void BacktrackingRegex_SingleMatch_TimeoutRespected()
+        {
+            const string RegexBacktrackingPattern = "(?<a>(.*?))[|].*(?<b>(.*?))[|].*(?<c>(.*?))[|].*(?<d>[1-3])[|].*(?<e>(.*?))[|].*[|].*[|].*(?<f>(.*?))[|].*[|].*(?<g>(.*?))[|].*(?<h>(.*))";
+
+            var regexBacktrackingData = new JArray();
+            regexBacktrackingData.Add(new JObject(new JProperty("b", @"15/04/2020 8:18:03 PM|1|System.String[]|3|Libero eligendi magnam ut inventore.. Quaerat et sit voluptatibus repellendus blanditiis aliquam ut.. Quidem qui ut sint in ex et tempore.|||.\iste.cpp||46018|-1")));
+
+            ExceptionAssert.Throws<RegexMatchTimeoutException>(() =>
+            {
+                regexBacktrackingData.SelectTokens(
+                    $"[?(@.b =~ /{RegexBacktrackingPattern}/)]",
+                    new JsonSelectSettings
+                    {
+                        RegexMatchTimeout = TimeSpan.FromSeconds(0.01)
+                    }).ToArray();
+            });
         }
 
         [Test]

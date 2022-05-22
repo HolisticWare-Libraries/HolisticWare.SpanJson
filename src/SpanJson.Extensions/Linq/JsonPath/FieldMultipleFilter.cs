@@ -11,8 +11,10 @@ namespace SpanJson.Linq.JsonPath
             Names = names;
         }
 
-        public override IEnumerable<JToken> ExecuteFilter(JToken root, IEnumerable<JToken> current, bool errorWhenNoMatch)
+        public override IEnumerable<JToken> ExecuteFilter(JToken root, IEnumerable<JToken> current, JsonSelectSettings settings)
         {
+            var errorWhenNoMatch = settings?.ErrorWhenNoMatch ?? false;
+
             foreach (JToken t in current)
             {
                 if (t is JObject o)

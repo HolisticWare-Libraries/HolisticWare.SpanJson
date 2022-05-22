@@ -6,7 +6,7 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(ImportLibs)'=='netfx'">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net471' or '$(TargetFramework)' == 'net452' ">
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Web" />
     <Reference Include="System.Data.Linq" />
@@ -21,7 +21,12 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNetTestSdkPackageVersion)" />
     <PackageReference Include="xunit" Version="$(xUnitPackageVersion)" />
     <PackageReference Include="xunit.analyzers" Version="$(xUnitAnalyzersPackageVersion)" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' or '$(TargetFramework)' == 'net471' ">
     <PackageReference Include="xunit.runner.visualstudio" Version="$(xUnitRunnerVsPackageVersion)" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' or '$(TargetFramework)' == 'net452' ">
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
   </ItemGroup>
 
   <ItemGroup>

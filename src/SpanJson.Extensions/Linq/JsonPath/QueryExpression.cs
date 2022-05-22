@@ -36,7 +36,13 @@ namespace SpanJson.Linq.JsonPath
             Operator = @operator;
         }
 
-        public abstract bool IsMatch(JToken root, JToken t);
+        // For unit tests
+        public bool IsMatch(JToken root, JToken t)
+        {
+            return IsMatch(root, t, null);
+        }
+
+        public abstract bool IsMatch(JToken root, JToken t, JsonSelectSettings settings);
     }
 
     internal class CompositeExpression : QueryExpression
@@ -48,20 +54,20 @@ namespace SpanJson.Linq.JsonPath
             Expressions = new List<QueryExpression>();
         }
 
-        public override bool IsMatch(JToken root, JToken t)
+        public override bool IsMatch(JToken root, JToken t, JsonSelectSettings settings)
         {
             switch (Operator)
             {
                 case QueryOperator.And:
                     foreach (QueryExpression e in Expressions)
                     {
-                        if (!e.IsMatch(root, t)) { return false; }
+                        if (!e.IsMatch(root, t, settings)) { return false; }
                     }
                     return true;
                 case QueryOperator.Or:
                     foreach (QueryExpression e in Expressions)
                     {
-                        if (e.IsMatch(root, t)) { return true; }
+                        if (e.IsMatch(root, t, settings)) { return true; }
                     }
                     return false;
                 default:
@@ -90,13 +96,13 @@ namespace SpanJson.Linq.JsonPath
 
             if (o is List<PathFilter> pathFilters)
             {
-                return JPath.Evaluate(pathFilters, root, t, false);
+                return JPath.Evaluate(pathFilters, root, t, null);
             }
 
             return EmptyArray<JToken>.Instance;
         }
 
-        public override bool IsMatch(JToken root, JToken t)
+        public override bool IsMatch(JToken root, JToken t, JsonSelectSettings settings)
         {
             if (Operator == QueryOperator.Exists)
             {
@@ -115,7 +121,7 @@ namespace SpanJson.Linq.JsonPath
                         JToken leftResult = leftResults.Current;
                         foreach (JToken rightResult in rightResults)
                         {
-                            if (MatchTokens(leftResult, rightResult)) { return true; }
+                            if (MatchTokens(leftResult, rightResult, settings)) { return true; }
                         }
                     } while (leftResults.MoveNext());
                 }
@@ -124,14 +130,14 @@ namespace SpanJson.Linq.JsonPath
             return false;
         }
 
-        private bool MatchTokens(JToken leftResult, JToken rightResult)
+        private bool MatchTokens(JToken leftResult, JToken rightResult, JsonSelectSettings settings)
         {
             if (leftResult is JValue leftValue && rightResult is JValue rightValue)
             {
                 switch (Operator)
                 {
                     case QueryOperator.RegexEquals:
-                        if (RegexEquals(leftValue, rightValue)) { return true; }
+                        if (RegexEquals(leftValue, rightValue, settings)) { return true; }
                         break;
 
                     case QueryOperator.Equals:
@@ -185,7 +191,7 @@ namespace SpanJson.Linq.JsonPath
             return false;
         }
 
-        private static bool RegexEquals(JValue input, JValue pattern)
+        private static bool RegexEquals(JValue input, JValue pattern, JsonSelectSettings settings)
         {
             if (!input.Type.IsString() || !pattern.Type.IsString())
             {
@@ -198,7 +204,8 @@ namespace SpanJson.Linq.JsonPath
             string patternText = regexText.Substring(1, patternOptionDelimiterIndex - 1);
             string optionsText = regexText.Substring(patternOptionDelimiterIndex + 1);
 
-            return Regex.IsMatch((string)input.Value, patternText, MiscellaneousUtils.GetRegexOptions(optionsText));
+            TimeSpan timeout = settings?.RegexMatchTimeout ?? Regex.InfiniteMatchTimeout;
+            return Regex.IsMatch((string)input.Value!, patternText, MiscellaneousUtils.GetRegexOptions(optionsText), timeout);
         }
 
         internal static bool EqualsWithStringCoercion(JValue value, JValue queryValue)

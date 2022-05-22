@@ -10,7 +10,7 @@ namespace SpanJson.Tests.Generated
         public void SerializeDeserializeNullCharUtf16()
         {
             var chars = new char[5];
-#if DESKTOPCLR
+#if NETFRAMEWORK
             for (var idx = 0; idx < chars.Length; idx++)
             {
                 chars[idx] = '\0';
@@ -41,7 +41,7 @@ namespace SpanJson.Tests.Generated
         public void SerializeDeserializeNullCharUtf8()
         {
             var chars = new char[5];
-#if DESKTOPCLR
+#if NETFRAMEWORK
             for (var idx = 0; idx < chars.Length; idx++)
             {
                 chars[idx] = '\0';

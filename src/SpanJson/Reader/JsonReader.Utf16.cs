@@ -434,7 +434,7 @@ namespace SpanJson
             ref var cStart = ref MemoryMarshal.GetReference(_utf16Span);
             SkipWhitespaceUtf16(ref cStart, ref pos, _length);
             var span = ReadUtf16StringSpanInternal(ref cStart, ref pos, _length, out var escapedCharsSize);
-#if NETCOREAPP || NETSTANDARD_2_0_GREATER
+#if NET || NETCOREAPP || NETSTANDARD2_1_OR_GREATER
             return 0u >= (uint)escapedCharsSize ? ParseUtf16Guid(span, _pos) : ParseUtf16GuidAllocating(span, pos);
 #else
             return 0u >= (uint)escapedCharsSize ? ConvertGuidViaUtf8(span, _pos) : ParseUtf16GuidAllocating(span, pos);
@@ -451,7 +451,7 @@ namespace SpanJson
             try
             {
                 UnescapeUtf16Chars(input, ref utf16Unescaped);
-#if NETCOREAPP || NETSTANDARD_2_0_GREATER
+#if NET || NETCOREAPP || NETSTANDARD2_1_OR_GREATER
                 return ParseUtf16Guid(utf16Unescaped, pos);
 #else
                 return ConvertGuidViaUtf8(utf16Unescaped, pos);
@@ -463,7 +463,7 @@ namespace SpanJson
             }
         }
 
-#if NETCOREAPP || NETSTANDARD_2_0_GREATER
+#if NET || NETCOREAPP || NETSTANDARD2_1_OR_GREATER
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Guid ParseUtf16Guid(in ReadOnlySpan<char> span, int position)
         {

@@ -630,7 +630,7 @@ namespace SpanJson.Tests
             Assert.False(json.ValueTextEquals(lookup));
         }
 
-#if !DESKTOPCLR
+#if !NETFRAMEWORK
         // NOTE: LookupOverflow test is constrained to run on Windows and MacOSX because it causes
         //       problems on Linux due to the way deferred memory allocation works. On Linux, the allocation can
         //       succeed even if there is not enough memory but then the test may get killed by the OOM killer at the

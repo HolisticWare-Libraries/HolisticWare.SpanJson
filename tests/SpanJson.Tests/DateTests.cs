@@ -40,7 +40,7 @@ namespace SpanJson.Tests
             Assert.True(DateTimeParser.TryParseDateTime(input.AsSpan(), out var dtValue, out var dtConsumed));
             Assert.Equal(length, dtConsumed);
             AssertDateTime(dtoValue.DateTime, year, month, day, hour, minute, second, fraction);
-#if DESKTOPCLR
+#if NETFRAMEWORK
             var offset = TimeSpan.FromTicks((long)Math.Round(new TimeSpan(offsethours, offsetminutes, 0).Ticks * (negative ? -1d : 1d)));
 #else
             var offset = new TimeSpan(offsethours, offsetminutes, 0) * (negative ? -1 : 1);
@@ -91,7 +91,7 @@ namespace SpanJson.Tests
             Assert.Equal(month, dtValue.Month);
             Assert.Equal(day, dtValue.Day);
 
-#if NETCOREAPP_2_0_GREATER
+#if (NET || NETCOREAPP2_1_OR_GREATER)
             Assert.True(DateTimeOffset.TryParseExact(input.AsSpan(), "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var bclDtoValue));
             Assert.True(DateTime.TryParseExact(input.AsSpan(), "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var bclDtValue));
 #else
@@ -126,7 +126,7 @@ namespace SpanJson.Tests
         public void AgainstBcl(string input)
         {
             Assert.True(DateTimeParser.TryParseDateTimeOffset(input.AsSpan(), out var dtoValue, out var dtoConsumed));
-#if NETCOREAPP_2_0_GREATER
+#if (NET || NETCOREAPP2_1_OR_GREATER)
             var dto = DateTimeOffset.ParseExact(input.AsSpan(), "O", CultureInfo.InvariantCulture);
 #else
             var dto = DateTimeOffset.ParseExact(input, "O", CultureInfo.InvariantCulture);
@@ -246,7 +246,7 @@ namespace SpanJson.Tests
             Span<byte> byteSpan = stackalloc byte[33];
             Assert.True(DateTimeFormatter.TryFormat(value, byteSpan, out symbolsWritten));
             DateTimeFormatter.TrimDateTimeOffset(byteSpan.Slice(0, symbolsWritten), out symbolsWritten);
-#if NETCOREAPP_2_0_GREATER
+#if (NET || NETCOREAPP2_1_OR_GREATER)
             Assert.Equal(comparison, Encoding.UTF8.GetString(byteSpan.Slice(0, symbolsWritten)));
 #else
             Assert.Equal(comparison, Encoding.UTF8.GetString(byteSpan.Slice(0, symbolsWritten).ToArray()));
@@ -274,7 +274,7 @@ namespace SpanJson.Tests
         public void FormatDateTimeOffset(string comparison, int year, int month, int day, int hour, int minute,
             int second, int fraction, bool negative, int offsethours, int offsetminutes, DateTimeKind kind)
         {
-#if DESKTOPCLR
+#if NETFRAMEWORK
             var offset = TimeSpan.FromTicks((long)Math.Round(new TimeSpan(0, offsethours, offsetminutes, 0).Ticks * (negative ? -1d : 1d)));
             var dt = new DateTime(year, month, day, hour, minute, second, kind).AddTicks(fraction);
             var value = new DateTimeOffset(dt, offset);
@@ -292,7 +292,7 @@ namespace SpanJson.Tests
             Span<byte> byteSpan = stackalloc byte[33];
             Assert.True(DateTimeFormatter.TryFormat(value, byteSpan, out symbolsWritten));
             DateTimeFormatter.TrimDateTimeOffset(byteSpan.Slice(0, symbolsWritten), out symbolsWritten);
-#if NETCOREAPP_2_0_GREATER
+#if (NET || NETCOREAPP2_1_OR_GREATER)
             Assert.Equal(comparison, Encoding.UTF8.GetString(byteSpan.Slice(0, symbolsWritten)));
 #else
             Assert.Equal(comparison, Encoding.UTF8.GetString(byteSpan.Slice(0, symbolsWritten).ToArray()));
@@ -316,7 +316,7 @@ namespace SpanJson.Tests
             Span<byte> byteSpan = stackalloc byte[33];
             Assert.True(DateTimeFormatter.TryFormat(value, byteSpan, out symbolsWritten));
             DateTimeFormatter.TrimDateTimeOffset(byteSpan.Slice(0, symbolsWritten), out symbolsWritten);
-#if NETCOREAPP_2_0_GREATER
+#if (NET || NETCOREAPP2_1_OR_GREATER)
             Assert.Equal(output, Encoding.UTF8.GetString(byteSpan.Slice(0, symbolsWritten)));
 #else
             Assert.Equal(output, Encoding.UTF8.GetString(byteSpan.Slice(0, symbolsWritten).ToArray()));

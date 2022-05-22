@@ -33,7 +33,7 @@
             private static int GetCharCountSlow(in ReadOnlySpan<byte> utf8Bytes)
             {
                 // TryFast
-#if NETCOREAPP || NETSTANDARD_2_0_GREATER
+#if NET || NETCOREAPP || NETSTANDARD2_1_OR_GREATER
                 return UTF8NoBOM.GetCharCount(utf8Bytes);
 #else
                 // It's ok for us to pass null pointers down to the workhorse routine.
@@ -59,7 +59,7 @@
             [MethodImpl(MethodImplOptions.NoInlining)]
             private static int GetByteCountSlow(in ReadOnlySpan<char> text)
             {
-#if NETCOREAPP || NETSTANDARD_2_0_GREATER
+#if NET || NETCOREAPP || NETSTANDARD2_1_OR_GREATER
                 return UTF8NoBOM.GetByteCount(text);
 #else
                 unsafe
@@ -75,7 +75,7 @@
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static int GetBytes(in ReadOnlySpan<char> chars, Span<byte> bytes)
             {
-#if NETCOREAPP_2_X_GREATER || NETSTANDARD_2_0_GREATER
+#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
                 return UTF8NoBOM.GetBytes(chars, bytes);
 #else
                 if (chars.IsEmpty) { return 0; }

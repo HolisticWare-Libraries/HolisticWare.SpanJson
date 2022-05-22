@@ -39,7 +39,7 @@ namespace SpanJson.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task FromException(Exception exception)
         {
-#if NET_4_5_GREATER
+#if !NET451
             return Task.FromException(exception);
 #else
             return FromException<VoidTaskResult>(exception);
@@ -51,7 +51,7 @@ namespace SpanJson.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<TResult> FromException<TResult>(Exception exception)
         {
-#if NET_4_5_GREATER
+#if !NET451
             return Task.FromException<TResult>(exception);
 #else
             //var tcs = new TaskCompletionSource<TResult>();

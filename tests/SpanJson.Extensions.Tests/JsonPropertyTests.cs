@@ -94,7 +94,7 @@ namespace SpanJson.Tests
         [InlineData(null)]
         public static void NameEquals_InvalidInstance_Throws(string text)
         {
-#if DESKTOPCLR
+#if NETFRAMEWORK
             const string ErrorMessage = "对象的当前状态使该操作无效。";
 #else
             const string ErrorMessage = "Operation is not valid due to the current state of the object.";

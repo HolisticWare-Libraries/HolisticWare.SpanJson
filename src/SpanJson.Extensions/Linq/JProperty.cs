@@ -198,14 +198,14 @@ namespace SpanJson.Linq
             return _content.IndexOf(item);
         }
 
-        internal override void InsertItem(int index, JToken item, bool skipParentCheck)
+        internal override bool InsertItem(int index, JToken item, bool skipParentCheck)
         {
             // don't add comments to JProperty
-            if (item is object && item.Type == JTokenType.Comment) { return; }
+            if (item is object && item.Type == JTokenType.Comment) { return false; }
 
             if (Value is object) { ThrowHelper2.ThrowJsonException_Cannot_have_multiple_values_JProperty(); }
 
-            base.InsertItem(0, item, false);
+            return base.InsertItem(0, item, false);
         }
 
         internal override bool ContainsItem(JToken item)

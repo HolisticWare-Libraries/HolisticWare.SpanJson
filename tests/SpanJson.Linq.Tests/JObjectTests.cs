@@ -34,7 +34,7 @@ using Assert = SpanJson.Tests.XUnitAssert;
 using SpanJson.Linq;
 using System.IO;
 using System.Collections;
-#if DESKTOPCLR
+#if NETFRAMEWORK
 using System.Web.UI;
 #endif
 using CuteAnt;

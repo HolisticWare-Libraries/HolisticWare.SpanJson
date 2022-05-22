@@ -6,13 +6,15 @@ namespace SpanJson.Linq.JsonPath
     {
         public int? Index { get; set; }
 
-        public override IEnumerable<JToken> ExecuteFilter(JToken root, IEnumerable<JToken> current, bool errorWhenNoMatch)
+        public override IEnumerable<JToken> ExecuteFilter(JToken root, IEnumerable<JToken> current, JsonSelectSettings settings)
         {
+            var errorWhenNoMatch = settings?.ErrorWhenNoMatch ?? false;
+
             foreach (JToken t in current)
             {
                 if (Index is object)
                 {
-                    JToken v = GetTokenIndex(t, errorWhenNoMatch, Index.GetValueOrDefault());
+                    JToken v = GetTokenIndex(t, settings, Index.GetValueOrDefault());
 
                     if (v is object)
                     {

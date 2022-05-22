@@ -45,7 +45,7 @@ namespace SpanJson.Tests
             var count = 0;
             while (!reader.TryReadUtf8IsEndObjectOrValueSeparator(ref count))
             {
-#if NETCOREAPP_2_0_GREATER
+#if (NET || NETCOREAPP2_1_OR_GREATER)
                 var name = Encoding.UTF8.GetString(reader.ReadUtf8EscapedNameSpan());
 #else
                 var name = Encoding.UTF8.GetString(reader.ReadUtf8EscapedNameSpan().ToArray());

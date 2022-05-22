@@ -4,6 +4,6 @@
 
 using Xunit;
 
-#if DESKTOPCLR
+#if NETFRAMEWORK
 [assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
 #endif

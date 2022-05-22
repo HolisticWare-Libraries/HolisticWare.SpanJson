@@ -217,7 +217,7 @@ namespace SpanJson.Tests
             Assert.Equal("001", result.X);
         }
 
-#if NETCOREAPP_2_0_GREATER
+#if (NET || NETCOREAPP2_1_OR_GREATER)
         public class ByRefTestObject
         {
             public Span<int> Property

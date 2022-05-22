@@ -23,7 +23,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-#if DESKTOPCLR
+#if NETFRAMEWORK
 using System.Web.UI;
 using SpanJson.Linq;
 using Xunit;

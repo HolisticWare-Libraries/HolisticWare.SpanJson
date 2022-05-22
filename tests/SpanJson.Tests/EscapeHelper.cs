@@ -21,7 +21,7 @@ namespace SpanJson.Tests
                 }
                 else
                 {
-#if NETCOREAPP_2_0_GREATER
+#if (NET || NETCOREAPP2_1_OR_GREATER)
                     sb.Append(serialized.AsSpan(from, index - from));
 #else
                     sb.Append(serialized.Substring(from, index - from));
@@ -49,7 +49,7 @@ namespace SpanJson.Tests
                 }
                 else
                 {
-#if NETCOREAPP_2_0_GREATER
+#if (NET || NETCOREAPP2_1_OR_GREATER)
                     sb.Append(serialized.AsSpan(from, index - from));
 #else
                     sb.Append(serialized.Substring(from, index - from));

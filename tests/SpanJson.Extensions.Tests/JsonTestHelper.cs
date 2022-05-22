@@ -20,7 +20,7 @@ namespace SpanJson
 {
     internal static class JsonTestHelper
     {
-#if NETCOREAPP_2_X_GREATER
+#if (NET || NETCOREAPP3_0_OR_GREATER)
         public const string DoubleFormatString = null;
         public const string SingleFormatString = null;
 #else

@@ -170,7 +170,7 @@ namespace SpanJson.Linq
             if (_parent is null) { ThrowHelper2.ThrowInvalidOperationException_The_parent_is_missing(); }
 
             int index = _parent.IndexOfItem(this);
-            _parent.AddInternal(index + 1, content, false);
+            _ = _parent.TryAddInternal(index + 1, content, false);
         }
 
         /// <summary>Adds the specified content immediately before this token.</summary>
@@ -180,7 +180,7 @@ namespace SpanJson.Linq
             if (_parent is null) { ThrowHelper2.ThrowInvalidOperationException_The_parent_is_missing(); }
 
             int index = _parent.IndexOfItem(this);
-            _parent.AddInternal(index, content, false);
+            _ = _parent.TryAddInternal(index, content, false);
         }
 
         /// <summary>Gets the <see cref="JToken"/> with the specified key.</summary>
@@ -291,7 +291,7 @@ namespace SpanJson.Linq
         /// <returns>A <see cref="JToken"/>, or <c>null</c>.</returns>
         public JToken SelectToken(string path)
         {
-            return SelectToken(path, false);
+            return SelectToken(path, settings: null);
         }
 
         /// <summary>Selects a <see cref="JToken"/> using a JSONPath expression. Selects the token that matches the object path.</summary>
@@ -300,10 +300,27 @@ namespace SpanJson.Linq
         /// <returns>A <see cref="JToken"/>.</returns>
         public JToken SelectToken(string path, bool errorWhenNoMatch)
         {
+            JsonSelectSettings settings = errorWhenNoMatch
+                ? new JsonSelectSettings { ErrorWhenNoMatch = true }
+                : null;
+
+            return SelectToken(path, settings);
+        }
+
+        /// <summary>
+        /// Selects a <see cref="JToken"/> using a JSONPath expression. Selects the token that matches the object path.
+        /// </summary>
+        /// <param name="path">
+        /// A <see cref="String"/> that contains a JSONPath expression.
+        /// </param>
+        /// <param name="settings">The <see cref="JsonSelectSettings"/> used to select tokens.</param>
+        /// <returns>A <see cref="JToken"/>.</returns>
+        public JToken SelectToken(string path, JsonSelectSettings settings)
+        {
             JPath p = new JPath(path);
 
             JToken token = null;
-            foreach (JToken t in p.Evaluate(this, this, errorWhenNoMatch))
+            foreach (JToken t in p.Evaluate(this, this, settings))
             {
                 if (token is object)
                 {
@@ -321,7 +338,7 @@ namespace SpanJson.Linq
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="JToken"/> that contains the selected elements.</returns>
         public IEnumerable<JToken> SelectTokens(string path)
         {
-            return SelectTokens(path, false);
+            return SelectTokens(path, settings: null);
         }
 
         /// <summary>Selects a collection of elements using a JSONPath expression.</summary>
@@ -330,8 +347,25 @@ namespace SpanJson.Linq
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="JToken"/> that contains the selected elements.</returns>
         public IEnumerable<JToken> SelectTokens(string path, bool errorWhenNoMatch)
         {
-            JPath p = new JPath(path);
-            return p.Evaluate(this, this, errorWhenNoMatch);
+            JsonSelectSettings settings = errorWhenNoMatch
+                ? new JsonSelectSettings { ErrorWhenNoMatch = true }
+                : null;
+
+            return SelectTokens(path, settings);
+        }
+
+        /// <summary>
+        /// Selects a collection of elements using a JSONPath expression.
+        /// </summary>
+        /// <param name="path">
+        /// A <see cref="String"/> that contains a JSONPath expression.
+        /// </param>
+        /// <param name="settings">The <see cref="JsonSelectSettings"/> used to select tokens.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="JToken"/> that contains the selected elements.</returns>
+        public IEnumerable<JToken> SelectTokens(string path, JsonSelectSettings settings)
+        {
+            var p = new JPath(path);
+            return p.Evaluate(this, this, settings);
         }
 
         /// <summary>Adds an object to the annotation list of this <see cref="JToken"/>.</summary>
@@ -581,6 +615,18 @@ namespace SpanJson.Linq
                         _annotations = null;
                     }
                     break;
+            }
+        }
+
+        internal void CopyAnnotations(JToken target, JToken source)
+        {
+            if (source._annotations is object[] annotations)
+            {
+                target._annotations = annotations.ToArray();
+            }
+            else
+            {
+                target._annotations = source._annotations;
             }
         }
     }

@@ -159,12 +159,17 @@ namespace SpanJson.Linq
         {
             if (_parent is object)
             {
-                _parent.Add(value);
-                _current = _parent.Last;
-
-                if (_parent.Type == JTokenType.Property)
+                // TryAdd will return false if an invalid JToken type is added.
+                // For example, a JComment can't be added to a JObject.
+                // If there is an invalid JToken type then skip it.
+                if (_parent.TryAdd(value))
                 {
-                    _parent = _parent.Parent;
+                    _current = _parent.Last;
+
+                    if (_parent.Type == JTokenType.Property)
+                    {
+                        _parent = _parent.Parent;
+                    }
                 }
             }
             else

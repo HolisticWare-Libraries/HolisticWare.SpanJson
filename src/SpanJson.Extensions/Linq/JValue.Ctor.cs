@@ -49,7 +49,10 @@ namespace SpanJson.Linq
 
         /// <summary>Initializes a new instance of the <see cref="JValue"/> class from another <see cref="JValue"/> object.</summary>
         /// <param name="other">A <see cref="JValue"/> object to copy from.</param>
-        public JValue(JValue other) : this(other.Value, other.Type) { }
+        public JValue(JValue other) : this(other.Value, other.Type)
+        {
+            CopyAnnotations(this, other);
+        }
 
         /// <summary>Initializes a new instance of the <see cref="JValue"/> class with the given value.</summary>
         /// <param name="value">The value.</param>

@@ -307,7 +307,7 @@
             ref byte pinnableAddr = ref Utf8PinnableAddress;
 
             WriteUtf8DoubleQuote(ref pinnableAddr, ref pos);
-#if NETCOREAPP || NETSTANDARD_2_0_GREATER
+#if NET || NETCOREAPP || NETSTANDARD2_1_OR_GREATER
             value.TryFormat(Utf8FreeSpan, CombGuidFormatStringType.Comb32Digits, out int bytesWritten);
             pos += bytesWritten;
 #else

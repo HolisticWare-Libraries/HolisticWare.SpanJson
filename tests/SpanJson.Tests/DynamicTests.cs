@@ -10,7 +10,7 @@ using SpanJson.Shared;
 using SpanJson.Shared.Fixture;
 using SpanJson.Shared.Models;
 using Xunit;
-#if NETCOREAPP
+#if NET || NETCOREAPP
 using Jil;
 #endif
 
@@ -345,7 +345,7 @@ namespace SpanJson.Tests
             }
         }
 
-#if NETCOREAPP
+#if NET || NETCOREAPP
         [Fact]
         public void DynamicObjectTestOnePropertyMultipleTimesJil()
         {
@@ -630,7 +630,7 @@ namespace SpanJson.Tests
 
                 public override bool TrySetMember(SetMemberBinder binder, object value)
                 {
-#if DESKTOPCLR
+#if NETFRAMEWORK
                     if (_extra.ContainsKey(binder.Name))
                     {
                         return false;

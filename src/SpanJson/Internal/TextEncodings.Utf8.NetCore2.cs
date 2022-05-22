@@ -1,4 +1,4 @@
-﻿#if !NETCOREAPP_3_0_GREATER
+﻿#if !(NETCOREAPP3_0_OR_GREATER || NET)
 namespace SpanJson.Internal
 {
     using System;
@@ -394,7 +394,7 @@ namespace SpanJson.Internal
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static int GetChars(in ReadOnlySpan<byte> utf8Bytes, Span<char> chars)
             {
-#if NETCOREAPP || NETSTANDARD_2_0_GREATER
+#if NET || NETCOREAPP || NETSTANDARD2_1_OR_GREATER
                 return UTF8NoBOM.GetChars(utf8Bytes, chars);
 #else
                 // It's ok for us to pass null pointers down to the workhorse below.
@@ -412,7 +412,7 @@ namespace SpanJson.Internal
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static string GetString(in ReadOnlySpan<byte> utf8Bytes)
             {
-#if NETCOREAPP || NETSTANDARD_2_0_GREATER
+#if NET || NETCOREAPP || NETSTANDARD2_1_OR_GREATER
                 return UTF8NoBOM.GetString(utf8Bytes);
 #else
                 if (utf8Bytes.IsEmpty) { return string.Empty; }

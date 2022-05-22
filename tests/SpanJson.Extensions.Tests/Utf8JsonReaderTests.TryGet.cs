@@ -611,7 +611,7 @@ namespace SpanJson.Tests
             {
                 if (json.TokenType == JsonTokenType.Number)
                 {
-#if !NETCOREAPP_2_X_GREATER
+#if !(NET || NETCOREAPP3_0_OR_GREATER)
                     // Full framework throws for overflow rather than returning Infinity
                     // This was fixed for .NET Core 3.0 in order to be IEEE 754 compliant
 
@@ -654,7 +654,7 @@ namespace SpanJson.Tests
             {
                 if (json.TokenType == JsonTokenType.Number)
                 {
-#if !NETCOREAPP_2_X_GREATER
+#if !(NET || NETCOREAPP3_0_OR_GREATER)
                     // Full framework throws for overflow rather than returning Infinity
                     // This was fixed for .NET Core 3.0 in order to be IEEE 754 compliant
 

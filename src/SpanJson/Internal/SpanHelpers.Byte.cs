@@ -7,7 +7,7 @@ namespace SpanJson.Internal
     using System.Diagnostics;
     using System.Numerics;
     using System.Runtime.CompilerServices;
-#if NETCOREAPP_3_0_GREATER
+#if (NET || NETCOREAPP3_0_OR_GREATER)
     using System.Runtime.Intrinsics;
     using System.Runtime.Intrinsics.X86;
 #endif
@@ -504,7 +504,7 @@ namespace SpanJson.Internal
             IntPtr offset = (IntPtr)0; // Use IntPtr for arithmetic to avoid unnecessary 64->32->64 truncations
             IntPtr lengthToExamine = (IntPtr)(void*)minLength;
 
-#if NETCOREAPP_3_0_GREATER
+#if (NET || NETCOREAPP3_0_OR_GREATER)
             if (Avx2.IsSupported)
             {
                 if ((byte*)lengthToExamine >= (byte*)Vector256<byte>.Count)
@@ -728,7 +728,7 @@ namespace SpanJson.Internal
             IntPtr offset = (IntPtr)0; // Use IntPtr for arithmetic to avoid unnecessary 64->32->64 truncations
             IntPtr lengthToExamine = (IntPtr)length;
 
-#if NETCOREAPP_3_0_GREATER
+#if (NET || NETCOREAPP3_0_OR_GREATER)
             if (Avx2.IsSupported || Sse2.IsSupported)
             {
                 // Avx2 branch also operates on Sse2 sizes, so check is combined.
@@ -794,7 +794,7 @@ namespace SpanJson.Internal
                 offset += 1;
             }
 
-#if NETCOREAPP_3_0_GREATER
+#if (NET || NETCOREAPP3_0_OR_GREATER)
             // We get past SequentialScan only if IsHardwareAccelerated or intrinsic .IsSupported is true; and remain length is greater than Vector length.
             // However, we still have the redundant check to allow the JIT to see that the code is unreachable and eliminate it when the platform does not
             // have hardware accelerated. After processing Vector lengths we return to SequentialScan to finish any remaining.
@@ -1014,7 +1014,7 @@ namespace SpanJson.Internal
             IntPtr offset = (IntPtr)0; // Use IntPtr for arithmetic to avoid unnecessary 64->32->64 truncations
             IntPtr lengthToExamine = (IntPtr)length;
 
-#if NETCOREAPP_3_0_GREATER
+#if (NET || NETCOREAPP3_0_OR_GREATER)
             if (Avx2.IsSupported || Sse2.IsSupported)
             {
                 // Avx2 branch also operates on Sse2 sizes, so check is combined.
@@ -1094,7 +1094,7 @@ namespace SpanJson.Internal
                 offset += 1;
             }
 
-#if NETCOREAPP_3_0_GREATER
+#if (NET || NETCOREAPP3_0_OR_GREATER)
             // We get past SequentialScan only if IsHardwareAccelerated or intrinsic .IsSupported is true. However, we still have the redundant check to allow
             // the JIT to see that the code is unreachable and eliminate it when the platform does not have hardware accelerated.
             if (Avx2.IsSupported)
@@ -1255,7 +1255,7 @@ namespace SpanJson.Internal
             IntPtr offset = (IntPtr)0; // Use IntPtr for arithmetic to avoid unnecessary 64->32->64 truncations
             IntPtr lengthToExamine = (IntPtr)length;
 
-#if NETCOREAPP_3_0_GREATER
+#if (NET || NETCOREAPP3_0_OR_GREATER)
             if (Avx2.IsSupported || Sse2.IsSupported)
             {
                 // Avx2 branch also operates on Sse2 sizes, so check is combined.
@@ -1335,7 +1335,7 @@ namespace SpanJson.Internal
                 offset += 1;
             }
 
-#if NETCOREAPP_3_0_GREATER
+#if (NET || NETCOREAPP3_0_OR_GREATER)
             if (Avx2.IsSupported)
             {
                 if ((int)(byte*)offset < length)
@@ -1965,7 +1965,7 @@ namespace SpanJson.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static int LocateFirstFoundByte(ulong match)
         {
-#if NETCOREAPP_3_0_GREATER
+#if (NET || NETCOREAPP3_0_OR_GREATER)
             if (Bmi1.X64.IsSupported)
             {
                 return (int)(Bmi1.X64.TrailingZeroCount(match) >> 3);
@@ -1977,7 +1977,7 @@ namespace SpanJson.Internal
                 var powerOfTwoFlag = match ^ (match - 1);
                 // Shift all powers of two into the high byte and extract
                 return (int)((powerOfTwoFlag * XorPowerOfTwoToHighByte) >> 57);
-#if NETCOREAPP_3_0_GREATER
+#if (NET || NETCOREAPP3_0_OR_GREATER)
             }
 #endif
         }
@@ -1985,7 +1985,7 @@ namespace SpanJson.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static int LocateLastFoundByte(ulong match)
         {
-#if NETCOREAPP_3_0_GREATER
+#if (NET || NETCOREAPP3_0_OR_GREATER)
             return 7 - (BitOperations.LeadingZeroCount(match) >> 3);
 #else
             // Find the most significant byte that has its highest bit set
@@ -2028,7 +2028,7 @@ namespace SpanJson.Internal
         private static unsafe Vector<byte> LoadVector(ref byte start, IntPtr offset)
             => Unsafe.ReadUnaligned<Vector<byte>>(ref Unsafe.AddByteOffset(ref start, offset));
 
-#if NETCOREAPP_3_0_GREATER
+#if (NET || NETCOREAPP3_0_OR_GREATER)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static unsafe Vector128<byte> LoadVector128(ref byte start, IntPtr offset)
             => Unsafe.ReadUnaligned<Vector128<byte>>(ref Unsafe.AddByteOffset(ref start, offset));
@@ -2042,7 +2042,7 @@ namespace SpanJson.Internal
         private static unsafe IntPtr GetByteVectorSpanLength(IntPtr offset, int length)
             => (IntPtr)((length - (int)(byte*)offset) & ~(Vector<byte>.Count - 1));
 
-#if NETCOREAPP_3_0_GREATER
+#if (NET || NETCOREAPP3_0_OR_GREATER)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static unsafe IntPtr GetByteVector128SpanLength(IntPtr offset, int length)
             => (IntPtr)((length - (int)(byte*)offset) & ~(Vector128<byte>.Count - 1));
@@ -2059,7 +2059,7 @@ namespace SpanJson.Internal
             return (IntPtr)((Vector<byte>.Count - unaligned) & (Vector<byte>.Count - 1));
         }
 
-#if NETCOREAPP_3_0_GREATER
+#if (NET || NETCOREAPP3_0_OR_GREATER)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static unsafe IntPtr UnalignedCountVector128(ref byte searchSpace)
         {

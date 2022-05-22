@@ -11,7 +11,7 @@ namespace SpanJson.Linq.JsonPath
             Expression = expression;
         }
 
-        public override IEnumerable<JToken> ExecuteFilter(JToken root, IEnumerable<JToken> current, bool errorWhenNoMatch)
+        public override IEnumerable<JToken> ExecuteFilter(JToken root, IEnumerable<JToken> current, JsonSelectSettings settings)
         {
             foreach (JToken t in current)
             {
@@ -19,7 +19,7 @@ namespace SpanJson.Linq.JsonPath
                 {
                     foreach (JToken d in c.DescendantsAndSelf())
                     {
-                        if (Expression.IsMatch(root, d))
+                        if (Expression.IsMatch(root, d, settings))
                         {
                             yield return d;
                         }
@@ -27,7 +27,7 @@ namespace SpanJson.Linq.JsonPath
                 }
                 else
                 {
-                    if (Expression.IsMatch(root, t))
+                    if (Expression.IsMatch(root, t, settings))
                     {
                         yield return t;
                     }

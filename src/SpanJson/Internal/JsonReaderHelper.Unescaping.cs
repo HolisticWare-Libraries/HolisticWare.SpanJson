@@ -193,7 +193,7 @@ namespace SpanJson.Internal
 #else
             try
             {
-#if NETCOREAPP || NETSTANDARD_2_0_GREATER
+#if NET || NETCOREAPP || NETSTANDARD2_1_OR_GREATER
                 return TextEncodings.UTF8NoBOM.GetString(utf8Text);
 #else
                 if (utf8Text.IsEmpty) { return string.Empty; }
@@ -223,7 +223,7 @@ namespace SpanJson.Internal
         {
             try
             {
-#if NETCOREAPP || NETSTANDARD_2_0_GREATER
+#if NET || NETCOREAPP || NETSTANDARD2_1_OR_GREATER
                 return TextEncodings.UTF8NoBOM.GetByteCount(text);
 #else
                 if (text.IsEmpty) { return 0; }
@@ -252,7 +252,7 @@ namespace SpanJson.Internal
         {
             try
             {
-#if NETCOREAPP || NETSTANDARD_2_0_GREATER
+#if NET || NETCOREAPP || NETSTANDARD2_1_OR_GREATER
                 return TextEncodings.UTF8NoBOM.GetBytes(text, dest);
 #else
                 if (text.IsEmpty) { return 0; }
@@ -280,7 +280,7 @@ namespace SpanJson.Internal
 
         public static string GetTextFromUtf8(in ReadOnlySpan<byte> utf8Text)
         {
-#if NETCOREAPP || NETSTANDARD_2_0_GREATER
+#if NET || NETCOREAPP || NETSTANDARD2_1_OR_GREATER
             return TextEncodings.UTF8NoBOM.GetString(utf8Text);
 #else
 #if NET451

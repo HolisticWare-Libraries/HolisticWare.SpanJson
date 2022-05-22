@@ -2,7 +2,7 @@
   <Import Project="..\nuget.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <RootNamespace>SpanJson.AspNetCore.Formatter</RootNamespace>
     <AssemblyName>SpanJson.AspNetCore.Formatter</AssemblyName>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>

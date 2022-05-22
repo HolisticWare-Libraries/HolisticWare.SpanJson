@@ -15,7 +15,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="$(xUnitRunnerVsPackageVersion)" />
 
     <PackageReference Include="Moq" Version="$(MoqPackageVersion)" />
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="$(MicrosoftAspNetCoreTestHostPackageVersion)" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="$(MicrosoftAspNetCoreTestHost3PackageVersion)" />
   </ItemGroup>
 
   <ItemGroup>

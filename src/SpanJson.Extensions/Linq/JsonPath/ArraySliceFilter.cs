@@ -9,10 +9,12 @@ namespace SpanJson.Linq.JsonPath
         public int? End { get; set; }
         public int? Step { get; set; }
 
-        public override IEnumerable<JToken> ExecuteFilter(JToken root, IEnumerable<JToken> current, bool errorWhenNoMatch)
+        public override IEnumerable<JToken> ExecuteFilter(JToken root, IEnumerable<JToken> current, JsonSelectSettings settings)
         {
             var step = Step;
             if (step.HasValue && 0u >= (uint)step.Value) { ThrowHelper2.ThrowJsonException_Step_cannot_be_zero(); }
+
+            var errorWhenNoMatch = settings?.ErrorWhenNoMatch ?? false;
 
             var start = Start;
             var end = End;

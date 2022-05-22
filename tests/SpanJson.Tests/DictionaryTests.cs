@@ -91,7 +91,7 @@ namespace SpanJson.Tests
         public void ExpandoObject()
         {
             var expando = new ExpandoObject();
-#if DESKTOPCLR
+#if NETFRAMEWORK
             if (!((IDictionary<string, object>)expando).ContainsKey("Hello"))
             {
                 ((IDictionary<string, object>)expando).Add("Hello", "World");
@@ -465,7 +465,7 @@ namespace SpanJson.Tests
                 new KeyValuePair<DictionaryKey, int>(DictionaryKey.Key1, 1),
                 new KeyValuePair<DictionaryKey, int>(DictionaryKey.Key2, 2)
             };
-#if DESKTOPCLR
+#if NETFRAMEWORK
             IDictionary<DictionaryKey, int> input = new Dictionary<DictionaryKey, int>();
             foreach (var item in values)
             {
@@ -490,7 +490,7 @@ namespace SpanJson.Tests
                 new KeyValuePair<DictionaryKey, int>(DictionaryKey.Key1, 1),
                 new KeyValuePair<DictionaryKey, int>(DictionaryKey.Key2, 2)
             };
-#if DESKTOPCLR
+#if NETFRAMEWORK
             IDictionary<DictionaryKey, int> input = new Dictionary<DictionaryKey, int>();
             foreach (var item in values)
             {
@@ -514,7 +514,7 @@ namespace SpanJson.Tests
                 new KeyValuePair<DictionaryKey, int>(DictionaryKey.Key1, 1),
                 new KeyValuePair<DictionaryKey, int>(DictionaryKey.Key2, 2)
             };
-#if DESKTOPCLR
+#if NETFRAMEWORK
             var dict = new Dictionary<DictionaryKey, int>();
             foreach (var item in values)
             {
@@ -540,7 +540,7 @@ namespace SpanJson.Tests
                 new KeyValuePair<DictionaryKey, int>(DictionaryKey.Key1, 1),
                 new KeyValuePair<DictionaryKey, int>(DictionaryKey.Key2, 2)
             };
-#if DESKTOPCLR
+#if NETFRAMEWORK
             var dict = new Dictionary<DictionaryKey, int>();
             foreach (var item in values)
             {

@@ -282,7 +282,7 @@ namespace SpanJson.Tests
 
                 public override bool TrySetMember(SetMemberBinder binder, object value)
                 {
-#if DESKTOPCLR
+#if NETFRAMEWORK
                     if (_extra.ContainsKey(binder.Name))
                     {
                         return false;
