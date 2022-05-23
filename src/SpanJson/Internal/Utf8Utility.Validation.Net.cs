@@ -4,27 +4,19 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-#if (NET || NETCOREAPP3_0_OR_GREATER)
+#if NET
 using System;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.Intrinsics;
+using System.Runtime.Intrinsics.Arm;
 using System.Runtime.Intrinsics.X86;
-using nint = System.Int64;
-using nuint = System.UInt64;
 
 namespace SpanJson.Internal
 {
-    internal static unsafe partial class Utf8Utility64
+    unsafe partial class Utf8Utility
     {
-#if DEBUG
-        private static void _ValidateAdditionalNIntDefinitions()
-        {
-            Debug.Assert(sizeof(nint) == IntPtr.Size && nint.MinValue < 0, "nint is defined incorrectly.");
-            Debug.Assert(sizeof(nuint) == IntPtr.Size && nuint.MinValue == 0, "nuint is defined incorrectly.");
-        }
-#endif // DEBUG
-
         // Returns &inputBuffer[inputLength] if the input buffer is valid.
         /// <summary>
         /// Given an input buffer <paramref name="pInputBuffer"/> of byte length <paramref name="inputLength"/>,
@@ -41,14 +33,14 @@ namespace SpanJson.Internal
             // First, try to drain off as many ASCII bytes as we can from the beginning.
 
             {
-                nuint numAsciiBytesCounted = ASCIIUtility64.GetIndexOfFirstNonAsciiByte(pInputBuffer, (uint)inputLength);
+                nuint numAsciiBytesCounted = ASCIIUtility.GetIndexOfFirstNonAsciiByte(pInputBuffer, (uint)inputLength);
                 pInputBuffer += numAsciiBytesCounted;
 
                 // Quick check - did we just end up consuming the entire input buffer?
                 // If so, short-circuit the remainder of the method.
 
                 inputLength -= (int)numAsciiBytesCounted;
-                if (0u >= inputLength)
+                if (0u >= (uint)inputLength)
                 {
                     utf16CodeUnitCountAdjustment = 0;
                     scalarCountAdjustment = 0;
@@ -128,56 +120,78 @@ namespace SpanJson.Internal
                         // the alignment check consumes at most a single DWORD.)
 
                         byte* pInputBufferFinalPosAtWhichCanSafelyLoop = pFinalPosWhereCanReadDWordFromInputBuffer - 3 * sizeof(uint); // can safely read 4 DWORDs here
-                        uint mask;
+                        nuint trailingZeroCount;
 
-                        do
+                        // pInputBuffer is 32-bit aligned but not necessary 128-bit aligned, so we're
+                        // going to perform an unaligned load. We don't necessarily care about aligning
+                        // this because we pessimistically assume we'll encounter non-ASCII data at some
+                        // point in the not-too-distant future (otherwise we would've stayed entirely
+                        // within the all-ASCII vectorized code at the entry to this method).
+                        if (AdvSimd.Arm64.IsSupported && BitConverter.IsLittleEndian)
                         {
-                            if (Sse2.IsSupported && Bmi1.IsSupported)
+                            // declare bitMask128 inside of the AdvSimd.Arm64.IsSupported check
+                            // so it gets removed on non-Arm64 builds.
+                            Vector128<byte> bitMask128 = BitConverter.IsLittleEndian ?
+                                Vector128.Create((ushort)0x1001).AsByte() :
+                                Vector128.Create((ushort)0x0110).AsByte();
+                            do
                             {
-                                // pInputBuffer is 32-bit aligned but not necessary 128-bit aligned, so we're
-                                // going to perform an unaligned load. We don't necessarily care about aligning
-                                // this because we pessimistically assume we'll encounter non-ASCII data at some
-                                // point in the not-too-distant future (otherwise we would've stayed entirely
-                                // within the all-ASCII vectorized code at the entry to this method).
-
-                                mask = (uint)Sse2.MoveMask(Sse2.LoadVector128((byte*)pInputBuffer));
+                                ulong mask = GetNonAsciiBytes(AdvSimd.LoadVector128(pInputBuffer), bitMask128);
                                 if (mask != 0)
                                 {
-                                    goto Sse2LoopTerminatedEarlyDueToNonAsciiData;
+                                    trailingZeroCount = (nuint)BitOperations.TrailingZeroCount(mask) >> 2;
+                                    goto LoopTerminatedEarlyDueToNonAsciiData;
                                 }
-                            }
-                            else
+
+                                pInputBuffer += 4 * sizeof(uint); // consumed 4 DWORDs
+                            } while (pInputBuffer <= pInputBufferFinalPosAtWhichCanSafelyLoop);
+                        }
+                        else
+                        {
+                            do
                             {
-                                if (!ASCIIUtility.AllBytesInUInt32AreAscii(((uint*)pInputBuffer)[0] | ((uint*)pInputBuffer)[1]))
+                                if (Sse2.IsSupported)
                                 {
-                                    goto LoopTerminatedEarlyDueToNonAsciiDataInFirstPair;
+                                    uint mask = (uint)Sse2.MoveMask(Sse2.LoadVector128(pInputBuffer));
+                                    if (mask != 0)
+                                    {
+                                        trailingZeroCount = (nuint)BitOperations.TrailingZeroCount(mask);
+                                        goto LoopTerminatedEarlyDueToNonAsciiData;
+                                    }
+                                }
+                                else
+                                {
+                                    if (!ASCIIUtility.AllBytesInUInt32AreAscii(((uint*)pInputBuffer)[0] | ((uint*)pInputBuffer)[1]))
+                                    {
+                                        goto LoopTerminatedEarlyDueToNonAsciiDataInFirstPair;
+                                    }
+
+                                    if (!ASCIIUtility.AllBytesInUInt32AreAscii(((uint*)pInputBuffer)[2] | ((uint*)pInputBuffer)[3]))
+                                    {
+                                        goto LoopTerminatedEarlyDueToNonAsciiDataInSecondPair;
+                                    }
                                 }
 
-                                if (!ASCIIUtility.AllBytesInUInt32AreAscii(((uint*)pInputBuffer)[2] | ((uint*)pInputBuffer)[3]))
-                                {
-                                    goto LoopTerminatedEarlyDueToNonAsciiDataInSecondPair;
-                                }
-                            }
-
-                            pInputBuffer += 4 * sizeof(uint); // consumed 4 DWORDs
-                        } while (pInputBuffer <= pInputBufferFinalPosAtWhichCanSafelyLoop);
+                                pInputBuffer += 4 * sizeof(uint); // consumed 4 DWORDs
+                            } while (pInputBuffer <= pInputBufferFinalPosAtWhichCanSafelyLoop);
+                        }
 
                         continue; // need to perform a bounds check because we might be running out of data
 
-                    Sse2LoopTerminatedEarlyDueToNonAsciiData:
+                    LoopTerminatedEarlyDueToNonAsciiData:
+                        // x86 can only be little endian, while ARM can be big or little endian
+                        // so if we reached this label we need to check both combinations are supported
+                        Debug.Assert((AdvSimd.Arm64.IsSupported && BitConverter.IsLittleEndian) || Sse2.IsSupported);
 
-                        Debug.Assert(BitConverter.IsLittleEndian);
-                        Debug.Assert(Sse2.IsSupported);
-                        Debug.Assert(Bmi1.IsSupported);
 
                         // The 'mask' value will have a 0 bit for each ASCII byte we saw and a 1 bit
-                        // for each non-ASCII byte we saw. We can count the number of ASCII bytes,
+                        // for each non-ASCII byte we saw. trailingZeroCount will count the number of ASCII bytes,
                         // bump our input counter by that amount, and resume processing from the
                         // "the first byte is no longer ASCII" portion of the main loop.
+                        // We should not expect a total number of zeroes equal or larger than 16.
+                        Debug.Assert(trailingZeroCount < 16);
 
-                        Debug.Assert(mask != 0);
-
-                        pInputBuffer += Bmi1.TrailingZeroCount(mask);
+                        pInputBuffer += trailingZeroCount;
                         if (pInputBuffer > pFinalPosWhereCanReadDWordFromInputBuffer)
                         {
                             goto ProcessRemainingBytesSlow;
@@ -271,8 +285,8 @@ namespace SpanJson.Internal
                     // the value isn't overlong using a single comparison. On big-endian platforms, we'll need
                     // to validate the mask and validate that the sequence isn't overlong as two separate comparisons.
 
-                    if ((BitConverter.IsLittleEndian && Utf8Utility.UInt32EndsWithValidUtf8TwoByteSequenceLittleEndian(thisDWord))
-                        || (!BitConverter.IsLittleEndian && (Utf8Utility.UInt32EndsWithUtf8TwoByteMask(thisDWord) && !Utf8Utility.UInt32EndsWithOverlongUtf8TwoByteSequence(thisDWord))))
+                    if ((BitConverter.IsLittleEndian && UInt32EndsWithValidUtf8TwoByteSequenceLittleEndian(thisDWord))
+                        || (!BitConverter.IsLittleEndian && (UInt32EndsWithUtf8TwoByteMask(thisDWord) && !UInt32EndsWithOverlongUtf8TwoByteSequence(thisDWord))))
                     {
                         // We have two runs of two bytes each.
                         pInputBuffer += 4;
@@ -287,7 +301,7 @@ namespace SpanJson.Internal
 
                             if (BitConverter.IsLittleEndian)
                             {
-                                if (Utf8Utility.UInt32BeginsWithValidUtf8TwoByteSequenceLittleEndian(thisDWord))
+                                if (UInt32BeginsWithValidUtf8TwoByteSequenceLittleEndian(thisDWord))
                                 {
                                     // The next sequence is a valid two-byte sequence.
                                     goto ProcessTwoByteSequenceSkipOverlongFormCheck;
@@ -295,9 +309,9 @@ namespace SpanJson.Internal
                             }
                             else
                             {
-                                if (Utf8Utility.UInt32BeginsWithUtf8TwoByteMask(thisDWord))
+                                if (UInt32BeginsWithUtf8TwoByteMask(thisDWord))
                                 {
-                                    if (Utf8Utility.UInt32BeginsWithOverlongUtf8TwoByteSequence(thisDWord))
+                                    if (UInt32BeginsWithOverlongUtf8TwoByteSequence(thisDWord))
                                     {
                                         goto Error; // The next sequence purports to be a 2-byte sequence but is overlong.
                                     }
@@ -322,9 +336,9 @@ namespace SpanJson.Internal
 
                     tempUtf16CodeUnitCountAdjustment--; // 2-byte sequence + (some number of ASCII bytes) -> 1 UTF-16 code units (and 1 scalar) [+ trailing]
 
-                    if (Utf8Utility.UInt32ThirdByteIsAscii(thisDWord))
+                    if (UInt32ThirdByteIsAscii(thisDWord))
                     {
-                        if (Utf8Utility.UInt32FourthByteIsAscii(thisDWord))
+                        if (UInt32FourthByteIsAscii(thisDWord))
                         {
                             pInputBuffer += 4;
                         }
@@ -459,7 +473,7 @@ namespace SpanJson.Internal
                             // Is this three 3-byte sequences in a row?
                             // thisQWord = [ 10yyyyyy 1110zzzz | 10xxxxxx 10yyyyyy 1110zzzz | 10xxxxxx 10yyyyyy 1110zzzz ] [ 10xxxxxx ]
                             //               ---- CHAR 3  ----   --------- CHAR 2 ---------   --------- CHAR 1 ---------     -CHAR 3-
-                            if ((thisQWord & 0xC0F0_C0C0_F0C0_C0F0ul) == 0x80E0_8080_E080_80E0ul && Utf8Utility.IsUtf8ContinuationByte(in pInputBuffer[8]))
+                            if ((thisQWord & 0xC0F0_C0C0_F0C0_C0F0ul) == 0x80E0_8080_E080_80E0ul && IsUtf8ContinuationByte(in pInputBuffer[8]))
                             {
                                 // Saw a proper bitmask for three incoming 3-byte sequences, perform the
                                 // overlong and surrogate sequence checking now.
@@ -533,7 +547,7 @@ namespace SpanJson.Internal
                                 continue;
                             }
 
-                            if (Utf8Utility.UInt32BeginsWithUtf8ThreeByteMask(thisDWord))
+                            if (UInt32BeginsWithUtf8ThreeByteMask(thisDWord))
                             {
                                 // A single three-byte sequence.
                                 goto ProcessThreeByteSequenceWithCheck;
@@ -555,7 +569,7 @@ namespace SpanJson.Internal
                         // marker now and jump directly to three-byte sequence processing if we see one, skipping
                         // all of the logic at the beginning of the loop.
 
-                        if (Utf8Utility.UInt32BeginsWithUtf8ThreeByteMask(thisDWord))
+                        if (UInt32BeginsWithUtf8ThreeByteMask(thisDWord))
                         {
                             goto ProcessThreeByteSequenceWithCheck; // Found another [not yet validated] three-byte sequence; process
                         }
@@ -665,7 +679,7 @@ namespace SpanJson.Internal
                     if ((byte)firstByte < 0xE0u)
                     {
                         // 2-byte case
-                        if ((byte)firstByte >= 0xC2u && Utf8Utility.IsLowByteUtf8ContinuationByte(secondByte))
+                        if ((byte)firstByte >= 0xC2u && IsLowByteUtf8ContinuationByte(secondByte))
                         {
                             pInputBuffer += 2;
                             tempUtf16CodeUnitCountAdjustment--; // 2 UTF-8 bytes -> 1 UTF-16 code unit (and 1 scalar)
@@ -693,13 +707,13 @@ namespace SpanJson.Internal
                             }
                             else
                             {
-                                if (!Utf8Utility.IsLowByteUtf8ContinuationByte(secondByte))
+                                if (!IsLowByteUtf8ContinuationByte(secondByte))
                                 {
                                     goto Error; // first trailing byte doesn't have proper continuation marker
                                 }
                             }
 
-                            if (Utf8Utility.IsUtf8ContinuationByte(in pInputBuffer[2]))
+                            if (IsUtf8ContinuationByte(in pInputBuffer[2]))
                             {
                                 pInputBuffer += 3;
                                 tempUtf16CodeUnitCountAdjustment -= 2; // 3 UTF-8 bytes -> 2 UTF-16 code units (and 2 scalars)
@@ -730,6 +744,20 @@ namespace SpanJson.Internal
             utf16CodeUnitCountAdjustment = tempUtf16CodeUnitCountAdjustment;
             scalarCountAdjustment = tempScalarCountAdjustment;
             return pInputBuffer;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static ulong GetNonAsciiBytes(Vector128<byte> value, Vector128<byte> bitMask128)
+        {
+            if (!AdvSimd.Arm64.IsSupported || !BitConverter.IsLittleEndian)
+            {
+                throw ThrowHelper.GetNotSupportedException(); ;
+            }
+
+            Vector128<byte> mostSignificantBitIsSet = AdvSimd.ShiftRightArithmetic(value.AsSByte(), 7).AsByte();
+            Vector128<byte> extractedBits = AdvSimd.And(mostSignificantBitIsSet, bitMask128);
+            extractedBits = AdvSimd.Arm64.AddPairwise(extractedBits, extractedBits);
+            return extractedBits.AsUInt64().ToScalar();
         }
     }
 }

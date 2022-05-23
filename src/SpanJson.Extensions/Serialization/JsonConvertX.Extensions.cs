@@ -3,7 +3,6 @@ using System.Buffers;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using CuteAnt;
 using CuteAnt.Collections;
 using CuteAnt.Pool;
 using CuteAnt.Reflection;
@@ -58,21 +57,21 @@ namespace SpanJson.Serialization
 
         #region -- NJsonSerializer.IsCheckAdditionalContentSetX --
 
-        [MethodImpl(InlineMethod.Value)]
+        [MethodImpl(InlineMethod.AggressiveInlining)]
         public static bool IsCheckAdditionalContentSetX(this NJsonSerializer jsonSerializer)
         {
             if (jsonSerializer is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.jsonSerializer); }
             return s_checkAdditionalContentGetter(jsonSerializer) is object;
         }
 
-        [MethodImpl(InlineMethod.Value)]
+        [MethodImpl(InlineMethod.AggressiveInlining)]
         public static bool? GetCheckAdditionalContent(this NJsonSerializer jsonSerializer)
         {
             if (jsonSerializer is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.jsonSerializer); }
             return (bool?)s_checkAdditionalContentGetter(jsonSerializer);
         }
 
-        [MethodImpl(InlineMethod.Value)]
+        [MethodImpl(InlineMethod.AggressiveInlining)]
         public static void SetCheckAdditionalContent(this NJsonSerializer jsonSerializer, bool? checkAdditionalContent = null)
         {
             if (jsonSerializer is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.jsonSerializer); }
@@ -83,14 +82,14 @@ namespace SpanJson.Serialization
 
         #region -- NJsonSerializer.Formatting --
 
-        [MethodImpl(InlineMethod.Value)]
+        [MethodImpl(InlineMethod.AggressiveInlining)]
         public static NFormatting? GetFormatting(this NJsonSerializer jsonSerializer)
         {
             if (jsonSerializer is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.jsonSerializer); }
             return (NFormatting?)s_formattingGetter(jsonSerializer);
         }
 
-        [MethodImpl(InlineMethod.Value)]
+        [MethodImpl(InlineMethod.AggressiveInlining)]
         public static void SetFormatting(this NJsonSerializer jsonSerializer, NFormatting? formatting = null)
         {
             if (jsonSerializer is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.jsonSerializer); }

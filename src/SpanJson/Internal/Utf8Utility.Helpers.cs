@@ -4,24 +4,26 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-#if (NET || NETCOREAPP3_0_OR_GREATER)
+#if NET || NETCOREAPP3_0_OR_GREATER
 using System;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+#if NETCOREAPP3_1
 using System.Runtime.Intrinsics.X86;
+#endif
 
 namespace SpanJson.Internal
 {
-    internal static partial class Utf8Utility
+    partial class Utf8Utility
     {
         /// <summary>
         /// Given a machine-endian DWORD which four bytes of UTF-8 data, interprets the
         /// first three bytes as a three-byte UTF-8 subsequence and returns the UTF-16 representation.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static uint ExtractCharFromFirstThreeByteSequence(uint value)
+        private static uint ExtractCharFromFirstThreeByteSequence(uint value)
         {
             Debug.Assert(UInt32BeginsWithUtf8ThreeByteMask(value));
 
@@ -46,7 +48,7 @@ namespace SpanJson.Internal
         /// first two bytes as a two-byte UTF-8 subsequence and returns the UTF-16 representation.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static uint ExtractCharFromFirstTwoByteSequence(uint value)
+        private static uint ExtractCharFromFirstTwoByteSequence(uint value)
         {
             Debug.Assert(UInt32BeginsWithUtf8TwoByteMask(value) && !UInt32BeginsWithOverlongUtf8TwoByteSequence(value));
 
@@ -68,10 +70,11 @@ namespace SpanJson.Internal
         /// four-byte UTF-8 sequence and returns the machine-endian DWORD of the UTF-16 representation.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static uint ExtractCharsFromFourByteSequence(uint value)
+        private static uint ExtractCharsFromFourByteSequence(uint value)
         {
             if (BitConverter.IsLittleEndian)
             {
+#if NETCOREAPP3_1
                 if (Bmi2.IsSupported)
                 {
                     // need to reverse endianness for bit manipulation to work correctly
@@ -91,6 +94,7 @@ namespace SpanJson.Internal
                 }
                 else
                 {
+#endif
                     // input is UTF8 [ 10xxxxxx 10yyyyyy 10uuzzzz 11110uuu ] = scalar 000uuuuu zzzzyyyy yyxxxxxx
                     // want to return UTF16 scalar 000uuuuuzzzzyyyyyyxxxxxx = [ 110111yy yyxxxxxx 110110ww wwzzzzyy ]
                     // where wwww = uuuuu - 1
@@ -104,7 +108,9 @@ namespace SpanJson.Internal
                     retVal += 0x0000_0800u; // retVal = [ 000000yy yyxxxxxx 110110ww wwzzzzyy ]
                     retVal += 0xDC00_0000u; // retVal = [ 110111yy yyxxxxxx 110110ww wwzzzzyy ]
                     return retVal;
+#if NETCOREAPP3_1
                 }
+#endif
             }
             else
             {
@@ -129,7 +135,7 @@ namespace SpanJson.Internal
         /// returns the packed 4-byte UTF-8 representation of this scalar value, also in machine-endian order.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static uint ExtractFourUtf8BytesFromSurrogatePair(uint value)
+        private static uint ExtractFourUtf8BytesFromSurrogatePair(uint value)
         {
             Debug.Assert(IsWellFormedUtf16SurrogatePair(value));
 
@@ -138,6 +144,7 @@ namespace SpanJson.Internal
                 // input = [ 110111yyyyxxxxxx 110110wwwwzzzzyy ] = scalar (000uuuuu zzzzyyyy yyxxxxxx)
                 // must return [ 10xxxxxx 10yyyyyy 10uuzzzz 11110uuu ], where wwww = uuuuu - 1
 
+#if NETCOREAPP3_1
                 if (Bmi2.IsSupported)
                 {
                     // Since pdep and pext have high latencies and can only be dispatched to a single execution port, we want
@@ -155,6 +162,7 @@ namespace SpanJson.Internal
                 }
                 else
                 {
+#endif
                     value += 0x0000_0040u; // = [ 110111yyyyxxxxxx 11011uuuuuzzzzyy ]
 
                     uint tempA = BinaryPrimitives.ReverseEndianness(value & 0x003F_0700u); // = [ 00000000 00000uuu 00xxxxxx 00000000 ]
@@ -167,8 +175,10 @@ namespace SpanJson.Internal
                     uint tempD = (value & 0x03u) << 20; // = [ 00000000 00yy0000 00000000 00000000 ]
                     tempD |= 0x8080_80F0u;
 
-                    return (tempD | tempA | tempC); // = [ 10xxxxxx 10yyyyyy 10uuzzzz 11110uuu ]
+                    return tempD | tempA | tempC; // = [ 10xxxxxx 10yyyyyy 10uuzzzz 11110uuu ]
+#if NETCOREAPP3_1
                 }
+#endif
             }
             else
             {
@@ -183,11 +193,15 @@ namespace SpanJson.Internal
                 tempB |= tempA;
 
                 uint tempC = (value << 2) & 0x0000_0F00u; // = [ 00000000 00000000 0000yyyy 00000000 ]
+#if NET
+                uint tempD = (value >> 4) & 0x0000_3000u; // = [ 00000000 00000000 00yy0000 00000000 ]
+#else
                 uint tempD = (value >> 6) & 0x0003_0000u; // = [ 00000000 00000000 00yy0000 00000000 ]
+#endif
                 tempD |= tempC;
 
                 uint tempE = (value & 0x3Fu) + 0xF080_8080u; // = [ 11110000 10000000 10000000 10xxxxxx ]
-                return (tempE | tempB | tempD); // = [ 11110uuu 10uuzzzz 10yyyyyy 10xxxxxx ]
+                return tempE | tempB | tempD; // = [ 11110uuu 10uuzzzz 10yyyyyy 10xxxxxx ]
             }
         }
 
@@ -199,7 +213,7 @@ namespace SpanJson.Internal
         /// <param name="value"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static uint ExtractTwoCharsPackedFromTwoAdjacentTwoByteSequences(uint value)
+        private static uint ExtractTwoCharsPackedFromTwoAdjacentTwoByteSequences(uint value)
         {
             // We don't want to swap the position of the high and low WORDs,
             // as the buffer was read in machine order and will be written in
@@ -223,7 +237,7 @@ namespace SpanJson.Internal
         /// adjacent UTF-8 two-byte sequences.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static uint ExtractTwoUtf8TwoByteSequencesFromTwoPackedUtf16Chars(uint value)
+        private static uint ExtractTwoUtf8TwoByteSequencesFromTwoPackedUtf16Chars(uint value)
         {
             // stays in machine endian
 
@@ -251,7 +265,7 @@ namespace SpanJson.Internal
         /// as a UTF-8 two-byte sequence packed into a WORD and zero-extended to DWORD.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static uint ExtractUtf8TwoByteSequenceFromFirstUtf16Char(uint value)
+        private static uint ExtractUtf8TwoByteSequenceFromFirstUtf16Char(uint value)
         {
             // stays in machine endian
 
@@ -272,7 +286,11 @@ namespace SpanJson.Internal
                 // want to return [ ######## ######## 110yyyyy 10xxxxxx ]
 
                 uint temp = (value >> 16) & 0x3Fu; // [ 00000000 00000000 00000000 00xxxxxx ]
+#if NET
+                value = (value >> 14) & 0x1F00u; // [ 00000000 00000000 000yyyyy 0000000 ]
+#else
                 value = (value >> 22) & 0x1F00u; // [ 00000000 00000000 000yyyyy 0000000 ]
+#endif
                 return value + temp + 0xC080u;
             }
         }
@@ -282,7 +300,7 @@ namespace SpanJson.Internal
         /// returns true iff the first UTF-16 character is ASCII.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool IsFirstCharAscii(uint value)
+        private static bool IsFirstCharAscii(uint value)
         {
             // Little-endian: Given [ #### AAAA ], return whether AAAA is in range [ 0000..007F ].
             // Big-endian: Given [ AAAA #### ], return whether AAAA is in range [ 0000..007F ].
@@ -299,7 +317,7 @@ namespace SpanJson.Internal
         /// This also returns true if the first UTF-16 character is a surrogate character (well-formedness is not validated).
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool IsFirstCharAtLeastThreeUtf8Bytes(uint value)
+        private static bool IsFirstCharAtLeastThreeUtf8Bytes(uint value)
         {
             // Little-endian: Given [ #### AAAA ], return whether AAAA is in range [ 0800..FFFF ].
             // Big-endian: Given [ AAAA #### ], return whether AAAA is in range [ 0800..FFFF ].
@@ -315,7 +333,7 @@ namespace SpanJson.Internal
         /// returns true iff the first UTF-16 character is a surrogate character (either high or low).
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool IsFirstCharSurrogate(uint value)
+        private static bool IsFirstCharSurrogate(uint value)
         {
             // Little-endian: Given [ #### AAAA ], return whether AAAA is in range [ D800..DFFF ].
             // Big-endian: Given [ AAAA #### ], return whether AAAA is in range [ D800..DFFF ].
@@ -331,7 +349,7 @@ namespace SpanJson.Internal
         /// returns true iff the first UTF-16 character would be encoded as exactly 2 bytes in UTF-8.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool IsFirstCharTwoUtf8Bytes(uint value)
+        private static bool IsFirstCharTwoUtf8Bytes(uint value)
         {
             // Little-endian: Given [ #### AAAA ], return whether AAAA is in range [ 0080..07FF ].
             // Big-endian: Given [ AAAA #### ], return whether AAAA is in range [ 0080..07FF ].
@@ -351,7 +369,7 @@ namespace SpanJson.Internal
         /// is a UTF-8 continuation byte.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool IsLowByteUtf8ContinuationByte(uint value)
+        private static bool IsLowByteUtf8ContinuationByte(uint value)
         {
             // The JIT won't emit a single 8-bit signed cmp instruction (see IsUtf8ContinuationByte),
             // so the best we can do for now is the lea / cmp pair.
@@ -365,7 +383,7 @@ namespace SpanJson.Internal
         /// returns true iff the second UTF-16 character is ASCII.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool IsSecondCharAscii(uint value)
+        private static bool IsSecondCharAscii(uint value)
         {
             // Little-endian: Given [ BBBB #### ], return whether BBBB is in range [ 0000..007F ].
             // Big-endian: Given [ #### BBBB ], return whether BBBB is in range [ 0000..007F ].
@@ -382,7 +400,7 @@ namespace SpanJson.Internal
         /// This also returns true if the second UTF-16 character is a surrogate character (well-formedness is not validated).
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool IsSecondCharAtLeastThreeUtf8Bytes(uint value)
+        private static bool IsSecondCharAtLeastThreeUtf8Bytes(uint value)
         {
             // Little-endian: Given [ BBBB #### ], return whether BBBB is in range [ 0800..FFFF ].
             // Big-endian: Given [ #### BBBB ], return whether ABBBBAAA is in range [ 0800..FFFF ].
@@ -398,7 +416,7 @@ namespace SpanJson.Internal
         /// returns true iff the second UTF-16 character is a surrogate character (either high or low).
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool IsSecondCharSurrogate(uint value)
+        private static bool IsSecondCharSurrogate(uint value)
         {
             // Little-endian: Given [ BBBB #### ], return whether BBBB is in range [ D800..DFFF ].
             // Big-endian: Given [ #### BBBB ], return whether BBBB is in range [ D800..DFFF ].
@@ -414,7 +432,7 @@ namespace SpanJson.Internal
         /// returns true iff the second UTF-16 character would be encoded as exactly 2 bytes in UTF-8.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool IsSecondCharTwoUtf8Bytes(uint value)
+        private static bool IsSecondCharTwoUtf8Bytes(uint value)
         {
             // Little-endian: Given [ BBBB #### ], return whether BBBB is in range [ 0080..07FF ].
             // Big-endian: Given [ #### BBBB ], return whether BBBB is in range [ 0080..07FF ].
@@ -445,7 +463,7 @@ namespace SpanJson.Internal
             // The below check takes advantage of the two's complement representation of negative numbers.
             // [ 0b1000_0000, 0b1011_1111 ] is [ -127 (sbyte.MinValue), -65 ]
 
-            return ((sbyte)value < -64);
+            return (sbyte)value < -64;
         }
 
         /// <summary>
@@ -453,7 +471,7 @@ namespace SpanJson.Internal
         /// returns true iff the two characters represent a well-formed UTF-16 surrogate pair.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool IsWellFormedUtf16SurrogatePair(uint value)
+        private static bool IsWellFormedUtf16SurrogatePair(uint value)
         {
             // Little-endian: Given [ LLLL HHHH ], validate that LLLL in [ DC00..DFFF ] and HHHH in [ D800..DBFF ].
             // Big-endian: Given [ HHHH LLLL ], validate that HHHH in [ D800..DBFF ] and LLLL in [ DC00..DFFF ].
@@ -474,7 +492,7 @@ namespace SpanJson.Internal
         /// Converts a DWORD from machine-endian to little-endian.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static uint ToLittleEndian(uint value)
+        private static uint ToLittleEndian(uint value)
         {
             if (BitConverter.IsLittleEndian)
             {
@@ -494,7 +512,7 @@ namespace SpanJson.Internal
         /// 2-byte sequence mask (see <see cref="UInt32BeginsWithUtf8TwoByteMask"/>).
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool UInt32BeginsWithOverlongUtf8TwoByteSequence(uint value)
+        private static bool UInt32BeginsWithOverlongUtf8TwoByteSequence(uint value)
         {
             // ASSUMPTION: Caller has already checked the '110yyyyy 10xxxxxx' mask of the input.
             Debug.Assert(UInt32BeginsWithUtf8TwoByteMask(value));
@@ -517,7 +535,7 @@ namespace SpanJson.Internal
         /// still perform overlong form or out-of-range checking.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool UInt32BeginsWithUtf8FourByteMask(uint value)
+        private static bool UInt32BeginsWithUtf8FourByteMask(uint value)
         {
             // The code in this method is equivalent to the code
             // below but is slightly more optimized.
@@ -538,7 +556,11 @@ namespace SpanJson.Internal
             // Return statement is written this way to work around https://github.com/dotnet/coreclr/issues/914.
 
             return (BitConverter.IsLittleEndian && (0u >= ((value - 0x8080_80F0u) & 0xC0C0_C0F8u)))
+#if NET
+                || (!BitConverter.IsLittleEndian && (0u >= ((value - 0xF080_8080u) & 0xF8C0_C0C0u)));
+#else
                 || (!BitConverter.IsLittleEndian && (0u >= ((value - 0xF080_8000u) & 0xF8C0_C0C0u)));
+#endif
         }
 
         /// <summary>
@@ -549,7 +571,7 @@ namespace SpanJson.Internal
         /// overlong form or surrogate checking.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool UInt32BeginsWithUtf8ThreeByteMask(uint value)
+        private static bool UInt32BeginsWithUtf8ThreeByteMask(uint value)
         {
             // The code in this method is equivalent to the code
             // below but is slightly more optimized.
@@ -581,7 +603,7 @@ namespace SpanJson.Internal
         /// overlong form checking.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool UInt32BeginsWithUtf8TwoByteMask(uint value)
+        private static bool UInt32BeginsWithUtf8TwoByteMask(uint value)
         {
             // The code in this method is equivalent to the code
             // below but is slightly more optimized.
@@ -613,7 +635,7 @@ namespace SpanJson.Internal
         /// 2-byte sequence mask (see <see cref="UInt32BeginsWithUtf8TwoByteMask"/>).
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool UInt32EndsWithOverlongUtf8TwoByteSequence(uint value)
+        private static bool UInt32EndsWithOverlongUtf8TwoByteSequence(uint value)
         {
             // ASSUMPTION: Caller has already checked the '110yyyyy 10xxxxxx' mask of the input.
             Debug.Assert(UInt32EndsWithUtf8TwoByteMask(value));
@@ -639,7 +661,7 @@ namespace SpanJson.Internal
         /// overlong form checking.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool UInt32EndsWithUtf8TwoByteMask(uint value)
+        private static bool UInt32EndsWithUtf8TwoByteMask(uint value)
         {
             // The code in this method is equivalent to the code
             // below but is slightly more optimized.
@@ -670,7 +692,7 @@ namespace SpanJson.Internal
         /// single operation. Returns <see langword="false"/> if running on a big-endian machine.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool UInt32BeginsWithValidUtf8TwoByteSequenceLittleEndian(uint value)
+        private static bool UInt32BeginsWithValidUtf8TwoByteSequenceLittleEndian(uint value)
         {
             // Per Table 3-7, valid 2-byte sequences are [ C2..DF ] [ 80..BF ].
             // In little-endian, that would be represented as:
@@ -695,7 +717,7 @@ namespace SpanJson.Internal
         /// single operation. Returns <see langword="false"/> if running on a big-endian machine.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool UInt32EndsWithValidUtf8TwoByteSequenceLittleEndian(uint value)
+        private static bool UInt32EndsWithValidUtf8TwoByteSequenceLittleEndian(uint value)
         {
             // See comments in UInt32BeginsWithValidUtf8TwoByteSequenceLittleEndian.
 
@@ -712,7 +734,7 @@ namespace SpanJson.Internal
         /// returns <see langword="true"/> iff the first byte of the buffer is ASCII.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool UInt32FirstByteIsAscii(uint value)
+        private static bool UInt32FirstByteIsAscii(uint value)
         {
             // Return statement is written this way to work around https://github.com/dotnet/coreclr/issues/914.
 
@@ -725,7 +747,7 @@ namespace SpanJson.Internal
         /// returns <see langword="true"/> iff the fourth byte of the buffer is ASCII.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool UInt32FourthByteIsAscii(uint value)
+        private static bool UInt32FourthByteIsAscii(uint value)
         {
             // Return statement is written this way to work around https://github.com/dotnet/coreclr/issues/914.
 
@@ -738,7 +760,7 @@ namespace SpanJson.Internal
         /// returns <see langword="true"/> iff the second byte of the buffer is ASCII.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool UInt32SecondByteIsAscii(uint value)
+        private static bool UInt32SecondByteIsAscii(uint value)
         {
             // Return statement is written this way to work around https://github.com/dotnet/coreclr/issues/914.
 
@@ -751,7 +773,7 @@ namespace SpanJson.Internal
         /// returns <see langword="true"/> iff the third byte of the buffer is ASCII.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool UInt32ThirdByteIsAscii(uint value)
+        private static bool UInt32ThirdByteIsAscii(uint value)
         {
             // Return statement is written this way to work around https://github.com/dotnet/coreclr/issues/914.
 
@@ -759,12 +781,13 @@ namespace SpanJson.Internal
                 || (!BitConverter.IsLittleEndian && (0u >= (value & 0x8000u)));
         }
 
+#if NETCOREAPP3_1
         /// <summary>
         /// Given a DWORD which represents a buffer of 4 ASCII bytes, widen each byte to a 16-bit WORD
         /// and writes the resulting QWORD into the destination with machine endianness.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void Widen4AsciiBytesToCharsAndWrite(ref char outputBuffer, uint value)
+        private static void Widen4AsciiBytesToCharsAndWrite(ref char outputBuffer, uint value)
         {
             if (Bmi2.X64.IsSupported)
             {
@@ -795,6 +818,7 @@ namespace SpanJson.Internal
                 }
             }
         }
+#endif
 
         /// <summary>
         /// Given a DWORD which represents a buffer of 2 packed UTF-16 values in machine endianess,
@@ -802,7 +826,7 @@ namespace SpanJson.Internal
         /// resulting 6 bytes to the destination buffer.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void WriteTwoUtf16CharsAsTwoUtf8ThreeByteSequences(ref byte outputBuffer, uint value)
+        private static void WriteTwoUtf16CharsAsTwoUtf8ThreeByteSequences(ref byte outputBuffer, uint value)
         {
             Debug.Assert(IsFirstCharAtLeastThreeUtf8Bytes(value) && !IsFirstCharSurrogate(value), "First half of value should've been 0800..D7FF or E000..FFFF");
             Debug.Assert(IsSecondCharAtLeastThreeUtf8Bytes(value) && !IsSecondCharSurrogate(value), "Second half of value should've been 0800..D7FF or E000..FFFF");
@@ -838,7 +862,7 @@ namespace SpanJson.Internal
         /// resulting 3 bytes to the destination buffer.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void WriteFirstUtf16CharAsUtf8ThreeByteSequence(ref byte outputBuffer, uint value)
+        private static void WriteFirstUtf16CharAsUtf8ThreeByteSequence(ref byte outputBuffer, uint value)
         {
             Debug.Assert(IsFirstCharAtLeastThreeUtf8Bytes(value) && !IsFirstCharSurrogate(value), "First half of value should've been 0800..D7FF or E000..FFFF");
 

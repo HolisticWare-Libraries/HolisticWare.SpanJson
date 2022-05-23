@@ -4,7 +4,7 @@
 
 // borrowed from https://github.com/dotnet/corefxlab/tree/master/src/System.Text.Primitives/System/Text/Encoders
 
-#if !(NETCOREAPP3_0_OR_GREATER || NET)
+#if !(NET || NETCOREAPP3_0_OR_GREATER)
 using System;
 using System.Diagnostics;
 using System.Numerics;
@@ -100,7 +100,7 @@ namespace SpanJson.Internal
         /// <paramref name="surrogatePairCount"/> to <paramref name="scalarCount"/>.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static int GetIndexOfFirstInvalidUtf8Sequence(ReadOnlySpan<byte> input, out int scalarCount, out int surrogatePairCount)
+        internal static int GetIndexOfFirstInvalidUtf8Sequence(in ReadOnlySpan<byte> input, out int scalarCount, out int surrogatePairCount)
             => GetIndexOfFirstInvalidUtf8Sequence(ref MemoryMarshal.GetReference(input), input.Length, out scalarCount, out surrogatePairCount);
 
         [MethodImpl(MethodImplOptions.NoInlining)]

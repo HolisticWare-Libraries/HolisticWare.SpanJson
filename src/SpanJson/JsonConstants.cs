@@ -65,12 +65,6 @@ namespace SpanJson
 
         internal const char ScientificNotationFormat = 'e';
 
-        // Encoding Helpers
-        public const char HighSurrogateStart = '\ud800';
-        public const char HighSurrogateEnd = '\udbff';
-        public const char LowSurrogateStart = '\udc00';
-        public const char LowSurrogateEnd = '\udfff';
-
         public const int UnicodePlane01StartValue = 0x10000;
         public const int HighSurrogateStartValue = 0xD800;
         public const int HighSurrogateEndValue = 0xDBFF;

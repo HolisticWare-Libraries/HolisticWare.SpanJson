@@ -1,4 +1,6 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+﻿// borrowed from https://github.com/dotnet/corefx/blob/release/3.1/src/Common/src/CoreLib/System/Convert.cs
+
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -222,17 +224,18 @@ namespace SpanJson.Internal
             return j;
         }
 
+#if NET
         internal static int ToBase64_CalculateAndValidateOutputLength(int inputLength, bool insertLineBreaks)
         {
-            long outlen = ((long)inputLength) / 3 * 4;          // the base length - we want integer division here. 
-            outlen += ((inputLength % 3) != 0) ? 4 : 0;         // at most 4 more chars for the remainder
+            // the base length - we want integer division here, at most 4 more chars for the remainder
+            long outlen = ((long)inputLength + 2) / 3 * 4;
 
             if (0ul >= (ulong)outlen) { return 0; }
 
             if (insertLineBreaks)
             {
-                long newLines = outlen / base64LineBreakPosition;
-                if ((outlen % base64LineBreakPosition) == 0)
+                (long newLines, long remainder) = Math.DivRem(outlen, base64LineBreakPosition);
+                if (0ul >= (ulong)remainder)
                 {
                     --newLines;
                 }
@@ -245,5 +248,30 @@ namespace SpanJson.Internal
 
             return (int)outlen;
         }
+#else
+        internal static int ToBase64_CalculateAndValidateOutputLength(int inputLength, bool insertLineBreaks)
+        {
+            long outlen = ((long)inputLength) / 3 * 4;          // the base length - we want integer division here. 
+            outlen += ((inputLength % 3) != 0) ? 4 : 0;         // at most 4 more chars for the remainder
+
+            if (0ul >= (ulong)outlen) { return 0; }
+
+            if (insertLineBreaks)
+            {
+                long newLines = outlen / base64LineBreakPosition;
+                if (0ul >= (ulong)(outlen % base64LineBreakPosition))
+                {
+                    --newLines;
+                }
+                outlen += newLines * 2;              // the number of line break chars we'll add, "\r\n"
+            }
+
+            // If we overflow an int then we cannot allocate enough
+            // memory to output the value so throw
+            if (outlen > int.MaxValue) { ThrowHelper.ThrowOutOfMemoryException(); }
+
+            return (int)outlen;
+        }
+#endif
     }
 }

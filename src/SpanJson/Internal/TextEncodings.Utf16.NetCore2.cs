@@ -1,4 +1,5 @@
-﻿#if !(NETCOREAPP3_0_OR_GREATER || NET)
+﻿#if !(NET || NETCOREAPP3_0_OR_GREATER)
+
 namespace SpanJson.Internal
 {
     using System;
@@ -121,31 +122,37 @@ namespace SpanJson.Internal
                                 }
 
                                 // Unfortunately, this is endianess sensitive
-#if BIGENDIAN
-                                *pTarget = (byte)(ch >> 16);
-                                *(pTarget + 1) = (byte)ch;
-                                pSrc += 4;
-                                *(pTarget + 2) = (byte)(chc >> 16);
-                                *(pTarget + 3) = (byte)chc;
-                                pTarget += 4;
-#else // BIGENDIAN
-                                *pTarget = (byte)ch;
-                                *(pTarget + 1) = (byte)(ch >> 16);
-                                pSrc += 4;
-                                *(pTarget + 2) = (byte)chc;
-                                *(pTarget + 3) = (byte)(chc >> 16);
-                                pTarget += 4;
-#endif // BIGENDIAN
+                                if (!BitConverter.IsLittleEndian)
+                                {
+                                    *pTarget = (byte)(ch >> 16);
+                                    *(pTarget + 1) = (byte)ch;
+                                    pSrc += 4;
+                                    *(pTarget + 2) = (byte)(chc >> 16);
+                                    *(pTarget + 3) = (byte)chc;
+                                    pTarget += 4;
+                                }
+                                else
+                                {
+                                    *pTarget = (byte)ch;
+                                    *(pTarget + 1) = (byte)(ch >> 16);
+                                    pSrc += 4;
+                                    *(pTarget + 2) = (byte)chc;
+                                    *(pTarget + 3) = (byte)(chc >> 16);
+                                    pTarget += 4;
+                                }
                             }
                             continue;
 
                         LongCodeWithMask:
-#if BIGENDIAN
-                            // be careful about the sign extension
-                            ch = (int)(((uint)ch) >> 16);
-#else // BIGENDIAN
-                            ch = (char)ch;
-#endif // BIGENDIAN
+                            if (!BitConverter.IsLittleEndian)
+                            {
+                                // be careful about the sign extension
+                                ch = (int)(((uint)ch) >> 16);
+                            }
+                            else
+                            {
+                                ch = (char)ch;
+                            }
                             pSrc++;
 
                             if (ch > 0x7F)
@@ -168,7 +175,7 @@ namespace SpanJson.Internal
                             else
                             {
                                 // if (!IsLowSurrogate(ch) && !IsHighSurrogate(ch))
-                                if (!JsonHelpers.IsInRangeInclusive(ch, JsonSharedConstant.HighSurrogateStart, JsonSharedConstant.LowSurrogateEnd))
+                                if (!UnicodeUtility.IsInRangeInclusive(ch, HighSurrogateStart, LowSurrogateEnd))
                                 {
                                     // 3 byte encoding
                                     chd = unchecked((sbyte)0xE0) | (ch >> 12);
@@ -177,7 +184,7 @@ namespace SpanJson.Internal
                                 {
                                     // 4 byte encoding - high surrogate + low surrogate
                                     // if (!IsHighSurrogate(ch))
-                                    if (ch > JsonSharedConstant.HighSurrogateEnd)
+                                    if (ch > HighSurrogateEnd)
                                     {
                                         // low without high -> bad
                                         goto InvalidData;
@@ -186,7 +193,7 @@ namespace SpanJson.Internal
                                     chd = *pSrc;
 
                                     // if (!IsLowSurrogate(chd)) {
-                                    if (!JsonHelpers.IsInRangeInclusive(chd, JsonSharedConstant.LowSurrogateStart, JsonSharedConstant.LowSurrogateEnd))
+                                    if (!UnicodeUtility.IsInRangeInclusive(chd, LowSurrogateStart, LowSurrogateEnd))
                                     {
                                         // high not followed by low -> bad
                                         goto InvalidData;
@@ -196,8 +203,8 @@ namespace SpanJson.Internal
 
                                     ch = chd + (ch << 10) +
                                         (0x10000
-                                        - JsonSharedConstant.LowSurrogateStart
-                                        - (JsonSharedConstant.HighSurrogateStart << 10));
+                                        - LowSurrogateStart
+                                        - (HighSurrogateStart << 10));
 
                                     *pTarget = (byte)(unchecked((sbyte)0xF0) | (ch >> 18));
                                     // pStop - this byte is compensated by the second surrogate character
@@ -257,7 +264,7 @@ namespace SpanJson.Internal
                         else
                         {
                             // if (!IsLowSurrogate(ch) && !IsHighSurrogate(ch))
-                            if (!JsonHelpers.IsInRangeInclusive(ch, JsonSharedConstant.HighSurrogateStart, JsonSharedConstant.LowSurrogateEnd))
+                            if (!UnicodeUtility.IsInRangeInclusive(ch, HighSurrogateStart, LowSurrogateEnd))
                             {
                                 if (pAllocatedBufferEnd - pTarget <= 2)
                                     goto DestinationFull;
@@ -272,7 +279,7 @@ namespace SpanJson.Internal
 
                                 // 4 byte encoding - high surrogate + low surrogate
                                 // if (!IsHighSurrogate(ch))
-                                if (ch > JsonSharedConstant.HighSurrogateEnd)
+                                if (ch > HighSurrogateEnd)
                                 {
                                     // low without high -> bad
                                     goto InvalidData;
@@ -284,7 +291,7 @@ namespace SpanJson.Internal
                                 chd = *pSrc;
 
                                 // if (!IsLowSurrogate(chd)) {
-                                if (!JsonHelpers.IsInRangeInclusive(chd, JsonSharedConstant.LowSurrogateStart, JsonSharedConstant.LowSurrogateEnd))
+                                if (!UnicodeUtility.IsInRangeInclusive(chd, LowSurrogateStart, LowSurrogateEnd))
                                 {
                                     // high not followed by low -> bad
                                     goto InvalidData;
@@ -294,8 +301,8 @@ namespace SpanJson.Internal
 
                                 ch = chd + (ch << 10) +
                                     (0x10000
-                                    - JsonSharedConstant.LowSurrogateStart
-                                    - (JsonSharedConstant.HighSurrogateStart << 10));
+                                    - LowSurrogateStart
+                                    - (HighSurrogateStart << 10));
 
                                 *pTarget = (byte)(unchecked((sbyte)0xF0) | (ch >> 18));
                                 pTarget++;
@@ -400,4 +407,5 @@ namespace SpanJson.Internal
         }
     }
 }
+
 #endif

@@ -41,7 +41,7 @@ namespace SpanJson
         private JsonEncodedText(string value)
         {
             Debug.Assert(value is object);
-
+            
             _value = value;
             _utf8Value = TextEncodings.UTF8NoBOM.GetBytes(value);
         }

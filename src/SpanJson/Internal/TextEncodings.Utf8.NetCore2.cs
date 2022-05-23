@@ -1,4 +1,5 @@
-﻿#if !(NETCOREAPP3_0_OR_GREATER || NET)
+﻿#if !(NET || NETCOREAPP3_0_OR_GREATER)
+
 namespace SpanJson.Internal
 {
     using System;
@@ -11,7 +12,7 @@ namespace SpanJson.Internal
     {
         public static partial class Utf8
         {
-            // borrowed from https://github.com/dotnet/corefxlab/tree/master/src/System.Text.Primitives/System/Text/Encoders
+            // Largely based from https://github.com/dotnet/corefxlab/tree/master/src/System.Text.Primitives/System/Text/Encoders
 
             /// <summary>Converts a span containing a sequence of UTF-8 bytes into UTF-16 bytes.
             ///
@@ -105,17 +106,20 @@ namespace SpanJson.Internal
                                     goto LongCodeWithMask16;
 
                                 // Unfortunately, endianness sensitive
-#if BIGENDIAN
-                                *pDst = (char)((ch >> 8) & 0x7F);
-                                pSrc += 2;
-                                *(pDst + 1) = (char)(ch & 0x7F);
-                                pDst += 2;
-#else // BIGENDIAN
-                                *pDst = (char)(ch & 0x7F);
-                                pSrc += 2;
-                                *(pDst + 1) = (char)((ch >> 8) & 0x7F);
-                                pDst += 2;
-#endif // BIGENDIAN
+                                if (!BitConverter.IsLittleEndian)
+                                {
+                                    *pDst = (char)((ch >> 8) & 0x7F);
+                                    pSrc += 2;
+                                    *(pDst + 1) = (char)(ch & 0x7F);
+                                    pDst += 2;
+                                }
+                                else
+                                {
+                                    *pDst = (char)(ch & 0x7F);
+                                    pSrc += 2;
+                                    *(pDst + 1) = (char)((ch >> 8) & 0x7F);
+                                    pDst += 2;
+                                }
                             }
 
                             // Run 8 characters at a time!
@@ -127,44 +131,51 @@ namespace SpanJson.Internal
                                     goto LongCodeWithMask32;
 
                                 // Unfortunately, endianness sensitive
-#if BIGENDIAN
-                                *pDst = (char)((ch >> 24) & 0x7F);
-                                *(pDst+1) = (char)((ch >> 16) & 0x7F);
-                                *(pDst+2) = (char)((ch >> 8) & 0x7F);
-                                *(pDst+3) = (char)(ch & 0x7F);
-                                pSrc += 8;
-                                *(pDst+4) = (char)((chb >> 24) & 0x7F);
-                                *(pDst+5) = (char)((chb >> 16) & 0x7F);
-                                *(pDst+6) = (char)((chb >> 8) & 0x7F);
-                                *(pDst+7) = (char)(chb & 0x7F);
-                                pDst += 8;
-#else // BIGENDIAN
-                                *pDst = (char)(ch & 0x7F);
-                                *(pDst + 1) = (char)((ch >> 8) & 0x7F);
-                                *(pDst + 2) = (char)((ch >> 16) & 0x7F);
-                                *(pDst + 3) = (char)((ch >> 24) & 0x7F);
-                                pSrc += 8;
-                                *(pDst + 4) = (char)(chb & 0x7F);
-                                *(pDst + 5) = (char)((chb >> 8) & 0x7F);
-                                *(pDst + 6) = (char)((chb >> 16) & 0x7F);
-                                *(pDst + 7) = (char)((chb >> 24) & 0x7F);
-                                pDst += 8;
-#endif // BIGENDIAN
+                                if (!BitConverter.IsLittleEndian)
+                                {
+                                    *pDst = (char)((ch >> 24) & 0x7F);
+                                    *(pDst+1) = (char)((ch >> 16) & 0x7F);
+                                    *(pDst+2) = (char)((ch >> 8) & 0x7F);
+                                    *(pDst+3) = (char)(ch & 0x7F);
+                                    pSrc += 8;
+                                    *(pDst+4) = (char)((chb >> 24) & 0x7F);
+                                    *(pDst+5) = (char)((chb >> 16) & 0x7F);
+                                    *(pDst+6) = (char)((chb >> 8) & 0x7F);
+                                    *(pDst+7) = (char)(chb & 0x7F);
+                                    pDst += 8;
+                                }
+                                else
+                                {
+                                    *pDst = (char)(ch & 0x7F);
+                                    *(pDst + 1) = (char)((ch >> 8) & 0x7F);
+                                    *(pDst + 2) = (char)((ch >> 16) & 0x7F);
+                                    *(pDst + 3) = (char)((ch >> 24) & 0x7F);
+                                    pSrc += 8;
+                                    *(pDst + 4) = (char)(chb & 0x7F);
+                                    *(pDst + 5) = (char)((chb >> 8) & 0x7F);
+                                    *(pDst + 6) = (char)((chb >> 16) & 0x7F);
+                                    *(pDst + 7) = (char)((chb >> 24) & 0x7F);
+                                    pDst += 8;
+                                }
                             }
 
                             break;
 
-#if BIGENDIAN
-                            LongCodeWithMask32:
+                        LongCodeWithMask32:
+                            if (!BitConverter.IsLittleEndian)
+                            {
                                 // be careful about the sign extension
                                 ch = (int)(((uint)ch) >> 16);
-                            LongCodeWithMask16:
-                                ch = (int)(((uint)ch) >> 8);
-#else // BIGENDIAN
-                        LongCodeWithMask32:
+                            }
                         LongCodeWithMask16:
-                            ch &= 0xFF;
-#endif // BIGENDIAN
+                            if (!BitConverter.IsLittleEndian)
+                            {
+                                ch = (int)(((uint)ch) >> 8);
+                            }
+                            else
+                            {
+                                ch &= 0xFF;
+                            }
                             pSrc++;
                             if (ch <= 0x7F)
                             {
@@ -197,7 +208,7 @@ namespace SpanJson.Internal
 
                                     // Bit 4 should be zero + the surrogate should be in the range 0x000000 - 0x10FFFF
                                     // and the trailing byte should be 10vvvvvv
-                                    if (!JsonHelpers.IsInRangeInclusive(chc >> 4, 0x01, 0x10) || (ch & unchecked((sbyte)0xC0)) != 0x80)
+                                    if (!UnicodeUtility.IsInRangeInclusive(chc >> 4, 0x01, 0x10) || (ch & unchecked((sbyte)0xC0)) != 0x80)
                                         goto InvalidData;
 
                                     // Merge 3rd byte then read the last byte
@@ -211,10 +222,10 @@ namespace SpanJson.Internal
                                     pSrc += 2;
                                     ch = (chc << 6) | (ch & 0x3F);
 
-                                    *pDst = (char)(((ch >> 10) & 0x7FF) + unchecked((short)(JsonSharedConstant.HighSurrogateStart - (0x10000 >> 10))));
+                                    *pDst = (char)(((ch >> 10) & 0x7FF) + unchecked((short)(HighSurrogateStart - (0x10000 >> 10))));
                                     pDst++;
 
-                                    ch = (ch & 0x3FF) + unchecked((short)(JsonSharedConstant.LowSurrogateStart));
+                                    ch = (ch & 0x3FF) + unchecked((short)(LowSurrogateStart));
                                 }
                                 else
                                 {
@@ -299,7 +310,7 @@ namespace SpanJson.Internal
 
                                 // Bit 4 should be zero + the surrogate should be in the range 0x000000 - 0x10FFFF
                                 // and the trailing byte should be 10vvvvvv
-                                if (!JsonHelpers.IsInRangeInclusive(chd >> 4, 0x01, 0x10) || (ch & unchecked((sbyte)0xC0)) != 0x80)
+                                if (!UnicodeUtility.IsInRangeInclusive(chd >> 4, 0x01, 0x10) || (ch & unchecked((sbyte)0xC0)) != 0x80)
                                     goto InvalidData;
 
                                 // Merge 3rd byte then read the last byte
@@ -317,10 +328,10 @@ namespace SpanJson.Internal
                                 pSrc += 2;
                                 ch = (chd << 6) | (ch & 0x3F);
 
-                                *pDst = (char)(((ch >> 10) & 0x7FF) + unchecked((short)(JsonSharedConstant.HighSurrogateStart - (0x10000 >> 10))));
+                                *pDst = (char)(((ch >> 10) & 0x7FF) + unchecked((short)(HighSurrogateStart - (0x10000 >> 10))));
                                 pDst++;
 
-                                ch = (ch & 0x3FF) + unchecked((short)(JsonSharedConstant.LowSurrogateStart));
+                                ch = (ch & 0x3FF) + unchecked((short)(LowSurrogateStart));
                             }
                             else
                             {
@@ -445,4 +456,5 @@ namespace SpanJson.Internal
         }
     }
 }
+
 #endif
