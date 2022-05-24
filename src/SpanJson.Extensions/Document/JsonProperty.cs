@@ -13,6 +13,14 @@ namespace SpanJson.Document
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public readonly struct JsonProperty
     {
+        private readonly string _name;
+
+        internal JsonProperty(JsonElement value, string name = null)
+        {
+            Value = value;
+            _name = name;
+        }
+
         /// <summary>
         ///   The value of this property.
         /// </summary>
@@ -40,15 +48,10 @@ namespace SpanJson.Document
         /// </exception>
         public ReadOnlyMemory<byte> RawMemory => Value.GetPropertyRawValue();
 
-        internal JsonProperty(JsonElement value)
-        {
-            Value = value;
-        }
-
         /// <summary>
         ///   The name of this property.
         /// </summary>
-        public string Name => Value.GetPropertyName();
+        public string Name => _name ?? Value.GetPropertyName();
 
         /// <summary>
         ///   Compares <paramref name="text" /> to the name of this property.
@@ -87,7 +90,7 @@ namespace SpanJson.Document
         /// </remarks>
         public bool NameEquals(in ReadOnlySpan<byte> utf8Text)
         {
-            return Value.TextEqualsHelper(utf8Text, isPropertyName: true);
+            return Value.TextEqualsHelper(utf8Text, isPropertyName: true, shouldUnescape: true);
         }
 
         /// <summary>
@@ -108,6 +111,11 @@ namespace SpanJson.Document
         public bool NameEquals(in ReadOnlySpan<char> text)
         {
             return Value.TextEqualsHelper(text, isPropertyName: true);
+        }
+
+        internal bool EscapedNameEquals(ReadOnlySpan<byte> utf8Text)
+        {
+            return Value.TextEqualsHelper(utf8Text, isPropertyName: true, shouldUnescape: false);
         }
 
         /// <summary>

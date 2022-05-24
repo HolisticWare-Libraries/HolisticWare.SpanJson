@@ -223,7 +223,7 @@ namespace SpanJson.Linq
             // the item already has a parent
             // the item is being added to itself
             // the item is being added to the root parent of itself
-            if (item.Parent is object || item == this || (item.HasValues && Root == item))
+            if (item.Parent is not null || item == this || (item.HasValues && Root == item))
             {
                 item = item.CloneToken();
             }
@@ -255,24 +255,24 @@ namespace SpanJson.Linq
             item.Parent = this;
 
             item.Previous = previous;
-            if (previous is object)
+            if (previous is not null)
             {
                 previous.Next = item;
             }
 
             item.Next = next;
-            if (next is object)
+            if (next is not null)
             {
                 next.Previous = item;
             }
 
             children.Insert(index, item);
 
-            if (_listChanged is object)
+            if (_listChanged is not null)
             {
                 OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, index));
             }
-            if (_collectionChanged is object)
+            if (_collectionChanged is not null)
             {
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
             }
@@ -297,11 +297,11 @@ namespace SpanJson.Linq
             JToken previous = (0u >= (uint)index) ? null : children[index - 1];
             JToken next = (index == children.Count - 1) ? null : children[index + 1];
 
-            if (previous is object)
+            if (previous is not null)
             {
                 previous.Next = next;
             }
-            if (next is object)
+            if (next is not null)
             {
                 next.Previous = previous;
             }
@@ -312,11 +312,11 @@ namespace SpanJson.Linq
 
             children.RemoveAt(index);
 
-            if (_listChanged is object)
+            if (_listChanged is not null)
             {
                 OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index));
             }
-            if (_collectionChanged is object)
+            if (_collectionChanged is not null)
             {
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index));
             }
@@ -324,7 +324,7 @@ namespace SpanJson.Linq
 
         internal virtual bool RemoveItem(JToken item)
         {
-            if (item is object)
+            if (item is not null)
             {
                 int index = IndexOfItem(item);
                 if (index >= 0)
@@ -371,13 +371,13 @@ namespace SpanJson.Linq
             item.Parent = this;
 
             item.Previous = previous;
-            if (previous is object)
+            if (previous is not null)
             {
                 previous.Next = item;
             }
 
             item.Next = next;
-            if (next is object)
+            if (next is not null)
             {
                 next.Previous = item;
             }
@@ -388,11 +388,11 @@ namespace SpanJson.Linq
             existing.Previous = null;
             existing.Next = null;
 
-            if (_listChanged is object)
+            if (_listChanged is not null)
             {
                 OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
             }
-            if (_collectionChanged is object)
+            if (_collectionChanged is not null)
             {
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, item, existing, index));
             }
@@ -413,11 +413,11 @@ namespace SpanJson.Linq
 
             children.Clear();
 
-            if (_listChanged is object)
+            if (_listChanged is not null)
             {
                 OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
             }
-            if (_collectionChanged is object)
+            if (_collectionChanged is not null)
             {
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
@@ -629,7 +629,7 @@ namespace SpanJson.Linq
                             }
                             else
                             {
-                                if (targetItem is object)
+                                if (targetItem is not null)
                                 {
                                     JToken contentValue = CreateFromContent(targetItem);
                                     if (contentValue.Type != JTokenType.Null)

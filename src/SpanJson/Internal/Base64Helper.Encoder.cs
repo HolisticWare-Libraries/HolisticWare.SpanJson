@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 
 namespace SpanJson.Internal
 {
-    public static partial class Base64Helper
+    partial class Base64Helper
     {
         private const int base64LineBreakPosition = 76;
 

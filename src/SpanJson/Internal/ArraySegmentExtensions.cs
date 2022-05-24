@@ -16,7 +16,7 @@ namespace SpanJson.Internal
         public static bool NonEmpty<T>(this in ArraySegment<T> segment)
         {
             var array = segment.Array;
-            return array is object && (uint)array.Length > 0u ? true : false;
+            return array is not null && (uint)array.Length > 0u ? true : false;
         }
 
 #if NETSTANDARD2_0 || NET471 || NET451

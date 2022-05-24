@@ -28,10 +28,8 @@ namespace SpanJson
         /// The property name should already be escaped when the instance of <see cref="JsonEncodedText"/> was created.
         /// </remarks>
         public void WriteString(in JsonEncodedText propertyName, DateTime value)
-            => WriteStringHelper(propertyName.EncodedUtf8Bytes, value);
-
-        private void WriteStringHelper(in ReadOnlySpan<byte> utf8PropertyName, DateTime value)
         {
+            ReadOnlySpan<byte> utf8PropertyName = propertyName.EncodedUtf8Bytes;
             Debug.Assert(utf8PropertyName.Length <= JsonSharedConstant.MaxUnescapedTokenSize);
 
             WriteStringByOptions(utf8PropertyName, value);
@@ -155,8 +153,8 @@ namespace SpanJson
 
             int length = EscapingHelper.GetMaxEscapedLength(propertyName.Length, firstEscapeIndexProp);
 
-            Span<char> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc char[length] :
+            Span<char> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocCharThresholdU ?
+                stackalloc char[JsonSharedConstant.StackallocCharThreshold] :
                 (propertyArray = ArrayPool<char>.Shared.Rent(length));
 
             EscapingHelper.EscapeString(propertyName, escapedPropertyName, _options.EscapeHandling, firstEscapeIndexProp, _options.Encoder, out int written);
@@ -170,7 +168,7 @@ namespace SpanJson
             }
 #endif
 
-            if (propertyArray is object)
+            if (propertyArray is not null)
             {
                 ArrayPool<char>.Shared.Return(propertyArray);
             }
@@ -185,8 +183,8 @@ namespace SpanJson
 
             int length = EscapingHelper.GetMaxEscapedLength(utf8PropertyName.Length, firstEscapeIndexProp);
 
-            Span<byte> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc byte[length] :
+            Span<byte> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocByteThresholdU ?
+                stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (propertyArray = ArrayPool<byte>.Shared.Rent(length));
 
             EscapingHelper.EscapeString(utf8PropertyName, escapedPropertyName, _options.EscapeHandling, firstEscapeIndexProp, _options.Encoder, out int written);
@@ -200,7 +198,7 @@ namespace SpanJson
             }
 #endif
 
-            if (propertyArray is object)
+            if (propertyArray is not null)
             {
                 ArrayPool<byte>.Shared.Return(propertyArray);
             }
@@ -258,12 +256,7 @@ namespace SpanJson
 
             Unsafe.Add(ref output, pos++) = JsonUtf8Constant.DoubleQuote;
 
-            Span<byte> tempSpan = stackalloc byte[JsonSharedConstant.MaximumFormatDateTimeOffsetLength];
-            bool result = Utf8Formatter.TryFormat(value, tempSpan, out int bytesWritten, s_dateTimeStandardFormat);
-            Debug.Assert(result);
-            DateTimeFormatter.TrimDateTimeOffset(tempSpan.Slice(0, bytesWritten), out bytesWritten);
-            BinaryUtil.CopyMemory(ref MemoryMarshal.GetReference(tempSpan), ref Unsafe.Add(ref output, pos), bytesWritten);
-            pos += bytesWritten;
+            DateTimeFormatter.WriteDateTimeTrimmed(ref output, ref pos, value);
 
             Unsafe.Add(ref output, pos++) = JsonUtf8Constant.DoubleQuote;
         }
@@ -295,12 +288,7 @@ namespace SpanJson
 
             Unsafe.Add(ref output, pos++) = JsonUtf8Constant.DoubleQuote;
 
-            Span<byte> tempSpan = stackalloc byte[JsonSharedConstant.MaximumFormatDateTimeOffsetLength];
-            bool result = Utf8Formatter.TryFormat(value, tempSpan, out int bytesWritten, s_dateTimeStandardFormat);
-            Debug.Assert(result);
-            DateTimeFormatter.TrimDateTimeOffset(tempSpan.Slice(0, bytesWritten), out bytesWritten);
-            BinaryUtil.CopyMemory(ref MemoryMarshal.GetReference(tempSpan), ref Unsafe.Add(ref output, pos), bytesWritten);
-            pos += bytesWritten;
+            DateTimeFormatter.WriteDateTimeTrimmed(ref output, ref pos, value);
 
             Unsafe.Add(ref output, pos++) = JsonUtf8Constant.DoubleQuote;
         }
@@ -345,12 +333,7 @@ namespace SpanJson
 
             Unsafe.Add(ref output, pos++) = JsonUtf8Constant.DoubleQuote;
 
-            Span<byte> tempSpan = stackalloc byte[JsonSharedConstant.MaximumFormatDateTimeOffsetLength];
-            bool result = Utf8Formatter.TryFormat(value, tempSpan, out int bytesWritten, s_dateTimeStandardFormat);
-            Debug.Assert(result);
-            DateTimeFormatter.TrimDateTimeOffset(tempSpan.Slice(0, bytesWritten), out bytesWritten);
-            BinaryUtil.CopyMemory(ref MemoryMarshal.GetReference(tempSpan), ref Unsafe.Add(ref output, pos), bytesWritten);
-            pos += bytesWritten;
+            DateTimeFormatter.WriteDateTimeTrimmed(ref output, ref pos, value);
 
             Unsafe.Add(ref output, pos++) = JsonUtf8Constant.DoubleQuote;
         }
@@ -395,14 +378,22 @@ namespace SpanJson
 
             Unsafe.Add(ref output, pos++) = JsonUtf8Constant.DoubleQuote;
 
-            Span<byte> tempSpan = stackalloc byte[JsonSharedConstant.MaximumFormatDateTimeOffsetLength];
-            bool result = Utf8Formatter.TryFormat(value, tempSpan, out int bytesWritten, s_dateTimeStandardFormat);
-            Debug.Assert(result);
-            DateTimeFormatter.TrimDateTimeOffset(tempSpan.Slice(0, bytesWritten), out bytesWritten);
-            BinaryUtil.CopyMemory(ref MemoryMarshal.GetReference(tempSpan), ref Unsafe.Add(ref output, pos), bytesWritten);
-            pos += bytesWritten;
+            DateTimeFormatter.WriteDateTimeTrimmed(ref output, ref pos, value);
 
             Unsafe.Add(ref output, pos++) = JsonUtf8Constant.DoubleQuote;
+        }
+
+        internal void WritePropertyName(DateTime value)
+        {
+            Span<byte> buffer;
+            unsafe
+            {
+                // Cannot create a span directly since it gets assigned to parameter and passed down.
+                byte* ptr = stackalloc byte[JsonSharedConstant.MaximumFormatDateTimeOffsetLength];
+                buffer = new Span<byte>(ptr, JsonSharedConstant.MaximumFormatDateTimeOffsetLength);
+            }
+            DateTimeFormatter.WriteDateTimeTrimmed(buffer, value, out int bytesWritten);
+            WritePropertyNameUnescaped(buffer.Slice(0, bytesWritten));
         }
     }
 }

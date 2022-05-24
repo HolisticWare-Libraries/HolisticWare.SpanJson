@@ -40,7 +40,7 @@ namespace SpanJson.Linq
         /// <param name="propertyName">Name of the property.</param>
         protected virtual void OnPropertyChanged(string propertyName)
         {
-            if (_dynamicJson is object) { _dynamicJson = null; }
+            if (_dynamicJson is not null) { _dynamicJson = null; }
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
@@ -54,11 +54,11 @@ namespace SpanJson.Linq
         internal void InternalPropertyChanged(JProperty childProperty)
         {
             OnPropertyChanged(childProperty.Name);
-            if (_listChanged is object)
+            if (_listChanged is not null)
             {
                 OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, IndexOfItem(childProperty)));
             }
-            if (_collectionChanged is object)
+            if (_collectionChanged is not null)
             {
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, childProperty, childProperty, IndexOfItem(childProperty)));
             }

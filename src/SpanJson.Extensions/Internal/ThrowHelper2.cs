@@ -125,6 +125,17 @@ namespace SpanJson
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
+        internal static void ThrowArgumentException_ExpectedJsonTokens()
+        {
+            throw GetArgumentException();
+
+            static ArgumentException GetArgumentException()
+            {
+                return new ArgumentException("The input does not contain any JSON tokens. Expected the input to start with a valid JSON token, when isFinalBlock is true.");
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException_The_number_of_elements()
         {
             throw GetArgumentException();
@@ -563,8 +574,8 @@ namespace SpanJson
             JsonException GetJsonException()
             {
                 return new JsonException(string.Format(CultureInfo.InvariantCulture, "Array slice of {0} to {1} returned no results.",
-                    start is object ? start.GetValueOrDefault().ToString(CultureInfo.InvariantCulture) : "*",
-                    end is object ? end.GetValueOrDefault().ToString(CultureInfo.InvariantCulture) : "*"));
+                    start is not null ? start.GetValueOrDefault().ToString(CultureInfo.InvariantCulture) : "*",
+                    end is not null ? end.GetValueOrDefault().ToString(CultureInfo.InvariantCulture) : "*"));
             }
         }
 

@@ -290,7 +290,7 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static DateTime ParseUtf8DateTime(in ReadOnlySpan<byte> span, int pos)
         {
-            if (JsonReaderHelper.TryParseAsISO(span, out DateTime value))
+            if (JsonHelpers.TryParseAsISO(span, out DateTime value))
             {
                 return value;
             }
@@ -302,13 +302,13 @@ namespace SpanJson
         private static DateTime ParseUtf8DateTimeAllocating(in ReadOnlySpan<byte> input, int backslashIdx, int pos)
         {
             byte[] unescapedArray = null;
-            Span<byte> utf8Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc byte[input.Length] :
+            Span<byte> utf8Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocByteThresholdU ?
+                stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (unescapedArray = ArrayPool<byte>.Shared.Rent(input.Length));
             try
             {
                 JsonReaderHelper.Unescape(input, utf8Unescaped, backslashIdx, out var written);
-                if (JsonReaderHelper.TryParseAsISO(utf8Unescaped.Slice(0, written), out DateTime value))
+                if (JsonHelpers.TryParseAsISO(utf8Unescaped.Slice(0, written), out DateTime value))
                 {
                     return value;
                 }
@@ -317,7 +317,7 @@ namespace SpanJson
             }
             finally
             {
-                if (unescapedArray is object) { ArrayPool<byte>.Shared.Return(unescapedArray); }
+                if (unescapedArray is not null) { ArrayPool<byte>.Shared.Return(unescapedArray); }
             }
         }
 
@@ -333,7 +333,7 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static DateTimeOffset ParseUtf8DateTimeOffset(in ReadOnlySpan<byte> span, int pos)
         {
-            if (JsonReaderHelper.TryParseAsISO(span, out DateTimeOffset value))
+            if (JsonHelpers.TryParseAsISO(span, out DateTimeOffset value))
             {
                 return value;
             }
@@ -345,13 +345,13 @@ namespace SpanJson
         private static DateTimeOffset ParseUtf8DateTimeOffsetAllocating(in ReadOnlySpan<byte> input, int backslashIdx, int pos)
         {
             byte[] unescapedArray = null;
-            Span<byte> utf8Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc byte[input.Length] :
+            Span<byte> utf8Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocByteThresholdU ?
+                stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (unescapedArray = ArrayPool<byte>.Shared.Rent(input.Length));
             try
             {
                 JsonReaderHelper.Unescape(input, utf8Unescaped, backslashIdx, out var written);
-                if (JsonReaderHelper.TryParseAsISO(utf8Unescaped.Slice(0, written), out DateTimeOffset value))
+                if (JsonHelpers.TryParseAsISO(utf8Unescaped.Slice(0, written), out DateTimeOffset value))
                 {
                     return value;
                 }
@@ -360,7 +360,7 @@ namespace SpanJson
             }
             finally
             {
-                if (unescapedArray is object) { ArrayPool<byte>.Shared.Return(unescapedArray); }
+                if (unescapedArray is not null) { ArrayPool<byte>.Shared.Return(unescapedArray); }
             }
         }
 
@@ -388,8 +388,8 @@ namespace SpanJson
         private static TimeSpan ParseUtf8TimeSpanAllocating(in ReadOnlySpan<byte> input, int backslashIdx, int pos)
         {
             byte[] unescapedArray = null;
-            Span<byte> utf8Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc byte[input.Length] :
+            Span<byte> utf8Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocByteThresholdU ?
+                stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (unescapedArray = ArrayPool<byte>.Shared.Rent(input.Length));
             try
             {
@@ -403,7 +403,7 @@ namespace SpanJson
             }
             finally
             {
-                if (unescapedArray is object) { ArrayPool<byte>.Shared.Return(unescapedArray); }
+                if (unescapedArray is not null) { ArrayPool<byte>.Shared.Return(unescapedArray); }
             }
         }
 
@@ -431,8 +431,8 @@ namespace SpanJson
         private static Guid ParseUtf8GuidAllocating(in ReadOnlySpan<byte> input, int backslashIdx, int pos)
         {
             byte[] unescapedArray = null;
-            Span<byte> utf8Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc byte[input.Length] :
+            Span<byte> utf8Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocByteThresholdU ?
+                stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (unescapedArray = ArrayPool<byte>.Shared.Rent(input.Length));
             try
             {
@@ -446,7 +446,7 @@ namespace SpanJson
             }
             finally
             {
-                if (unescapedArray is object) { ArrayPool<byte>.Shared.Return(unescapedArray); }
+                if (unescapedArray is not null) { ArrayPool<byte>.Shared.Return(unescapedArray); }
             }
         }
 
@@ -478,8 +478,8 @@ namespace SpanJson
         private static CombGuid ParseUtf8CombGuidAllocating(in ReadOnlySpan<byte> input, int backslashIdx, int pos)
         {
             byte[] unescapedArray = null;
-            Span<byte> utf8Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc byte[input.Length] :
+            Span<byte> utf8Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocByteThresholdU ?
+                stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (unescapedArray = ArrayPool<byte>.Shared.Rent(input.Length));
             try
             {
@@ -497,7 +497,7 @@ namespace SpanJson
             }
             finally
             {
-                if (unescapedArray is object) { ArrayPool<byte>.Shared.Return(unescapedArray); }
+                if (unescapedArray is not null) { ArrayPool<byte>.Shared.Return(unescapedArray); }
             }
         }
 
@@ -1311,7 +1311,7 @@ namespace SpanJson
                         }
                         finally
                         {
-                            if (temp is object)
+                            if (temp is not null)
                             {
                                 ArrayPool<object>.Shared.Return(temp);
                             }

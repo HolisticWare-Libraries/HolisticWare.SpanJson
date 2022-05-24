@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace SpanJson.Internal
 {
-    public static partial class JsonHelpers
+    internal static partial class JsonHelpers
     {
 #if NETSTANDARD2_0 || NET471 || NET451
 
@@ -130,6 +130,57 @@ namespace SpanJson.Internal
         /// Otherwise, returns <see langword="false"/>.
         /// </summary>
         public static bool IsDigit(char value) => (uint)(value - '0') <= '9' - '0';
+
+        /// <summary>
+        /// Emulates Dictionary(IEnumerable{KeyValuePair}) on netstandard.
+        /// </summary>
+        public static Dictionary<TKey, TValue> CreateDictionaryFromCollection<TKey, TValue>(
+            IEnumerable<KeyValuePair<TKey, TValue>> collection,
+            IEqualityComparer<TKey> comparer)
+            where TKey : notnull
+        {
+#if NETSTANDARD2_0 || NETFRAMEWORK
+            var dictionary = new Dictionary<TKey, TValue>(comparer);
+
+            foreach (KeyValuePair<TKey, TValue> item in collection)
+            {
+                dictionary.Add(item.Key, item.Value);
+            }
+
+            return dictionary;
+#else
+            return new Dictionary<TKey, TValue>(collection: collection, comparer);
+#endif
+        }
+
+        [MethodImpl(InlineMethod.AggressiveOptimization)]
+        public static bool IsFinite(double value)
+        {
+#if NETSTANDARD2_0 || NET471 || NET451
+            return !(double.IsNaN(value) || double.IsInfinity(value));
+#else
+            return double.IsFinite(value);
+#endif
+        }
+
+        [MethodImpl(InlineMethod.AggressiveOptimization)]
+        public static bool IsFinite(float value)
+        {
+#if NETSTANDARD2_0 || NET471 || NET451
+            return !(float.IsNaN(value) || float.IsInfinity(value));
+#else
+            return float.IsFinite(value);
+#endif
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ValidateInt32MaxArrayLength(uint length)
+        {
+            if (length > 0X7FEFFFFF) // prior to .NET 6, max array length for sizeof(T) != 1 (size == 1 is larger)
+            {
+                ThrowHelper.ThrowOutOfMemoryException(length);
+            }
+        }
 
         /// <summary>
         /// Emulates Dictionary.TryAdd on netstandard.

@@ -257,8 +257,8 @@ namespace SpanJson.Internal
                 var length = GetMaxEscapedLength(source.Length, firstEscapeIndex);
                 try
                 {
-                    Span<char> escapedName = (uint)length <= JsonSharedConstant.StackallocThreshold ?
-                        stackalloc char[length] :
+                    Span<char> escapedName = (uint)length <= JsonSharedConstant.StackallocCharThresholdU ?
+                        stackalloc char[JsonSharedConstant.StackallocCharThreshold] :
                         (tempArray = ArrayPool<char>.Shared.Rent(length));
                     EscapeString(source, escapedName, escapeHandling, firstEscapeIndex, encoder, out int written);
 
@@ -266,12 +266,12 @@ namespace SpanJson.Internal
                 }
                 finally
                 {
-                    if (tempArray is object) { ArrayPool<char>.Shared.Return(tempArray); }
+                    if (tempArray is not null) { ArrayPool<char>.Shared.Return(tempArray); }
                 }
             }
         }
 
-        public static string EscapeString(ReadOnlySpan<char> input, JsonEscapeHandling escapeHandling = JsonEscapeHandling.Default, JavaScriptEncoder encoder = null)
+        public static string EscapeString(in ReadOnlySpan<char> input, JsonEscapeHandling escapeHandling = JsonEscapeHandling.Default, JavaScriptEncoder encoder = null)
         {
             if (input.IsEmpty) { return string.Empty; }
 
@@ -286,8 +286,8 @@ namespace SpanJson.Internal
                 var length = GetMaxEscapedLength(input.Length, firstEscapeIndex);
                 try
                 {
-                    Span<char> escapedName = (uint)length <= JsonSharedConstant.StackallocThreshold ?
-                        stackalloc char[length] :
+                    Span<char> escapedName = (uint)length <= JsonSharedConstant.StackallocCharThresholdU ?
+                        stackalloc char[JsonSharedConstant.StackallocCharThreshold] :
                         (tempArray = ArrayPool<char>.Shared.Rent(length));
                     EscapeString(input, escapedName, escapeHandling, firstEscapeIndex, encoder, out int written);
 
@@ -295,7 +295,7 @@ namespace SpanJson.Internal
                 }
                 finally
                 {
-                    if (tempArray is object) { ArrayPool<char>.Shared.Return(tempArray); }
+                    if (tempArray is not null) { ArrayPool<char>.Shared.Return(tempArray); }
                 }
             }
         }
@@ -1546,10 +1546,10 @@ namespace SpanJson.Internal
         {
             Unsafe.Add(ref destSpace, pos++) = JsonUtf16Constant.ReverseSolidus;
             Unsafe.Add(ref destSpace, pos++) = 'u';
-            Unsafe.Add(ref destSpace, pos++) = (char)Int32LsbToHexDigit(toEscape >> 12);
-            Unsafe.Add(ref destSpace, pos++) = (char)Int32LsbToHexDigit((int)((toEscape >> 8) & 0xFU));
-            Unsafe.Add(ref destSpace, pos++) = (char)Int32LsbToHexDigit((int)((toEscape >> 4) & 0xFU));
-            Unsafe.Add(ref destSpace, pos++) = (char)Int32LsbToHexDigit((int)(toEscape & 0xFU));
+            Unsafe.Add(ref destSpace, pos++) = HexConverter.ToCharLower(toEscape >> 12);
+            Unsafe.Add(ref destSpace, pos++) = HexConverter.ToCharLower(toEscape >> 8);
+            Unsafe.Add(ref destSpace, pos++) = HexConverter.ToCharLower(toEscape >> 4);
+            Unsafe.Add(ref destSpace, pos++) = HexConverter.ToCharLower(toEscape);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1558,27 +1558,25 @@ namespace SpanJson.Internal
             var offset = (IntPtr)pos;
             Unsafe.AddByteOffset(ref destSpace, offset) = JsonUtf8Constant.ReverseSolidus;
             Unsafe.AddByteOffset(ref destSpace, offset + 1) = (byte)'u';
-            Unsafe.AddByteOffset(ref destSpace, offset + 2) = Int32LsbToHexDigit(toEscape >> 12);
-            Unsafe.AddByteOffset(ref destSpace, offset + 3) = Int32LsbToHexDigit((int)((toEscape >> 8) & 0xFU));
-            Unsafe.AddByteOffset(ref destSpace, offset + 4) = Int32LsbToHexDigit((int)((toEscape >> 4) & 0xFU));
-            Unsafe.AddByteOffset(ref destSpace, offset + 5) = Int32LsbToHexDigit((int)(toEscape & 0xFU));
+            Unsafe.AddByteOffset(ref destSpace, offset + 2) = ToCharLower(toEscape >> 12);
+            Unsafe.AddByteOffset(ref destSpace, offset + 3) = ToCharLower(toEscape >> 8);
+            Unsafe.AddByteOffset(ref destSpace, offset + 4) = ToCharLower(toEscape >> 4);
+            Unsafe.AddByteOffset(ref destSpace, offset + 5) = ToCharLower(toEscape);
             pos += 6;
         }
 
-        /// <summary>Converts a number 0 - 15 to its associated hex character '0' - 'f' as byte.</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static byte Int32LsbToHexDigit(int value)
+        private static byte ToCharLower(int value)
         {
-            Debug.Assert(value < 16);
-            return (byte)((value < 10) ? ('0' + value) : ('a' + (value - 10)));
-        }
+            value &= 0xF;
+            value += '0';
 
-        /// <summary>Converts a number 0 - 15 to its associated hex character '0' - 'F' as byte.</summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static byte Int32LsbToUpperHexDigit(int value)
-        {
-            Debug.Assert(value < 16);
-            return (byte)((value < 10) ? ('0' + value) : ('A' + (value - 10)));
+            if (value > '9')
+            {
+                value += ('a' - ('9' + 1));
+            }
+
+            return (byte)value;
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]

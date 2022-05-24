@@ -20,8 +20,8 @@ namespace SpanJson.Formatters
 
             byte[] valueArray = null;
 
-            Span<byte> utf8Json = (uint)maxRequired <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc byte[maxRequired] :
+            Span<byte> utf8Json = (uint)maxRequired <= JsonSharedConstant.StackallocByteThresholdU ?
+                stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (valueArray = ArrayPool<byte>.Shared.Rent(maxRequired));
             var written = TextEncodings.Utf8.GetBytes(utf16Json, utf8Json);
 
@@ -34,7 +34,7 @@ namespace SpanJson.Formatters
             writer.WriteUtf8Verbatim(MemoryMarshal.CreateReadOnlySpan(ref MemoryMarshal.GetReference(utf8Json), written));
 #endif
 
-            if (valueArray is object) { ArrayPool<byte>.Shared.Return(valueArray); }
+            if (valueArray is not null) { ArrayPool<byte>.Shared.Return(valueArray); }
         }
 
         public override void Serialize(ref JsonWriter<char> writer, SpanJsonDynamicUtf16String value, IJsonFormatterResolver<char> resolver)

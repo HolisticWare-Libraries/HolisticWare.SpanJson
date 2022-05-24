@@ -14,12 +14,12 @@ namespace SpanJson.Helpers
     {
         private static int GetSymbolSize<TSymbol>() where TSymbol : struct
         {
-            if ((uint)Unsafe.SizeOf<TSymbol>() == JsonSharedConstant.ByteSize)
+            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
             {
                 return sizeof(byte);
             }
 
-            if ((uint)Unsafe.SizeOf<TSymbol>() == JsonSharedConstant.CharSize)
+            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
             {
                 return sizeof(char);
             }
@@ -100,12 +100,12 @@ namespace SpanJson.Helpers
 
         private static int GetLength<TSymbol>(string name)
         {
-            if ((uint)Unsafe.SizeOf<TSymbol>() == JsonSharedConstant.ByteSize)
+            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
             {
                 return TextEncodings.UTF8NoBOM.GetByteCount(name);
             }
 
-            if ((uint)Unsafe.SizeOf<TSymbol>() == JsonSharedConstant.CharSize)
+            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
             {
                 return name.Length;
             }
@@ -171,12 +171,12 @@ namespace SpanJson.Helpers
 
         private static (ulong Key, Type intType, int offset) CalculateKey<TSymbol>(string memberName, int index)
         {
-            if ((uint)Unsafe.SizeOf<TSymbol>() == JsonSharedConstant.ByteSize)
+            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
             {
                 return CalculateKeyUtf8(memberName, index);
             }
 
-            if ((uint)Unsafe.SizeOf<TSymbol>() == JsonSharedConstant.CharSize)
+            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
             {
                 return CalculateKeyUtf16(memberName, index);
             }

@@ -201,7 +201,7 @@ namespace SpanJson.Linq
                     }
 
                     byte[] bytesA = objA as byte[];
-                    Debug.Assert(bytesA is object);
+                    Debug.Assert(bytesA is not null);
 
                     return bytesA.AsSpan().SequenceCompareTo(bytesB);
 

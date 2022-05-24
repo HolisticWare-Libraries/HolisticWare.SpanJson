@@ -1,10 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
 using System;
 using System.Buffers;
-using System.Buffers.Text;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -26,10 +24,8 @@ namespace SpanJson
         /// Writes the <see cref="float"/> using the default <see cref="StandardFormat"/> (that is, 'G').
         /// </remarks>
         public void WriteNumber(in JsonEncodedText propertyName, float value)
-            => WriteNumberHelper(propertyName.EncodedUtf8Bytes, value);
-
-        private void WriteNumberHelper(in ReadOnlySpan<byte> utf8PropertyName, float value)
         {
+            ReadOnlySpan<byte> utf8PropertyName = propertyName.EncodedUtf8Bytes;
             Debug.Assert(utf8PropertyName.Length <= JsonSharedConstant.MaxUnescapedTokenSize);
 
             JsonWriterHelper.ValidateSingle(value);
@@ -157,8 +153,8 @@ namespace SpanJson
 
             int length = EscapingHelper.GetMaxEscapedLength(propertyName.Length, firstEscapeIndexProp);
 
-            Span<char> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc char[length] :
+            Span<char> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocCharThresholdU ?
+                stackalloc char[JsonSharedConstant.StackallocCharThreshold] :
                 (propertyArray = ArrayPool<char>.Shared.Rent(length));
 
             EscapingHelper.EscapeString(propertyName, escapedPropertyName, _options.EscapeHandling, firstEscapeIndexProp, _options.Encoder, out int written);
@@ -172,7 +168,7 @@ namespace SpanJson
             }
 #endif
 
-            if (propertyArray is object)
+            if (propertyArray is not null)
             {
                 ArrayPool<char>.Shared.Return(propertyArray);
             }
@@ -187,8 +183,8 @@ namespace SpanJson
 
             int length = EscapingHelper.GetMaxEscapedLength(utf8PropertyName.Length, firstEscapeIndexProp);
 
-            Span<byte> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc byte[length] :
+            Span<byte> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocByteThresholdU ?
+                stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (propertyArray = ArrayPool<byte>.Shared.Rent(length));
 
             EscapingHelper.EscapeString(utf8PropertyName, escapedPropertyName, _options.EscapeHandling, firstEscapeIndexProp, _options.Encoder, out int written);
@@ -202,7 +198,7 @@ namespace SpanJson
             }
 #endif
 
-            if (propertyArray is object)
+            if (propertyArray is not null)
             {
                 ArrayPool<byte>.Shared.Return(propertyArray);
             }
@@ -379,6 +375,20 @@ namespace SpanJson
             bool result = TryFormatSingle(value, FreeSpan, out int bytesWritten);
             Debug.Assert(result);
             pos += bytesWritten;
+        }
+
+        internal void WritePropertyName(float value)
+        {
+            Span<byte> utf8PropertyName;
+            unsafe
+            {
+                // Cannot create a span directly since it gets assigned to parameter and passed down.
+                byte* ptr = stackalloc byte[JsonSharedConstant.MaximumFormatSingleLength];
+                utf8PropertyName = new Span<byte>(ptr, JsonSharedConstant.MaximumFormatSingleLength);
+            }
+            bool result = TryFormatSingle(value, utf8PropertyName, out int bytesWritten);
+            Debug.Assert(result);
+            WritePropertyNameUnescaped(utf8PropertyName.Slice(0, bytesWritten));
         }
     }
 }

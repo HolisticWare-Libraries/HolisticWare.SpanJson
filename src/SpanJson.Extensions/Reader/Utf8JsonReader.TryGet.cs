@@ -1,11 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
 using System;
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using SpanJson.Internal;
 
 namespace SpanJson
@@ -96,21 +96,21 @@ namespace SpanJson
         }
 
         /// <summary>
-        /// Parses the current JSON token value from the source and decodes the base 64 encoded JSON string as bytes.
+        /// Parses the current JSON token value from the source and decodes the Base64 encoded JSON string as bytes.
         /// </summary>
         /// <exception cref="InvalidOperationException">
         /// Thrown if trying to get the value of a JSON token that is not a <see cref="JsonTokenType.String"/>.
         /// <seealso cref="TokenType" />
         /// </exception>
         /// <exception cref="FormatException">
-        /// Thrown when the JSON string contains data outside of the expected base 64 range, or if it contains invalid/more than two padding characters,
+        /// The JSON string contains data outside of the expected Base64 range, or if it contains invalid/more than two padding characters,
         /// or is incomplete (i.e. the JSON string length is not a multiple of 4).
         /// </exception>
         public byte[] GetBytesFromBase64()
         {
             if (!TryGetBytesFromBase64(out byte[] value))
             {
-                throw SysJsonThrowHelper.GetFormatException(DateType.Base64String);
+                throw SysJsonThrowHelper.GetFormatException(DataType.Base64String);
             }
             return value;
         }
@@ -126,13 +126,23 @@ namespace SpanJson
         /// <seealso cref="TokenType" />
         /// </exception>
         /// <exception cref="FormatException">
-        /// Thrown if the JSON token value is either of incorrect numeric format (for example if it contains a decimal or 
-        /// is written in scientific notation) or, it represents a number less than <see cref="byte.MinValue"/> or greater 
+        /// Thrown if the JSON token value is either of incorrect numeric format (for example if it contains a decimal or
+        /// is written in scientific notation) or, it represents a number less than <see cref="byte.MinValue"/> or greater
         /// than <see cref="byte.MaxValue"/>.
         /// </exception>
         public byte GetByte()
         {
             if (!TryGetByte(out byte value))
+            {
+                throw SysJsonThrowHelper.GetFormatException(NumericType.Byte);
+            }
+            return value;
+        }
+
+        internal byte GetByteWithQuotes()
+        {
+            ReadOnlySpan<byte> span = GetUnescapedSpan();
+            if (!TryGetByteCore(out byte value, span))
             {
                 throw SysJsonThrowHelper.GetFormatException(NumericType.Byte);
             }
@@ -150,13 +160,23 @@ namespace SpanJson
         /// <seealso cref="TokenType" />
         /// </exception>
         /// <exception cref="FormatException">
-        /// Thrown if the JSON token value is either of incorrect numeric format (for example if it contains a decimal or 
-        /// is written in scientific notation) or, it represents a number less than <see cref="sbyte.MinValue"/> or greater 
+        /// Thrown if the JSON token value is either of incorrect numeric format (for example if it contains a decimal or
+        /// is written in scientific notation) or, it represents a number less than <see cref="sbyte.MinValue"/> or greater
         /// than <see cref="sbyte.MaxValue"/>.
         /// </exception>
         public sbyte GetSByte()
         {
             if (!TryGetSByte(out sbyte value))
+            {
+                throw SysJsonThrowHelper.GetFormatException(NumericType.SByte);
+            }
+            return value;
+        }
+
+        internal sbyte GetSByteWithQuotes()
+        {
+            ReadOnlySpan<byte> span = GetUnescapedSpan();
+            if (!TryGetSByteCore(out sbyte value, span))
             {
                 throw SysJsonThrowHelper.GetFormatException(NumericType.SByte);
             }
@@ -174,13 +194,23 @@ namespace SpanJson
         /// <seealso cref="TokenType" />
         /// </exception>
         /// <exception cref="FormatException">
-        /// Thrown if the JSON token value is either of incorrect numeric format (for example if it contains a decimal or 
-        /// is written in scientific notation) or, it represents a number less than <see cref="short.MinValue"/> or greater 
+        /// Thrown if the JSON token value is either of incorrect numeric format (for example if it contains a decimal or
+        /// is written in scientific notation) or, it represents a number less than <see cref="short.MinValue"/> or greater
         /// than <see cref="short.MaxValue"/>.
         /// </exception>
         public short GetInt16()
         {
             if (!TryGetInt16(out short value))
+            {
+                throw SysJsonThrowHelper.GetFormatException(NumericType.Int16);
+            }
+            return value;
+        }
+
+        internal short GetInt16WithQuotes()
+        {
+            ReadOnlySpan<byte> span = GetUnescapedSpan();
+            if (!TryGetInt16Core(out short value, span))
             {
                 throw SysJsonThrowHelper.GetFormatException(NumericType.Int16);
             }
@@ -198,13 +228,23 @@ namespace SpanJson
         /// <seealso cref="TokenType" />
         /// </exception>
         /// <exception cref="FormatException">
-        /// Thrown if the JSON token value is either of incorrect numeric format (for example if it contains a decimal or 
-        /// is written in scientific notation) or, it represents a number less than <see cref="int.MinValue"/> or greater 
+        /// Thrown if the JSON token value is either of incorrect numeric format (for example if it contains a decimal or
+        /// is written in scientific notation) or, it represents a number less than <see cref="int.MinValue"/> or greater
         /// than <see cref="int.MaxValue"/>.
         /// </exception>
         public int GetInt32()
         {
             if (!TryGetInt32(out int value))
+            {
+                throw SysJsonThrowHelper.GetFormatException(NumericType.Int32);
+            }
+            return value;
+        }
+
+        internal int GetInt32WithQuotes()
+        {
+            ReadOnlySpan<byte> span = GetUnescapedSpan();
+            if (!TryGetInt32Core(out int value, span))
             {
                 throw SysJsonThrowHelper.GetFormatException(NumericType.Int32);
             }
@@ -222,13 +262,23 @@ namespace SpanJson
         /// <seealso cref="TokenType" />
         /// </exception>
         /// <exception cref="FormatException">
-        /// Thrown if the JSON token value is either of incorrect numeric format (for example if it contains a decimal or 
-        /// is written in scientific notation) or, it represents a number less than <see cref="long.MinValue"/> or greater 
+        /// Thrown if the JSON token value is either of incorrect numeric format (for example if it contains a decimal or
+        /// is written in scientific notation) or, it represents a number less than <see cref="long.MinValue"/> or greater
         /// than <see cref="long.MaxValue"/>.
         /// </exception>
         public long GetInt64()
         {
             if (!TryGetInt64(out long value))
+            {
+                throw SysJsonThrowHelper.GetFormatException(NumericType.Int64);
+            }
+            return value;
+        }
+
+        internal long GetInt64WithQuotes()
+        {
+            ReadOnlySpan<byte> span = GetUnescapedSpan();
+            if (!TryGetInt64Core(out long value, span))
             {
                 throw SysJsonThrowHelper.GetFormatException(NumericType.Int64);
             }
@@ -246,13 +296,23 @@ namespace SpanJson
         /// <seealso cref="TokenType" />
         /// </exception>
         /// <exception cref="FormatException">
-        /// Thrown if the JSON token value is either of incorrect numeric format (for example if it contains a decimal or 
-        /// is written in scientific notation) or, it represents a number less than <see cref="ushort.MinValue"/> or greater 
+        /// Thrown if the JSON token value is either of incorrect numeric format (for example if it contains a decimal or
+        /// is written in scientific notation) or, it represents a number less than <see cref="ushort.MinValue"/> or greater
         /// than <see cref="ushort.MaxValue"/>.
         /// </exception>
         public ushort GetUInt16()
         {
             if (!TryGetUInt16(out ushort value))
+            {
+                throw SysJsonThrowHelper.GetFormatException(NumericType.UInt16);
+            }
+            return value;
+        }
+
+        internal ushort GetUInt16WithQuotes()
+        {
+            ReadOnlySpan<byte> span = GetUnescapedSpan();
+            if (!TryGetUInt16Core(out ushort value, span))
             {
                 throw SysJsonThrowHelper.GetFormatException(NumericType.UInt16);
             }
@@ -270,13 +330,23 @@ namespace SpanJson
         /// <seealso cref="TokenType" />
         /// </exception>
         /// <exception cref="FormatException">
-        /// Thrown if the JSON token value is either of incorrect numeric format (for example if it contains a decimal or 
-        /// is written in scientific notation) or, it represents a number less than <see cref="uint.MinValue"/> or greater 
+        /// Thrown if the JSON token value is either of incorrect numeric format (for example if it contains a decimal or
+        /// is written in scientific notation) or, it represents a number less than <see cref="uint.MinValue"/> or greater
         /// than <see cref="uint.MaxValue"/>.
         /// </exception>
         public uint GetUInt32()
         {
             if (!TryGetUInt32(out uint value))
+            {
+                throw SysJsonThrowHelper.GetFormatException(NumericType.UInt32);
+            }
+            return value;
+        }
+
+        internal uint GetUInt32WithQuotes()
+        {
+            ReadOnlySpan<byte> span = GetUnescapedSpan();
+            if (!TryGetUInt32Core(out uint value, span))
             {
                 throw SysJsonThrowHelper.GetFormatException(NumericType.UInt32);
             }
@@ -294,13 +364,23 @@ namespace SpanJson
         /// <seealso cref="TokenType" />
         /// </exception>
         /// <exception cref="FormatException">
-        /// Thrown if the JSON token value is either of incorrect numeric format (for example if it contains a decimal or 
-        /// is written in scientific notation) or, it represents a number less than <see cref="ulong.MinValue"/> or greater 
+        /// Thrown if the JSON token value is either of incorrect numeric format (for example if it contains a decimal or
+        /// is written in scientific notation) or, it represents a number less than <see cref="ulong.MinValue"/> or greater
         /// than <see cref="ulong.MaxValue"/>.
         /// </exception>
         public ulong GetUInt64()
         {
             if (!TryGetUInt64(out ulong value))
+            {
+                throw SysJsonThrowHelper.GetFormatException(NumericType.UInt64);
+            }
+            return value;
+        }
+
+        internal ulong GetUInt64WithQuotes()
+        {
+            ReadOnlySpan<byte> span = GetUnescapedSpan();
+            if (!TryGetUInt64Core(out ulong value, span))
             {
                 throw SysJsonThrowHelper.GetFormatException(NumericType.UInt64);
             }
@@ -318,7 +398,7 @@ namespace SpanJson
         /// <seealso cref="TokenType" />
         /// </exception>
         /// <exception cref="FormatException">
-        /// On any framework that is not .NET Core 3.0 or higher, thrown if the JSON token value represents a number less than <see cref="float.MinValue"/> or greater 
+        /// On any framework that is not .NET Core 3.0 or higher, thrown if the JSON token value represents a number less than <see cref="float.MinValue"/> or greater
         /// than <see cref="float.MaxValue"/>.
         /// </exception>
         public float GetSingle()
@@ -328,6 +408,42 @@ namespace SpanJson
                 throw SysJsonThrowHelper.GetFormatException(NumericType.Single);
             }
             return value;
+        }
+
+        internal float GetSingleWithQuotes()
+        {
+            ReadOnlySpan<byte> span = GetUnescapedSpan();
+
+            if (JsonReaderHelper.TryGetFloatingPointConstant(span, out float value))
+            {
+                return value;
+            }
+
+            if (Utf8Parser.TryParse(span, out value, out int bytesConsumed)
+                && 0u >= (uint)(span.Length - bytesConsumed))
+            {
+                // NETCOREAPP implementation of the TryParse method above permits case-insenstive variants of the
+                // float constants "NaN", "Infinity", "-Infinity". This differs from the NETFRAMEWORK implementation.
+                // The following logic reconciles the two implementations to enforce consistent behavior.
+                if (JsonHelpers.IsFinite(value))
+                {
+                    return value;
+                }
+            }
+
+            throw SysJsonThrowHelper.GetFormatException(NumericType.Single);
+        }
+
+        internal float GetSingleFloatingPointConstant()
+        {
+            ReadOnlySpan<byte> span = GetUnescapedSpan();
+
+            if (JsonReaderHelper.TryGetFloatingPointConstant(span, out float value))
+            {
+                return value;
+            }
+
+            throw SysJsonThrowHelper.GetFormatException(NumericType.Single);
         }
 
         /// <summary>
@@ -341,7 +457,7 @@ namespace SpanJson
         /// <seealso cref="TokenType" />
         /// </exception>
         /// <exception cref="FormatException">
-        /// On any framework that is not .NET Core 3.0 or higher, thrown if the JSON token value represents a number less than <see cref="double.MinValue"/> or greater 
+        /// On any framework that is not .NET Core 3.0 or higher, thrown if the JSON token value represents a number less than <see cref="double.MinValue"/> or greater
         /// than <see cref="double.MaxValue"/>.
         /// </exception>
         public double GetDouble()
@@ -351,6 +467,42 @@ namespace SpanJson
                 throw SysJsonThrowHelper.GetFormatException(NumericType.Double);
             }
             return value;
+        }
+
+        internal double GetDoubleWithQuotes()
+        {
+            ReadOnlySpan<byte> span = GetUnescapedSpan();
+
+            if (JsonReaderHelper.TryGetFloatingPointConstant(span, out double value))
+            {
+                return value;
+            }
+
+            if (Utf8Parser.TryParse(span, out value, out int bytesConsumed)
+                && 0u >= (uint)(span.Length - bytesConsumed))
+            {
+                // NETCOREAPP implementation of the TryParse method above permits case-insenstive variants of the
+                // float constants "NaN", "Infinity", "-Infinity". This differs from the NETFRAMEWORK implementation.
+                // The following logic reconciles the two implementations to enforce consistent behavior.
+                if (JsonHelpers.IsFinite(value))
+                {
+                    return value;
+                }
+            }
+
+            throw SysJsonThrowHelper.GetFormatException(NumericType.Double);
+        }
+
+        internal double GetDoubleFloatingPointConstant()
+        {
+            ReadOnlySpan<byte> span = GetUnescapedSpan();
+
+            if (JsonReaderHelper.TryGetFloatingPointConstant(span, out double value))
+            {
+                return value;
+            }
+
+            throw SysJsonThrowHelper.GetFormatException(NumericType.Double);
         }
 
         /// <summary>
@@ -364,12 +516,22 @@ namespace SpanJson
         /// <seealso cref="TokenType" />
         /// </exception>
         /// <exception cref="FormatException">
-        /// Thrown if the JSON token value represents a number less than <see cref="decimal.MinValue"/> or greater 
+        /// Thrown if the JSON token value represents a number less than <see cref="decimal.MinValue"/> or greater
         /// than <see cref="decimal.MaxValue"/>.
         /// </exception>
         public decimal GetDecimal()
         {
             if (!TryGetDecimal(out decimal value))
+            {
+                throw SysJsonThrowHelper.GetFormatException(NumericType.Decimal);
+            }
+            return value;
+        }
+
+        internal decimal GetDecimalWithQuotes()
+        {
+            ReadOnlySpan<byte> span = GetUnescapedSpan();
+            if (!TryGetDecimalCore(out decimal value, span))
             {
                 throw SysJsonThrowHelper.GetFormatException(NumericType.Decimal);
             }
@@ -393,7 +555,17 @@ namespace SpanJson
         {
             if (!TryGetDateTime(out DateTime value))
             {
-                throw SysJsonThrowHelper.GetFormatException(DateType.DateTime);
+                throw SysJsonThrowHelper.GetFormatException(DataType.DateTime);
+            }
+
+            return value;
+        }
+
+        internal DateTime GetDateTimeNoValidation()
+        {
+            if (!TryGetDateTimeCore(out DateTime value))
+            {
+                throw SysJsonThrowHelper.GetFormatException(DataType.DateTime);
             }
 
             return value;
@@ -416,7 +588,17 @@ namespace SpanJson
         {
             if (!TryGetDateTimeOffset(out DateTimeOffset value))
             {
-                throw SysJsonThrowHelper.GetFormatException(DateType.DateTimeOffset);
+                throw SysJsonThrowHelper.GetFormatException(DataType.DateTimeOffset);
+            }
+
+            return value;
+        }
+
+        internal DateTimeOffset GetDateTimeOffsetNoValidation()
+        {
+            if (!TryGetDateTimeOffsetCore(out DateTimeOffset value))
+            {
+                throw SysJsonThrowHelper.GetFormatException(DataType.DateTimeOffset);
             }
 
             return value;
@@ -445,9 +627,19 @@ namespace SpanJson
             return value;
         }
 
+        internal Guid GetGuidNoValidation()
+        {
+            if (!TryGetGuidCore(out Guid value))
+            {
+                ThrowHelper2.ThrowFormatException_Guid();
+            }
+
+            return value;
+        }
+
         /// <summary>
-        /// Parses the current JSON token value from the source and decodes the base 64 encoded JSON string as bytes.
-        /// Returns <see langword="true"/> if the entire token value is encoded as valid base 64 text and can be successfully
+        /// Parses the current JSON token value from the source and decodes the Base64 encoded JSON string as bytes.
+        /// Returns <see langword="true"/> if the entire token value is encoded as valid Base64 text and can be successfully
         /// decoded to bytes.
         /// Returns <see langword="false"/> otherwise.
         /// </summary>
@@ -477,7 +669,7 @@ namespace SpanJson
 
         /// <summary>
         /// Parses the current JSON token value from the source as a <see cref="byte"/>.
-        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully 
+        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully
         /// parsed to a <see cref="byte"/> value.
         /// Returns <see langword="false"/> otherwise.
         /// </summary>
@@ -493,8 +685,14 @@ namespace SpanJson
             }
 
             ReadOnlySpan<byte> span = HasValueSequence ? ValueSequence.ToArray() : ValueSpan;
+            return TryGetByteCore(out value, span);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal bool TryGetByteCore(out byte value, ReadOnlySpan<byte> span)
+        {
             if (Utf8Parser.TryParse(span, out byte tmp, out int bytesConsumed)
-                && span.Length == bytesConsumed)
+                && 0u >= (uint)(span.Length - bytesConsumed))
             {
                 value = tmp;
                 return true;
@@ -506,7 +704,7 @@ namespace SpanJson
 
         /// <summary>
         /// Parses the current JSON token value from the source as an <see cref="sbyte"/>.
-        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully 
+        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully
         /// parsed to an <see cref="sbyte"/> value.
         /// Returns <see langword="false"/> otherwise.
         /// </summary>
@@ -522,8 +720,14 @@ namespace SpanJson
             }
 
             ReadOnlySpan<byte> span = HasValueSequence ? ValueSequence.ToArray() : ValueSpan;
+            return TryGetSByteCore(out value, span);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal bool TryGetSByteCore(out sbyte value, ReadOnlySpan<byte> span)
+        {
             if (Utf8Parser.TryParse(span, out sbyte tmp, out int bytesConsumed)
-                && span.Length == bytesConsumed)
+                && 0u >= (uint)(span.Length - bytesConsumed))
             {
                 value = tmp;
                 return true;
@@ -535,7 +739,7 @@ namespace SpanJson
 
         /// <summary>
         /// Parses the current JSON token value from the source as a <see cref="short"/>.
-        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully 
+        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully
         /// parsed to a <see cref="short"/> value.
         /// Returns <see langword="false"/> otherwise.
         /// </summary>
@@ -551,8 +755,14 @@ namespace SpanJson
             }
 
             ReadOnlySpan<byte> span = HasValueSequence ? ValueSequence.ToArray() : ValueSpan;
+            return TryGetInt16Core(out value, span);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal bool TryGetInt16Core(out short value, ReadOnlySpan<byte> span)
+        {
             if (Utf8Parser.TryParse(span, out short tmp, out int bytesConsumed)
-                && span.Length == bytesConsumed)
+                && 0u >= (uint)(span.Length - bytesConsumed))
             {
                 value = tmp;
                 return true;
@@ -564,7 +774,7 @@ namespace SpanJson
 
         /// <summary>
         /// Parses the current JSON token value from the source as an <see cref="int"/>.
-        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully 
+        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully
         /// parsed to an <see cref="int"/> value.
         /// Returns <see langword="false"/> otherwise.
         /// </summary>
@@ -580,8 +790,14 @@ namespace SpanJson
             }
 
             ReadOnlySpan<byte> span = HasValueSequence ? ValueSequence.ToArray() : ValueSpan;
+            return TryGetInt32Core(out value, span);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal bool TryGetInt32Core(out int value, ReadOnlySpan<byte> span)
+        {
             if (Utf8Parser.TryParse(span, out int tmp, out int bytesConsumed)
-                && span.Length == bytesConsumed)
+                && 0u >= (uint)(span.Length - bytesConsumed))
             {
                 value = tmp;
                 return true;
@@ -593,7 +809,7 @@ namespace SpanJson
 
         /// <summary>
         /// Parses the current JSON token value from the source as a <see cref="long"/>.
-        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully 
+        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully
         /// parsed to a <see cref="long"/> value.
         /// Returns <see langword="false"/> otherwise.
         /// </summary>
@@ -609,8 +825,14 @@ namespace SpanJson
             }
 
             ReadOnlySpan<byte> span = HasValueSequence ? ValueSequence.ToArray() : ValueSpan;
+            return TryGetInt64Core(out value, span);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal bool TryGetInt64Core(out long value, ReadOnlySpan<byte> span)
+        {
             if (Utf8Parser.TryParse(span, out long tmp, out int bytesConsumed) 
-                && span.Length == bytesConsumed)
+                && 0u >= (uint)(span.Length - bytesConsumed))
             {
                 value = tmp;
                 return true;
@@ -622,7 +844,7 @@ namespace SpanJson
 
         /// <summary>
         /// Parses the current JSON token value from the source as a <see cref="ushort"/>.
-        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully 
+        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully
         /// parsed to a <see cref="ushort"/> value.
         /// Returns <see langword="false"/> otherwise.
         /// </summary>
@@ -638,8 +860,14 @@ namespace SpanJson
             }
 
             ReadOnlySpan<byte> span = HasValueSequence ? ValueSequence.ToArray() : ValueSpan;
+            return TryGetUInt16Core(out value, span);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal bool TryGetUInt16Core(out ushort value, ReadOnlySpan<byte> span)
+        {
             if (Utf8Parser.TryParse(span, out ushort tmp, out int bytesConsumed)
-                && span.Length == bytesConsumed)
+                && 0u >= (uint)(span.Length - bytesConsumed))
             {
                 value = tmp;
                 return true;
@@ -651,7 +879,7 @@ namespace SpanJson
 
         /// <summary>
         /// Parses the current JSON token value from the source as a <see cref="uint"/>.
-        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully 
+        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully
         /// parsed to a <see cref="uint"/> value.
         /// Returns <see langword="false"/> otherwise.
         /// </summary>
@@ -667,8 +895,14 @@ namespace SpanJson
             }
 
             ReadOnlySpan<byte> span = HasValueSequence ? ValueSequence.ToArray() : ValueSpan;
+            return TryGetUInt32Core(out value, span);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal bool TryGetUInt32Core(out uint value, ReadOnlySpan<byte> span)
+        {
             if (Utf8Parser.TryParse(span, out uint tmp, out int bytesConsumed)
-                && span.Length == bytesConsumed)
+                && 0u >= (uint)(span.Length - bytesConsumed))
             {
                 value = tmp;
                 return true;
@@ -680,7 +914,7 @@ namespace SpanJson
 
         /// <summary>
         /// Parses the current JSON token value from the source as a <see cref="ulong"/>.
-        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully 
+        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully
         /// parsed to a <see cref="ulong"/> value.
         /// Returns <see langword="false"/> otherwise.
         /// </summary>
@@ -696,8 +930,14 @@ namespace SpanJson
             }
 
             ReadOnlySpan<byte> span = HasValueSequence ? ValueSequence.ToArray() : ValueSpan;
+            return TryGetUInt64Core(out value, span);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal bool TryGetUInt64Core(out ulong value, ReadOnlySpan<byte> span)
+        {
             if (Utf8Parser.TryParse(span, out ulong tmp, out int bytesConsumed) 
-                && span.Length == bytesConsumed)
+                && 0u >= (uint)(span.Length - bytesConsumed))
             {
                 value = tmp;
                 return true;
@@ -709,7 +949,7 @@ namespace SpanJson
 
         /// <summary>
         /// Parses the current JSON token value from the source as a <see cref="float"/>.
-        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully 
+        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully
         /// parsed to a <see cref="float"/> value.
         /// Returns <see langword="false"/> otherwise.
         /// </summary>
@@ -725,8 +965,8 @@ namespace SpanJson
             }
 
             ReadOnlySpan<byte> span = HasValueSequence ? ValueSequence.ToArray() : ValueSpan;
-            if (Utf8Parser.TryParse(span, out float tmp, out int bytesConsumed, _numberFormat) 
-                && span.Length == bytesConsumed)
+            if (Utf8Parser.TryParse(span, out float tmp, out int bytesConsumed) 
+                && 0u >= (uint)(span.Length - bytesConsumed))
             {
                 value = tmp;
                 return true;
@@ -738,7 +978,7 @@ namespace SpanJson
 
         /// <summary>
         /// Parses the current JSON token value from the source as a <see cref="double"/>.
-        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully 
+        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully
         /// parsed to a <see cref="double"/> value.
         /// Returns <see langword="false"/> otherwise.
         /// </summary>
@@ -754,8 +994,8 @@ namespace SpanJson
             }
 
             ReadOnlySpan<byte> span = HasValueSequence ? ValueSequence.ToArray() : ValueSpan;
-            if (Utf8Parser.TryParse(span, out double tmp, out int bytesConsumed, _numberFormat)
-                && span.Length == bytesConsumed)
+            if (Utf8Parser.TryParse(span, out double tmp, out int bytesConsumed)
+                && 0u >= (uint)(span.Length - bytesConsumed))
             {
                 value = tmp;
                 return true;
@@ -767,7 +1007,7 @@ namespace SpanJson
 
         /// <summary>
         /// Parses the current JSON token value from the source as a <see cref="decimal"/>.
-        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully 
+        /// Returns <see langword="true"/> if the entire UTF-8 encoded token value can be successfully
         /// parsed to a <see cref="decimal"/> value.
         /// Returns <see langword="false"/> otherwise.
         /// </summary>
@@ -783,8 +1023,14 @@ namespace SpanJson
             }
 
             ReadOnlySpan<byte> span = HasValueSequence ? ValueSequence.ToArray() : ValueSpan;
-            if (Utf8Parser.TryParse(span, out decimal tmp, out int bytesConsumed, _numberFormat)
-                && span.Length == bytesConsumed)
+            return TryGetDecimalCore(out value, span);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal bool TryGetDecimalCore(out decimal value, ReadOnlySpan<byte> span)
+        {
+            if (Utf8Parser.TryParse(span, out decimal tmp, out int bytesConsumed)
+                && 0u >= (uint)(span.Length - bytesConsumed))
             {
                 value = tmp;
                 return true;
@@ -811,27 +1057,32 @@ namespace SpanJson
                 throw SysJsonThrowHelper.GetInvalidOperationException_ExpectedString(TokenType);
             }
 
+            return TryGetDateTimeCore(out value);
+        }
+
+        internal bool TryGetDateTimeCore(out DateTime value)
+        {
             ReadOnlySpan<byte> span = stackalloc byte[0];
+
+            int maximumLength = _stringHasEscaping ? JsonSharedConstant.MaximumEscapedDateTimeOffsetParseLength : JsonSharedConstant.MaximumDateTimeOffsetParseLength;
 
             if (HasValueSequence)
             {
                 long sequenceLength = ValueSequence.Length;
-
-                if (!JsonReaderHelper.IsValidDateTimeOffsetParseLength(sequenceLength))
+                if (!JsonHelpers.IsInRangeInclusive(sequenceLength, JsonSharedConstant.MinimumDateTimeParseLength, maximumLength))
                 {
                     value = default;
                     return false;
                 }
 
                 Debug.Assert(sequenceLength <= JsonSharedConstant.MaximumEscapedDateTimeOffsetParseLength);
-                Span<byte> stackSpan = stackalloc byte[(int)sequenceLength];
-
+                Span<byte> stackSpan = stackalloc byte[_stringHasEscaping ? JsonSharedConstant.MaximumEscapedDateTimeOffsetParseLength : JsonSharedConstant.MaximumDateTimeOffsetParseLength];
                 ValueSequence.CopyTo(stackSpan);
-                span = stackSpan;
+                span = stackSpan.Slice(0, (int)sequenceLength);
             }
             else
             {
-                if (!JsonReaderHelper.IsValidDateTimeOffsetParseLength(ValueSpan.Length))
+                if (!JsonHelpers.IsInRangeInclusive(ValueSpan.Length, JsonSharedConstant.MinimumDateTimeParseLength, maximumLength))
                 {
                     value = default;
                     return false;
@@ -847,8 +1098,7 @@ namespace SpanJson
 
             Debug.Assert(span.IndexOf(JsonUtf8Constant.BackSlash) == -1);
 
-            if (span.Length <= JsonSharedConstant.MaximumDateTimeOffsetParseLength
-                && JsonReaderHelper.TryParseAsISO(span, out DateTime tmp))
+            if (JsonHelpers.TryParseAsISO(span, out DateTime tmp))
             {
                 value = tmp;
                 return true;
@@ -875,27 +1125,32 @@ namespace SpanJson
                 throw SysJsonThrowHelper.GetInvalidOperationException_ExpectedString(TokenType);
             }
 
+            return TryGetDateTimeOffsetCore(out value);
+        }
+
+        internal bool TryGetDateTimeOffsetCore(out DateTimeOffset value)
+        {
             ReadOnlySpan<byte> span = stackalloc byte[0];
+
+            int maximumLength = _stringHasEscaping ? JsonSharedConstant.MaximumEscapedDateTimeOffsetParseLength : JsonSharedConstant.MaximumDateTimeOffsetParseLength;
 
             if (HasValueSequence)
             {
                 long sequenceLength = ValueSequence.Length;
-
-                if (!JsonReaderHelper.IsValidDateTimeOffsetParseLength(sequenceLength))
+                if (!JsonHelpers.IsInRangeInclusive(sequenceLength, JsonSharedConstant.MinimumDateTimeParseLength, maximumLength))
                 {
                     value = default;
                     return false;
                 }
 
                 Debug.Assert(sequenceLength <= JsonSharedConstant.MaximumEscapedDateTimeOffsetParseLength);
-                Span<byte> stackSpan = stackalloc byte[(int)sequenceLength];
-
+                Span<byte> stackSpan = stackalloc byte[_stringHasEscaping ? JsonSharedConstant.MaximumEscapedDateTimeOffsetParseLength : JsonSharedConstant.MaximumDateTimeOffsetParseLength];
                 ValueSequence.CopyTo(stackSpan);
-                span = stackSpan;
+                span = stackSpan.Slice(0, (int)sequenceLength);
             }
             else
             {
-                if (!JsonReaderHelper.IsValidDateTimeOffsetParseLength(ValueSpan.Length))
+                if (!JsonHelpers.IsInRangeInclusive(ValueSpan.Length, JsonSharedConstant.MinimumDateTimeParseLength, maximumLength))
                 {
                     value = default;
                     return false;
@@ -911,8 +1166,7 @@ namespace SpanJson
 
             Debug.Assert(span.IndexOf(JsonUtf8Constant.BackSlash) == -1);
 
-            if (span.Length <= JsonSharedConstant.MaximumDateTimeOffsetParseLength
-                && JsonReaderHelper.TryParseAsISO(span, out DateTimeOffset tmp))
+            if (JsonHelpers.TryParseAsISO(span, out DateTimeOffset tmp))
             {
                 value = tmp;
                 return true;
@@ -940,26 +1194,32 @@ namespace SpanJson
                 throw SysJsonThrowHelper.GetInvalidOperationException_ExpectedString(TokenType);
             }
 
+            return TryGetGuidCore(out value);
+        }
+
+        internal bool TryGetGuidCore(out Guid value)
+        {
             ReadOnlySpan<byte> span = stackalloc byte[0];
+
+            int maximumLength = _stringHasEscaping ? JsonSharedConstant.MaximumEscapedGuidLength : JsonSharedConstant.MaximumFormatGuidLength;
 
             if (HasValueSequence)
             {
                 long sequenceLength = ValueSequence.Length;
-                if (sequenceLength > JsonSharedConstant.MaximumEscapedGuidLength)
+                if (sequenceLength > maximumLength)
                 {
                     value = default;
                     return false;
                 }
 
                 Debug.Assert(sequenceLength <= JsonSharedConstant.MaximumEscapedGuidLength);
-                Span<byte> stackSpan = stackalloc byte[(int)sequenceLength];
-
+                Span<byte> stackSpan = stackalloc byte[_stringHasEscaping ? JsonSharedConstant.MaximumEscapedGuidLength : JsonSharedConstant.MaximumFormatGuidLength];
                 ValueSequence.CopyTo(stackSpan);
-                span = stackSpan;
+                span = stackSpan.Slice(0, (int)sequenceLength);
             }
             else
             {
-                if (ValueSpan.Length > JsonSharedConstant.MaximumEscapedGuidLength)
+                if (ValueSpan.Length > maximumLength)
                 {
                     value = default;
                     return false;

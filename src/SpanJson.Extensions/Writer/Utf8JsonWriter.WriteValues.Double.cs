@@ -1,6 +1,5 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
 using System;
 using System.Buffers;
@@ -29,7 +28,11 @@ namespace SpanJson
         {
             JsonWriterHelper.ValidateDouble(value);
 
-            ValidateWritingValue();
+            if (!_options.SkipValidation)
+            {
+                ValidateWritingValue();
+            }
+
             if (_options.Indented)
             {
                 WriteNumberValueIndented(value);
@@ -137,6 +140,40 @@ namespace SpanJson
                 return false;
             }
 #endif
+        }
+
+        internal void WriteNumberValueAsString(double value)
+        {
+            Span<byte> utf8Number;
+            unsafe
+            {
+                // Cannot create a span directly since it gets assigned to parameter and passed down.
+                byte* ptr = stackalloc byte[JsonSharedConstant.MaximumFormatDoubleLength];
+                utf8Number = new Span<byte>(ptr, JsonSharedConstant.MaximumFormatDoubleLength);
+            }
+            bool result = TryFormatDouble(value, utf8Number, out int bytesWritten);
+            Debug.Assert(result);
+            WriteNumberValueAsStringUnescaped(utf8Number.Slice(0, bytesWritten));
+        }
+
+        internal void WriteFloatingPointConstant(double value)
+        {
+            if (double.IsNaN(value))
+            {
+                WriteNumberValueAsStringUnescaped(JsonUtf8Constant.NaNValue);
+            }
+            else if (double.IsPositiveInfinity(value))
+            {
+                WriteNumberValueAsStringUnescaped(JsonUtf8Constant.PositiveInfinityValue);
+            }
+            else if (double.IsNegativeInfinity(value))
+            {
+                WriteNumberValueAsStringUnescaped(JsonUtf8Constant.NegativeInfinityValue);
+            }
+            else
+            {
+                WriteNumberValue(value);
+            }
         }
     }
 }

@@ -167,6 +167,24 @@
 
         // Largely based on https://github.com/dotnet/corefx/blob/8135319caa7e457ed61053ca1418313b88057b51/src/System.Text.Json/src/System/Text/Json/Writer/JsonWriterHelper.Date.cs
 
+        public static void WriteDateTimeTrimmed(Span<char> buffer, DateTime value, out int charsWritten)
+        {
+            Span<char> tempSpan = stackalloc char[JsonSharedConstant.MaximumFormatDateTimeOffsetLength];
+            bool result = TryFormat(value, tempSpan, out charsWritten);
+            Debug.Assert(result);
+            TrimDateTimeOffset(tempSpan.Slice(0, charsWritten), out charsWritten);
+            tempSpan.Slice(0, charsWritten).CopyTo(buffer);
+        }
+
+        public static void WriteDateTimeOffsetTrimmed(Span<char> buffer, DateTimeOffset value, out int charsWritten)
+        {
+            Span<char> tempSpan = stackalloc char[JsonSharedConstant.MaximumFormatDateTimeOffsetLength];
+            bool result = TryFormat(value, tempSpan, out charsWritten);
+            Debug.Assert(result);
+            TrimDateTimeOffset(tempSpan.Slice(0, charsWritten), out charsWritten);
+            tempSpan.Slice(0, charsWritten).CopyTo(buffer);
+        }
+
         /// <summary>
         /// Trims roundtrippable DateTime(Offset) input.
         /// If the milliseconds part of the date is zero, we omit the fraction part of the date,
@@ -178,95 +196,69 @@
         ///   2017-06-12T05:30:45.00768Z           (Z is short for "+00:00" but also distinguishes DateTimeKind.Utc from DateTimeKind.Local)
         ///   2017-06-12T05:30:45                  (interpreted as local time wrt to current time zone)
         /// </summary>
-        public static void TrimDateTimeOffset(Span<char> buffer, out int bytesWritten)
+        public static void TrimDateTimeOffset(Span<char> buffer, out int charsWritten)
         {
+            const int maxDateTimeLength = JsonSharedConstant.MaximumFormatDateTimeLength;
+
             // Assert buffer is the right length for:
-            // YYYY-MM-DDThh:mm:ss.fffffff (JsonConstants.MaximumFormatDateTimeLength)
-            // YYYY-MM-DDThh:mm:ss.fffffffZ (JsonConstants.MaximumFormatDateTimeLength + 1)
-            // YYYY-MM-DDThh:mm:ss.fffffff(+|-)hh:mm (JsonConstants.MaximumFormatDateTimeOffsetLength)
-            Debug.Assert(buffer.Length == JsonSharedConstant.MaximumFormatDateTimeLength ||
-                buffer.Length == (JsonSharedConstant.MaximumFormatDateTimeLength + 1) ||
+            // YYYY-MM-DDThh:mm:ss.fffffff (JsonSharedConstant.MaximumFormatDateTimeLength)
+            // YYYY-MM-DDThh:mm:ss.fffffffZ (JsonSharedConstant.MaximumFormatDateTimeLength + 1)
+            // YYYY-MM-DDThh:mm:ss.fffffff(+|-)hh:mm (JsonSharedConstant.MaximumFormatDateTimeOffsetLength)
+            Debug.Assert(buffer.Length == maxDateTimeLength ||
+                buffer.Length == maxDateTimeLength + 1 ||
                 buffer.Length == JsonSharedConstant.MaximumFormatDateTimeOffsetLength);
 
-            uint digit7 = buffer[26] - (uint)'0';
-            uint digit6 = buffer[25] - (uint)'0';
-            uint digit5 = buffer[24] - (uint)'0';
-            uint digit4 = buffer[23] - (uint)'0';
-            uint digit3 = buffer[22] - (uint)'0';
-            uint digit2 = buffer[21] - (uint)'0';
-            uint digit1 = buffer[20] - (uint)'0';
-            uint fraction = (digit1 * 1_000_000) + (digit2 * 100_000) + (digit3 * 10_000) + (digit4 * 1_000) + (digit5 * 100) + (digit6 * 10) + digit7;
-
-            // The period's index
-            int curIndex = 19;
-
-            if (fraction > 0u)
+            // Find the last significant digit.
+            int curIndex;
+            if (buffer[maxDateTimeLength - 1] == '0')
+                if (buffer[maxDateTimeLength - 2] == '0')
+                    if (buffer[maxDateTimeLength - 3] == '0')
+                        if (buffer[maxDateTimeLength - 4] == '0')
+                            if (buffer[maxDateTimeLength - 5] == '0')
+                                if (buffer[maxDateTimeLength - 6] == '0')
+                                    if (buffer[maxDateTimeLength - 7] == '0')
+                                    {
+                                        // All decimal places are 0 so we can delete the decimal point too.
+                                        curIndex = maxDateTimeLength - 7 - 1;
+                                    }
+                                    else { curIndex = maxDateTimeLength - 6; }
+                                else { curIndex = maxDateTimeLength - 5; }
+                            else { curIndex = maxDateTimeLength - 4; }
+                        else { curIndex = maxDateTimeLength - 3; }
+                    else { curIndex = maxDateTimeLength - 2; }
+                else { curIndex = maxDateTimeLength - 1; }
+            else
             {
-                int numFractionDigits = 7;
-
-                // Remove trailing zeros
-                while (true)
-                {
-                    uint quotient = DivMod(fraction, 10u, out uint remainder);
-                    if (remainder != 0u)
-                    {
-                        break;
-                    }
-                    fraction = quotient;
-                    numFractionDigits--;
-                }
-
-                // The last fraction digit's index will be (the period's index plus one) + (the number of fraction digits minus one)
-                int fractionEnd = 19 + numFractionDigits;
-
-                // Write fraction
-                // Leading zeros are written because the fraction becomes zero when it's their turn
-                for (int i = fractionEnd; i > curIndex; i--)
-                {
-                    buffer[i] = (char)((fraction % 10u) + (uint)'0');
-                    fraction /= 10u;
-                }
-
-                curIndex = fractionEnd + 1;
+                // There is nothing to trim.
+                charsWritten = buffer.Length;
+                return;
             }
-
-            bytesWritten = curIndex;
 
             // We are either trimming a DateTimeOffset, or a DateTime with
             // DateTimeKind.Local or DateTimeKind.Utc
-            if ((uint)buffer.Length > JsonSharedConstant.MaximumFormatDateTimeLength)
+            if (buffer.Length == maxDateTimeLength)
             {
-                // Write offset
+                // There is no offset to copy.
+                charsWritten = curIndex;
+            }
+            else if (buffer.Length == JsonSharedConstant.MaximumFormatDateTimeOffsetLength)
+            {
+                // We have a non-UTC offset (+|-)hh:mm that are 6 characters to copy.
+                buffer[curIndex] = buffer[maxDateTimeLength];
+                buffer[curIndex + 1] = buffer[maxDateTimeLength + 1];
+                buffer[curIndex + 2] = buffer[maxDateTimeLength + 2];
+                buffer[curIndex + 3] = buffer[maxDateTimeLength + 3];
+                buffer[curIndex + 4] = buffer[maxDateTimeLength + 4];
+                buffer[curIndex + 5] = buffer[maxDateTimeLength + 5];
+                charsWritten = curIndex + 6;
+            }
+            else
+            {
+                // There is a single 'Z'. Just write it at the current index.
+                Debug.Assert(buffer[maxDateTimeLength] == 'Z');
 
-                buffer[curIndex] = buffer[27];
-
-                // curIndex is at one of 'Z', '+', or '-'
-                bytesWritten = curIndex + 1;
-
-                // We have a Non-UTC offset i.e. (+|-)hh:mm
-                if (buffer.Length == JsonSharedConstant.MaximumFormatDateTimeOffsetLength)
-                {
-                    // Last index of the offset
-                    int bufferEnd = curIndex + 5;
-
-                    // Cache offset characters to prevent them from being overwritten
-                    // The second minute digit is never at risk
-                    char offsetMinDigit1 = buffer[31];
-                    char offsetHourDigit2 = buffer[29];
-                    char offsetHourDigit1 = buffer[28];
-
-                    Debug.Assert(buffer[30] == JsonUtf16Constant.Colon);
-
-                    // Write offset characters
-                    buffer[bufferEnd] = buffer[32];
-                    buffer[bufferEnd - 1] = offsetMinDigit1;
-                    buffer[bufferEnd - 2] = JsonUtf16Constant.Colon;
-                    buffer[bufferEnd - 3] = offsetHourDigit2;
-                    buffer[bufferEnd - 4] = offsetHourDigit1;
-
-                    // bytes written is the last index of the offset + 1
-                    bytesWritten = bufferEnd + 1;
-                }
+                buffer[curIndex] = 'Z';
+                charsWritten = curIndex + 1;
             }
         }
     }

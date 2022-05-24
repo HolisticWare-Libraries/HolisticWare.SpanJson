@@ -96,7 +96,7 @@ namespace SpanJson.Linq
         internal override bool InsertItem(int index, JToken item, bool skipParentCheck)
         {
             // don't add comments to JObject, no name to reference comment by
-            if (item is object && item.Type == JTokenType.Comment) { return false; }
+            if (item is not null && item.Type == JTokenType.Comment) { return false; }
 
             return base.InsertItem(index, item, skipParentCheck);
         }
@@ -112,7 +112,7 @@ namespace SpanJson.Linq
 
             JProperty newProperty = (JProperty)o;
 
-            if (existing is object)
+            if (existing is not null)
             {
                 JProperty existingProperty = (JProperty)existing;
 
@@ -167,7 +167,7 @@ namespace SpanJson.Linq
                 {
                     Add(contentItem.Key, contentItem.Value);
                 }
-                else if (contentItem.Value is object)
+                else if (contentItem.Value is not null)
                 {
                     if (!(existingProperty.Value is JContainer existingContainer) || existingContainer.Type != contentItem.Value.Type)
                     {
@@ -298,7 +298,7 @@ namespace SpanJson.Linq
             set
             {
                 JProperty property = Property(propertyName);
-                if (property is object)
+                if (property is not null)
                 {
                     property.Value = value;
                 }
@@ -350,7 +350,7 @@ namespace SpanJson.Linq
         public bool TryGetValue(string propertyName, StringComparison comparison, out JToken value)
         {
             value = GetValue(propertyName, comparison);
-            return (value is object);
+            return (value is not null);
         }
 
         internal override int GetDeepHashCode()

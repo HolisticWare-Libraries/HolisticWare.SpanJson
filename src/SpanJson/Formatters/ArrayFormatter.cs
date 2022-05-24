@@ -45,7 +45,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<T>.Shared.Return(temp);
                 }

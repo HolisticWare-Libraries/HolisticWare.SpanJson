@@ -17,7 +17,7 @@ namespace SpanJson.Internal
             try { resourceString = ResourceManager.GetString(resourceKey, null); }
             catch (MissingManifestResourceException) { }
 
-            if (defaultString is object && resourceKey.Equals(resourceString, StringComparison.Ordinal))
+            if (defaultString is not null && resourceKey.Equals(resourceString, StringComparison.Ordinal))
             {
                 return defaultString;
             }
@@ -27,7 +27,7 @@ namespace SpanJson.Internal
 
         internal static string Format(string resourceFormat, params object[] args)
         {
-            if (args is object)
+            if (args is not null)
             {
                 return String.Format(resourceFormat, args);
             }

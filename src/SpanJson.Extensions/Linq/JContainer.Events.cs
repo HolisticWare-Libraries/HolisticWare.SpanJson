@@ -78,7 +78,7 @@ namespace SpanJson.Linq
         {
             ListChangedEventHandler handler = _listChanged;
 
-            if (handler is object)
+            if (handler is not null)
             {
                 _busy = true;
                 try
@@ -98,7 +98,7 @@ namespace SpanJson.Linq
         {
             NotifyCollectionChangedEventHandler handler = _collectionChanged;
 
-            if (handler is object)
+            if (handler is not null)
             {
                 _busy = true;
                 try

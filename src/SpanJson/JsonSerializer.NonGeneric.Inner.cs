@@ -175,7 +175,7 @@ namespace SpanJson
                 /// <summary>Build only the delegates which are actually required</summary>
                 private static Invoker BuildInvoker(Type type)
                 {
-                    if ((uint)Unsafe.SizeOf<TSymbol>() == JsonSharedConstant.ByteSize)
+                    if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
                     {
                         return new Invoker(
                             BuildToByteArraySerializer(type),
@@ -190,7 +190,7 @@ namespace SpanJson
                             BuildAsyncStreamDeserializer(type));
                     }
 
-                    if ((uint)Unsafe.SizeOf<TSymbol>() == JsonSharedConstant.CharSize)
+                    if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
                     {
                         return new Invoker(
                             BuildToStringSerializer(type),

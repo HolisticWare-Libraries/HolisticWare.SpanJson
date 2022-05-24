@@ -339,6 +339,9 @@ namespace SpanJson
                 case ExceptionResource.InvalidEndOfJsonNonPrimitive:
                     message = SR.Format(SR.InvalidEndOfJsonNonPrimitive, json.TokenType);
                     break;
+                case ExceptionResource.InvalidLeadingZeroInNumber:
+                    message = SR.Format(SR.InvalidLeadingZeroInNumber, character);
+                    break;
                 case ExceptionResource.ObjectDepthTooLarge:
                     message = SR.Format(SR.ObjectDepthTooLarge, json.CurrentState.Options.MaxDepth);
                     break;
@@ -574,19 +577,19 @@ namespace SpanJson
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static FormatException GetFormatException(DateType dateType)
+        public static FormatException GetFormatException(DataType dateType)
         {
             string message = "";
 
             switch (dateType)
             {
-                case DateType.DateTime:
+                case DataType.DateTime:
                     message = SR.FormatDateTime;
                     break;
-                case DateType.DateTimeOffset:
+                case DataType.DateTimeOffset:
                     message = SR.FormatDateTimeOffset;
                     break;
-                case DateType.Base64String:
+                case DataType.Base64String:
                     message = SR.CannotDecodeInvalidBase64;
                     break;
                 default:
@@ -602,7 +605,7 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static NotSupportedException GetNotSupportedException_SerializationNotSupportedCollection(Type propertyType, Type parentType, MemberInfo memberInfo)
         {
-            if (parentType is object && parentType != typeof(object) && memberInfo is object)
+            if (parentType is not null && parentType != typeof(object) && memberInfo is not null)
             {
                 return new NotSupportedException(SR.Format(SR.SerializationNotSupportedCollection, propertyType, $"{parentType}.{memberInfo.Name}"));
             }
@@ -626,7 +629,7 @@ namespace SpanJson
         Decimal
     }
 
-    internal enum DateType
+    internal enum DataType
     {
         DateTime,
         DateTimeOffset,

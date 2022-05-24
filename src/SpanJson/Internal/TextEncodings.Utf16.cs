@@ -4,7 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Text;
 
-    public static partial class TextEncodings
+    partial class TextEncodings
     {
         public static partial class Utf16
         {

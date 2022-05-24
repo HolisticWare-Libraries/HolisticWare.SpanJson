@@ -48,7 +48,7 @@ namespace SpanJson.Formatters
                     writer.IncrementDepth();
                     writer.WriteUtf8Name(EscapingHelper.GetEncodedText(item.Key, resolver.EscapeHandling));
                     var propertyValue = item.Value;
-                    if (propertyValue is object)
+                    if (propertyValue is not null)
                     {
                         formatter.Serialize(ref writer, propertyValue, resolver);
                     }
@@ -86,7 +86,7 @@ namespace SpanJson.Formatters
                     writer.IncrementDepth();
                     writer.WriteUtf16Name(EscapingHelper.GetEncodedText(item.Key, resolver.EscapeHandling));
                     var propertyValue = item.Value;
-                    if (propertyValue is object)
+                    if (propertyValue is not null)
                     {
                         formatter.Serialize(ref writer, propertyValue, resolver);
                     }

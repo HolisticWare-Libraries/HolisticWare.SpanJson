@@ -4,10 +4,12 @@
 
 // Largely based on https://github.com/dotnet/corefx/blob/8135319caa7e457ed61053ca1418313b88057b51/src/System.Text.Json/src/System/Text/Json/Writer/JsonWriterHelper.Transcoding.cs#L12
 
+#if NET451
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text.Encodings.Web;
 
 namespace SpanJson.Internal
 {
@@ -15,6 +17,71 @@ namespace SpanJson.Internal
     {
         public static partial class NonAscii
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static JsonEncodedText GetEncodedText(string text)
+            {
+                return s_encodedTextCache.GetOrAdd(text, s => JsonEncodedText.Encode(s, JsonEscapeHandling.EscapeNonAscii));
+            }
+
+            public static int NeedsEscaping(in ReadOnlySpan<byte> utf8Source, JavaScriptEncoder encoder = null)
+            {
+                int idx;
+
+#if !NET451
+                if (encoder is not null)
+                {
+                    idx = encoder.FindFirstCharacterToEncodeUtf8(utf8Source);
+                    goto Return;
+                }
+#endif
+
+                ref byte space = ref MemoryMarshal.GetReference(utf8Source);
+                idx = 0;
+                uint nlen = (uint)utf8Source.Length;
+                while ((uint)idx < nlen)
+                {
+                    if (NeedsEscaping(Unsafe.Add(ref space, idx))) { goto Return; }
+                    idx++;
+                }
+
+                idx = -1; // all characters allowed
+
+            Return:
+                return idx;
+            }
+
+            public static unsafe int NeedsEscaping(in ReadOnlySpan<char> utf16Source, JavaScriptEncoder encoder = null)
+            {
+                int idx;
+
+#if !NET451
+                // Some implementations of JavascriptEncoder.FindFirstCharacterToEncode may not accept
+                // null pointers and gaurd against that. Hence, check up-front and fall down to return -1.
+                if (encoder is not null && !utf16Source.IsEmpty)
+                {
+                    fixed (char* ptr = utf16Source)
+                    {
+                        idx = encoder.FindFirstCharacterToEncode(ptr, utf16Source.Length);
+                    }
+                    goto Return;
+                }
+#endif
+
+                ref char space = ref MemoryMarshal.GetReference(utf16Source);
+                idx = 0;
+                uint nlen = (uint)utf16Source.Length;
+                while ((uint)idx < nlen)
+                {
+                    if (NeedsEscaping(Unsafe.Add(ref space, idx))) { goto Return; }
+                    idx++;
+                }
+
+                idx = -1; // all characters allowed
+
+            Return:
+                return idx;
+            }
+
             public static void EscapeString(in ReadOnlySpan<byte> utf8Source, Span<byte> destination, int indexOfFirstByteToEscape, out int written)
             {
                 Debug.Assert(indexOfFirstByteToEscape >= 0 && indexOfFirstByteToEscape < utf8Source.Length);
@@ -73,3 +140,4 @@ namespace SpanJson.Internal
         }
     }
 }
+#endif

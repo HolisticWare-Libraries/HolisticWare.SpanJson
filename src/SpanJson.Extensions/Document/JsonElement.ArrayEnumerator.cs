@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace SpanJson.Document
 {
-    public partial struct JsonElement
+    partial struct JsonElement
     {
         /// <summary>
         ///   An enumerable and enumerator for the contents of a JSON array.
@@ -19,20 +19,31 @@ namespace SpanJson.Document
         {
             private readonly JsonElement _target;
             private int _curIdx;
-            private readonly int _endIdx;
+            private readonly int _endIdxOrVersion;
 
             internal ArrayEnumerator(JsonElement target)
             {
-                Debug.Assert(target.TokenType == JsonTokenType.BeginArray);
-
                 _target = target;
                 _curIdx = -1;
-                _endIdx = _target._parent.GetEndIndex(_target._idx, includeEndElement: false);
+
+                Debug.Assert(target.TokenType == JsonTokenType.BeginArray);
+
+                _endIdxOrVersion = target._parent.GetEndIndex(_target._idx, includeEndElement: false);
             }
 
             /// <inheritdoc />
-            public JsonElement Current =>
-                (uint)_curIdx > JsonSharedConstant.TooBigOrNegative ? default : new JsonElement(_target._parent, _curIdx);
+            public JsonElement Current
+            {
+                get
+                {
+                    if ((uint)_curIdx > JsonSharedConstant.TooBigOrNegative)
+                    {
+                        return default;
+                    }
+
+                    return new JsonElement(_target._parent, _curIdx);
+                }
+            }
 
             /// <summary>
             ///   Returns an enumerator that iterates through a collection.
@@ -57,7 +68,7 @@ namespace SpanJson.Document
             /// <inheritdoc />
             public void Dispose()
             {
-                _curIdx = _endIdx;
+                _curIdx = _endIdxOrVersion;
             }
 
             /// <inheritdoc />
@@ -72,7 +83,7 @@ namespace SpanJson.Document
             /// <inheritdoc />
             public bool MoveNext()
             {
-                if (_curIdx >= _endIdx)
+                if (_curIdx >= _endIdxOrVersion)
                 {
                     return false;
                 }
@@ -86,7 +97,7 @@ namespace SpanJson.Document
                     _curIdx = _target._parent.GetEndIndex(_curIdx, includeEndElement: true);
                 }
 
-                return _curIdx < _endIdx;
+                return _curIdx < _endIdxOrVersion;
             }
         }
     }

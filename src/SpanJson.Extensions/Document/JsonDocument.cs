@@ -1,6 +1,5 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
 using System;
 using System.Buffers;
@@ -28,7 +27,13 @@ namespace SpanJson.Document
     {
         private ReadOnlyMemory<byte> _utf8Json;
         private MetadataDb _parsedData;
-        private byte[] _extraRentedBytes;
+
+        private byte[] _extraRentedArrayPoolBytes;
+        private bool _hasExtraRentedArrayPoolBytes;
+
+        private PooledByteBufferWriter _extraPooledByteBufferWriter;
+        private bool _hasExtraPooledByteBufferWriter;
+
         private (int, string) _lastIndexAndString = (-1, null);
 
         internal bool IsDisposable { get; }
@@ -77,19 +82,33 @@ namespace SpanJson.Document
         private JsonDocument(
             in ReadOnlyMemory<byte> utf8Json,
             MetadataDb parsedData,
-            byte[] extraRentedBytes,
+            byte[] extraRentedArrayPoolBytes = null,
+            PooledByteBufferWriter extraPooledByteBufferWriter = null,
             bool isDisposable = true)
         {
             Debug.Assert(!utf8Json.IsEmpty);
 
+            // We never have both rented fields.
+            Debug.Assert(extraRentedArrayPoolBytes == null || extraPooledByteBufferWriter == null);
+
             _utf8Json = utf8Json;
             _parsedData = parsedData;
-            _extraRentedBytes = extraRentedBytes;
+
+            if (extraRentedArrayPoolBytes != null)
+            {
+                _hasExtraRentedArrayPoolBytes = true;
+                _extraRentedArrayPoolBytes = extraRentedArrayPoolBytes;
+            }
+            else if (extraPooledByteBufferWriter != null)
+            {
+                _hasExtraPooledByteBufferWriter = true;
+                _extraPooledByteBufferWriter = extraPooledByteBufferWriter;
+            }
 
             IsDisposable = isDisposable;
 
-            // extraRentedBytes better be null if we're not disposable.
-            Debug.Assert(isDisposable || extraRentedBytes is null);
+            // Both rented fields better be null if we're not disposable.
+            Debug.Assert(isDisposable || (_extraRentedArrayPoolBytes == null && _extraPooledByteBufferWriter == null));
         }
 
         /// <inheritdoc />
@@ -104,14 +123,22 @@ namespace SpanJson.Document
             _parsedData.Dispose();
             _utf8Json = ReadOnlyMemory<byte>.Empty;
 
-            // When "extra rented bytes exist" they contain the document,
-            // and thus need to be cleared before being returned.
-            byte[] extraRentedBytes = Interlocked.Exchange(ref _extraRentedBytes, null);
-
-            if (extraRentedBytes is object)
+            if (_hasExtraRentedArrayPoolBytes)
             {
-                //extraRentedBytes.AsSpan(0, length).Clear();
-                ArrayPool<byte>.Shared.Return(extraRentedBytes);
+                byte[] extraRentedBytes = Interlocked.Exchange(ref _extraRentedArrayPoolBytes, null);
+
+                if (extraRentedBytes != null)
+                {
+                    // When "extra rented bytes exist" it contains the document,
+                    // and thus needs to be cleared before being returned.
+                    extraRentedBytes.AsSpan(0, length).Clear();
+                    ArrayPool<byte>.Shared.Return(extraRentedBytes);
+                }
+            }
+            else if (_hasExtraPooledByteBufferWriter)
+            {
+                PooledByteBufferWriter extraBufferWriter = Interlocked.Exchange(ref _extraPooledByteBufferWriter, null);
+                extraBufferWriter?.Dispose();
             }
         }
 
@@ -220,6 +247,11 @@ namespace SpanJson.Document
             return endIndex;
         }
 
+        internal ReadOnlyMemory<byte> GetRootRawValue()
+        {
+            return GetRawValue(0, includeQuotes: true);
+        }
+
         internal ReadOnlyMemory<byte> GetRawValue(int index, bool includeQuotes)
         {
             CheckNotDisposed();
@@ -285,6 +317,7 @@ namespace SpanJson.Document
 
             if (lastIdx == index)
             {
+                Debug.Assert(lastString != null);
                 return lastString;
             }
 
@@ -312,6 +345,7 @@ namespace SpanJson.Document
                 lastString = JsonReaderHelper.TranscodeHelper(segment);
             }
 
+            Debug.Assert(lastString != null);
             _lastIndexAndString = (index, lastString);
             return lastString;
         }
@@ -332,8 +366,8 @@ namespace SpanJson.Document
             byte[] otherUtf8TextArray = null;
 
             int length = checked(otherText.Length * JsonSharedConstant.MaxExpansionFactorWhileTranscoding);
-            Span<byte> otherUtf8Text = (uint)length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc byte[JsonSharedConstant.StackallocMaxLength] :
+            Span<byte> otherUtf8Text = (uint)length <= JsonSharedConstant.StackallocByteThresholdU ?
+                stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (otherUtf8TextArray = ArrayPool<byte>.Shared.Rent(length));
 
             OperationStatus status = TextEncodings.Utf16.ToUtf8(otherText,
@@ -349,10 +383,10 @@ namespace SpanJson.Document
                 Debug.Assert(status == OperationStatus.Done);
                 Debug.Assert(consumed == otherText.Length);
 
-                result = TextEquals(index, otherUtf8Text.Slice(0, written), isPropertyName);
+                result = TextEquals(index, otherUtf8Text.Slice(0, written), isPropertyName, shouldUnescape: true);
             }
 
-            if (otherUtf8TextArray is object)
+            if (otherUtf8TextArray is not null)
             {
                 //otherUtf8Text.Slice(0, written).Clear();
                 ArrayPool<byte>.Shared.Return(otherUtf8TextArray);
@@ -361,7 +395,7 @@ namespace SpanJson.Document
             return result;
         }
 
-        internal bool TextEquals(int index, in ReadOnlySpan<byte> otherUtf8Text, bool isPropertyName)
+        internal bool TextEquals(int index, in ReadOnlySpan<byte> otherUtf8Text, bool isPropertyName, bool shouldUnescape)
         {
             CheckNotDisposed();
 
@@ -376,12 +410,12 @@ namespace SpanJson.Document
             ReadOnlySpan<byte> data = _utf8Json.Span;
             ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
 
-            if ((uint)otherUtf8Text.Length > (uint)segment.Length)
+            if ((uint)otherUtf8Text.Length > (uint)segment.Length || (!shouldUnescape && otherUtf8Text.Length != segment.Length))
             {
                 return false;
             }
 
-            if (row.HasComplexChildren)
+            if (row.HasComplexChildren && shouldUnescape)
             {
                 if (otherUtf8Text.Length < segment.Length / JsonSharedConstant.MaxExpansionFactorWhileEscaping)
                 {
@@ -618,9 +652,7 @@ namespace SpanJson.Document
             ReadOnlySpan<byte> data = _utf8Json.Span;
             ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
 
-            char standardFormat = row.HasComplexChildren ? JsonSharedConstant.ScientificNotationFormat : default;
-
-            if (Utf8Parser.TryParse(segment, out double tmp, out int bytesConsumed, standardFormat) &&
+            if (Utf8Parser.TryParse(segment, out double tmp, out int bytesConsumed) &&
                 segment.Length == bytesConsumed)
             {
                 value = tmp;
@@ -642,9 +674,7 @@ namespace SpanJson.Document
             ReadOnlySpan<byte> data = _utf8Json.Span;
             ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
 
-            char standardFormat = row.HasComplexChildren ? JsonSharedConstant.ScientificNotationFormat : default;
-
-            if (Utf8Parser.TryParse(segment, out float tmp, out int bytesConsumed, standardFormat) &&
+            if (Utf8Parser.TryParse(segment, out float tmp, out int bytesConsumed) &&
                 segment.Length == bytesConsumed)
             {
                 value = tmp;
@@ -666,9 +696,7 @@ namespace SpanJson.Document
             ReadOnlySpan<byte> data = _utf8Json.Span;
             ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
 
-            char standardFormat = row.HasComplexChildren ? JsonSharedConstant.ScientificNotationFormat : default;
-
-            if (Utf8Parser.TryParse(segment, out decimal tmp, out int bytesConsumed, standardFormat) &&
+            if (Utf8Parser.TryParse(segment, out decimal tmp, out int bytesConsumed) &&
                 segment.Length == bytesConsumed)
             {
                 value = tmp;
@@ -690,7 +718,7 @@ namespace SpanJson.Document
             ReadOnlySpan<byte> data = _utf8Json.Span;
             ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
 
-            if (!JsonReaderHelper.IsValidDateTimeOffsetParseLength(segment.Length))
+            if (!JsonHelpers.IsValidDateTimeOffsetParseLength(segment.Length))
             {
                 value = default;
                 return false;
@@ -704,8 +732,7 @@ namespace SpanJson.Document
 
             Debug.Assert(segment.IndexOf(JsonUtf8Constant.BackSlash) == -1);
 
-            if (segment.Length <= JsonSharedConstant.MaximumDateTimeOffsetParseLength
-                && JsonReaderHelper.TryParseAsISO(segment, out DateTime tmp))
+            if (JsonHelpers.TryParseAsISO(segment, out DateTime tmp))
             {
                 value = tmp;
                 return true;
@@ -726,7 +753,7 @@ namespace SpanJson.Document
             ReadOnlySpan<byte> data = _utf8Json.Span;
             ReadOnlySpan<byte> segment = data.Slice(row.Location, row.SizeOrLength);
 
-            if (!JsonReaderHelper.IsValidDateTimeOffsetParseLength(segment.Length))
+            if (!JsonHelpers.IsValidDateTimeOffsetParseLength(segment.Length))
             {
                 value = default;
                 return false;
@@ -740,8 +767,7 @@ namespace SpanJson.Document
 
             Debug.Assert(segment.IndexOf(JsonUtf8Constant.BackSlash) == -1);
 
-            if (segment.Length <= JsonSharedConstant.MaximumDateTimeOffsetParseLength
-                && JsonReaderHelper.TryParseAsISO(segment, out DateTimeOffset tmp))
+            if (JsonHelpers.TryParseAsISO(segment, out DateTimeOffset tmp))
             {
                 value = tmp;
                 return true;
@@ -844,11 +870,15 @@ namespace SpanJson.Document
         {
             int endIndex = GetEndIndex(index, true);
             MetadataDb newDb = _parsedData.CopySegment(index, endIndex);
-            ReadOnlyMemory<byte> segment = GetRawValue(index, includeQuotes: true);
-            ReadOnlyMemory<byte> segmentCopy = _extraRentedBytes is null ? segment : segment.ToArray();
+            ReadOnlyMemory<byte> segmentCopy = GetRawValue(index, includeQuotes: true).ToArray();
 
             JsonDocument newDocument =
-                new JsonDocument(segmentCopy, newDb, extraRentedBytes: null, isDisposable: false);
+                new JsonDocument(
+                    segmentCopy,
+                    newDb,
+                    extraRentedArrayPoolBytes: null,
+                    extraPooledByteBufferWriter: null,
+                    isDisposable: false);
 
             return newDocument.RootElement;
         }
@@ -965,7 +995,7 @@ namespace SpanJson.Document
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void ClearAndReturn(ArraySegment<byte> rented)
         {
-            if (rented.Array is object)
+            if (rented.Array is not null)
             {
                 //rented.AsSpan().Clear();
                 ArrayPool<byte>.Shared.Return(rented.Array);
@@ -1006,7 +1036,7 @@ namespace SpanJson.Document
 
         private static void ParseCore(
             ReadOnlySpan<byte> utf8JsonSpan,
-            Utf8JsonReader reader,
+            JsonReaderOptions readerOptions,
             ref MetadataDb database,
             ref StackRowStack stack)
         {
@@ -1015,11 +1045,16 @@ namespace SpanJson.Document
             int numberOfRowsForMembers = 0;
             int numberOfRowsForValues = 0;
 
+            Utf8JsonReader reader = new Utf8JsonReader(
+                utf8JsonSpan,
+                isFinalBlock: true,
+                new JsonReaderState(options: readerOptions));
+
             while (reader.Read())
             {
                 JsonTokenType tokenType = reader.TokenType;
 
-                // Since the input payload is contained within a Span, 
+                // Since the input payload is contained within a Span,
                 // token start index can never be larger than int.MaxValue (i.e. utf8JsonSpan.Length).
                 Debug.Assert(reader.TokenStartIndex <= int.MaxValue);
                 int tokenStart = (int)reader.TokenStartIndex;
@@ -1143,21 +1178,6 @@ namespace SpanJson.Document
                             else
                             {
                                 database.Append(tokenType, tokenStart, reader.ValueSpan.Length);
-
-                                if (tokenType == JsonTokenType.Number)
-                                {
-                                    switch (reader._numberFormat)
-                                    {
-                                        case JsonSharedConstant.ScientificNotationFormat:
-                                            database.SetHasComplexChildren(database.Length - DbRow.Size);
-                                            break;
-                                        default:
-                                            Debug.Assert(
-                                                reader._numberFormat == default,
-                                                $"Unhandled numeric format {reader._numberFormat}");
-                                            break;
-                                    }
-                                }
                             }
                             break;
                         }
@@ -1167,7 +1187,7 @@ namespace SpanJson.Document
             }
 
             Debug.Assert(reader.BytesConsumed == utf8JsonSpan.Length);
-            database.TrimExcess();
+            database.CompleteAllocations();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1187,7 +1207,7 @@ namespace SpanJson.Document
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void CheckExpectedType(JsonTokenType expected, JsonTokenType actual)
+        private static void CheckExpectedType(JsonTokenType expected, JsonTokenType actual)
         {
             if (expected != actual)
             {
@@ -1195,9 +1215,7 @@ namespace SpanJson.Document
             }
         }
 
-        private static void CheckSupportedOptions(
-            JsonReaderOptions readerOptions,
-            ExceptionArgument paramName)
+        private static void CheckSupportedOptions(JsonReaderOptions readerOptions, ExceptionArgument paramName)
         {
             // Since these are coming from a valid instance of Utf8JsonReader, the JsonReaderOptions must already be valid
             Debug.Assert(readerOptions.CommentHandling >= 0 && readerOptions.CommentHandling <= JsonCommentHandling.Allow);

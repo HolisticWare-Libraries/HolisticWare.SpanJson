@@ -7,12 +7,13 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using SpanJson.Helpers;
 
 namespace SpanJson.Internal
 {
-    internal static partial class JsonReaderHelper
+    static partial class JsonHelpers
     {
-        private struct Utf16DateTimeParseData
+        private struct Utf8DateTimeParseData
         {
             public int Year;
             public int Month;
@@ -23,27 +24,121 @@ namespace SpanJson.Internal
             public int Fraction; // This value should never be greater than 9_999_999.
             public int OffsetHours;
             public int OffsetMinutes;
-            public bool OffsetNegative => OffsetToken == JsonUtf16Constant.Hyphen;
-            public char OffsetToken;
+            public bool OffsetNegative => OffsetToken == JsonUtf8Constant.Hyphen;
+            public byte OffsetToken;
+        }
+
+        public static string FormatDateTimeOffset(DateTimeOffset value)
+        {
+            Span<byte> span = stackalloc byte[JsonSharedConstant.MaximumFormatDateTimeOffsetLength];
+
+            DateTimeFormatter.WriteDateTimeOffsetTrimmed(span, value, out int bytesWritten);
+
+            return JsonReaderHelper.GetTextFromUtf8(span.Slice(0, bytesWritten));
+        }
+
+        public static string FormatDateTime(DateTime value)
+        {
+            Span<byte> span = stackalloc byte[JsonSharedConstant.MaximumFormatDateTimeOffsetLength];
+
+            DateTimeFormatter.WriteDateTimeTrimmed(span, value, out int bytesWritten);
+
+            return JsonReaderHelper.GetTextFromUtf8(span.Slice(0, bytesWritten));
+        }
+
+        public static bool TryParseAsISO(in ReadOnlySpan<char> source, out DateTime value)
+        {
+            if (!IsValidDateTimeOffsetParseLength(source.Length))
+            {
+                value = default;
+                return false;
+            }
+
+            int maxLength = checked(source.Length * JsonSharedConstant.MaxExpansionFactorWhileTranscoding);
+
+            Span<byte> bytes = (uint)maxLength <= JsonSharedConstant.StackallocByteThresholdU
+                ? stackalloc byte[JsonSharedConstant.StackallocByteThreshold]
+                : new byte[maxLength];
+
+            int length = JsonReaderHelper.GetUtf8FromText(source, bytes);
+
+            bytes = bytes.Slice(0, length);
+
+            if (bytes.IndexOf(JsonUtf8Constant.BackSlash) != -1)
+            {
+                return JsonReaderHelper.TryGetEscapedDateTime(bytes, out value);
+            }
+
+            Debug.Assert(bytes.IndexOf(JsonUtf8Constant.BackSlash) == -1);
+
+            if (TryParseAsISO(bytes, out DateTime tmp))
+            {
+                value = tmp;
+                return true;
+            }
+
+            value = default;
+            return false;
+        }
+
+        public static bool TryParseAsISO(in ReadOnlySpan<char> source, out DateTimeOffset value)
+        {
+            if (!IsValidDateTimeOffsetParseLength(source.Length))
+            {
+                value = default;
+                return false;
+            }
+
+            int maxLength = checked(source.Length * JsonSharedConstant.MaxExpansionFactorWhileTranscoding);
+
+            Span<byte> bytes = (uint)maxLength <= JsonSharedConstant.StackallocByteThresholdU
+                ? stackalloc byte[JsonSharedConstant.StackallocByteThreshold]
+                : new byte[maxLength];
+
+            int length = JsonReaderHelper.GetUtf8FromText(source, bytes);
+
+            bytes = bytes.Slice(0, length);
+
+            if (bytes.IndexOf(JsonUtf8Constant.BackSlash) != -1)
+            {
+                return JsonReaderHelper.TryGetEscapedDateTimeOffset(bytes, out value);
+            }
+
+            Debug.Assert(bytes.IndexOf(JsonUtf8Constant.BackSlash) == -1);
+
+            if (TryParseAsISO(bytes, out DateTimeOffset tmp))
+            {
+                value = tmp;
+                return true;
+            }
+
+            value = default;
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsValidDateTimeOffsetParseLength(int length)
+        {
+            return IsInRangeInclusive(length, JsonSharedConstant.MinimumDateTimeParseLength, JsonSharedConstant.MaximumEscapedDateTimeOffsetParseLength);
         }
 
         /// <summary>Parse the given UTF-8 <paramref name="source"/> as extended ISO 8601 format.</summary>
         /// <param name="source">UTF-8 source to parse.</param>
         /// <param name="value">The parsed <see cref="DateTime"/> if successful.</param>
         /// <returns>"true" if successfully parsed.</returns>
-        public static bool TryParseAsISO(ReadOnlySpan<char> source, out DateTime value)
+        public static bool TryParseAsISO(in ReadOnlySpan<byte> source, out DateTime value)
         {
-            if (!TryParseDateTimeOffset(source, out Utf16DateTimeParseData parseData))
+            if (!TryParseDateTimeOffset(source, out Utf8DateTimeParseData parseData))
             {
                 value = default;
                 return false;
             }
 
-            if (parseData.OffsetToken == JsonUtf16Constant.UtcOffsetToken)
+            if (parseData.OffsetToken == JsonUtf8Constant.UtcOffsetToken)
             {
                 return TryCreateDateTime(parseData, DateTimeKind.Utc, out value);
             }
-            else if (parseData.OffsetToken == JsonUtf16Constant.Plus || parseData.OffsetToken == JsonUtf16Constant.Hyphen)
+            else if (parseData.OffsetToken == JsonUtf8Constant.Plus || parseData.OffsetToken == JsonUtf8Constant.Hyphen)
             {
                 if (!TryCreateDateTimeOffset(ref parseData, out DateTimeOffset dateTimeOffset))
                 {
@@ -62,16 +157,16 @@ namespace SpanJson.Internal
         /// <param name="source">UTF-8 source to parse.</param>
         /// <param name="value">The parsed <see cref="DateTimeOffset"/> if successful.</param>
         /// <returns>"true" if successfully parsed.</returns>
-        public static bool TryParseAsISO(ReadOnlySpan<char> source, out DateTimeOffset value)
+        public static bool TryParseAsISO(in ReadOnlySpan<byte> source, out DateTimeOffset value)
         {
-            if (!TryParseDateTimeOffset(source, out Utf16DateTimeParseData parseData))
+            if (!TryParseDateTimeOffset(source, out Utf8DateTimeParseData parseData))
             {
                 value = default;
                 return false;
             }
 
-            if (parseData.OffsetToken == JsonUtf16Constant.UtcOffsetToken || // Same as specifying an offset of "+00:00", except that DateTime's Kind gets set to UTC rather than Local
-                parseData.OffsetToken == JsonUtf16Constant.Plus || parseData.OffsetToken == JsonUtf16Constant.Hyphen)
+            if (parseData.OffsetToken == JsonUtf8Constant.UtcOffsetToken || // Same as specifying an offset of "+00:00", except that DateTime's Kind gets set to UTC rather than Local
+                parseData.OffsetToken == JsonUtf8Constant.Plus || parseData.OffsetToken == JsonUtf8Constant.Hyphen)
             {
                 return TryCreateDateTimeOffset(ref parseData, out value);
             }
@@ -82,16 +177,16 @@ namespace SpanJson.Internal
 
         /// <summary>ISO 8601 date time parser (ISO 8601-1:2019).</summary>
         /// <param name="source">The date/time to parse in UTF-8 format.</param>
-        /// <param name="parseData">The parsed <see cref="Utf16DateTimeParseData"/> for the given <paramref name="source"/>.</param>
+        /// <param name="parseData">The parsed <see cref="Utf8DateTimeParseData"/> for the given <paramref name="source"/>.</param>
         /// <remarks>
         /// Supports extended calendar date (5.2.2.1) and complete (5.4.2.1) calendar date/time of day
         /// representations with optional specification of seconds and fractional seconds.
-        /// 
+        ///
         /// Times can be explicitly specified as UTC ("Z" - 5.3.3) or offsets from UTC ("+/-hh:mm" 5.3.4.2).
-        /// If unspecified they are considered to be local per spec. 
-        /// 
+        /// If unspecified they are considered to be local per spec.
+        ///
         /// Examples: (TZD is either "Z" or hh:mm offset from UTC)
-        /// 
+        ///
         ///  YYYY-MM-DD               (eg 1997-07-16)
         ///  YYYY-MM-DDThh:mm         (eg 1997-07-16T19:20)
         ///  YYYY-MM-DDThh:mm:ss      (eg 1997-07-16T19:20:30)
@@ -105,29 +200,25 @@ namespace SpanJson.Internal
         /// Spaces are not permitted.
         /// </remarks>
         /// <returns>"true" if successfully parsed.</returns>
-        private static bool TryParseDateTimeOffset(ReadOnlySpan<char> source, out Utf16DateTimeParseData parseData)
+        private static bool TryParseDateTimeOffset(in ReadOnlySpan<byte> source, out Utf8DateTimeParseData parseData)
         {
+            parseData = default;
             uint srcLen = (uint)source.Length;
-            // Source does not have enough characters for YYYY-MM-DD
-            if (srcLen < 10u)
-            {
-                parseData = default;
-                return false;
-            }
+
+            // too short datetime
+            Debug.Assert(srcLen >= 10u);
 
             // Parse the calendar date
             // -----------------------
             // ISO 8601-1:2019 5.2.2.1b "Calendar date complete extended format"
-            //  [dateX] = [year][“-”][month][“-”][day]
+            //  [dateX] = [year]["-"][month]["-"][day]
             //  [year]  = [YYYY] [0000 - 9999] (4.3.2)
             //  [month] = [MM] [01 - 12] (4.3.3)
             //  [day]   = [DD] [01 - 28, 29, 30, 31] (4.3.4)
             //
             // Note: 5.2.2.2 "Representations with reduced precision" allows for
-            // just [year][“-”][month] (a) and just [year] (b), but we currently
+            // just [year]["-"][month] (a) and just [year] (b), but we currently
             // don't permit it.
-
-            parseData = new Utf16DateTimeParseData();
 
             {
                 uint digit1 = source[0] - (uint)'0';
@@ -143,9 +234,9 @@ namespace SpanJson.Internal
                 parseData.Year = (int)(digit1 * 1000 + digit2 * 100 + digit3 * 10 + digit4);
             }
 
-            if (source[4] != JsonUtf16Constant.Hyphen
+            if (source[4] != JsonUtf8Constant.Hyphen
                 || !TryGetNextTwoDigits(source.Slice(start: 5, length: 2), ref parseData.Month)
-                || source[7] != JsonUtf16Constant.Hyphen
+                || source[7] != JsonUtf8Constant.Hyphen
                 || !TryGetNextTwoDigits(source.Slice(start: 8, length: 2), ref parseData.Day))
             {
                 return false;
@@ -153,7 +244,6 @@ namespace SpanJson.Internal
 
             // We now have YYYY-MM-DD [dateX]
 
-            Debug.Assert(srcLen >= 10u);
             if (srcLen == 10u)
             {
                 // Just a calendar date
@@ -164,18 +254,18 @@ namespace SpanJson.Internal
             // ---------------------
             //
             // ISO 8601-1:2019 5.3.1.2b "Local time of day complete extended format"
-            //  [timeX]   = [“T”][hour][“:”][min][“:”][sec]
+            //  [timeX]   = ["T"][hour][":"][min][":"][sec]
             //  [hour]    = [hh] [00 - 23] (4.3.8a)
             //  [minute]  = [mm] [00 - 59] (4.3.9a)
             //  [sec]     = [ss] [00 - 59, 60 with a leap second] (4.3.10a)
             //
             // ISO 8601-1:2019 5.3.3 "UTC of day"
-            //  [timeX][“Z”]
+            //  [timeX]["Z"]
             //
             // ISO 8601-1:2019 5.3.4.2 "Local time of day with the time shift between
             // local time scale and UTC" (Extended format)
             //
-            //  [shiftX] = [“+”|“-”][hour][“:”][min]
+            //  [shiftX] = ["+"|"-"][hour][":"][min]
             //
             // Notes:
             //
@@ -203,7 +293,7 @@ namespace SpanJson.Internal
             }
 
             // Parse THH:MM (e.g. "T10:32")
-            if (source[10] != JsonUtf16Constant.TimePrefix || source[13] != JsonUtf16Constant.Colon
+            if (source[10] != JsonUtf8Constant.TimePrefix || source[13] != JsonUtf8Constant.Colon
                 || !TryGetNextTwoDigits(source.Slice(start: 11, length: 2), ref parseData.Hour)
                 || !TryGetNextTwoDigits(source.Slice(start: 14, length: 2), ref parseData.Minute))
             {
@@ -217,20 +307,20 @@ namespace SpanJson.Internal
                 return true;
             }
 
-            char curByte = source[16];
+            byte curByte = source[16];
             int sourceIndex = 17;
 
             // Either a TZD ['Z'|'+'|'-'] or a seconds separator [':'] is valid at this point
             switch (curByte)
             {
-                case JsonUtf16Constant.UtcOffsetToken:
-                    parseData.OffsetToken = JsonUtf16Constant.UtcOffsetToken;
+                case JsonUtf8Constant.UtcOffsetToken:
+                    parseData.OffsetToken = JsonUtf8Constant.UtcOffsetToken;
                     return (uint)sourceIndex == srcLen ? true : false;
-                case JsonUtf16Constant.Plus:
-                case JsonUtf16Constant.Hyphen:
+                case JsonUtf8Constant.Plus:
+                case JsonUtf8Constant.Hyphen:
                     parseData.OffsetToken = curByte;
                     return ParseOffset(ref parseData, source.Slice(sourceIndex));
-                case JsonUtf16Constant.Colon:
+                case JsonUtf8Constant.Colon:
                     break;
                 default:
                     return false;
@@ -256,14 +346,14 @@ namespace SpanJson.Internal
             // Either a TZD ['Z'|'+'|'-'] or a seconds decimal fraction separator ['.'] is valid at this point
             switch (curByte)
             {
-                case JsonUtf16Constant.UtcOffsetToken:
-                    parseData.OffsetToken = JsonUtf16Constant.UtcOffsetToken;
+                case JsonUtf8Constant.UtcOffsetToken:
+                    parseData.OffsetToken = JsonUtf8Constant.UtcOffsetToken;
                     return (uint)sourceIndex == srcLen ? true : false;
-                case JsonUtf16Constant.Plus:
-                case JsonUtf16Constant.Hyphen:
+                case JsonUtf8Constant.Plus:
+                case JsonUtf8Constant.Hyphen:
                     parseData.OffsetToken = curByte;
                     return ParseOffset(ref parseData, source.Slice(sourceIndex));
-                case JsonUtf16Constant.Period:
+                case JsonUtf8Constant.Period:
                     break;
                 default:
                     return false;
@@ -281,7 +371,7 @@ namespace SpanJson.Internal
                 int numDigitsRead = 0;
                 int fractionEnd = Math.Min(sourceIndex + JsonSharedConstant.DateTimeParseNumFractionDigits, source.Length);
 
-                while (sourceIndex < fractionEnd && JsonHelpers.IsDigit(curByte = source[sourceIndex]))
+                while (sourceIndex < fractionEnd && IsDigit(curByte = source[sourceIndex]))
                 {
                     if (numDigitsRead < JsonSharedConstant.DateTimeNumFractionDigits)
                     {
@@ -314,19 +404,18 @@ namespace SpanJson.Internal
             // TZD ['Z'|'+'|'-'] is valid at this point
             switch (curByte)
             {
-                case JsonUtf16Constant.UtcOffsetToken:
-                    parseData.OffsetToken = JsonUtf16Constant.UtcOffsetToken;
+                case JsonUtf8Constant.UtcOffsetToken:
+                    parseData.OffsetToken = JsonUtf8Constant.UtcOffsetToken;
                     return (uint)sourceIndex == srcLen ? true : false;
-                case JsonUtf16Constant.Plus:
-                case JsonUtf16Constant.Hyphen:
+                case JsonUtf8Constant.Plus:
+                case JsonUtf8Constant.Hyphen:
                     parseData.OffsetToken = curByte;
-                    return ParseOffset(ref parseData, source.Slice(sourceIndex))
-                        && true;
+                    return ParseOffset(ref parseData, source.Slice(sourceIndex));
                 default:
                     return false;
             }
 
-            static bool ParseOffset(ref Utf16DateTimeParseData parseData, ReadOnlySpan<char> offsetData)
+            static bool ParseOffset(ref Utf8DateTimeParseData parseData, ReadOnlySpan<byte> offsetData)
             {
                 uint offsetDataLen = (uint)offsetData.Length;
                 // Parse the hours for the offset
@@ -346,7 +435,7 @@ namespace SpanJson.Internal
 
                 // Ensure we have enough for ":mm"
                 if (offsetDataLen != 5u
-                    || offsetData[2] != JsonUtf16Constant.Colon
+                    || offsetData[2] != JsonUtf8Constant.Colon
                     || !TryGetNextTwoDigits(offsetData.Slice(3), ref parseData.OffsetMinutes))
                 {
                     return false;
@@ -357,7 +446,7 @@ namespace SpanJson.Internal
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool TryGetNextTwoDigits(ReadOnlySpan<char> source, ref int value)
+        private static bool TryGetNextTwoDigits(in ReadOnlySpan<byte> source, ref int value)
         {
             Debug.Assert(source.Length == 2);
 
@@ -377,7 +466,7 @@ namespace SpanJson.Internal
         // The following methods are borrowed verbatim from src/Common/src/CoreLib/System/Buffers/Text/Utf8Parser/Utf8Parser.Date.Helpers.cs
 
         /// <summary>Overflow-safe DateTimeOffset factory.</summary>
-        private static bool TryCreateDateTimeOffset(DateTime dateTime, ref Utf16DateTimeParseData parseData, out DateTimeOffset value)
+        private static bool TryCreateDateTimeOffset(DateTime dateTime, ref Utf8DateTimeParseData parseData, out DateTimeOffset value)
         {
             if (((uint)parseData.OffsetHours) > JsonSharedConstant.MaxDateTimeUtcOffsetHours)
             {
@@ -419,7 +508,7 @@ namespace SpanJson.Internal
         }
 
         /// <summary>Overflow-safe DateTimeOffset factory.</summary>
-        private static bool TryCreateDateTimeOffset(ref Utf16DateTimeParseData parseData, out DateTimeOffset value)
+        private static bool TryCreateDateTimeOffset(ref Utf8DateTimeParseData parseData, out DateTimeOffset value)
         {
             if (!TryCreateDateTime(parseData, kind: DateTimeKind.Unspecified, out DateTime dateTime))
             {
@@ -437,7 +526,7 @@ namespace SpanJson.Internal
         }
 
         /// <summary>Overflow-safe DateTimeOffset/Local time conversion factory.</summary>
-        private static bool TryCreateDateTimeOffsetInterpretingDataAsLocalTime(Utf16DateTimeParseData parseData, out DateTimeOffset value)
+        private static bool TryCreateDateTimeOffsetInterpretingDataAsLocalTime(Utf8DateTimeParseData parseData, out DateTimeOffset value)
         {
             if (!TryCreateDateTime(parseData, DateTimeKind.Local, out DateTime dateTime))
             {
@@ -461,7 +550,7 @@ namespace SpanJson.Internal
         }
 
         /// <summary>Overflow-safe DateTime factory.</summary>
-        private static bool TryCreateDateTime(Utf16DateTimeParseData parseData, DateTimeKind kind, out DateTime value)
+        private static bool TryCreateDateTime(Utf8DateTimeParseData parseData, DateTimeKind kind, out DateTime value)
         {
             if (parseData.Year == 0)
             {
@@ -497,7 +586,7 @@ namespace SpanJson.Internal
             }
 
             // This needs to allow leap seconds when appropriate.
-            // See https://github.com/dotnet/corefx/issues/39185.
+            // See https://github.com/dotnet/runtime/issues/30135.
             if (((uint)parseData.Second) > 59u)
             {
                 value = default;
@@ -516,5 +605,8 @@ namespace SpanJson.Internal
             value = new DateTime(ticks: ticks, kind: kind);
             return true;
         }
+
+        private static readonly int[] s_daysToMonth365 = { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 };
+        private static readonly int[] s_daysToMonth366 = { 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366 };
     }
 }

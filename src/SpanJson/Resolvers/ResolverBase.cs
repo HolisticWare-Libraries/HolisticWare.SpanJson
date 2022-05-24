@@ -137,10 +137,10 @@ namespace SpanJson.Resolvers
         public virtual IJsonFormatter GetFormatter(JsonMemberInfo memberInfo, Type overrideMemberType = null)
         {
             // ReSharper disable ConvertClosureToMethodGroup
-            if (memberInfo.CustomSerializer is object)
+            if (memberInfo.CustomSerializer is not null)
             {
                 var formatter = GetDefaultOrCreate(memberInfo.CustomSerializer);
-                if (formatter is ICustomJsonFormatter csf && memberInfo.CustomSerializerArguments is object)
+                if (formatter is ICustomJsonFormatter csf && memberInfo.CustomSerializerArguments is not null)
                 {
                     csf.Arguments = memberInfo.CustomSerializerArguments;
                 }
@@ -172,7 +172,7 @@ namespace SpanJson.Resolvers
         public IJsonFormatter<T, TSymbol> GetEnumStringFormatter<T>() where T : struct, Enum
         {
             var type = typeof(T);
-            if (type.FirstAttribute<FlagsAttribute>() is object)
+            if (type.FirstAttribute<FlagsAttribute>() is not null)
             {
                 var enumBaseType = Enum.GetUnderlyingType(type);
                 return (IJsonFormatter<T, TSymbol>)GetDefaultOrCreate(typeof(EnumStringFlagsFormatter<,,,>).GetCachedGenericType(type, enumBaseType, typeof(TSymbol), typeof(TResolver)));
@@ -215,7 +215,7 @@ namespace SpanJson.Resolvers
                     canWrite = propertyInfo.CanWrite;
                 }
 
-                if (memberInfo.FirstAttribute<JsonExtensionDataAttribute>() is object && typeof(IDictionary<string, object>).IsAssignableFrom(memberType) && canRead && canWrite)
+                if (memberInfo.FirstAttribute<JsonExtensionDataAttribute>() is not null && typeof(IDictionary<string, object>).IsAssignableFrom(memberType) && canRead && canWrite)
                 {
                     extensionMemberInfo = new JsonExtensionMemberInfo(memberInfo.Name, memberType, excludeNulls);
                 }
@@ -236,14 +236,14 @@ namespace SpanJson.Resolvers
             var declaredConstructors = type.GetTypeInfo().DeclaredConstructors.Where(c => !c.IsStatic && c.IsPublic).ToArray();
 
             constructor = declaredConstructors
-                .FirstOrDefault(a => a.FirstAttribute<JsonConstructorAttribute>() is object);
-            if (constructor is object)
+                .FirstOrDefault(a => a.FirstAttribute<JsonConstructorAttribute>() is not null);
+            if (constructor is not null)
             {
                 attribute = constructor.FirstAttribute<JsonConstructorAttribute>();
                 return;
             }
 
-            if (TryGetBaseClassJsonConstructorAttribute(type, out attribute))
+            if (TryGetBaseClassJsonConstructorAttribute(type, out attribute) || type.GetMethod("<Clone>$") is not null)
             {
                 // We basically take the one with the most parameters, this needs to match the dictionary // TODO find better method
                 constructor = declaredConstructors.OrderByDescending(a => a.GetParameters().Length)
@@ -252,21 +252,21 @@ namespace SpanJson.Resolvers
             }
 
             attribute = type.FirstAttribute<JsonConstructorAttribute>();
-            if (attribute is object)
+            if (attribute is not null)
             {
                 var parameterNames = attribute.ParameterNames;
-                var hasParameterNames = parameterNames is object && (uint)parameterNames.Length > 0u;
+                var hasParameterNames = parameterNames is not null && (uint)parameterNames.Length > 0u;
                 var parameterTypes = attribute.ParameterTypes;
-                var hasParameterTypes = parameterTypes is object && (uint)parameterTypes.Length > 0u;
+                var hasParameterTypes = parameterTypes is not null && (uint)parameterTypes.Length > 0u;
                 if (hasParameterTypes)
                 {
                     constructor = declaredConstructors.FirstOrDefault(a => MatchConstructor(a, parameterTypes));
-                    if (constructor is object) { return; }
+                    if (constructor is not null) { return; }
                 }
                 else if (hasParameterNames)
                 {
                     constructor = declaredConstructors.OrderByDescending(a => a.GetParameters().Length).FirstOrDefault(a => a.GetParameters().Length == parameterNames.Length);
-                    if (constructor is object) { return; }
+                    if (constructor is not null) { return; }
                 }
 
                 // We basically take the one with the most parameters, this needs to match the dictionary // TODO find better method
@@ -304,16 +304,16 @@ namespace SpanJson.Resolvers
         private IJsonFormatter BuildFormatter(Type type)
         {
             var integrated = GetIntegrated(type);
-            if (integrated is object)
+            if (integrated is not null)
             {
                 return integrated;
             }
 
             JsonCustomSerializerAttribute attr;
-            if ((attr = type.FirstAttribute<JsonCustomSerializerAttribute>()) is object)
+            if ((attr = type.FirstAttribute<JsonCustomSerializerAttribute>()) is not null)
             {
                 var formatter = GetDefaultOrCreate(attr.Type);
-                if (formatter is ICustomJsonFormatter csf && attr.Arguments is object)
+                if (formatter is ICustomJsonFormatter csf && attr.Arguments is not null)
                 {
                     csf.Arguments = attr.Arguments;
                 }
@@ -326,7 +326,7 @@ namespace SpanJson.Resolvers
             foreach (var item in resolvers)
             {
                 var f = item.GetFormatter(type);
-                if (f is object) { return f; }
+                if (f is not null) { return f; }
             }
 
             if (type == typeof(object))
@@ -356,7 +356,7 @@ namespace SpanJson.Resolvers
                 {
                     case EnumOptions.String:
                         {
-                            if (type.FirstAttribute<FlagsAttribute>() is object)
+                            if (type.FirstAttribute<FlagsAttribute>() is not null)
                             {
                                 var enumBaseType = Enum.GetUnderlyingType(type);
                                 return GetDefaultOrCreate(typeof(EnumStringFlagsFormatter<,,,>).GetCachedGenericType(type, enumBaseType, typeof(TSymbol), typeof(TResolver)));
@@ -432,7 +432,7 @@ namespace SpanJson.Resolvers
                 return true; // late checking with fallback
             }
 
-            return type.GetConstructor(Type.EmptyTypes) is object;
+            return type.GetConstructor(Type.EmptyTypes) is not null;
         }
 
         private static IJsonFormatter GetIntegrated(Type type)
@@ -477,14 +477,14 @@ namespace SpanJson.Resolvers
                 relatedType = argumentTypes.Single();
             }
 
-            if (relatedType is object)
+            if (relatedType is not null)
             {
                 if (Formatters.TryGetValue(relatedType, out var formatter) && formatter is ICustomJsonFormatter)
                 {
                     return true;
                 }
 
-                if (Nullable.GetUnderlyingType(relatedType) is object)
+                if (Nullable.GetUnderlyingType(relatedType) is not null)
                 {
                     return HasCustomFormatterForRelatedType(relatedType); // we need to recurse if the related type is again nullable
                 }
@@ -609,7 +609,7 @@ namespace SpanJson.Resolvers
         /// <returns>Resolved key of the dictionary.</returns>
         public string ResolveDictionaryKey(string dictionaryKey)
         {
-            if (_dictionayKeyPolicy is object)
+            if (_dictionayKeyPolicy is not null)
             {
                 return _dictionayKeyPolicy.ConvertName(dictionaryKey);
             }
@@ -622,7 +622,7 @@ namespace SpanJson.Resolvers
         /// <returns>Resolved name of the extension data.</returns>
         public string ResolveExtensionDataName(string extensionDataName)
         {
-            if (_extensionDataPolicy is object)
+            if (_extensionDataPolicy is not null)
             {
                 return _extensionDataPolicy.ConvertName(extensionDataName);
             }
@@ -635,7 +635,7 @@ namespace SpanJson.Resolvers
         /// <returns>Resolved name of the property.</returns>
         public string ResolvePropertyName(string propertyName)
         {
-            if (_jsonPropertyNamingPolicy is object)
+            if (_jsonPropertyNamingPolicy is not null)
             {
                 return _jsonPropertyNamingPolicy.ConvertName(propertyName);
             }

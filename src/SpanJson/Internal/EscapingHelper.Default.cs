@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 
 namespace SpanJson.Internal
 {
-    static partial class EscapingHelper
+    partial class EscapingHelper
     {
         public static class Default
         {

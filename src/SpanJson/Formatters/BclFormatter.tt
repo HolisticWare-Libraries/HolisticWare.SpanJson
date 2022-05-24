@@ -13,9 +13,23 @@ void GenerateListSerializeCode(string typeName, string utfName)
                 writer.Write<#= utfName #>Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<<#= typeName #>>(value);
+            var valueLength = span.Length;
+            writer.Write<#= utfName #>BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.Write<#= utfName #>ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.Write<#= utfName #>BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -24,7 +38,7 @@ void GenerateListSerializeCode(string typeName, string utfName)
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.Write<#= utfName #>EndArray();
 <#
 }
@@ -56,7 +70,7 @@ void GenerateArraySerializeCode(string typeName, string utfName)
             }
             var valueLength = value.Length;
             writer.Write<#= utfName #>BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -104,7 +118,7 @@ void GenerateArrayDeserializeCode(string typeName, string utfName)
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<<#= typeName #>>.Shared.Return(temp);
                 }

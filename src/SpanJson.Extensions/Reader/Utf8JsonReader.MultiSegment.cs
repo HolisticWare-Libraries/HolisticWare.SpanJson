@@ -1,6 +1,5 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
 using System;
 using System.Buffers;
@@ -35,7 +34,6 @@ namespace SpanJson
             _bytePositionInLine = state._bytePositionInLine;
             _inObject = state._inObject;
             _isNotPrimitive = state._isNotPrimitive;
-            _numberFormat = state._numberFormat;
             _stringHasEscaping = state._stringHasEscaping;
             _trailingCommaBeforeComment = state._trailingCommaBeforeComment;
             _tokenType = state._tokenType;
@@ -303,7 +301,7 @@ namespace SpanJson
             ReadOnlyMemory<byte> memory = default;
             while (true)
             {
-                Debug.Assert(!_isMultiSegment || _currentPosition.GetObject() is object);
+                Debug.Assert(!_isMultiSegment || _currentPosition.GetObject() is not null);
                 SequencePosition copy = _currentPosition;
                 _currentPosition = _nextPosition;
                 bool noMoreData = !_sequence.TryGet(ref _nextPosition, out memory, advance: true);
@@ -320,7 +318,7 @@ namespace SpanJson
                 // _currentPosition needs to point to last non-empty segment
                 // Since memory.Length == 0, we need to revert back to previous.
                 _currentPosition = copy;
-                Debug.Assert(!_isMultiSegment || _currentPosition.GetObject() is object);
+                Debug.Assert(!_isMultiSegment || _currentPosition.GetObject() is not null);
             }
 
             if (_isFinalBlock)
@@ -544,9 +542,9 @@ namespace SpanJson
 
         private bool CheckLiteralMultiSegment(ReadOnlySpan<byte> span, in ReadOnlySpan<byte> literal, out int consumed)
         {
-            Debug.Assert(span.Length > 0 && span[0] == literal[0]);
+            Debug.Assert(span.Length > 0 && span[0] == literal[0] && literal.Length <= JsonSharedConstant.MaximumLiteralLength);
 
-            Span<byte> readSoFar = stackalloc byte[literal.Length];
+            Span<byte> readSoFar = stackalloc byte[JsonSharedConstant.MaximumLiteralLength];
             int written = 0;
 
             long prevTotalConsumed = _totalConsumed;
@@ -1122,10 +1120,8 @@ namespace SpanJson
         // https://tools.ietf.org/html/rfc7159#section-6
         private bool TryGetNumberMultiSegment(ReadOnlySpan<byte> data, out int consumed)
         {
-            // TODO: https://github.com/dotnet/corefx/issues/33294
+            // TODO: https://github.com/dotnet/runtime/issues/27837
             Debug.Assert(data.Length > 0);
-
-            _numberFormat = default;
 
             PartialStateForRollback rollBackState = CaptureState();
 
@@ -1210,7 +1206,6 @@ namespace SpanJson
 
             Debug.Assert(nextByte == 'E' || nextByte == 'e');
             i++;
-            _numberFormat = JsonSharedConstant.ScientificNotationFormat;
             _bytePositionInLine++;
 
             signResult = ConsumeSignMultiSegment(ref data, ref i, rollBackState);
@@ -1346,7 +1341,9 @@ namespace SpanJson
             if (nextByte != '.' && nextByte != 'E' && nextByte != 'e')
             {
                 RollBackState(rollBackState, isError: true);
-                SysJsonThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.ExpectedEndOfDigitNotFound, nextByte);
+                SysJsonThrowHelper.ThrowJsonReaderException(ref this,
+                    JsonHelpers.IsInRangeInclusive(nextByte, '0', '9') ? ExceptionResource.InvalidLeadingZeroInNumber : ExceptionResource.ExpectedEndOfDigitNotFound,
+                    nextByte);
             }
 
             return ConsumeNumberResult.OperationIncomplete;

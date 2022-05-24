@@ -121,11 +121,7 @@
 
         public void WriteUtf16Single(float value)
         {
-#if NETSTANDARD2_0 || NET471 || NET451
-            if (float.IsNaN(value) || float.IsInfinity(value))
-#else
-            if (!float.IsFinite(value))
-#endif
+            if (!JsonHelpers.IsFinite(value))
             {
                 ThrowHelper.ThrowArgumentException_InvalidFloatValueForJson();
             }
@@ -157,11 +153,7 @@
 
         public void WriteUtf16Double(double value)
         {
-#if NETSTANDARD2_0 || NET471 || NET451
-            if (double.IsNaN(value) || double.IsInfinity(value))
-#else
-            if (!double.IsFinite(value))
-#endif
+            if (!JsonHelpers.IsFinite(value))
             {
                 ThrowHelper.ThrowArgumentException_InvalidDoubleValueForJson();
             }
@@ -266,12 +258,7 @@
 
             WriteUtf16DoubleQuote(ref pinnableAddr, ref pos);
 
-            Span<char> tempSpan = stackalloc char[JsonSharedConstant.MaximumFormatDateTimeOffsetLength];
-            bool result = DateTimeFormatter.TryFormat(value, tempSpan, out int charsWritten);
-            Debug.Assert(result);
-            DateTimeFormatter.TrimDateTimeOffset(tempSpan.Slice(0, charsWritten), out charsWritten);
-
-            tempSpan.Slice(0, charsWritten).CopyTo(Utf16FreeSpan);
+            DateTimeFormatter.WriteDateTimeTrimmed(Utf16FreeSpan, value, out var charsWritten);
             pos += charsWritten;
 
             WriteUtf16DoubleQuote(ref pinnableAddr, ref pos);
@@ -290,12 +277,7 @@
 
             WriteUtf16DoubleQuote(ref pinnableAddr, ref pos);
 
-            Span<char> tempSpan = stackalloc char[JsonSharedConstant.MaximumFormatDateTimeOffsetLength];
-            bool result = DateTimeFormatter.TryFormat(value, tempSpan, out int charsWritten);
-            Debug.Assert(result);
-            DateTimeFormatter.TrimDateTimeOffset(tempSpan.Slice(0, charsWritten), out charsWritten);
-
-            tempSpan.Slice(0, charsWritten).CopyTo(Utf16FreeSpan);
+            DateTimeFormatter.WriteDateTimeOffsetTrimmed(Utf16FreeSpan, value, out var charsWritten);
             pos += charsWritten;
 
             WriteUtf16DoubleQuote(ref pinnableAddr, ref pos);

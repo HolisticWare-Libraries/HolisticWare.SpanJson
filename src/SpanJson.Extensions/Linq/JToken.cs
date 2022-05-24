@@ -82,7 +82,7 @@ namespace SpanJson.Linq
                     return this;
                 }
 
-                while (parent.Parent is object)
+                while (parent.Parent is not null)
                 {
                     parent = parent.Parent;
                 }
@@ -124,7 +124,7 @@ namespace SpanJson.Linq
 
                 List<JsonPosition> positions = new List<JsonPosition>();
                 JToken previous = null;
-                for (JToken current = this; current is object; current = current.Parent)
+                for (JToken current = this; current is not null; current = current.Parent)
                 {
                     switch (current.Type)
                     {
@@ -134,7 +134,7 @@ namespace SpanJson.Linq
                             break;
                         case JTokenType.Array:
                             //case JTokenType.Constructor:
-                            if (previous is object)
+                            if (previous is not null)
                             {
                                 int index = ((IList<JToken>)current).IndexOf(previous);
 
@@ -322,7 +322,7 @@ namespace SpanJson.Linq
             JToken token = null;
             foreach (JToken t in p.Evaluate(this, this, settings))
             {
-                if (token is object)
+                if (token is not null)
                 {
                     ThrowHelper2.ThrowJsonException_Path_returned_multiple_tokens();
                 }
@@ -377,12 +377,12 @@ namespace SpanJson.Linq
             switch (_annotations)
             {
                 case null:
-                    _annotations = (annotation is object[]) ? new[] { annotation } : annotation;
+                    _annotations = (annotation is not null[]) ? new[] { annotation } : annotation;
                     break;
 
                 case object[] annotations:
                     int index = 0;
-                    while ((uint)index < (uint)annotations.Length && annotations[index] is object)
+                    while ((uint)index < (uint)annotations.Length && annotations[index] is not null)
                     {
                         index++;
                     }
@@ -620,7 +620,7 @@ namespace SpanJson.Linq
 
         internal void CopyAnnotations(JToken target, JToken source)
         {
-            if (source._annotations is object[] annotations)
+            if (source._annotations is not null[] annotations)
             {
                 target._annotations = annotations.ToArray();
             }

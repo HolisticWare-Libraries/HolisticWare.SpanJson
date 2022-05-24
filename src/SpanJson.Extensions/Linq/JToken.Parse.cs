@@ -143,7 +143,7 @@ namespace SpanJson.Linq
                         }
                         finally
                         {
-                            if (temp is object)
+                            if (temp is not null)
                             {
                                 ArrayPool<JToken>.Shared.Return(temp);
                             }
@@ -288,7 +288,7 @@ namespace SpanJson.Linq
                         }
                         finally
                         {
-                            if (temp is object)
+                            if (temp is not null)
                             {
                                 ArrayPool<JToken>.Shared.Return(temp);
                             }

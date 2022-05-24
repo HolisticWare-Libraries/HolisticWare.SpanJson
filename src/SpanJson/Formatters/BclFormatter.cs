@@ -61,7 +61,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -108,7 +108,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<SByte?>.Shared.Return(temp);
                 }
@@ -130,9 +130,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<SByte?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -141,7 +155,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -176,7 +190,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -223,7 +237,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<SByte>.Shared.Return(temp);
                 }
@@ -245,9 +259,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<SByte>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -256,7 +284,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -330,7 +358,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -377,7 +405,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<SByte?>.Shared.Return(temp);
                 }
@@ -399,9 +427,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<SByte?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -410,7 +452,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -445,7 +487,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -492,7 +534,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<SByte>.Shared.Return(temp);
                 }
@@ -514,9 +556,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<SByte>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -525,7 +581,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -599,7 +655,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -646,7 +702,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Int16?>.Shared.Return(temp);
                 }
@@ -668,9 +724,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Int16?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -679,7 +749,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -714,7 +784,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -761,7 +831,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Int16>.Shared.Return(temp);
                 }
@@ -783,9 +853,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Int16>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -794,7 +878,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -868,7 +952,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -915,7 +999,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Int16?>.Shared.Return(temp);
                 }
@@ -937,9 +1021,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Int16?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -948,7 +1046,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -983,7 +1081,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -1030,7 +1128,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Int16>.Shared.Return(temp);
                 }
@@ -1052,9 +1150,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Int16>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -1063,7 +1175,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -1137,7 +1249,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -1184,7 +1296,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Int32?>.Shared.Return(temp);
                 }
@@ -1206,9 +1318,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Int32?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -1217,7 +1343,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -1252,7 +1378,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -1299,7 +1425,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Int32>.Shared.Return(temp);
                 }
@@ -1321,9 +1447,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Int32>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -1332,7 +1472,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -1406,7 +1546,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -1453,7 +1593,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Int32?>.Shared.Return(temp);
                 }
@@ -1475,9 +1615,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Int32?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -1486,7 +1640,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -1521,7 +1675,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -1568,7 +1722,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Int32>.Shared.Return(temp);
                 }
@@ -1590,9 +1744,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Int32>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -1601,7 +1769,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -1675,7 +1843,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -1722,7 +1890,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Int64?>.Shared.Return(temp);
                 }
@@ -1744,9 +1912,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Int64?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -1755,7 +1937,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -1790,7 +1972,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -1837,7 +2019,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Int64>.Shared.Return(temp);
                 }
@@ -1859,9 +2041,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Int64>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -1870,7 +2066,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -1944,7 +2140,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -1991,7 +2187,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Int64?>.Shared.Return(temp);
                 }
@@ -2013,9 +2209,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Int64?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -2024,7 +2234,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -2059,7 +2269,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -2106,7 +2316,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Int64>.Shared.Return(temp);
                 }
@@ -2128,9 +2338,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Int64>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -2139,7 +2363,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -2213,7 +2437,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -2260,7 +2484,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Byte?>.Shared.Return(temp);
                 }
@@ -2282,9 +2506,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Byte?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -2293,7 +2531,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -2328,7 +2566,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -2375,7 +2613,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Byte>.Shared.Return(temp);
                 }
@@ -2397,9 +2635,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Byte>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -2408,7 +2660,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -2482,7 +2734,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -2529,7 +2781,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Byte?>.Shared.Return(temp);
                 }
@@ -2551,9 +2803,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Byte?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -2562,7 +2828,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -2597,7 +2863,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -2644,7 +2910,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Byte>.Shared.Return(temp);
                 }
@@ -2666,9 +2932,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Byte>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -2677,7 +2957,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -2751,7 +3031,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -2798,7 +3078,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<UInt16?>.Shared.Return(temp);
                 }
@@ -2820,9 +3100,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<UInt16?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -2831,7 +3125,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -2866,7 +3160,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -2913,7 +3207,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<UInt16>.Shared.Return(temp);
                 }
@@ -2935,9 +3229,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<UInt16>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -2946,7 +3254,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -3020,7 +3328,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -3067,7 +3375,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<UInt16?>.Shared.Return(temp);
                 }
@@ -3089,9 +3397,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<UInt16?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -3100,7 +3422,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -3135,7 +3457,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -3182,7 +3504,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<UInt16>.Shared.Return(temp);
                 }
@@ -3204,9 +3526,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<UInt16>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -3215,7 +3551,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -3289,7 +3625,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -3336,7 +3672,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<UInt32?>.Shared.Return(temp);
                 }
@@ -3358,9 +3694,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<UInt32?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -3369,7 +3719,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -3404,7 +3754,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -3451,7 +3801,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<UInt32>.Shared.Return(temp);
                 }
@@ -3473,9 +3823,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<UInt32>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -3484,7 +3848,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -3558,7 +3922,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -3605,7 +3969,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<UInt32?>.Shared.Return(temp);
                 }
@@ -3627,9 +3991,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<UInt32?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -3638,7 +4016,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -3673,7 +4051,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -3720,7 +4098,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<UInt32>.Shared.Return(temp);
                 }
@@ -3742,9 +4120,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<UInt32>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -3753,7 +4145,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -3827,7 +4219,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -3874,7 +4266,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<UInt64?>.Shared.Return(temp);
                 }
@@ -3896,9 +4288,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<UInt64?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -3907,7 +4313,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -3942,7 +4348,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -3989,7 +4395,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<UInt64>.Shared.Return(temp);
                 }
@@ -4011,9 +4417,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<UInt64>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -4022,7 +4442,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -4096,7 +4516,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -4143,7 +4563,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<UInt64?>.Shared.Return(temp);
                 }
@@ -4165,9 +4585,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<UInt64?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -4176,7 +4610,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -4211,7 +4645,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -4258,7 +4692,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<UInt64>.Shared.Return(temp);
                 }
@@ -4280,9 +4714,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<UInt64>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -4291,7 +4739,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -4365,7 +4813,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -4412,7 +4860,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Single?>.Shared.Return(temp);
                 }
@@ -4434,9 +4882,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Single?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -4445,7 +4907,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -4480,7 +4942,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -4527,7 +4989,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Single>.Shared.Return(temp);
                 }
@@ -4549,9 +5011,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Single>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -4560,7 +5036,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -4634,7 +5110,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -4681,7 +5157,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Single?>.Shared.Return(temp);
                 }
@@ -4703,9 +5179,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Single?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -4714,7 +5204,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -4749,7 +5239,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -4796,7 +5286,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Single>.Shared.Return(temp);
                 }
@@ -4818,9 +5308,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Single>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -4829,7 +5333,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -4903,7 +5407,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -4950,7 +5454,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Double?>.Shared.Return(temp);
                 }
@@ -4972,9 +5476,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Double?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -4983,7 +5501,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -5018,7 +5536,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -5065,7 +5583,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Double>.Shared.Return(temp);
                 }
@@ -5087,9 +5605,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Double>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -5098,7 +5630,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -5172,7 +5704,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -5219,7 +5751,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Double?>.Shared.Return(temp);
                 }
@@ -5241,9 +5773,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Double?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -5252,7 +5798,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -5287,7 +5833,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -5334,7 +5880,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Double>.Shared.Return(temp);
                 }
@@ -5356,9 +5902,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Double>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -5367,7 +5927,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -5441,7 +6001,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -5488,7 +6048,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Decimal?>.Shared.Return(temp);
                 }
@@ -5510,9 +6070,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Decimal?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -5521,7 +6095,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -5556,7 +6130,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -5603,7 +6177,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Decimal>.Shared.Return(temp);
                 }
@@ -5625,9 +6199,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Decimal>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -5636,7 +6224,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -5710,7 +6298,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -5757,7 +6345,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Decimal?>.Shared.Return(temp);
                 }
@@ -5779,9 +6367,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Decimal?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -5790,7 +6392,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -5825,7 +6427,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -5872,7 +6474,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Decimal>.Shared.Return(temp);
                 }
@@ -5894,9 +6496,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Decimal>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -5905,7 +6521,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -5979,7 +6595,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -6026,7 +6642,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Boolean?>.Shared.Return(temp);
                 }
@@ -6048,9 +6664,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Boolean?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -6059,7 +6689,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -6094,7 +6724,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -6141,7 +6771,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Boolean>.Shared.Return(temp);
                 }
@@ -6163,9 +6793,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Boolean>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -6174,7 +6818,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -6248,7 +6892,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -6295,7 +6939,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Boolean?>.Shared.Return(temp);
                 }
@@ -6317,9 +6961,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Boolean?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -6328,7 +6986,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -6363,7 +7021,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -6410,7 +7068,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Boolean>.Shared.Return(temp);
                 }
@@ -6432,9 +7090,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Boolean>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -6443,7 +7115,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -6517,7 +7189,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -6564,7 +7236,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Char?>.Shared.Return(temp);
                 }
@@ -6586,9 +7258,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Char?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -6597,7 +7283,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -6632,7 +7318,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -6679,7 +7365,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Char>.Shared.Return(temp);
                 }
@@ -6701,9 +7387,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Char>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -6712,7 +7412,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -6786,7 +7486,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -6833,7 +7533,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Char?>.Shared.Return(temp);
                 }
@@ -6855,9 +7555,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Char?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -6866,7 +7580,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -6901,7 +7615,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -6948,7 +7662,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Char>.Shared.Return(temp);
                 }
@@ -6970,9 +7684,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Char>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -6981,7 +7709,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -7055,7 +7783,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -7102,7 +7830,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<DateTime?>.Shared.Return(temp);
                 }
@@ -7124,9 +7852,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<DateTime?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -7135,7 +7877,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -7170,7 +7912,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -7217,7 +7959,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<DateTime>.Shared.Return(temp);
                 }
@@ -7239,9 +7981,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<DateTime>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -7250,7 +8006,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -7324,7 +8080,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -7371,7 +8127,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<DateTime?>.Shared.Return(temp);
                 }
@@ -7393,9 +8149,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<DateTime?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -7404,7 +8174,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -7439,7 +8209,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -7486,7 +8256,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<DateTime>.Shared.Return(temp);
                 }
@@ -7508,9 +8278,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<DateTime>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -7519,7 +8303,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -7593,7 +8377,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -7640,7 +8424,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<DateTimeOffset?>.Shared.Return(temp);
                 }
@@ -7662,9 +8446,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<DateTimeOffset?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -7673,7 +8471,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -7708,7 +8506,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -7755,7 +8553,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<DateTimeOffset>.Shared.Return(temp);
                 }
@@ -7777,9 +8575,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<DateTimeOffset>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -7788,7 +8600,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -7862,7 +8674,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -7909,7 +8721,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<DateTimeOffset?>.Shared.Return(temp);
                 }
@@ -7931,9 +8743,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<DateTimeOffset?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -7942,7 +8768,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -7977,7 +8803,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -8024,7 +8850,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<DateTimeOffset>.Shared.Return(temp);
                 }
@@ -8046,9 +8872,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<DateTimeOffset>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -8057,7 +8897,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -8131,7 +8971,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -8178,7 +9018,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<TimeSpan?>.Shared.Return(temp);
                 }
@@ -8200,9 +9040,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<TimeSpan?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -8211,7 +9065,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -8246,7 +9100,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -8293,7 +9147,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<TimeSpan>.Shared.Return(temp);
                 }
@@ -8315,9 +9169,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<TimeSpan>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -8326,7 +9194,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -8400,7 +9268,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -8447,7 +9315,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<TimeSpan?>.Shared.Return(temp);
                 }
@@ -8469,9 +9337,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<TimeSpan?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -8480,7 +9362,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -8515,7 +9397,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -8562,7 +9444,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<TimeSpan>.Shared.Return(temp);
                 }
@@ -8584,9 +9466,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<TimeSpan>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -8595,7 +9491,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -8669,7 +9565,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -8716,7 +9612,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Guid?>.Shared.Return(temp);
                 }
@@ -8738,9 +9634,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Guid?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -8749,7 +9659,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -8784,7 +9694,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -8831,7 +9741,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Guid>.Shared.Return(temp);
                 }
@@ -8853,9 +9763,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Guid>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -8864,7 +9788,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -8938,7 +9862,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -8985,7 +9909,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Guid?>.Shared.Return(temp);
                 }
@@ -9007,9 +9931,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Guid?>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -9018,7 +9956,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -9053,7 +9991,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -9100,7 +10038,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Guid>.Shared.Return(temp);
                 }
@@ -9122,9 +10060,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Guid>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -9133,7 +10085,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -9187,7 +10139,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -9234,7 +10186,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<String>.Shared.Return(temp);
                 }
@@ -9256,9 +10208,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<String>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -9267,7 +10233,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -9321,7 +10287,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -9368,7 +10334,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<String>.Shared.Return(temp);
                 }
@@ -9390,9 +10356,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<String>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -9401,7 +10381,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -9455,7 +10435,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -9502,7 +10482,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Version>.Shared.Return(temp);
                 }
@@ -9524,9 +10504,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Version>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -9535,7 +10529,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -9589,7 +10583,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -9636,7 +10630,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Version>.Shared.Return(temp);
                 }
@@ -9658,9 +10652,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Version>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -9669,7 +10677,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 
@@ -9723,7 +10731,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -9770,7 +10778,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Uri>.Shared.Return(temp);
                 }
@@ -9792,9 +10800,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Uri>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf16BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf16ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf16BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -9803,7 +10825,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf16EndArray();
         }
 
@@ -9857,7 +10879,7 @@ namespace SpanJson.Formatters
             }
             var valueLength = value.Length;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -9904,7 +10926,7 @@ namespace SpanJson.Formatters
             }
             finally
             {
-                if (temp is object)
+                if (temp is not null)
                 {
                     ArrayPool<Uri>.Shared.Return(temp);
                 }
@@ -9926,9 +10948,23 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
+#if NET
+            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan<Uri>(value);
+            var valueLength = span.Length;
+            writer.WriteUtf8BeginArray();
+            if (!span.IsEmpty)
+            {
+                ElementFormatter.Serialize(ref writer, span[0], resolver);
+                for (var i = 1; i < valueLength; i++)
+                {
+                    writer.WriteUtf8ValueSeparator();
+                    ElementFormatter.Serialize(ref writer, span[i], resolver);
+                }
+            }            
+#else
             var valueLength = value.Count;
             writer.WriteUtf8BeginArray();
-            if (valueLength > 0)
+            if ((uint)valueLength > 0u)
             {
                 ElementFormatter.Serialize(ref writer, value[0], resolver);
                 for (var i = 1; i < valueLength; i++)
@@ -9937,7 +10973,7 @@ namespace SpanJson.Formatters
                     ElementFormatter.Serialize(ref writer, value[i], resolver);
                 }
             }
-
+#endif
             writer.WriteUtf8EndArray();
         }
 

@@ -267,7 +267,7 @@ namespace SpanJson.Linq.JsonPath
                 {
                     int length = (end ?? _currentIndex) - start;
 
-                    if (indexes is object)
+                    if (indexes is not null)
                     {
                         if (0u >= (uint)length)
                         {
@@ -407,7 +407,7 @@ namespace SpanJson.Linq.JsonPath
                 }
                 else
                 {
-                    if (end is object)
+                    if (end is not null)
                     {
                         ThrowHelper2.ThrowJsonException_Unexpected_character_while_parsing_path_indexer(currentCharacter);
                     }
@@ -548,7 +548,7 @@ namespace SpanJson.Linq.JsonPath
 
                 if (_expression[_currentIndex] == ')')
                 {
-                    if (parentExpression is object)
+                    if (parentExpression is not null)
                     {
                         parentExpression.Expressions.Add(booleanExpression);
                         return rootExpression;
@@ -868,7 +868,7 @@ namespace SpanJson.Linq.JsonPath
 
                 if (_expression[_currentIndex] == indexerCloseChar)
                 {
-                    if (fields is object)
+                    if (fields is not null)
                     {
                         fields.Add(field);
                         return (scan)

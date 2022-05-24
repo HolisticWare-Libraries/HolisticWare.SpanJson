@@ -120,10 +120,10 @@ namespace SpanJson.Linq
             var tokenWriter = writer as JTokenWriter;
             //if (tokenWriter is null)
             //{
-            //    if (_value is object)
+            //    if (_value is not null)
             //    {
             //        var matchingConverter = GetMatchingConverter(serializer.Converters, _value.GetType());
-            //        if (matchingConverter is object && matchingConverter.CanWrite)
+            //        if (matchingConverter is not null && matchingConverter.CanWrite)
             //        {
             //            matchingConverter.WriteJson(writer, _value, serializer);
             //            return;
@@ -149,7 +149,7 @@ namespace SpanJson.Linq
                     writer.WriteNull();
                     return;
                 case JTokenType.Undefined:
-                    if (tokenWriter is object)
+                    if (tokenWriter is not null)
                     {
                         tokenWriter.WriteUndefined(_value);
                     }
@@ -178,7 +178,7 @@ namespace SpanJson.Linq
                             break;
 
                         case SpanJsonDynamicUtf16Number _:
-                            if (tokenWriter is object)
+                            if (tokenWriter is not null)
                             {
                                 tokenWriter.WriteValue(_value);
                             }
@@ -188,7 +188,7 @@ namespace SpanJson.Linq
                             }
                             break;
                         case SpanJsonDynamicUtf8Number _:
-                            if (tokenWriter is object)
+                            if (tokenWriter is not null)
                             {
                                 tokenWriter.WriteValue(_value);
                             }
@@ -198,7 +198,7 @@ namespace SpanJson.Linq
                             }
                             break;
                         case JsonElement _:
-                            if (tokenWriter is object)
+                            if (tokenWriter is not null)
                             {
                                 tokenWriter.WriteValue(_value);
                             }
@@ -229,7 +229,7 @@ namespace SpanJson.Linq
                             break;
 
                         case SpanJsonDynamicUtf16Number _:
-                            if (tokenWriter is object)
+                            if (tokenWriter is not null)
                             {
                                 tokenWriter.WriteValue(_value);
                             }
@@ -239,7 +239,7 @@ namespace SpanJson.Linq
                             }
                             break;
                         case SpanJsonDynamicUtf8Number _:
-                            if (tokenWriter is object)
+                            if (tokenWriter is not null)
                             {
                                 tokenWriter.WriteValue(_value);
                             }
@@ -249,7 +249,7 @@ namespace SpanJson.Linq
                             }
                             break;
                         case JsonElement _:
-                            if (tokenWriter is object)
+                            if (tokenWriter is not null)
                             {
                                 tokenWriter.WriteValue(_value);
                             }
@@ -293,7 +293,7 @@ namespace SpanJson.Linq
                     writer.WriteValue((Uri)_value);
                     return;
                 case JTokenType.Dynamic:
-                    if (tokenWriter is object)
+                    if (tokenWriter is not null)
                     {
                         tokenWriter.WriteValue(_value);
                     }
@@ -303,7 +303,7 @@ namespace SpanJson.Linq
                     }
                     return;
                 case JTokenType.CombGuid: // 非 JTokenWriter 无法到达这儿
-                    if (tokenWriter is object)
+                    if (tokenWriter is not null)
                     {
                         tokenWriter.WriteValue((CuteAnt.CombGuid)_value);
                     }
@@ -319,7 +319,7 @@ namespace SpanJson.Linq
 
         private static Newtonsoft.Json.JsonConverter GetMatchingConverter(IList<Newtonsoft.Json.JsonConverter> converters, Type objectType)
         {
-            if (converters is object)
+            if (converters is not null)
             {
                 for (int i = 0; i < converters.Count; i++)
                 {

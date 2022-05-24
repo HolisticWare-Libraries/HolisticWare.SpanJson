@@ -169,7 +169,7 @@ namespace SpanJson.Utilities
                         MethodInfo toParameterTypeMethod = typeof(IConvertible)
                             .GetMethod("To" + parameterType.Name, new[] { typeof(IFormatProvider) });
                         
-                        if (toParameterTypeMethod is object)
+                        if (toParameterTypeMethod is not null)
                         {
                             Label skipConvertible = generator.DefineLabel();
 

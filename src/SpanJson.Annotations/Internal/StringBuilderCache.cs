@@ -33,7 +33,7 @@ namespace SpanJson.Internal
             if (capacity <= MaxBuilderSize)
             {
                 StringBuilder? sb = t_cachedInstance;
-                if (sb is object)
+                if (sb is not null)
                 {
                     // Avoid stringbuilder block fragmentation by getting a new StringBuilder
                     // when the requested size is larger than the current capacity

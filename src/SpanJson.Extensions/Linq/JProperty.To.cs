@@ -13,7 +13,7 @@ namespace SpanJson.Linq
             writer.WritePropertyName(_name);
 
             JToken value = Value;
-            if (value is object)
+            if (value is not null)
             {
                 value.WriteTo(writer, serializer);
             }

@@ -1,6 +1,5 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
 using System;
 using System.Buffers;
@@ -13,7 +12,7 @@ namespace SpanJson
 {
     partial struct Utf8JsonWriter
     {
-        private static char[] s_singleLineCommentDelimiter = new char[2] { '*', '/' };
+        private static readonly char[] s_singleLineCommentDelimiter = new char[2] { '*', '/' };
         private static ReadOnlySpan<byte> SingleLineCommentDelimiterUtf8 => new byte[2] { (byte)'*', (byte)'/' };
 
         /// <summary>

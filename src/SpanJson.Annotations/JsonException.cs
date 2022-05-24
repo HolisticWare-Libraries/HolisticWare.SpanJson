@@ -92,7 +92,7 @@ namespace SpanJson
         public string Path { get; internal set; }
 
         /// <summary>Gets a message that describes the current exception.</summary>
-        public override string Message => _message;
+        public override string Message => _message ?? base.Message;
 
         internal void SetMessage(string message) => _message = message;
     }

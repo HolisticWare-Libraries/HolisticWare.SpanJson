@@ -31,7 +31,14 @@ namespace SpanJson.Document
             _idx = idx;
         }
 
-        private JsonTokenType TokenType => _parent?.GetJsonTokenType(_idx) ?? JsonTokenType.None;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private JsonTokenType TokenType
+        {
+            get
+            {
+                return _parent?.GetJsonTokenType(_idx) ?? JsonTokenType.None;
+            }
+        }
 
         /// <summary>
         ///   The <see cref="JsonValueKind"/> that the value is.
@@ -392,14 +399,14 @@ namespace SpanJson.Document
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON string as bytes assuming it is base 64 encoded.
+        ///   Attempts to represent the current JSON string as bytes assuming it is Base64 encoded.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///  This method does not create a byte[] representation of values other than bsae 64 encoded JSON strings.
+        ///  This method does not create a byte[] representation of values other than base 64 encoded JSON strings.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the entire token value is encoded as valid base 64 text and can be successfully decoded to bytes.
+        ///   <see langword="true"/> if the entire token value is encoded as valid Base64 text and can be successfully decoded to bytes.
         ///   <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
@@ -419,14 +426,14 @@ namespace SpanJson.Document
         ///   Gets the value of the element as bytes.
         /// </summary>
         /// <remarks>
-        ///   This method does not create a byte[] representation of values other than base 64 encoded JSON strings.
+        ///   This method does not create a byte[] representation of values other than Base64 encoded JSON strings.
         /// </remarks>
         /// <returns>The value decode to bytes.</returns>
         /// <exception cref="InvalidOperationException">
         ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value is not encoded as base 64 text and hence cannot be decoded to bytes.
+        ///   The value is not encoded as Base64 text and hence cannot be decoded to bytes.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
@@ -1234,7 +1241,7 @@ namespace SpanJson.Document
         ///   Gets the original input data backing this value, returning it as a <see cref="string"/>.
         /// </summary>
         /// <returns>
-        ///  The original input data backing this value, returning it as a <see cref="string"/>.
+        ///   The original input data backing this value, returning it as a <see cref="string"/>.
         /// </returns>
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
@@ -1244,6 +1251,13 @@ namespace SpanJson.Document
             CheckValidInstance();
 
             return _parent.GetRawValueAsString(_idx);
+        }
+
+        internal ReadOnlyMemory<byte> GetRawValue()
+        {
+            CheckValidInstance();
+
+            return _parent.GetRawValue(_idx, includeQuotes: true);
         }
 
         internal string GetPropertyRawText()
@@ -1313,7 +1327,7 @@ namespace SpanJson.Document
                 return utf8Text == default;
             }
 
-            return TextEqualsHelper(utf8Text, isPropertyName: false);
+            return TextEqualsHelper(utf8Text, isPropertyName: false, shouldUnescape: true);
         }
 
         /// <summary>
@@ -1344,11 +1358,11 @@ namespace SpanJson.Document
             return TextEqualsHelper(text, isPropertyName: false);
         }
 
-        internal bool TextEqualsHelper(in ReadOnlySpan<byte> utf8Text, bool isPropertyName)
+        internal bool TextEqualsHelper(in ReadOnlySpan<byte> utf8Text, bool isPropertyName, bool shouldUnescape)
         {
             CheckValidInstance();
 
-            return _parent.TextEquals(_idx, utf8Text, isPropertyName);
+            return _parent.TextEquals(_idx, utf8Text, isPropertyName, shouldUnescape);
         }
 
         internal bool TextEqualsHelper(in ReadOnlySpan<char> text, bool isPropertyName)
@@ -1435,6 +1449,10 @@ namespace SpanJson.Document
         /// </summary>
         /// <remarks>
         ///   <para>
+        ///     For JsonElement built from <see cref="JsonDocument"/>:
+        ///   </para>
+        ///
+        ///   <para>
         ///     For <see cref="JsonValueKind.Null"/>, <see cref="string.Empty"/> is returned.
         ///   </para>
         ///
@@ -1445,7 +1463,7 @@ namespace SpanJson.Document
         ///   <para>
         ///     For <see cref="JsonValueKind.False"/>, <see cref="bool.FalseString"/> is returned.
         ///   </para>
-        /// 
+        ///
         ///   <para>
         ///     For <see cref="JsonValueKind.String"/>, the value of <see cref="GetString"/>() is returned.
         ///   </para>
@@ -1476,7 +1494,7 @@ namespace SpanJson.Document
                 case JsonTokenType.BeginObject:
                     {
                         // null parent should have hit the None case
-                        Debug.Assert(_parent is object);
+                        Debug.Assert(_parent is not null);
                         return _parent.GetRawValueAsString(_idx);
                     }
                 case JsonTokenType.String:
@@ -1499,9 +1517,11 @@ namespace SpanJson.Document
         ///   original <see cref="JsonDocument"/>.
         /// </returns>
         /// <remarks>
-        ///   If this JsonElement is itself the output of a previous call to Clone, or
-        ///   a value contained within another JsonElement which was the output of a previous
-        ///   call to Clone, this method results in no additional memory allocation.
+        ///   <para>
+        ///     If this JsonElement is itself the output of a previous call to Clone, or
+        ///     a value contained within another JsonElement which was the output of a previous
+        ///     call to Clone, this method results in no additional memory allocation.
+        ///   </para>
         /// </remarks>
         public JsonElement Clone()
         {

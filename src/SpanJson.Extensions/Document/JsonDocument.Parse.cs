@@ -1,6 +1,5 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
 using System;
 using System.Buffers;
@@ -12,18 +11,25 @@ using SpanJson.Internal;
 
 namespace SpanJson.Document
 {
-    public sealed partial class JsonDocument
+    partial class JsonDocument
     {
+        // Cached unrented documents for literal values.
+        private static JsonDocument s_nullLiteral;
+        private static JsonDocument s_trueLiteral;
+        private static JsonDocument s_falseLiteral;
+
+        private const int UnseekableStreamInitialRentSize = 4096;
         public static JsonDocument Parse(byte[] utf8Json, JsonDocumentOptions options = default)
         {
             if (utf8Json is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.utf8Json); }
-            return ParseCore(new ReadOnlyMemory<byte>(utf8Json), options.GetReaderOptions(), null);
+            return Parse(new ReadOnlyMemory<byte>(utf8Json), options.GetReaderOptions());
         }
 
         public static JsonDocument Parse(in ReadOnlySpan<byte> utf8Json, JsonDocumentOptions options = default)
         {
-            return ParseCore(new ReadOnlyMemory<byte>(utf8Json.ToArray()), options.GetReaderOptions(), null);
+            return Parse(new ReadOnlyMemory<byte>(utf8Json.ToArray()), options.GetReaderOptions());
         }
+
 
         /// <summary>
         ///   Parse memory as UTF-8-encoded text representing a single JSON value into a JsonDocument.
@@ -52,7 +58,7 @@ namespace SpanJson.Document
         /// </exception>
         public static JsonDocument Parse(in ReadOnlyMemory<byte> utf8Json, JsonDocumentOptions options = default)
         {
-            return ParseCore(utf8Json, options.GetReaderOptions(), null);
+            return Parse(utf8Json, options.GetReaderOptions());
         }
 
         /// <summary>
@@ -86,24 +92,21 @@ namespace SpanJson.Document
 
             if (utf8Json.IsSingleSegment)
             {
-                return ParseCore(utf8Json.First, readerOptions, null);
+                return Parse(utf8Json.First, readerOptions);
             }
 
             int length = checked((int)utf8Json.Length);
-            byte[] utf8Bytes;
-            Span<byte> utf8Span = (utf8Bytes = ArrayPool<byte>.Shared.Rent(length)).AsSpan(0, length);
+            byte[] utf8Bytes = ArrayPool<byte>.Shared.Rent(length);
 
             try
             {
-                utf8Json.CopyTo(utf8Span);
-                return ParseCore(new ReadOnlyMemory<byte>(utf8Bytes, 0, length),
-                    readerOptions: readerOptions,
-                    extraRentedBytes: utf8Bytes);
+                utf8Json.CopyTo(utf8Bytes.AsSpan());
+                return Parse(utf8Bytes.AsMemory(0, length), readerOptions, utf8Bytes);
             }
             catch
             {
                 // Holds document content, clear it before returning it.
-                //utf8Span.Clear();
+                utf8Bytes.AsSpan(0, length).Clear();
                 ArrayPool<byte>.Shared.Return(utf8Bytes);
                 throw;
             }
@@ -128,21 +131,61 @@ namespace SpanJson.Document
         {
             if (utf8Json is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.utf8Json); }
 
-            ArraySegment<byte> drained = utf8Json.ReadToEnd();
-
+            ArraySegment<byte> drained = ReadToEnd(utf8Json);
+            Debug.Assert(drained.Array != null);
             try
             {
-                return ParseCore(new ReadOnlyMemory<byte>(drained.Array, drained.Offset, drained.Count),
-                    readerOptions: options.GetReaderOptions(),
-                    extraRentedBytes: drained.Array);
+                return Parse(drained.AsMemory(), options.GetReaderOptions(), drained.Array);
             }
             catch
             {
                 // Holds document content, clear it before returning it.
-                //drained.AsSpan().Clear();
+                drained.AsSpan().Clear();
                 ArrayPool<byte>.Shared.Return(drained.Array);
                 throw;
             }
+        }
+
+        internal static JsonDocument ParseRented(PooledByteBufferWriter utf8Json, JsonDocumentOptions options = default)
+        {
+            return Parse(
+                utf8Json.WrittenMemory,
+                options.GetReaderOptions(),
+                extraRentedArrayPoolBytes: null,
+                extraPooledByteBufferWriter: utf8Json);
+        }
+
+        internal static JsonDocument ParseValue(Stream utf8Json, JsonDocumentOptions options)
+        {
+            Debug.Assert(utf8Json != null);
+
+            ArraySegment<byte> drained = ReadToEnd(utf8Json);
+            Debug.Assert(drained.Array != null);
+
+            byte[] owned = new byte[drained.Count];
+            Buffer.BlockCopy(drained.Array, 0, owned, 0, drained.Count);
+
+            // Holds document content, clear it before returning it.
+            drained.AsSpan().Clear();
+            ArrayPool<byte>.Shared.Return(drained.Array);
+
+            return ParseUnrented(owned.AsMemory(), options.GetReaderOptions());
+        }
+
+        internal static JsonDocument ParseValue(ReadOnlySpan<byte> utf8Json, JsonDocumentOptions options)
+        {
+            Debug.Assert(utf8Json != null);
+
+            byte[] owned = new byte[utf8Json.Length];
+            utf8Json.CopyTo(owned);
+
+            return ParseUnrented(owned.AsMemory(), options.GetReaderOptions());
+        }
+
+        internal static JsonDocument ParseValue(string json, JsonDocumentOptions options)
+        {
+            Debug.Assert(json != null);
+            return ParseValue(json.AsMemory(), options);
         }
 
         /// <summary>
@@ -176,25 +219,92 @@ namespace SpanJson.Document
             JsonDocumentOptions options = default,
             CancellationToken cancellationToken = default)
         {
-            ArraySegment<byte> drained = await utf8Json.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
-
+            ArraySegment<byte> drained = await ReadToEndAsync(utf8Json, cancellationToken).ConfigureAwait(false);
+            Debug.Assert(drained.Array != null);
             try
             {
-                return ParseCore(new ReadOnlyMemory<byte>(drained.Array, drained.Offset, drained.Count),
-                    readerOptions: options.GetReaderOptions(),
-                    extraRentedBytes: drained.Array);
+                return Parse(drained.AsMemory(), options.GetReaderOptions(), drained.Array);
             }
             catch
             {
                 // Holds document content, clear it before returning it.
-                //drained.AsSpan().Clear();
+                drained.AsSpan().Clear();
                 ArrayPool<byte>.Shared.Return(drained.Array);
                 throw;
             }
         }
 
         /// <summary>
-        ///   Parse text representing a single JSON value into a JsonDocument.
+        ///   Parses text representing a single JSON value into a JsonDocument.
+        /// </summary>
+        /// <remarks>
+        ///   The <see cref="ReadOnlyMemory{T}"/> value may be used for the entire lifetime of the
+        ///   JsonDocument object, and the caller must ensure that the data therein does not change during
+        ///   the object lifetime.
+        /// </remarks>
+        /// <param name="json">JSON text to parse.</param>
+        /// <param name="options">Options to control the reader behavior during parsing.</param>
+        /// <returns>
+        ///   A JsonDocument representation of the JSON value.
+        /// </returns>
+        /// <exception cref="JsonException">
+        ///   <paramref name="json"/> does not represent a valid single JSON value.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///   <paramref name="options"/> contains unsupported options.
+        /// </exception>
+        public static JsonDocument Parse(ReadOnlyMemory<char> json, JsonDocumentOptions options = default)
+        {
+            ReadOnlySpan<char> jsonChars = json.Span;
+            int expectedByteCount = JsonReaderHelper.GetUtf8ByteCount(jsonChars);
+            byte[] utf8Bytes = ArrayPool<byte>.Shared.Rent(expectedByteCount);
+
+            try
+            {
+                int actualByteCount = JsonReaderHelper.GetUtf8FromText(jsonChars, utf8Bytes);
+                Debug.Assert(expectedByteCount == actualByteCount);
+
+                return Parse(
+                    utf8Bytes.AsMemory(0, actualByteCount),
+                    options.GetReaderOptions(),
+                    utf8Bytes);
+            }
+            catch
+            {
+                // Holds document content, clear it before returning it.
+                utf8Bytes.AsSpan(0, expectedByteCount).Clear();
+                ArrayPool<byte>.Shared.Return(utf8Bytes);
+                throw;
+            }
+        }
+
+        internal static JsonDocument ParseValue(ReadOnlyMemory<char> json, JsonDocumentOptions options)
+        {
+            ReadOnlySpan<char> jsonChars = json.Span;
+            int expectedByteCount = JsonReaderHelper.GetUtf8ByteCount(jsonChars);
+            byte[] owned;
+            byte[] utf8Bytes = ArrayPool<byte>.Shared.Rent(expectedByteCount);
+
+            try
+            {
+                int actualByteCount = JsonReaderHelper.GetUtf8FromText(jsonChars, utf8Bytes);
+                Debug.Assert(expectedByteCount == actualByteCount);
+
+                owned = new byte[actualByteCount];
+                Buffer.BlockCopy(utf8Bytes, 0, owned, 0, actualByteCount);
+            }
+            finally
+            {
+                // Holds document content, clear it before returning it.
+                utf8Bytes.AsSpan(0, expectedByteCount).Clear();
+                ArrayPool<byte>.Shared.Return(utf8Bytes);
+            }
+
+            return ParseUnrented(owned.AsMemory(), options.GetReaderOptions());
+        }
+
+        /// <summary>
+        ///   Parses text representing a single JSON value into a JsonDocument.
         /// </summary>
         /// <param name="json">JSON text to parse.</param>
         /// <param name="options">Options to control the reader behavior during parsing.</param>
@@ -211,74 +321,7 @@ namespace SpanJson.Document
         {
             if (json is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.json); }
 
-            return Parse(json.AsSpan(), options);
-        }
-
-        /// <summary>
-        ///   Parse text representing a single JSON value into a JsonDocument.
-        /// </summary>
-        /// <remarks>
-        ///   The <see cref="ReadOnlyMemory{T}"/> value may be used for the entire lifetime of the
-        ///   JsonDocument object, and the caller must ensure that the data therein does not change during
-        ///   the object lifetime.
-        /// </remarks>
-        /// <param name="json">JSON text to parse.</param>
-        /// <param name="options">Options to control the reader behavior during parsing.</param>
-        /// <returns>
-        ///   A JsonDocument representation of the JSON value.
-        /// </returns>
-        /// <exception cref="JsonException">
-        ///   <paramref name="json"/> does not represent a valid single JSON value.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///   <paramref name="options"/> contains unsupported options.
-        /// </exception>
-        public static JsonDocument Parse(in ReadOnlyMemory<char> json, JsonDocumentOptions options = default)
-        {
-            return Parse(json.Span, options);
-        }
-
-        /// <summary>
-        ///   Parse text representing a single JSON value into a JsonDocument.
-        /// </summary>
-        /// <remarks>
-        ///   The <see cref="ReadOnlyMemory{T}"/> value may be used for the entire lifetime of the
-        ///   JsonDocument object, and the caller must ensure that the data therein does not change during
-        ///   the object lifetime.
-        /// </remarks>
-        /// <param name="jsonChars">JSON text to parse.</param>
-        /// <param name="options">Options to control the reader behavior during parsing.</param>
-        /// <returns>
-        ///   A JsonDocument representation of the JSON value.
-        /// </returns>
-        /// <exception cref="JsonException">
-        ///   <paramref name="jsonChars"/> does not represent a valid single JSON value.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///   <paramref name="options"/> contains unsupported options.
-        /// </exception>
-        public static JsonDocument Parse(in ReadOnlySpan<char> jsonChars, JsonDocumentOptions options = default)
-        {
-            int expectedByteCount = JsonReaderHelper.GetUtf8ByteCount(jsonChars);
-            byte[] utf8Bytes;
-            Span<byte> utf8Span = utf8Bytes = ArrayPool<byte>.Shared.Rent(expectedByteCount);
-
-            try
-            {
-                int actualByteCount = JsonReaderHelper.GetUtf8FromText(jsonChars, utf8Span);
-                Debug.Assert(expectedByteCount == actualByteCount);
-
-                return ParseCore(new ReadOnlyMemory<byte>(utf8Bytes, 0, actualByteCount),
-                    readerOptions: options.GetReaderOptions(),
-                    extraRentedBytes: utf8Bytes);
-            }
-            catch
-            {
-                // Holds document content, clear it before returning it.
-                //utf8Span.Slice(0, expectedByteCount).Clear();
-                ArrayPool<byte>.Shared.Return(utf8Bytes);
-                throw;
-            }
+            return Parse(json.AsMemory(), options);
         }
 
         /// <summary>
@@ -300,7 +343,7 @@ namespace SpanJson.Document
         ///   </para>
         ///
         ///   <para>
-        ///     Upon completion of this method <paramref name="reader"/> will be positioned at the
+        ///     Upon completion of this method, <paramref name="reader"/> will be positioned at the
         ///     final token in the JSON value.  If an exception is thrown, or <see langword="false"/>
         ///     is returned, the reader is reset to the state it was in when the method was called.
         ///   </para>
@@ -319,9 +362,9 @@ namespace SpanJson.Document
         /// <exception cref="JsonException">
         ///   A value could not be read from the reader.
         /// </exception>
-        public static bool TryParseValue(ref Utf8JsonReader reader, out JsonDocument document)
+        public static bool TryParseValue(ref Utf8JsonReader reader, /*[NotNullWhen(true)] */out JsonDocument document)
         {
-            return TryParseValue(ref reader, out document, shouldThrow: false);
+            return TryParseValue(ref reader, out document, shouldThrow: false, useArrayPools: true);
         }
 
         /// <summary>
@@ -338,10 +381,10 @@ namespace SpanJson.Document
         ///     reader will be advanced by one call to <see cref="Utf8JsonReader.Read"/> to determine
         ///     the start of the value.
         ///   </para>
-        /// 
+        ///
         ///   <para>
-        ///     Upon completion of this method <paramref name="reader"/> will be positioned at the
-        ///     final token in the JSON value.  If an exception is thrown the reader is reset to
+        ///     Upon completion of this method, <paramref name="reader"/> will be positioned at the
+        ///     final token in the JSON value. If an exception is thrown, the reader is reset to
         ///     the state it was in when the method was called.
         ///   </para>
         ///
@@ -361,12 +404,18 @@ namespace SpanJson.Document
         /// </exception>
         public static JsonDocument ParseValue(ref Utf8JsonReader reader)
         {
-            bool ret = TryParseValue(ref reader, out JsonDocument document, shouldThrow: true);
+            bool ret = TryParseValue(ref reader, out JsonDocument document, shouldThrow: true, useArrayPools: true);
+
             Debug.Assert(ret, "TryParseValue returned false with shouldThrow: true.");
+            Debug.Assert(document != null, "null document returned with shouldThrow: true.");
             return document;
         }
 
-        private static bool TryParseValue(ref Utf8JsonReader reader, out JsonDocument document, bool shouldThrow)
+        internal static bool TryParseValue(
+            ref Utf8JsonReader reader,
+            /*[NotNullWhen(true)] */out JsonDocument document,
+            bool shouldThrow,
+            bool useArrayPools)
         {
             JsonReaderState state = reader.CurrentState;
             CheckSupportedOptions(state.Options, ExceptionArgument.reader);
@@ -402,6 +451,7 @@ namespace SpanJson.Document
                                 document = null;
                                 return false;
                             }
+
                             break;
                         }
                 }
@@ -414,31 +464,18 @@ namespace SpanJson.Document
                         {
                             long startingOffset = reader.TokenStartIndex;
 
-                            // Placeholder until reader.Skip() is written (#33295)
+                            if (!reader.TrySkip())
                             {
-                                int depth = reader.CurrentDepth;
-
-                                // CurrentDepth rises late and falls fast,
-                                // a payload of "[ 1, 2, 3, 4 ]" will report post-Read()
-                                // CurrentDepth values of { 0, 1, 1, 1, 1, 0 },
-                                // Since we're logically at 0 ([), Read() once and keep
-                                // reading until we've come back down to 0 (]).
-                                do
+                                if (shouldThrow)
                                 {
-                                    if (!reader.Read())
-                                    {
-                                        if (shouldThrow)
-                                        {
-                                            SysJsonThrowHelper.ThrowJsonReaderException(
-                                                ref reader,
-                                                ExceptionResource.ExpectedJsonTokens);
-                                        }
+                                    SysJsonThrowHelper.ThrowJsonReaderException(
+                                        ref reader,
+                                        ExceptionResource.ExpectedJsonTokens);
+                                }
 
-                                        reader = restore;
-                                        document = null;
-                                        return false;
-                                    }
-                                } while (reader.CurrentDepth > depth);
+                                reader = restore;
+                                document = null;
+                                return false;
                             }
 
                             long totalLength = reader.BytesConsumed - startingOffset;
@@ -462,11 +499,10 @@ namespace SpanJson.Document
                             break;
                         }
 
-                    // Single-token values
-                    case JsonTokenType.Number:
-                    case JsonTokenType.True:
                     case JsonTokenType.False:
+                    case JsonTokenType.True:
                     case JsonTokenType.Null:
+                        if (useArrayPools)
                         {
                             if (reader.HasValueSequence)
                             {
@@ -479,6 +515,24 @@ namespace SpanJson.Document
 
                             break;
                         }
+
+                        document = CreateForLiteral(reader.TokenType);
+                        return true;
+
+                    case JsonTokenType.Number:
+                        {
+                            if (reader.HasValueSequence)
+                            {
+                                valueSequence = reader.ValueSequence;
+                            }
+                            else
+                            {
+                                valueSpan = reader.ValueSpan;
+                            }
+
+                            break;
+                        }
+
                     // String's ValueSequence/ValueSpan omits the quotes, we need them back.
                     case JsonTokenType.String:
                         {
@@ -555,51 +609,90 @@ namespace SpanJson.Document
             }
 
             int length = valueSpan.IsEmpty ? checked((int)valueSequence.Length) : valueSpan.Length;
-            byte[] rented;
-            Span<byte> rentedSpan = (rented = ArrayPool<byte>.Shared.Rent(length)).AsSpan(0, length);
-
-            try
+            if (useArrayPools)
             {
+                byte[] rented = ArrayPool<byte>.Shared.Rent(length);
+                Span<byte> rentedSpan = rented.AsSpan(0, length);
+
+                try
+                {
+                    if (valueSpan.IsEmpty)
+                    {
+                        valueSequence.CopyTo(rentedSpan);
+                    }
+                    else
+                    {
+                        valueSpan.CopyTo(rentedSpan);
+                    }
+
+                    document = Parse(rented.AsMemory(0, length), state.Options, rented);
+                }
+                catch
+                {
+                    // This really shouldn't happen since the document was already checked
+                    // for consistency by Skip.  But if data mutations happened just after
+                    // the calls to Read then the copy may not be valid.
+                    rentedSpan.Clear();
+                    ArrayPool<byte>.Shared.Return(rented);
+                    throw;
+                }
+            }
+            else
+            {
+                byte[] owned;
+
                 if (valueSpan.IsEmpty)
                 {
-                    valueSequence.CopyTo(rentedSpan);
+                    owned = valueSequence.ToArray();
                 }
                 else
                 {
-                    valueSpan.CopyTo(rentedSpan);
+                    owned = valueSpan.ToArray();
                 }
 
-                document = ParseCore(new ReadOnlyMemory<byte>(rented, 0, length),
-                    readerOptions: state.Options,
-                    extraRentedBytes: rented);
-                return true;
+                document = ParseUnrented(owned, state.Options, reader.TokenType);
             }
-            catch
+
+            return true;
+        }
+
+        private static JsonDocument CreateForLiteral(JsonTokenType tokenType)
+        {
+            switch (tokenType)
             {
-                // This really shouldn't happen since the document was already checked
-                // for consistency by Skip.  But if data mutations happened just after
-                // the calls to Read then the copy may not be valid.
-                //rentedSpan.Clear();
-                ArrayPool<byte>.Shared.Return(rented);
-                throw;
+                case JsonTokenType.False:
+                    s_falseLiteral ??= Create(JsonUtf8Constant.FalseValue.ToArray());
+                    return s_falseLiteral;
+                case JsonTokenType.True:
+                    s_trueLiteral ??= Create(JsonUtf8Constant.TrueValue.ToArray());
+                    return s_trueLiteral;
+                default:
+                    Debug.Assert(tokenType == JsonTokenType.Null);
+                    s_nullLiteral ??= Create(JsonUtf8Constant.NullValue.ToArray());
+                    return s_nullLiteral;
+            }
+
+            JsonDocument Create(byte[] utf8Json)
+            {
+                MetadataDb database = MetadataDb.CreateLocked(utf8Json.Length);
+                database.Append(tokenType, startLocation: 0, utf8Json.Length);
+                return new JsonDocument(utf8Json, database);
             }
         }
 
-        private static JsonDocument ParseCore(in ReadOnlyMemory<byte> utf8Json,
-            JsonReaderOptions readerOptions, byte[] extraRentedBytes)
+        private static JsonDocument Parse(
+            ReadOnlyMemory<byte> utf8Json,
+            JsonReaderOptions readerOptions,
+            byte[] extraRentedArrayPoolBytes = null,
+            PooledByteBufferWriter extraPooledByteBufferWriter = null)
         {
             ReadOnlySpan<byte> utf8JsonSpan = utf8Json.Span;
-            Utf8JsonReader reader = new Utf8JsonReader(
-                utf8JsonSpan,
-                isFinalBlock: true,
-                new JsonReaderState(options: readerOptions));
-
-            var database = new MetadataDb(utf8Json.Length);
+            var database = MetadataDb.CreateRented(utf8Json.Length, convertToAlloc: false);
             var stack = new StackRowStack(JsonDocumentOptions.DefaultMaxDepth * StackRow.Size);
 
             try
             {
-                ParseCore(utf8JsonSpan, reader, ref database, ref stack);
+                ParseCore(utf8JsonSpan, readerOptions, ref database, ref stack);
             }
             catch
             {
@@ -611,7 +704,217 @@ namespace SpanJson.Document
                 stack.Dispose();
             }
 
-            return new JsonDocument(utf8Json, database, extraRentedBytes);
+            return new JsonDocument(utf8Json, database, extraRentedArrayPoolBytes, extraPooledByteBufferWriter);
+        }
+
+        private static JsonDocument ParseUnrented(
+            ReadOnlyMemory<byte> utf8Json,
+            JsonReaderOptions readerOptions,
+            JsonTokenType tokenType = JsonTokenType.None)
+        {
+            // These tokens should already have been processed.
+            Debug.Assert(
+                tokenType != JsonTokenType.Null &&
+                tokenType != JsonTokenType.False &&
+                tokenType != JsonTokenType.True);
+
+            ReadOnlySpan<byte> utf8JsonSpan = utf8Json.Span;
+            MetadataDb database;
+
+            if (tokenType == JsonTokenType.String || tokenType == JsonTokenType.Number)
+            {
+                // For primitive types, we can avoid renting MetadataDb and creating StackRowStack.
+                database = MetadataDb.CreateLocked(utf8Json.Length);
+                StackRowStack stack = default;
+                ParseCore(utf8JsonSpan, readerOptions, ref database, ref stack);
+            }
+            else
+            {
+                database = MetadataDb.CreateRented(utf8Json.Length, convertToAlloc: true);
+                var stack = new StackRowStack(JsonDocumentOptions.DefaultMaxDepth * StackRow.Size);
+                try
+                {
+                    ParseCore(utf8JsonSpan, readerOptions, ref database, ref stack);
+                }
+                finally
+                {
+                    stack.Dispose();
+                }
+            }
+
+            return new JsonDocument(utf8Json, database);
+        }
+
+        private static ArraySegment<byte> ReadToEnd(Stream stream)
+        {
+            int written = 0;
+            byte[] rented = null;
+
+            ReadOnlySpan<byte> utf8Bom = JsonUtf8Constant.Utf8Bom;
+
+            try
+            {
+                if (stream.CanSeek)
+                {
+                    // Ask for 1 more than the length to avoid resizing later,
+                    // which is unnecessary in the common case where the stream length doesn't change.
+                    long expectedLength = Math.Max(utf8Bom.Length, stream.Length - stream.Position) + 1;
+                    rented = ArrayPool<byte>.Shared.Rent(checked((int)expectedLength));
+                }
+                else
+                {
+                    rented = ArrayPool<byte>.Shared.Rent(UnseekableStreamInitialRentSize);
+                }
+
+                int lastRead;
+
+                // Read up to 3 bytes to see if it's the UTF-8 BOM
+                do
+                {
+                    // No need for checking for growth, the minimal rent sizes both guarantee it'll fit.
+                    Debug.Assert(rented.Length >= utf8Bom.Length);
+
+                    lastRead = stream.Read(
+                        rented,
+                        written,
+                        utf8Bom.Length - written);
+
+                    written += lastRead;
+                } while (lastRead > 0 && written < utf8Bom.Length);
+
+                // If we have 3 bytes, and they're the BOM, reset the write position to 0.
+                if (0u >= (uint)(written - utf8Bom.Length) &&
+                    utf8Bom.SequenceEqual(rented.AsSpan(0, utf8Bom.Length)))
+                {
+                    written = 0;
+                }
+
+                do
+                {
+                    if (0u >= (uint)(rented.Length - written))
+                    {
+                        byte[] toReturn = rented;
+                        rented = ArrayPool<byte>.Shared.Rent(checked(toReturn.Length * 2));
+                        Buffer.BlockCopy(toReturn, 0, rented, 0, toReturn.Length);
+                        // Holds document content, clear it.
+                        ArrayPool<byte>.Shared.Return(toReturn, clearArray: true);
+                    }
+
+                    lastRead = stream.Read(rented, written, rented.Length - written);
+                    written += lastRead;
+                } while (lastRead > 0);
+
+                return new ArraySegment<byte>(rented, 0, written);
+            }
+            catch
+            {
+                if (rented != null)
+                {
+                    // Holds document content, clear it before returning it.
+                    rented.AsSpan(0, written).Clear();
+                    ArrayPool<byte>.Shared.Return(rented);
+                }
+
+                throw;
+            }
+        }
+
+        private static async
+#if NET || NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+            ValueTask<ArraySegment<byte>>
+#else
+            Task<ArraySegment<byte>>
+#endif
+            ReadToEndAsync(
+            Stream stream,
+            CancellationToken cancellationToken)
+        {
+            int written = 0;
+            byte[] rented = null;
+
+            try
+            {
+                // Save the length to a local to be reused across awaits.
+                int utf8BomLength = JsonUtf8Constant.Utf8Bom.Length;
+
+                if (stream.CanSeek)
+                {
+                    // Ask for 1 more than the length to avoid resizing later,
+                    // which is unnecessary in the common case where the stream length doesn't change.
+                    long expectedLength = Math.Max(utf8BomLength, stream.Length - stream.Position) + 1;
+                    rented = ArrayPool<byte>.Shared.Rent(checked((int)expectedLength));
+                }
+                else
+                {
+                    rented = ArrayPool<byte>.Shared.Rent(UnseekableStreamInitialRentSize);
+                }
+
+                int lastRead;
+
+                // Read up to 3 bytes to see if it's the UTF-8 BOM
+                do
+                {
+                    // No need for checking for growth, the minimal rent sizes both guarantee it'll fit.
+                    Debug.Assert(rented.Length >= JsonUtf8Constant.Utf8Bom.Length);
+
+                    lastRead = await stream.ReadAsync(
+#if NET || NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        rented.AsMemory(written, utf8BomLength - written),
+#else
+                        rented,
+                        written,
+                        utf8BomLength - written,
+#endif
+                        cancellationToken).ConfigureAwait(false);
+
+                    written += lastRead;
+                } while (lastRead > 0 && written < utf8BomLength);
+
+                // If we have 3 bytes, and they're the BOM, reset the write position to 0.
+                if (0u >= (uint)(written - utf8BomLength) &&
+                    JsonUtf8Constant.Utf8Bom.SequenceEqual(rented.AsSpan(0, utf8BomLength)))
+                {
+                    written = 0;
+                }
+
+                do
+                {
+                    if (0u >= (uint)(rented.Length - written))
+                    {
+                        byte[] toReturn = rented;
+                        rented = ArrayPool<byte>.Shared.Rent(toReturn.Length * 2);
+                        Buffer.BlockCopy(toReturn, 0, rented, 0, toReturn.Length);
+                        // Holds document content, clear it.
+                        ArrayPool<byte>.Shared.Return(toReturn, clearArray: true);
+                    }
+
+                    lastRead = await stream.ReadAsync(
+#if NET || NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        rented.AsMemory(written),
+#else
+                        rented,
+                        written,
+                        rented.Length - written,
+#endif
+                        cancellationToken).ConfigureAwait(false);
+
+                    written += lastRead;
+
+                } while (lastRead > 0);
+
+                return new ArraySegment<byte>(rented, 0, written);
+            }
+            catch
+            {
+                if (rented != null)
+                {
+                    // Holds document content, clear it before returning it.
+                    rented.AsSpan(0, written).Clear();
+                    ArrayPool<byte>.Shared.Return(rented);
+                }
+
+                throw;
+            }
         }
     }
 }

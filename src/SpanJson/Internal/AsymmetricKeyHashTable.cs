@@ -11,9 +11,9 @@ namespace SpanJson.Internal
     internal interface IAsymmetricEqualityComparer
     {
         int GetHashCode(byte[] key1);
-        int GetHashCode(ReadOnlySpan<byte> key2);
+        int GetHashCode(in ReadOnlySpan<byte> key2);
         bool Equals(byte[] x, byte[] y); // when used rehash
-        bool Equals(byte[] x, ReadOnlySpan<byte> y); // when used get
+        bool Equals(byte[] x, in ReadOnlySpan<byte> y); // when used get
     }
 
     internal sealed class StringReadOnlySpanByteAscymmetricEqualityComparer : IAsymmetricEqualityComparer
@@ -25,7 +25,7 @@ namespace SpanJson.Internal
             return x.AsSpan().SequenceEqual(y);
         }
 
-        public bool Equals(byte[] x, ReadOnlySpan<byte> y)
+        public bool Equals(byte[] x, in ReadOnlySpan<byte> y)
         {
             return y.SequenceEqual(x);
         }
@@ -42,7 +42,7 @@ namespace SpanJson.Internal
             }
         }
 
-        public int GetHashCode(ReadOnlySpan<byte> key2)
+        public int GetHashCode(in ReadOnlySpan<byte> key2)
         {
             unchecked
             {
@@ -104,7 +104,7 @@ namespace SpanJson.Internal
                     for (int i = 0; i < buckets.Length; i++)
                     {
                         var e = buckets[i];
-                        while (e is object)
+                        while (e is not null)
                         {
                             var newEntry = new Entry { Key = e.Key, Value = e.Value, Hash = e.Hash };
                             AddToBuckets(nextBucket, key, newEntry, null, out resultingValue);
@@ -133,10 +133,10 @@ namespace SpanJson.Internal
 
         bool AddToBuckets(Entry[] buckets, byte[] newKey, Entry newEntryOrNull, Func<byte[], TValue> valueFactory, out TValue resultingValue)
         {
-            var h = (newEntryOrNull is object) ? newEntryOrNull.Hash : comparer.GetHashCode(newKey);
+            var h = (newEntryOrNull is not null) ? newEntryOrNull.Hash : comparer.GetHashCode(newKey);
             if (buckets[h & (buckets.Length - 1)] is null)
             {
-                if (newEntryOrNull is object)
+                if (newEntryOrNull is not null)
                 {
                     resultingValue = newEntryOrNull.Value;
                     VolatileWrite(ref buckets[h & (buckets.Length - 1)], newEntryOrNull);
@@ -160,7 +160,7 @@ namespace SpanJson.Internal
 
                     if (searchLastEntry.Next is null)
                     {
-                        if (newEntryOrNull is object)
+                        if (newEntryOrNull is not null)
                         {
                             resultingValue = newEntryOrNull.Value;
                             VolatileWrite(ref searchLastEntry.Next, newEntryOrNull);
@@ -179,7 +179,7 @@ namespace SpanJson.Internal
             return true;
         }
 
-        public bool TryGetValue(ReadOnlySpan<byte> key, out TValue value)
+        public bool TryGetValue(in ReadOnlySpan<byte> key, out TValue value)
         {
             var table = buckets;
             var hash = comparer.GetHashCode(key);
@@ -194,7 +194,7 @@ namespace SpanJson.Internal
             }
 
             var next = entry.Next;
-            while (next is object)
+            while (next is not null)
             {
                 if (comparer.Equals(next.Key, key))
                 {
@@ -254,7 +254,7 @@ namespace SpanJson.Internal
                 {
                     var count = 1;
                     var n = this;
-                    while (n.Next is object)
+                    while (n.Next is not null)
                     {
                         count++;
                         n = n.Next;

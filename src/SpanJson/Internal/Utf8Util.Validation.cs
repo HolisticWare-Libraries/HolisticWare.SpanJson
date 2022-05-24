@@ -17,7 +17,7 @@ using System.Runtime.InteropServices;
 
 namespace SpanJson.Internal
 {
-    internal static partial class Utf8Util
+    partial class Utf8Util
     {
         // This method will consume as many ASCII bytes as it can using fast vectorized processing, returning the number of
         // consumed (ASCII) bytes. It's possible that the method exits early, perhaps because there is some non-ASCII byte

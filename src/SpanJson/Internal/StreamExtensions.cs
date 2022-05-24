@@ -74,7 +74,7 @@ namespace SpanJson.Internal
             }
             catch
             {
-                if (rented is object)
+                if (rented is not null)
                 {
                     // Holds document content, clear it before returning it.
                     //rented.AsSpan(0, written).Clear();
@@ -156,7 +156,7 @@ namespace SpanJson.Internal
             }
             catch
             {
-                if (rented is object)
+                if (rented is not null)
                 {
                     // Holds document content, clear it before returning it.
                     //rented.AsSpan(0, written).Clear();

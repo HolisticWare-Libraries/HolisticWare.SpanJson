@@ -63,11 +63,11 @@ namespace SpanJson.Dynamic
         {
             var result = new Dictionary<Type, ConvertDelegate>();
             string utfType = null;
-            if ((uint)Unsafe.SizeOf<TSymbol>() == JsonSharedConstant.ByteSize)
+            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
             {
                 utfType = "Utf8";
             }
-            else if ((uint)Unsafe.SizeOf<TSymbol>() == JsonSharedConstant.CharSize)
+            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
             {
                 utfType = "Utf16";
             }
@@ -79,7 +79,7 @@ namespace SpanJson.Dynamic
             foreach (var allowedType in allowedTypes)
             {
                 var method = typeof(JsonReader<TSymbol>).GetMethod($"Read{utfType}{allowedType.Name}");
-                if (method is object)
+                if (method is not null)
                 {
                     var parameter = Expression.Parameter(typeof(JsonReader<TSymbol>).MakeByRefType(), "reader");
                     var lambda = Expression.Lambda<ConvertDelegate>(

@@ -361,7 +361,7 @@ namespace SpanJson.Utilities
                     MethodInfo toTargetTypeMethod = typeof(Convert)
                         .GetMethod("To" + targetType.Name, new[] { typeof(object) });
 
-                    if (toTargetTypeMethod is object)
+                    if (toTargetTypeMethod is not null)
                     {
                         convert = Expression.Condition(
                             Expression.TypeIs(expression, targetType),

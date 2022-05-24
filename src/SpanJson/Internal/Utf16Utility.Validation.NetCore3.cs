@@ -16,7 +16,7 @@ using nuint_32 = System.UInt32;
 
 namespace SpanJson.Internal
 {
-    internal static unsafe partial class Utf16Utility
+    unsafe partial class Utf16Utility
     {
         // Returns &inputBuffer[inputLength] if the input buffer is valid.
         /// <summary>

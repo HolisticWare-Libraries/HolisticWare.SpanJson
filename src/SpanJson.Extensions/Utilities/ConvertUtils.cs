@@ -558,7 +558,7 @@ namespace SpanJson.Utilities
             // see if source or target types have a TypeConverter that converts between the two
             TypeConverter toConverter = TypeDescriptor.GetConverter(initialType);
 
-            if (toConverter is object && toConverter.CanConvertTo(targetType))
+            if (toConverter is not null && toConverter.CanConvertTo(targetType))
             {
                 value = toConverter.ConvertTo(null, culture, initialValue, targetType);
                 return ConvertResult.Success;
@@ -566,7 +566,7 @@ namespace SpanJson.Utilities
 
             TypeConverter fromConverter = TypeDescriptor.GetConverter(targetType);
 
-            if (fromConverter is object && fromConverter.CanConvertFrom(initialType))
+            if (fromConverter is not null && fromConverter.CanConvertFrom(initialType))
             {
                 value = fromConverter.ConvertFrom(null, culture, initialValue);
                 return ConvertResult.Success;
@@ -677,7 +677,7 @@ namespace SpanJson.Utilities
 
         private static object EnsureTypeAssignable(object value, Type initialType, Type targetType)
         {
-            if (value is object)
+            if (value is not null)
             {
                 Type valueType = value?.GetType();
 
@@ -687,7 +687,7 @@ namespace SpanJson.Utilities
                 }
 
                 Func<object, object> castConverter = CastConverters.GetOrAdd(new StructMultiKey<Type, Type>(valueType, targetType), k => CreateCastConverter(k));
-                if (castConverter is object)
+                if (castConverter is not null)
                 {
                     return castConverter(value);
                 }

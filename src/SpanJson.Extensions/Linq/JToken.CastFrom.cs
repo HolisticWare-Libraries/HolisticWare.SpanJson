@@ -86,7 +86,7 @@ namespace SpanJson.Linq
                 return Convert.ToBoolean((int)integer);
             }
 
-            return (v.Value is object) ? (bool?)Convert.ToBoolean(v.Value, CultureInfo.InvariantCulture) : null;
+            return (v.Value is not null) ? (bool?)Convert.ToBoolean(v.Value, CultureInfo.InvariantCulture) : null;
         }
 
         /// <summary>Performs an explicit conversion from <see cref="JToken"/> to <see cref="Char"/>.</summary>
@@ -126,7 +126,7 @@ namespace SpanJson.Linq
                 return (char?)integer;
             }
 
-            return (v.Value is object) ? (char?)Convert.ToChar(v.Value, CultureInfo.InvariantCulture) : null;
+            return (v.Value is not null) ? (char?)Convert.ToChar(v.Value, CultureInfo.InvariantCulture) : null;
         }
 
 

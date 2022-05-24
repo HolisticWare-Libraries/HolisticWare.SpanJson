@@ -160,7 +160,7 @@ namespace SpanJson.Serialization
 
         public static Type GetImplementedCollectionType(Type queryType)
         {
-            Debug.Assert(queryType is object);
+            Debug.Assert(queryType is not null);
 
             if (!(typeof(IEnumerable).IsAssignableFrom(queryType)) ||
                 queryType == typeof(string) ||
@@ -183,7 +183,7 @@ namespace SpanJson.Serialization
             foreach (Type candidate in s_genericInterfacesWithAddMethods)
             {
                 Type derivedGeneric = ExtractGenericInterface(queryType, candidate);
-                if (derivedGeneric is object)
+                if (derivedGeneric is not null)
                 {
                     return derivedGeneric;
                 }
@@ -202,7 +202,7 @@ namespace SpanJson.Serialization
             foreach (Type candidate in s_genericInterfacesWithoutAddMethods)
             {
                 Type derivedGeneric = ExtractGenericInterface(queryType, candidate);
-                if (derivedGeneric is object)
+                if (derivedGeneric is not null)
                 {
                     return derivedGeneric;
                 }
@@ -249,7 +249,7 @@ namespace SpanJson.Serialization
         //public static bool HasConstructorThatTakesGenericIEnumerable(Type type, JsonSerializerOptions options)
         //{
         //    Type elementType = GetElementType(type, parentType: null, memberInfo: null, options);
-        //    return type.GetConstructor(new Type[] { typeof(List<>).MakeGenericType(elementType) }) is object;
+        //    return type.GetConstructor(new Type[] { typeof(List<>).MakeGenericType(elementType) }) is not null;
         //}
 
         public static bool IsDeserializedByConstructingWithIList(Type type)
@@ -279,7 +279,7 @@ namespace SpanJson.Serialization
 
         public static bool IsNativelySupportedCollection(Type queryType)
         {
-            Debug.Assert(queryType is object);
+            Debug.Assert(queryType is not null);
 
             if (queryType.IsGenericType)
             {
@@ -366,7 +366,7 @@ namespace SpanJson.Serialization
                 }
             }
 
-            if (bestMatch is object)
+            if (bestMatch is not null)
             {
                 return bestMatch;
             }

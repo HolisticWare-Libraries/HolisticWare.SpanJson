@@ -63,10 +63,10 @@ namespace SpanJson.Dynamic
                         return true;
                     }
 
-                    if (destinationType.IsEnum || (destinationType = Nullable.GetUnderlyingType(destinationType)) is object)
+                    if (destinationType.IsEnum || (destinationType = Nullable.GetUnderlyingType(destinationType)) is not null)
                     {
                         string data;
-                        if ((uint)Unsafe.SizeOf<TSymbol>() == JsonSharedConstant.ByteSize)
+                        if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
                         {
                             data = TextEncodings.Utf8.GetStringWithCache(reader.ReadUtf8StringSpan()); // Eunm 基本不需要Json转义
                         }
@@ -98,7 +98,7 @@ namespace SpanJson.Dynamic
                 if (!fix)
                 {
                     var nullable = Nullable.GetUnderlyingType(type);
-                    if (nullable is object)
+                    if (nullable is not null)
                     {
                         fix |= IsSupported(nullable);
                     }
@@ -293,14 +293,14 @@ namespace SpanJson.Dynamic
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override string ToString()
         {
-            if (_value is object) { return _value; }
+            if (_value is not null) { return _value; }
             if (DynamicConverter.TryConvertTo(typeof(string), Symbols, out var value))
             {
                 _value = (string)value;
                 return _value;
             }
 
-            //if ((uint)Unsafe.SizeOf<TSymbol>() == JsonSharedConstant.ByteSize)
+            //if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
             //{
             //    var jsonRaw = Symbols;
             //    var temp = jsonRaw.Array;
@@ -309,7 +309,7 @@ namespace SpanJson.Dynamic
             //    return _value;
             //}
 
-            //if ((uint)Unsafe.SizeOf<TSymbol>() == JsonSharedConstant.CharSize)
+            //if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
             //{
             //    var jsonRaw = Symbols;
             //    var temp = jsonRaw.Array;

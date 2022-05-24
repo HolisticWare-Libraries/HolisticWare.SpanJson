@@ -37,7 +37,7 @@ namespace SpanJson.Utilities
     {
         public static char[] EnsureBufferSize(int size, char[] buffer)
         {
-            if (buffer is object)
+            if (buffer is not null)
             {
                 ArrayPool<char>.Shared.Return(buffer);
             }
@@ -212,7 +212,7 @@ namespace SpanJson.Utilities
                                 // copy it over when creating new buffer
                                 if (isEscapedUnicodeText)
                                 {
-                                    Debug.Assert(writeBuffer is object, "Write buffer should never be null because it is set when the escaped unicode text is encountered.");
+                                    Debug.Assert(writeBuffer is not null, "Write buffer should never be null because it is set when the escaped unicode text is encountered.");
 
                                     Array.Copy(writeBuffer, newBuffer, UnicodeTextLength);
                                 }

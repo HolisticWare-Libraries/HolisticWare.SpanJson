@@ -16,7 +16,7 @@ namespace SpanJson.AspNetCore.Formatter
 
         public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding encoding)
         {
-            if (context.Object is object)
+            if (context.Object is not null)
             {
                 var valueTask = JsonSerializer.NonGeneric.Utf8.SerializeAsync<TResolver>(context.Object, context.HttpContext.Response.Body);
                 return valueTask.IsCompletedSuccessfully ? Task.CompletedTask : valueTask.AsTask();

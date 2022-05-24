@@ -1,6 +1,5 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
 using System;
 using System.Buffers;
@@ -27,7 +26,11 @@ namespace SpanJson
         /// </remarks>
         public void WriteStringValue(DateTime value)
         {
-            ValidateWritingValue();
+            if (!_options.SkipValidation)
+            {
+                ValidateWritingValue();
+            }
+
             if (_options.Indented)
             {
                 WriteStringValueIndented(value);
@@ -57,12 +60,7 @@ namespace SpanJson
 
             Unsafe.Add(ref output, pos++) = JsonUtf8Constant.DoubleQuote;
 
-            Span<byte> tempSpan = stackalloc byte[JsonSharedConstant.MaximumFormatDateTimeOffsetLength];
-            bool result = Utf8Formatter.TryFormat(value, tempSpan, out int bytesWritten, s_dateTimeStandardFormat);
-            Debug.Assert(result);
-            DateTimeFormatter.TrimDateTimeOffset(tempSpan.Slice(0, bytesWritten), out bytesWritten);
-            BinaryUtil.CopyMemory(ref MemoryMarshal.GetReference(tempSpan), ref Unsafe.Add(ref output, pos), bytesWritten);
-            pos += bytesWritten;
+            DateTimeFormatter.WriteDateTimeTrimmed(ref output, ref pos, value);
 
             Unsafe.Add(ref output, pos++) = JsonUtf8Constant.DoubleQuote;
         }
@@ -96,16 +94,9 @@ namespace SpanJson
 
             Unsafe.Add(ref output, pos++) = JsonUtf8Constant.DoubleQuote;
 
-            Span<byte> tempSpan = stackalloc byte[JsonSharedConstant.MaximumFormatDateTimeOffsetLength];
-            bool result = Utf8Formatter.TryFormat(value, tempSpan, out int bytesWritten, s_dateTimeStandardFormat);
-            Debug.Assert(result);
-            DateTimeFormatter.TrimDateTimeOffset(tempSpan.Slice(0, bytesWritten), out bytesWritten);
-            BinaryUtil.CopyMemory(ref MemoryMarshal.GetReference(tempSpan), ref Unsafe.Add(ref output, pos), bytesWritten);
-            pos += bytesWritten;
+            DateTimeFormatter.WriteDateTimeTrimmed(ref output, ref pos, value);
 
             Unsafe.Add(ref output, pos++) = JsonUtf8Constant.DoubleQuote;
         }
-
-        private static readonly StandardFormat s_dateTimeStandardFormat = new StandardFormat('O');
     }
 }

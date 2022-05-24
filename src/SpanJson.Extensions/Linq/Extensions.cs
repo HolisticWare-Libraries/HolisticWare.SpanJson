@@ -180,7 +180,7 @@ namespace SpanJson.Linq
                 foreach (T token in source)
                 {
                     JToken value = token[key];
-                    if (value is object)
+                    if (value is not null)
                     {
                         yield return value.Convert<JToken, U>();
                     }

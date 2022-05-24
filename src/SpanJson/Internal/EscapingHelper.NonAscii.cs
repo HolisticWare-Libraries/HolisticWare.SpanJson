@@ -48,8 +48,16 @@ namespace SpanJson.Internal
             private static readonly ConcurrentDictionary<string, JsonEncodedText> s_encodedTextCache =
                 new ConcurrentDictionary<string, JsonEncodedText>(StringComparer.Ordinal);
 
+            private static bool NeedsEscapingNoBoundsCheck(char value) => 0u >= (uint)AllowList[value] ? true : false;
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static bool NeedsEscaping(byte utf8Value) => 0u >= (uint)AllowList[utf8Value] ? true : false;
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static bool NeedsEscaping(char value) => ((uint)value > byte.MaxValue || 0u >= AllowList[value]) ? true : false;
+
 #if !NET451
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static JsonEncodedText GetEncodedText(string text, JavaScriptEncoder encoder)
             {
                 if (encoder is null)
@@ -61,83 +69,23 @@ namespace SpanJson.Internal
                     return JsonEncodedText.Encode(text, JsonEscapeHandling.EscapeNonAscii, encoder);
                 }
             }
-#else
-            public static JsonEncodedText GetEncodedText(string text)
+
+            public static int NeedsEscaping(in ReadOnlySpan<byte> value, JavaScriptEncoder encoder = null)
             {
-                return s_encodedTextCache.GetOrAdd(text, s => JsonEncodedText.Encode(s, JsonEscapeHandling.EscapeNonAscii));
-            }
-#endif
-
-
-            private static bool NeedsEscapingNoBoundsCheck(char value) => 0u >= (uint)AllowList[value] ? true : false;
-
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static bool NeedsEscaping(byte utf8Value) => 0u >= (uint)AllowList[utf8Value] ? true : false;
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static bool NeedsEscaping(char value) => ((uint)value > byte.MaxValue || 0u >= AllowList[value]) ? true : false;
-
-            public static int NeedsEscaping(in ReadOnlySpan<byte> utf8Source, JavaScriptEncoder encoder = null)
-            {
-                int idx;
-
-#if !NET451
-                if (encoder is object)
-                {
-                    idx = encoder.FindFirstCharacterToEncodeUtf8(utf8Source);
-                    goto Return;
-                }
-#endif
-
-                ref byte space = ref MemoryMarshal.GetReference(utf8Source);
-                idx = 0;
-                uint nlen = (uint)utf8Source.Length;
-                while ((uint)idx < nlen)
-                {
-                    if (NeedsEscaping(Unsafe.Add(ref space, idx))) { goto Return; }
-                    idx++;
-                }
-
-                idx = -1; // all characters allowed
-
-            Return:
-                return idx;
+                return (encoder ?? JavaScriptEncoder.Default).FindFirstCharacterToEncodeUtf8(value);
             }
 
-            public static unsafe int NeedsEscaping(in ReadOnlySpan<char> utf16Source, JavaScriptEncoder encoder = null)
+            public static unsafe int NeedsEscaping(in ReadOnlySpan<char> value, JavaScriptEncoder encoder = null)
             {
-                int idx;
+                // Some implementations of JavaScriptEncoder.FindFirstCharacterToEncode may not accept
+                // null pointers and guard against that. Hence, check up-front to return -1.
+                if (value.IsEmpty) { return -1; }
 
-#if !NET451
-                // Some implementations of JavascriptEncoder.FindFirstCharacterToEncode may not accept
-                // null pointers and gaurd against that. Hence, check up-front and fall down to return -1.
-                if (encoder is object && !utf16Source.IsEmpty)
+                fixed (char* ptr = value)
                 {
-                    fixed (char* ptr = utf16Source)
-                    {
-                        idx = encoder.FindFirstCharacterToEncode(ptr, utf16Source.Length);
-                    }
-                    goto Return;
+                    return (encoder ?? JavaScriptEncoder.Default).FindFirstCharacterToEncode(ptr, value.Length);
                 }
-#endif
-
-                ref char space = ref MemoryMarshal.GetReference(utf16Source);
-                idx = 0;
-                uint nlen = (uint)utf16Source.Length;
-                while ((uint)idx < nlen)
-                {
-                    if (NeedsEscaping(Unsafe.Add(ref space, idx))) { goto Return; }
-                    idx++;
-                }
-
-                idx = -1; // all characters allowed
-
-            Return:
-                return idx;
             }
-
-#if !NET451
 
             public static void EscapeString(in ReadOnlySpan<byte> utf8Source, Span<byte> destination, int indexOfFirstByteToEscape, JavaScriptEncoder encoder, out int written)
             {
@@ -146,7 +94,7 @@ namespace SpanJson.Internal
                 utf8Source.Slice(0, indexOfFirstByteToEscape).CopyTo(destination);
                 written = indexOfFirstByteToEscape;
 
-                if (encoder is object)
+                if (encoder is not null)
                 {
                     destination = destination.Slice(indexOfFirstByteToEscape);
                     var utf8Value = utf8Source.Slice(indexOfFirstByteToEscape);
@@ -190,7 +138,7 @@ namespace SpanJson.Internal
 
             private static void EscapeStringInternal(in ReadOnlySpan<byte> value, Span<byte> destination, JavaScriptEncoder encoder, ref int written)
             {
-                Debug.Assert(encoder is object);
+                Debug.Assert(encoder is not null);
 
                 OperationStatus result = encoder.EncodeUtf8(value, destination, out int encoderBytesConsumed, out int encoderBytesWritten);
 
@@ -214,7 +162,7 @@ namespace SpanJson.Internal
                 utf16Source.Slice(0, indexOfFirstByteToEscape).CopyTo(destination);
                 written = indexOfFirstByteToEscape;
 
-                if (encoder is object)
+                if (encoder is not null)
                 {
                     destination = destination.Slice(indexOfFirstByteToEscape);
                     var utf16Value = utf16Source.Slice(indexOfFirstByteToEscape);
@@ -258,7 +206,7 @@ namespace SpanJson.Internal
 
             private static void EscapeStringInternal(in ReadOnlySpan<char> value, Span<char> destination, JavaScriptEncoder encoder, ref int written)
             {
-                Debug.Assert(encoder is object);
+                Debug.Assert(encoder is not null);
 
                 OperationStatus result = encoder.Encode(value, destination, out int encoderBytesConsumed, out int encoderCharsWritten);
 

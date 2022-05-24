@@ -12,11 +12,11 @@ namespace SpanJson.Linq.JsonPath
 
             foreach (JToken t in current)
             {
-                if (Index is object)
+                if (Index is not null)
                 {
                     JToken v = GetTokenIndex(t, settings, Index.GetValueOrDefault());
 
-                    if (v is object)
+                    if (v is not null)
                     {
                         yield return v;
                     }

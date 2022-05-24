@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Reflection;
 using System.Text;
 using SpanJson.Internal;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SpanJson
 {
@@ -71,6 +72,7 @@ namespace SpanJson
     internal enum ExceptionResource
     {
         ArrayDepthTooLarge,
+        BufferMaximumSizeExceeded,
         EndOfCommentNotFound,
         EndOfStringNotFound,
         RequiredDigitNotFoundAfterDecimal,
@@ -93,6 +95,7 @@ namespace SpanJson
         InvalidCharacterAfterEscapeWithinString,
         InvalidHexCharacterWithinString,
         InvalidEndOfJsonNonPrimitive,
+        InvalidLeadingZeroInNumber,
         MismatchedObjectArray,
         ObjectDepthTooLarge,
         ZeroDepthAtEnd,
@@ -579,6 +582,16 @@ namespace SpanJson
             static OutOfMemoryException GetException()
             {
                 return new OutOfMemoryException();
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        internal static void ThrowOutOfMemoryException(uint capacity)
+        {
+            throw GetException();
+            OutOfMemoryException GetException()
+            {
+                throw new OutOfMemoryException(SR.Format(SR.BufferMaximumSizeExceeded, capacity));
             }
         }
 

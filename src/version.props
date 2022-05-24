@@ -1,96 +1,96 @@
 <Project>
   <!-- Versioning properties -->
   <PropertyGroup>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <VersionPrefix Condition=" '$(VersionPrefix)'=='' ">2.0.18</VersionPrefix>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <VersionPrefix Condition=" '$(VersionPrefix)'=='' ">3.2.2</VersionPrefix>
     <VersionSuffix Condition=" '$(VersionSuffix)'=='' ">rtm</VersionSuffix>
-    <VersionDateSuffix Condition=" '$(VersionDateSuffix)'=='' ">200429-01</VersionDateSuffix>
+    <VersionDateSuffix Condition=" '$(VersionDateSuffix)'=='' ">220525-01</VersionDateSuffix>
     <VersionSuffix Condition=" '$(VersionDateSuffix)'!='' ">$(VersionSuffix)-$(VersionDateSuffix)</VersionSuffix>
   </PropertyGroup>
   <Choose>
     <When Condition=" '$(TargetFramework)' == 'net40' ">
       <PropertyGroup>
-        <FileVersion>2.0.18.0</FileVersion>
+        <FileVersion>3.2.2.0</FileVersion>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFramework)' == 'net45' ">
       <PropertyGroup>
-        <FileVersion>2.0.18.1000</FileVersion>
+        <FileVersion>3.2.2.1000</FileVersion>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFramework)' == 'net451' ">
       <PropertyGroup>
-        <FileVersion>2.0.18.1100</FileVersion>
+        <FileVersion>3.2.2.1100</FileVersion>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFramework)' == 'net452' ">
       <PropertyGroup>
-        <FileVersion>2.0.18.1200</FileVersion>
+        <FileVersion>3.2.2.1200</FileVersion>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFramework)' == 'net47' ">
       <PropertyGroup>
-        <FileVersion>2.0.18.2000</FileVersion>
+        <FileVersion>3.2.2.2000</FileVersion>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFramework)' == 'net471' ">
       <PropertyGroup>
-        <FileVersion>2.0.18.2100</FileVersion>
+        <FileVersion>3.2.2.2100</FileVersion>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFramework)' == 'net472' ">
       <PropertyGroup>
-        <FileVersion>2.0.18.2200</FileVersion>
+        <FileVersion>3.2.2.2200</FileVersion>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFramework)' == 'net48' ">
       <PropertyGroup>
-        <FileVersion>2.0.18.2500</FileVersion>
+        <FileVersion>3.2.2.2500</FileVersion>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
       <PropertyGroup>
-        <FileVersion>2.0.18.5000</FileVersion>
+        <FileVersion>3.2.2.5000</FileVersion>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
       <PropertyGroup>
-        <FileVersion>2.0.18.5100</FileVersion>
+        <FileVersion>3.2.2.5100</FileVersion>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
       <PropertyGroup>
-        <FileVersion>2.0.18.6000</FileVersion>
+        <FileVersion>3.2.2.6000</FileVersion>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
       <PropertyGroup>
-        <FileVersion>2.0.18.6100</FileVersion>
+        <FileVersion>3.2.2.6100</FileVersion>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFramework)' == 'netcoreapp2.2' ">
       <PropertyGroup>
-        <FileVersion>2.0.18.6200</FileVersion>
+        <FileVersion>3.2.2.6200</FileVersion>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
       <PropertyGroup>
-        <FileVersion>2.0.18.6500</FileVersion>
+        <FileVersion>3.2.2.6500</FileVersion>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
       <PropertyGroup>
-        <FileVersion>2.0.18.6600</FileVersion>
+        <FileVersion>3.2.2.6600</FileVersion>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFramework)' == 'net6.0' ">
       <PropertyGroup>
-        <FileVersion>2.0.18.7000</FileVersion>
+        <FileVersion>3.2.2.7000</FileVersion>
       </PropertyGroup>
     </When>
     <Otherwise>
       <PropertyGroup>
-        <FileVersion>2.0.18.9000</FileVersion>
+        <FileVersion>3.2.2.9000</FileVersion>
       </PropertyGroup>
     </Otherwise>
   </Choose>

@@ -1,13 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
 using System;
 using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
 using SpanJson.Internal;
 
 namespace SpanJson
@@ -27,8 +25,8 @@ namespace SpanJson
     {
         private ReadOnlySpan<byte> _buffer;
 
-        private bool _isFinalBlock;
-        private bool _isInputSequence;
+        private readonly bool _isFinalBlock;
+        private readonly bool _isInputSequence;
 
         private long _lineNumber;
         private long _bytePositionInLine;
@@ -37,7 +35,6 @@ namespace SpanJson
         private int _consumed;
         private bool _inObject;
         private bool _isNotPrimitive;
-        internal char _numberFormat;
         private JsonTokenType _tokenType;
         private JsonTokenType _previousTokenType;
         private JsonReaderOptions _readerOptions;
@@ -51,7 +48,7 @@ namespace SpanJson
 
         private SequencePosition _nextPosition;
         private SequencePosition _currentPosition;
-        private ReadOnlySequence<byte> _sequence;
+        private readonly ReadOnlySequence<byte> _sequence;
 
         private bool IsLastSpan => _isFinalBlock && (!_isMultiSegment || _isLastSegment);
 
@@ -127,7 +124,7 @@ namespace SpanJson
         public JsonTokenType TokenType => _tokenType;
 
         /// <summary>
-        /// Lets the caller know which of the two 'Value' properties to read to get the 
+        /// Lets the caller know which of the two 'Value' properties to read to get the
         /// token value. For input data within a ReadOnlySpan&lt;byte&gt; this will
         /// always return false. For input data within a ReadOnlySequence&lt;byte&gt;, this
         /// will only return true if the token value straddles more than a single segment and
@@ -167,7 +164,7 @@ namespace SpanJson
             {
                 if (_isInputSequence)
                 {
-                    Debug.Assert(_currentPosition.GetObject() is object);
+                    Debug.Assert(_currentPosition.GetObject() is not null);
                     return _sequence.GetPosition(_consumed, _currentPosition);
                 }
                 return default;
@@ -187,7 +184,6 @@ namespace SpanJson
             _bytePositionInLine = _bytePositionInLine,
             _inObject = _inObject,
             _isNotPrimitive = _isNotPrimitive,
-            _numberFormat = _numberFormat,
             _stringHasEscaping = _stringHasEscaping,
             _trailingCommaBeforeComment = _trailingCommaBeforeComment,
             _tokenType = _tokenType,
@@ -219,7 +215,6 @@ namespace SpanJson
             _bytePositionInLine = state._bytePositionInLine;
             _inObject = state._inObject;
             _isNotPrimitive = state._isNotPrimitive;
-            _numberFormat = state._numberFormat;
             _stringHasEscaping = state._stringHasEscaping;
             _trailingCommaBeforeComment = state._trailingCommaBeforeComment;
             _tokenType = state._tokenType;
@@ -300,10 +295,10 @@ namespace SpanJson
         /// </exception>
         /// <remarks>
         /// When <see cref="TokenType"/> is <see cref="JsonTokenType.PropertyName" />, the reader first moves to the property value.
-        /// When <see cref="TokenType"/> (originally, or after advancing) is <see cref="JsonTokenType.BeginObject" /> or 
+        /// When <see cref="TokenType"/> (originally, or after advancing) is <see cref="JsonTokenType.BeginObject" /> or
         /// <see cref="JsonTokenType.BeginArray" />, the reader advances to the matching
         /// <see cref="JsonTokenType.EndObject" /> or <see cref="JsonTokenType.EndArray" />.
-        /// 
+        ///
         /// For all other token types, the reader does not move. After the next call to <see cref="Read"/>, the reader will be at
         /// the next value (when in an array), the next property name (when in an object), or the end array/object token.
         /// </remarks>
@@ -359,10 +354,10 @@ namespace SpanJson
         ///   </para>
         ///   <para>
         ///     When <see cref="TokenType"/> is <see cref="JsonTokenType.PropertyName" />, the reader first moves to the property value.
-        ///     When <see cref="TokenType"/> (originally, or after advancing) is <see cref="JsonTokenType.BeginObject" /> or 
+        ///     When <see cref="TokenType"/> (originally, or after advancing) is <see cref="JsonTokenType.BeginObject" /> or
         ///     <see cref="JsonTokenType.BeginArray" />, the reader advances to the matching
         ///     <see cref="JsonTokenType.EndObject" /> or <see cref="JsonTokenType.EndArray" />.
-        /// 
+        ///
         ///     For all other token types, the reader does not move. After the next call to <see cref="Read"/>, the reader will be at
         ///     the next value (when in an array), the next property name (when in an object), or the end array/object token.
         ///   </para>
@@ -424,7 +419,7 @@ namespace SpanJson
         /// </exception>
         /// <remarks>
         ///   <para>
-        ///     If the look up text is invalid UTF-8 text, the method will return false since you cannot have 
+        ///     If the look up text is invalid UTF-8 text, the method will return false since you cannot have
         ///     invalid UTF-8 within the JSON payload.
         ///   </para>
         ///   <para>
@@ -453,7 +448,7 @@ namespace SpanJson
         /// </exception>
         /// <remarks>
         ///   <para>
-        ///     If the look up text is invalid UTF-8 text, the method will return false since you cannot have 
+        ///     If the look up text is invalid UTF-8 text, the method will return false since you cannot have
         ///     invalid UTF-8 within the JSON payload.
         ///   </para>
         ///   <para>
@@ -520,7 +515,7 @@ namespace SpanJson
 
             int length = checked(text.Length * JsonSharedConstant.MaxExpansionFactorWhileTranscoding);
 
-            if ((uint)length > JsonSharedConstant.StackallocThreshold)
+            if ((uint)length > JsonSharedConstant.StackallocByteThresholdU)
             {
                 otherUtf8TextArray = ArrayPool<byte>.Shared.Rent(length);
                 otherUtf8Text = otherUtf8TextArray;
@@ -530,8 +525,8 @@ namespace SpanJson
                 // Cannot create a span directly since it gets passed to instance methods on a ref struct.
                 unsafe
                 {
-                    byte* ptr = stackalloc byte[JsonSharedConstant.StackallocMaxLength];
-                    otherUtf8Text = new Span<byte>(ptr, JsonSharedConstant.StackallocMaxLength);
+                    byte* ptr = stackalloc byte[JsonSharedConstant.StackallocByteThreshold];
+                    otherUtf8Text = new Span<byte>(ptr, JsonSharedConstant.StackallocByteThreshold);
                 }
             }
 
@@ -551,7 +546,7 @@ namespace SpanJson
                 result = TextEqualsHelper(otherUtf8Text.Slice(0, written));
             }
 
-            if (otherUtf8TextArray is object)
+            if (otherUtf8TextArray is not null)
             {
                 //otherUtf8Text.Slice(0, written).Clear();
                 ArrayPool<byte>.Shared.Return(otherUtf8TextArray);
@@ -930,7 +925,7 @@ namespace SpanJson
         }
 
         // Unlike the parameter-less overload of HasMoreData, if there is no more data when this method is called, we know the JSON input is invalid.
-        // This is because, this method is only called after a ',' (i.e. we expect a value/property name) or after 
+        // This is because, this method is only called after a ',' (i.e. we expect a value/property name) or after
         // a property name, which means it must be followed by a value.
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool HasMoreData(ExceptionResource resource)
@@ -1007,7 +1002,7 @@ namespace SpanJson
             {
                 byte val = localBuffer[_consumed];
 
-                // JSON RFC 8259 section 2 says only these 4 characters count, not all of the Unicode defintions of whitespace.
+                // JSON RFC 8259 section 2 says only these 4 characters count, not all of the Unicode definitions of whitespace.
                 switch (val)
                 {
                     case JsonUtf8Constant.Space:
@@ -1430,10 +1425,9 @@ namespace SpanJson
         // https://tools.ietf.org/html/rfc7159#section-6
         private bool TryGetNumber(in ReadOnlySpan<byte> source, out int consumed)
         {
-            // TODO: https://github.com/dotnet/corefx/issues/33294
+            // TODO: https://github.com/dotnet/runtime/issues/27837
             Debug.Assert(source.Length > 0);
 
-            _numberFormat = default;
             consumed = 0;
             int i = 0;
 
@@ -1512,7 +1506,6 @@ namespace SpanJson
 
             Debug.Assert(nextByte == 'E' || nextByte == 'e');
             i++;
-            _numberFormat = JsonSharedConstant.ScientificNotationFormat;
 
             signResult = ConsumeSign(ref data, ref i);
             if (signResult == ConsumeNumberResult.NeedMoreData)
@@ -1602,7 +1595,9 @@ namespace SpanJson
             if (nextByte != '.' && nextByte != 'E' && nextByte != 'e')
             {
                 _bytePositionInLine += i;
-                SysJsonThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.ExpectedEndOfDigitNotFound, nextByte);
+                SysJsonThrowHelper.ThrowJsonReaderException(ref this,
+                    JsonHelpers.IsInRangeInclusive(nextByte, '0', '9') ? ExceptionResource.InvalidLeadingZeroInNumber : ExceptionResource.ExpectedEndOfDigitNotFound,
+                    nextByte);
             }
 
             return ConsumeNumberResult.OperationIncomplete;
@@ -2571,5 +2566,18 @@ namespace SpanJson
                 JsonTokenType.True => nameof(JsonTokenType.True),
                 _ => ((byte)TokenType).ToString()
             };
+
+        private ReadOnlySpan<byte> GetUnescapedSpan()
+        {
+            ReadOnlySpan<byte> span = HasValueSequence ? ValueSequence.ToArray() : ValueSpan;
+            if (_stringHasEscaping)
+            {
+                int idx = span.IndexOf(JsonUtf8Constant.BackSlash);
+                Debug.Assert(idx != -1);
+                span = JsonReaderHelper.GetUnescapedSpan(span, idx);
+            }
+
+            return span;
+        }
     }
 }

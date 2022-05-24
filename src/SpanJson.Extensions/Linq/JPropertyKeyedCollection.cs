@@ -56,12 +56,12 @@ namespace SpanJson.Linq
             string keyForItem = GetKeyForItem(item);
             if (!Comparer.Equals(keyForItem, newKey))
             {
-                if (newKey is object)
+                if (newKey is not null)
                 {
                     AddKey(newKey, item);
                 }
 
-                if (keyForItem is object)
+                if (keyForItem is not null)
                 {
                     RemoveKey(keyForItem);
                 }
@@ -79,7 +79,7 @@ namespace SpanJson.Linq
         {
             if (key is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.key); }
 
-            if (_dictionary is object)
+            if (_dictionary is not null)
             {
                 return _dictionary.ContainsKey(key);
             }
@@ -121,7 +121,7 @@ namespace SpanJson.Linq
         {
             if (key is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.key); }
 
-            if (_dictionary is object)
+            if (_dictionary is not null)
             {
                 return _dictionary.TryGetValue(key, out JToken value) && Remove(value);
             }
@@ -148,7 +148,7 @@ namespace SpanJson.Linq
 
             if (Comparer.Equals(keyAtIndex, keyForItem))
             {
-                if (_dictionary is object)
+                if (_dictionary is not null)
                 {
                     _dictionary[keyForItem] = item;
                 }
@@ -157,7 +157,7 @@ namespace SpanJson.Linq
             {
                 AddKey(keyForItem, item);
 
-                if (keyAtIndex is object)
+                if (keyAtIndex is not null)
                 {
                     RemoveKey(keyAtIndex);
                 }
@@ -171,7 +171,7 @@ namespace SpanJson.Linq
             {
                 if (key is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.key); }
 
-                if (_dictionary is object)
+                if (_dictionary is not null)
                 {
                     return _dictionary[key];
                 }

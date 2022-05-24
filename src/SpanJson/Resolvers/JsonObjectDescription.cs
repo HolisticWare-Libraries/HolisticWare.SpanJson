@@ -13,9 +13,35 @@ namespace SpanJson.Resolvers
             ExtensionMemberInfo = extensionMemberInfo;
             Constructor = constructor;
             Attribute = attribute;
-            if (Constructor is object)
+            if (Constructor is not null)
             {
                 ConstructorMapping = BuildMapping();
+                // we need to sort all the members which are not assigned in the ctor after the ctor assigment, otherwise the object is not ctor'd.
+                Array.Sort(Members, (x, y) =>
+                {
+                    if (ReferenceEquals(x, y))
+                    {
+                        return 0;
+                    }
+
+                    var xIsCtorMapping = ConstructorMapping.TryGetValue(x.MemberName, out var xElement);
+                    var yIsCtorMapping = ConstructorMapping.TryGetValue(y.MemberName, out var yElement);
+                    if (!xIsCtorMapping && !yIsCtorMapping) // both are not in, it doesn't matter
+                    {
+                        return StringComparer.Ordinal.Compare(x.MemberName, y.MemberName);
+                    }
+                    if (xIsCtorMapping && !yIsCtorMapping) // x is in ctor and y not, move x up
+                    {
+                        return -1;
+                    }
+
+                    if (!xIsCtorMapping && yIsCtorMapping) // x is not in ctor and y is, move x down
+                    {
+                        return 1;
+                    }
+
+                    return xElement.Index.CompareTo(yElement.Index);
+                });
             }
         }
 
@@ -56,7 +82,7 @@ namespace SpanJson.Resolvers
             foreach (var constructorParameter in constructorParameters)
             {
                 if (memberInfoDictionary.TryGetValue(constructorParameter.Name, out var memberInfo) ||
-                    Attribute.ParameterNames is object && index < Attribute.ParameterNames.Length &&
+                    Attribute.ParameterNames is not null && index < Attribute.ParameterNames.Length &&
                     memberInfoDictionary.TryGetValue(Attribute.ParameterNames[index], out memberInfo))
                 {
                     constructorValueIndexDictionary[memberInfo.MemberName] = (memberInfo.MemberType, index++);

@@ -12,14 +12,15 @@ namespace SpanJson
         public const int MaxTimeSpanLength = 27; // c + 2 double quotes
         public const int MaxGuidLength = 42; // d + 2 double quotes
 
-        public const uint StackallocThreshold = 256u;
-        public const int StackallocMaxLength = 256;
-        //public const int StackAllocCharMaxLength = StackallocMaxLength / sizeof(char);
+        public const int StackallocByteThreshold = 256;
+        internal const uint StackallocByteThresholdU = 256u;
+        public const int StackallocCharThreshold = StackallocByteThreshold / 2;
+        internal const uint StackallocCharThresholdU = StackallocCharThreshold;
 
         public const uint TooBigOrNegative = int.MaxValue;
 
-        public const uint ByteSize = sizeof(byte);
-        public const uint CharSize = sizeof(char);
+        public const int ByteSize = sizeof(byte);
+        public const int CharSize = sizeof(char);
 
         // \u2028 and \u2029 are considered respectively line and paragraph separators
         // UTF-8 representation for them is E2, 80, A8/A9
@@ -40,11 +41,19 @@ namespace SpanJson
         // All other UTF-16 characters can be represented by either 1 or 2 UTF-8 bytes.
         public const int MaxExpansionFactorWhileTranscoding = 3;
 
+        // When transcoding from UTF8 -> UTF16, the byte count threshold where we rent from the array pool before performing a normal alloc.
+        public const long ArrayPoolMaxSizeBeforeUsingNormalAlloc = 1024 * 1024;
+
+        // The maximum number of characters allowed when writing raw UTF-16 JSON. This is the maximum length that we can guarantee can
+        // be safely transcoded to UTF-8 and fit within an integer-length span, given the max expansion factor of a single character (3).
+        public const int MaxUtf16RawValueLength = int.MaxValue / MaxExpansionFactorWhileTranscoding;
+
         public const int MaxEscapedTokenSize = 1_000_000_000;   // Max size for already escaped value.
         public const int MaxUnescapedTokenSize = MaxEscapedTokenSize / MaxExpansionFactorWhileEscaping;  // 166_666_666 bytes
         public const int MaxBase64ValueTokenSize = (MaxEscapedTokenSize >> 2) * 3 / MaxExpansionFactorWhileEscaping;  // 125_000_000 bytes
         public const int MaxCharacterTokenSize = MaxEscapedTokenSize / MaxExpansionFactorWhileEscaping; // 166_666_666 characters
 
+        public const int MaximumFormatBooleanLength = 5;
         public const int MaximumFormatInt64Length = 20;   // 19 + sign (i.e. -9223372036854775808)
         public const int MaximumFormatUInt64Length = 20;  // i.e. 18446744073709551615
         public const int MaximumFormatDoubleLength = 128;  // default (i.e. 'G'), using 128 (rather than say 32) to be future-proof.
@@ -63,7 +72,7 @@ namespace SpanJson
         public const int MinimumDateTimeParseLength = 10; // YYYY-MM-DD
         public const int MaximumEscapedDateTimeOffsetParseLength = MaxExpansionFactorWhileEscaping * MaximumDateTimeOffsetParseLength;
 
-        internal const char ScientificNotationFormat = 'e';
+        public const int MaximumLiteralLength = 5; // Must be able to fit null, true, & false.
 
         public const int UnicodePlane01StartValue = 0x10000;
         public const int HighSurrogateStartValue = 0xD800;
@@ -71,6 +80,10 @@ namespace SpanJson
         public const int LowSurrogateStartValue = 0xDC00;
         public const int LowSurrogateEndValue = 0xDFFF;
         public const int BitShiftBy10 = 0x400;
+
+        // The maximum number of parameters a constructor can have where it can be considered
+        // for a path on deserialization where we don't box the constructor arguments.
+        public const int UnboxedParameterCountThreshold = 4;
     }
 
     public static class JsonUtf8Constant
@@ -118,6 +131,10 @@ namespace SpanJson
         public static ReadOnlySpan<byte> TrueValue => new byte[] { (byte)'t', (byte)'r', (byte)'u', (byte)'e' };
         public static ReadOnlySpan<byte> FalseValue => new byte[] { (byte)'f', (byte)'a', (byte)'l', (byte)'s', (byte)'e' };
         public static ReadOnlySpan<byte> NullValue => new byte[] { (byte)'n', (byte)'u', (byte)'l', (byte)'l' };
+
+        public static ReadOnlySpan<byte> NaNValue => new byte[] { (byte)'N', (byte)'a', (byte)'N' };
+        public static ReadOnlySpan<byte> PositiveInfinityValue => new byte[] { (byte)'I', (byte)'n', (byte)'f', (byte)'i', (byte)'n', (byte)'i', (byte)'t', (byte)'y' };
+        public static ReadOnlySpan<byte> NegativeInfinityValue => new byte[] { (byte)'-', (byte)'I', (byte)'n', (byte)'f', (byte)'i', (byte)'n', (byte)'i', (byte)'t', (byte)'y' };
 
         // Used to search for the end of a number
         public static ReadOnlySpan<byte> Delimiters => new byte[] { ValueSeparator, CloseBrace, CloseBracket, Space, LineFeed, CarriageReturn, Tab, Slash };

@@ -52,7 +52,7 @@ namespace SpanJson
         /// then skipping validation (by setting it to true) could improve performance.
         /// An example of invalid JSON where the writer will throw (when SkipValidation
         /// is set to false) is when you write a value within a JSON object
-        /// without a property name. 
+        /// without a property name.
         /// </remarks>
         public bool SkipValidation
         {

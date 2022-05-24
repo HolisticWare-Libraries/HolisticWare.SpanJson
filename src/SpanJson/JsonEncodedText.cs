@@ -20,8 +20,8 @@ namespace SpanJson
     /// </remarks>
     public readonly struct JsonEncodedText : IEquatable<JsonEncodedText>
     {
-        private readonly byte[] _utf8Value;
-        private readonly string _value;
+        internal readonly byte[] _utf8Value;
+        internal readonly string _value;
 
         /// <summary>
         /// Returns the UTF-8 encoded representation of the pre-encoded JSON text.
@@ -32,7 +32,7 @@ namespace SpanJson
 
         private JsonEncodedText(byte[] utf8Value)
         {
-            Debug.Assert(utf8Value is object);
+            Debug.Assert(utf8Value is not null);
 
             _value = JsonReaderHelper.GetTextFromUtf8(utf8Value);
             _utf8Value = utf8Value;
@@ -40,7 +40,7 @@ namespace SpanJson
 
         private JsonEncodedText(string value)
         {
-            Debug.Assert(value is object);
+            Debug.Assert(value is not null);
             
             _value = value;
             _utf8Value = TextEncodings.UTF8NoBOM.GetBytes(value);
@@ -144,33 +144,8 @@ namespace SpanJson
             }
             else
             {
-                return new JsonEncodedText(GetEscapedString(utf8Value, escapeHandling, idx, encoder));
+                return new JsonEncodedText(JsonHelpers.EscapeValue(utf8Value, escapeHandling, idx, encoder));
             }
-        }
-
-        private static byte[] GetEscapedString(in ReadOnlySpan<byte> utf8Value, JsonEscapeHandling escapeHandling, int firstEscapeIndexVal, JavaScriptEncoder encoder)
-        {
-            Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= utf8Value.Length);
-            Debug.Assert(firstEscapeIndexVal >= 0 && firstEscapeIndexVal < utf8Value.Length);
-
-            byte[] valueArray = null;
-
-            int length = EscapingHelper.GetMaxEscapedLength(utf8Value.Length, firstEscapeIndexVal);
-
-            Span<byte> escapedValue = (uint)length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc byte[length] :
-                (valueArray = ArrayPool<byte>.Shared.Rent(length));
-
-            EscapingHelper.EscapeString(utf8Value, escapedValue, escapeHandling, firstEscapeIndexVal, encoder, out int written);
-
-            byte[] escapedString = escapedValue.Slice(0, written).ToArray();
-
-            if (valueArray is object)
-            {
-                ArrayPool<byte>.Shared.Return(valueArray);
-            }
-
-            return escapedString;
         }
 
         /// <summary>

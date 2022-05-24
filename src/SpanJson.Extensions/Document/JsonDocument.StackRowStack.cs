@@ -1,6 +1,5 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
 using System;
 using System.Buffers;
@@ -11,14 +10,14 @@ using SpanJson.Internal;
 
 namespace SpanJson.Document
 {
-    public sealed partial class JsonDocument
+    partial class JsonDocument
     {
         private struct StackRowStack : IDisposable
         {
             private byte[] _rentedBuffer;
             private int _topOfStack;
 
-            internal StackRowStack(int initialSize)
+            public StackRowStack(int initialSize)
             {
                 _rentedBuffer = ArrayPool<byte>.Shared.Rent(initialSize);
                 _topOfStack = _rentedBuffer.Length;
@@ -30,7 +29,7 @@ namespace SpanJson.Document
                 _rentedBuffer = null;
                 _topOfStack = 0;
 
-                if (toReturn is object)
+                if (toReturn is not null)
                 {
                     // The data in this rented buffer only conveys the positions and
                     // lengths of tokens in a document, but no content; so it does not
@@ -52,7 +51,9 @@ namespace SpanJson.Document
 
             internal StackRow Pop()
             {
-                Debug.Assert(_topOfStack <= _rentedBuffer.Length - StackRow.Size);
+                Debug.Assert(_rentedBuffer != null);
+                Debug.Assert(_topOfStack <= _rentedBuffer!.Length - StackRow.Size);
+
                 StackRow row = MemoryMarshal.Read<StackRow>(_rentedBuffer.AsSpan(_topOfStack));
                 _topOfStack += StackRow.Size;
                 return row;

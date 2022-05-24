@@ -25,8 +25,8 @@ namespace SpanJson.Formatters
 
                     byte[] valueArray = null;
 
-                    Span<byte> utf8Json = (uint)maxRequired <= JsonSharedConstant.StackallocThreshold ?
-                        stackalloc byte[maxRequired] :
+                    Span<byte> utf8Json = (uint)maxRequired <= JsonSharedConstant.StackallocByteThresholdU ?
+                        stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                         (valueArray = ArrayPool<byte>.Shared.Rent(maxRequired));
                     var written = TextEncodings.Utf8.GetBytes(utf16Json, utf8Json);
 
@@ -39,7 +39,7 @@ namespace SpanJson.Formatters
                     writer.WriteUtf8Verbatim(MemoryMarshal.CreateReadOnlySpan(ref MemoryMarshal.GetReference(utf8Json), written));
 #endif
 
-                    if (valueArray is object) { ArrayPool<byte>.Shared.Return(valueArray); }
+                    if (valueArray is not null) { ArrayPool<byte>.Shared.Return(valueArray); }
                 }
                 else
                 {
@@ -92,8 +92,8 @@ namespace SpanJson.Formatters
 
                     char[] valueArray = null;
 
-                    Span<char> utf16Json = (uint)maxRequired <= JsonSharedConstant.StackallocThreshold ?
-                        stackalloc char[maxRequired] :
+                    Span<char> utf16Json = (uint)maxRequired <= JsonSharedConstant.StackallocCharThresholdU ?
+                        stackalloc char[JsonSharedConstant.StackallocCharThreshold] :
                         (valueArray = ArrayPool<char>.Shared.Rent(maxRequired));
                     var written = TextEncodings.Utf8.GetChars(utf8Json, utf16Json);
 
@@ -106,7 +106,7 @@ namespace SpanJson.Formatters
                     writer.WriteUtf16Verbatim(MemoryMarshal.CreateReadOnlySpan(ref MemoryMarshal.GetReference(utf16Json), written));
 #endif
 
-                    if (valueArray is object) { ArrayPool<char>.Shared.Return(valueArray); }
+                    if (valueArray is not null) { ArrayPool<char>.Shared.Return(valueArray); }
                 }
             }
             else

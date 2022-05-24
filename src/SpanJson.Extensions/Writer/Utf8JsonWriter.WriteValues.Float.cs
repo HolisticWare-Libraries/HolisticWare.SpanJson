@@ -29,7 +29,11 @@ namespace SpanJson
         {
             JsonWriterHelper.ValidateSingle(value);
 
-            ValidateWritingValue();
+            if (!_options.SkipValidation)
+            {
+                ValidateWritingValue();
+            }
+
             if (_options.Indented)
             {
                 WriteNumberValueIndented(value);
@@ -137,6 +141,40 @@ namespace SpanJson
                 return false;
             }
 #endif
+        }
+
+        internal void WriteNumberValueAsString(float value)
+        {
+            Span<byte> utf8Number;
+            unsafe
+            {
+                // Cannot create a span directly since it gets assigned to parameter and passed down.
+                byte* ptr = stackalloc byte[JsonSharedConstant.MaximumFormatSingleLength];
+                utf8Number = new Span<byte>(ptr, JsonSharedConstant.MaximumFormatSingleLength);
+            }
+            bool result = TryFormatSingle(value, utf8Number, out int bytesWritten);
+            Debug.Assert(result);
+            WriteNumberValueAsStringUnescaped(utf8Number.Slice(0, bytesWritten));
+        }
+
+        internal void WriteFloatingPointConstant(float value)
+        {
+            if (float.IsNaN(value))
+            {
+                WriteNumberValueAsStringUnescaped(JsonUtf8Constant.NaNValue);
+            }
+            else if (float.IsPositiveInfinity(value))
+            {
+                WriteNumberValueAsStringUnescaped(JsonUtf8Constant.PositiveInfinityValue);
+            }
+            else if (float.IsNegativeInfinity(value))
+            {
+                WriteNumberValueAsStringUnescaped(JsonUtf8Constant.NegativeInfinityValue);
+            }
+            else
+            {
+                WriteNumberValue(value);
+            }
         }
     }
 }

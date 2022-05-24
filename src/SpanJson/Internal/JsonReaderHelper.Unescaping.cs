@@ -1,6 +1,5 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
 using System;
 using System.Buffers;
@@ -14,14 +13,14 @@ using System.Text;
 
 namespace SpanJson.Internal
 {
-    internal static partial class JsonReaderHelper
+    partial class JsonReaderHelper
     {
         public static bool TryGetUnescapedBase64Bytes(in ReadOnlySpan<byte> utf8Source, int idx, out byte[] bytes)
         {
             byte[] unescapedArray = null;
 
-            Span<byte> utf8Unescaped = (uint)utf8Source.Length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc byte[utf8Source.Length] :
+            Span<byte> utf8Unescaped = (uint)utf8Source.Length <= JsonSharedConstant.StackallocByteThresholdU ?
+                stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (unescapedArray = ArrayPool<byte>.Shared.Rent(utf8Source.Length));
 
             Unescape(utf8Source, utf8Unescaped, idx, out int written);
@@ -32,7 +31,7 @@ namespace SpanJson.Internal
 
             bool result = TryDecodeBase64InPlace(utf8Unescaped, out bytes);
 
-            if (unescapedArray is object)
+            if (unescapedArray is not null)
             {
                 //utf8Unescaped.Clear();
                 ArrayPool<byte>.Shared.Return(unescapedArray);
@@ -44,31 +43,57 @@ namespace SpanJson.Internal
         //// Reject any invalid UTF-8 data rather than silently replacing.
         //public static readonly UTF8Encoding s_utf8Encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
 
-        // TODO: Similar to escaping, replace the unescaping logic with publicly shipping APIs from https://github.com/dotnet/corefx/issues/33509
+        // TODO: Similar to escaping, replace the unescaping logic with publicly shipping APIs from https://github.com/dotnet/runtime/issues/27919
         public static string GetUnescapedString(in ReadOnlySpan<byte> utf8Source, int idx)
         {
-            byte[] unescapedArray = null;
-            Span<byte> utf8Unescaped = (uint)utf8Source.Length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc byte[utf8Source.Length] :
-                (unescapedArray = ArrayPool<byte>.Shared.Rent(utf8Source.Length));
-            try
-            {
-                Unescape(utf8Source, utf8Unescaped, idx, out int written);
-                Debug.Assert(written > 0);
+            // The escaped name is always >= than the unescaped, so it is safe to use escaped name for the buffer length.
+            int length = utf8Source.Length;
+            byte[] pooledName = null;
 
-                utf8Unescaped = utf8Unescaped.Slice(0, written);
-                Debug.Assert(!utf8Unescaped.IsEmpty);
+            Span<byte> utf8Unescaped = (uint)length <= JsonSharedConstant.StackallocByteThresholdU ?
+                stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
+                (pooledName = ArrayPool<byte>.Shared.Rent(length));
 
-                return TranscodeHelper(utf8Unescaped);
-            }
-            finally
+            Unescape(utf8Source, utf8Unescaped, idx, out int written);
+            Debug.Assert(written > 0);
+
+            utf8Unescaped = utf8Unescaped.Slice(0, written);
+            Debug.Assert(!utf8Unescaped.IsEmpty);
+
+            string utf8String = TranscodeHelper(utf8Unescaped);
+
+            if (pooledName is not null)
             {
-                if (unescapedArray is object)
-                {
-                    //utf8Unescaped.Clear();
-                    ArrayPool<byte>.Shared.Return(unescapedArray);
-                }
+                //utf8Unescaped.Clear();
+                ArrayPool<byte>.Shared.Return(pooledName);
             }
+
+            return utf8String;
+        }
+
+        public static ReadOnlySpan<byte> GetUnescapedSpan(in ReadOnlySpan<byte> utf8Source, int idx)
+        {
+            // The escaped name is always >= than the unescaped, so it is safe to use escaped name for the buffer length.
+            int length = utf8Source.Length;
+            byte[] pooledName = null;
+
+            Span<byte> utf8Unescaped = (uint)length <= JsonSharedConstant.StackallocByteThresholdU ?
+                stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
+                (pooledName = ArrayPool<byte>.Shared.Rent(length));
+
+            Unescape(utf8Source, utf8Unescaped, idx, out int written);
+            Debug.Assert(written > 0);
+
+            ReadOnlySpan<byte> propertyName = utf8Unescaped.Slice(0, written).ToArray();
+            Debug.Assert(!propertyName.IsEmpty);
+
+            if (pooledName is not null)
+            {
+                //new Span<byte>(pooledName, 0, written).Clear();
+                ArrayPool<byte>.Shared.Return(pooledName);
+            }
+
+            return propertyName;
         }
 
         public static bool UnescapeAndCompare(in ReadOnlySpan<byte> utf8Source, ReadOnlySpan<byte> other)
@@ -77,8 +102,8 @@ namespace SpanJson.Internal
 
             byte[] unescapedArray = null;
 
-            Span<byte> utf8Unescaped = (uint)utf8Source.Length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc byte[utf8Source.Length] :
+            Span<byte> utf8Unescaped = (uint)utf8Source.Length <= JsonSharedConstant.StackallocByteThresholdU ?
+                stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (unescapedArray = ArrayPool<byte>.Shared.Rent(utf8Source.Length));
 
             Unescape(utf8Source, utf8Unescaped, 0, out int written);
@@ -89,7 +114,7 @@ namespace SpanJson.Internal
 
             bool result = other.SequenceEqual(utf8Unescaped);
 
-            if (unescapedArray is object)
+            if (unescapedArray is not null)
             {
                 //utf8Unescaped.Clear();
                 ArrayPool<byte>.Shared.Return(unescapedArray);
@@ -108,12 +133,12 @@ namespace SpanJson.Internal
 
             int length = checked((int)utf8Source.Length);
 
-            Span<byte> utf8Unescaped = (uint)length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc byte[length] :
+            Span<byte> utf8Unescaped = (uint)length <= JsonSharedConstant.StackallocByteThresholdU ?
+                stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (unescapedArray = ArrayPool<byte>.Shared.Rent(length));
 
-            Span<byte> utf8Escaped = (uint)length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc byte[length] :
+            Span<byte> utf8Escaped = (uint)length <= JsonSharedConstant.StackallocByteThresholdU ?
+                stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (escapedArray = ArrayPool<byte>.Shared.Rent(length));
 
             utf8Source.CopyTo(utf8Escaped);
@@ -127,9 +152,9 @@ namespace SpanJson.Internal
 
             bool result = other.SequenceEqual(utf8Unescaped);
 
-            if (unescapedArray is object)
+            if (unescapedArray is not null)
             {
-                Debug.Assert(escapedArray is object);
+                Debug.Assert(escapedArray is not null);
                 //utf8Unescaped.Clear();
                 ArrayPool<byte>.Shared.Return(unescapedArray);
                 //utf8Escaped.Clear();
@@ -155,8 +180,8 @@ namespace SpanJson.Internal
         {
             byte[] pooledArray = null;
 
-            Span<byte> byteSpan = (uint)utf8Unescaped.Length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc byte[utf8Unescaped.Length] :
+            Span<byte> byteSpan = (uint)utf8Unescaped.Length <= JsonSharedConstant.StackallocByteThresholdU ?
+                stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (pooledArray = ArrayPool<byte>.Shared.Rent(utf8Unescaped.Length));
 
             OperationStatus status = Base64.DecodeFromUtf8(utf8Unescaped, byteSpan, out int bytesConsumed, out int bytesWritten);
@@ -165,7 +190,7 @@ namespace SpanJson.Internal
             {
                 bytes = null;
 
-                if (pooledArray is object)
+                if (pooledArray is not null)
                 {
                     //byteSpan.Clear();
                     ArrayPool<byte>.Shared.Return(pooledArray);
@@ -177,7 +202,7 @@ namespace SpanJson.Internal
 
             bytes = byteSpan.Slice(0, bytesWritten).ToArray();
 
-            if (pooledArray is object)
+            if (pooledArray is not null)
             {
                 //byteSpan.Clear();
                 ArrayPool<byte>.Shared.Return(pooledArray);

@@ -36,14 +36,14 @@ namespace SpanJson.Linq.JsonPath
         protected static JToken GetNextScanValue(JToken originalParent, JToken container, JToken value)
         {
             // step into container's values
-            if (container is object && container.HasValues)
+            if (container is not null && container.HasValues)
             {
                 value = container.First;
             }
             else
             {
                 // finished container, move to parent
-                while (value is object && value != originalParent && value == value.Parent.Last)
+                while (value is not null && value != originalParent && value == value.Parent.Last)
                 {
                     value = value.Parent;
                 }

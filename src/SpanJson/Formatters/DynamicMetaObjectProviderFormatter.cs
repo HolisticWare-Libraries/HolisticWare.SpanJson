@@ -82,8 +82,8 @@ namespace SpanJson.Formatters
                     char[] cBuffer = null;
                     try
                     {
-                        Span<char> utf16Span = (uint)cMaxLength <= JsonSharedConstant.StackallocThreshold ?
-                            stackalloc char[cMaxLength] :
+                        Span<char> utf16Span = (uint)cMaxLength <= JsonSharedConstant.StackallocCharThresholdU ?
+                            stackalloc char[JsonSharedConstant.StackallocCharThreshold] :
                             (cBuffer = ArrayPool<char>.Shared.Rent(cMaxLength));
 
                         var written = TextEncodings.Utf8.GetChars(bValue.Symbols, utf16Span);
@@ -99,7 +99,7 @@ namespace SpanJson.Formatters
                     }
                     finally
                     {
-                        if (cBuffer is object) { ArrayPool<char>.Shared.Return(cBuffer); }
+                        if (cBuffer is not null) { ArrayPool<char>.Shared.Return(cBuffer); }
                     }
                     break;
 
@@ -108,8 +108,8 @@ namespace SpanJson.Formatters
                     byte[] bBuffer = null;
                     try
                     {
-                        Span<byte> utf8Span = (uint)bMaxLength <= JsonSharedConstant.StackallocThreshold ?
-                            stackalloc byte[bMaxLength] :
+                        Span<byte> utf8Span = (uint)bMaxLength <= JsonSharedConstant.StackallocByteThresholdU ?
+                            stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                             (bBuffer = ArrayPool<byte>.Shared.Rent(bMaxLength));
 
                         var written = TextEncodings.Utf8.GetBytes(cValue.Symbols, utf8Span);
@@ -125,7 +125,7 @@ namespace SpanJson.Formatters
                     }
                     finally
                     {
-                        if (bBuffer is object) { ArrayPool<byte>.Shared.Return(bBuffer); }
+                        if (bBuffer is not null) { ArrayPool<byte>.Shared.Return(bBuffer); }
                     }
                     break;
 

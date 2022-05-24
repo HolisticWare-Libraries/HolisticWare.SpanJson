@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 
 namespace SpanJson.Internal
 {
-    public static partial class Base64Helper
+    partial class Base64Helper
     {
         /// <summary>Converts the specified string, which encodes binary data as Base64 digits, to the equivalent byte array.</summary>
         /// <param name="s">The string to convert</param>
@@ -130,7 +130,7 @@ namespace SpanJson.Internal
             return true;
         }
 
-        private static void CopyToTempBufferWithoutWhiteSpace(ReadOnlySpan<char> chars, Span<char> tempBuffer, out int consumed, out int charsWritten)
+        private static void CopyToTempBufferWithoutWhiteSpace(in ReadOnlySpan<char> chars, Span<char> tempBuffer, out int consumed, out int charsWritten)
         {
             Debug.Assert(tempBuffer.Length != 0); // We only bound-check after writing a character to the tempBuffer.
 
@@ -317,7 +317,7 @@ namespace SpanJson.Internal
         /// Note: This is a cut down version of the implementation of Base64.DecodeFromUtf8(), modified the accept UTF16 chars and act as a fast-path
         /// helper for the Convert routines when the input string contains no whitespace.
         /// </returns>
-        private static bool TryDecodeFromUtf16(ReadOnlySpan<char> utf16, Span<byte> bytes, out int consumed, out int written)
+        private static bool TryDecodeFromUtf16(in ReadOnlySpan<char> utf16, Span<byte> bytes, out int consumed, out int written)
         {
             ref char srcChars = ref MemoryMarshal.GetReference(utf16);
             ref byte destBytes = ref MemoryMarshal.GetReference(bytes);

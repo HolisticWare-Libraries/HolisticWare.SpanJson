@@ -309,7 +309,7 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static DateTime ParseUtf16DateTime(in ReadOnlySpan<char> span, int pos)
         {
-            if (JsonReaderHelper.TryParseAsISO(span, out DateTime value))
+            if (JsonHelpers.TryParseAsISO(span, out DateTime value))
             {
                 return value;
             }
@@ -321,13 +321,13 @@ namespace SpanJson
         private static DateTime ParseUtf16DateTimeAllocating(in ReadOnlySpan<char> input, int pos)
         {
             char[] unescapedArray = null;
-            Span<char> utf16Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc char[input.Length] :
+            Span<char> utf16Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocCharThresholdU ?
+                stackalloc char[JsonSharedConstant.StackallocCharThreshold] :
                 (unescapedArray = ArrayPool<char>.Shared.Rent(input.Length));
             try
             {
                 UnescapeUtf16Chars(input, ref utf16Unescaped);
-                if (JsonReaderHelper.TryParseAsISO(utf16Unescaped, out DateTime value))
+                if (JsonHelpers.TryParseAsISO(utf16Unescaped, out DateTime value))
                 {
                     return value;
                 }
@@ -336,7 +336,7 @@ namespace SpanJson
             }
             finally
             {
-                if (unescapedArray is object) { ArrayPool<char>.Shared.Return(unescapedArray); }
+                if (unescapedArray is not null) { ArrayPool<char>.Shared.Return(unescapedArray); }
             }
         }
 
@@ -352,7 +352,7 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static DateTimeOffset ParseUtf16DateTimeOffset(in ReadOnlySpan<char> span, int pos)
         {
-            if (JsonReaderHelper.TryParseAsISO(span, out DateTimeOffset value))
+            if (JsonHelpers.TryParseAsISO(span, out DateTimeOffset value))
             {
                 return value;
             }
@@ -364,13 +364,13 @@ namespace SpanJson
         private static DateTimeOffset ParseUtf16DateTimeOffsetAllocating(in ReadOnlySpan<char> input, int pos)
         {
             char[] unescapedArray = null;
-            Span<char> utf16Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc char[input.Length] :
+            Span<char> utf16Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocCharThresholdU ?
+                stackalloc char[JsonSharedConstant.StackallocCharThreshold] :
                 (unescapedArray = ArrayPool<char>.Shared.Rent(input.Length));
             try
             {
                 UnescapeUtf16Chars(input, ref utf16Unescaped);
-                if (JsonReaderHelper.TryParseAsISO(utf16Unescaped, out DateTimeOffset value))
+                if (JsonHelpers.TryParseAsISO(utf16Unescaped, out DateTimeOffset value))
                 {
                     return value;
                 }
@@ -379,7 +379,7 @@ namespace SpanJson
             }
             finally
             {
-                if (unescapedArray is object) { ArrayPool<char>.Shared.Return(unescapedArray); }
+                if (unescapedArray is not null) { ArrayPool<char>.Shared.Return(unescapedArray); }
             }
         }
 
@@ -396,8 +396,8 @@ namespace SpanJson
         private static TimeSpan ParseUtf16TimeSpanAllocating(in ReadOnlySpan<char> input, int pos)
         {
             char[] unescapedArray = null;
-            Span<char> utf16Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc char[input.Length] :
+            Span<char> utf16Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocCharThresholdU ?
+                stackalloc char[JsonSharedConstant.StackallocCharThreshold] :
                 (unescapedArray = ArrayPool<char>.Shared.Rent(input.Length));
             try
             {
@@ -406,7 +406,7 @@ namespace SpanJson
             }
             finally
             {
-                if (unescapedArray is object) { ArrayPool<char>.Shared.Return(unescapedArray); }
+                if (unescapedArray is not null) { ArrayPool<char>.Shared.Return(unescapedArray); }
             }
         }
 
@@ -420,6 +420,7 @@ namespace SpanJson
             }
 
             // still slow in .NET Core 3.0
+            byteSpan = byteSpan.Slice(0, span.Length);
             if (Utf8Parser.TryParse(byteSpan, out TimeSpan value, out var bytesConsumed) && bytesConsumed == span.Length)
             {
                 return value;
@@ -445,8 +446,8 @@ namespace SpanJson
         private static Guid ParseUtf16GuidAllocating(in ReadOnlySpan<char> input, int pos)
         {
             char[] unescapedArray = null;
-            Span<char> utf16Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc char[input.Length] :
+            Span<char> utf16Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocCharThresholdU ?
+                stackalloc char[JsonSharedConstant.StackallocCharThreshold] :
                 (unescapedArray = ArrayPool<char>.Shared.Rent(input.Length));
             try
             {
@@ -459,7 +460,7 @@ namespace SpanJson
             }
             finally
             {
-                if (unescapedArray is object) { ArrayPool<char>.Shared.Return(unescapedArray); }
+                if (unescapedArray is not null) { ArrayPool<char>.Shared.Return(unescapedArray); }
             }
         }
 
@@ -522,8 +523,8 @@ namespace SpanJson
         private static CombGuid ParseUtf16CombGuidAllocating(in ReadOnlySpan<char> input, int pos)
         {
             char[] unescapedArray = null;
-            Span<char> utf16Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc char[input.Length] :
+            Span<char> utf16Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocCharThresholdU ?
+                stackalloc char[JsonSharedConstant.StackallocCharThreshold] :
                 (unescapedArray = ArrayPool<char>.Shared.Rent(input.Length));
             try
             {
@@ -541,7 +542,7 @@ namespace SpanJson
             }
             finally
             {
-                if (unescapedArray is object) { ArrayPool<char>.Shared.Return(unescapedArray); }
+                if (unescapedArray is not null) { ArrayPool<char>.Shared.Return(unescapedArray); }
             }
         }
 
@@ -1463,7 +1464,7 @@ namespace SpanJson
                         }
                         finally
                         {
-                            if (temp is object)
+                            if (temp is not null)
                             {
                                 ArrayPool<object>.Shared.Return(temp);
                             }

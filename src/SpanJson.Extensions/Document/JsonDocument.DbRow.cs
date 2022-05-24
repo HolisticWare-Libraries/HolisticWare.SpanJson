@@ -8,18 +8,18 @@ using System.Runtime.InteropServices;
 
 namespace SpanJson.Document
 {
-    public sealed partial class JsonDocument
+    partial class JsonDocument
     {
         [StructLayout(LayoutKind.Sequential)]
-        internal struct DbRow
+        internal readonly struct DbRow
         {
             internal const int Size = 12;
 
             // Sign bit is currently unassigned
-            private int _location;
+            private readonly int _location;
 
             // Sign bit is used for "HasComplexChildren" (StartArray)
-            private int _sizeOrLengthUnion;
+            private readonly int _sizeOrLengthUnion;
 
             // Top nybble is JsonTokenType
             // remaining nybbles are the number of rows to skip to get to the next value
@@ -40,7 +40,6 @@ namespace SpanJson.Document
             internal bool IsUnknownSize => _sizeOrLengthUnion == UnknownSize;
 
             /// <summary>
-            /// Number: Use scientific format.
             /// String/PropertyName: Unescaping is required.
             /// Array: At least one element is an object/array.
             /// Otherwise; false

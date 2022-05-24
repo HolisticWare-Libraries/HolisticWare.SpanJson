@@ -7,7 +7,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
 
-    public static partial class TextEncodings
+    partial class TextEncodings
     {
         // borrowed from https://github.com/dotnet/corefxlab/tree/master/src/System.Text.Primitives/System/Text/Encoders
 

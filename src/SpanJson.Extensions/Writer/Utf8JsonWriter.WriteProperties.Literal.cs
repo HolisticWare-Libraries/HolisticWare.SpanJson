@@ -4,6 +4,7 @@
 
 using System;
 using System.Buffers;
+using System.Buffers.Text;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -24,6 +25,29 @@ namespace SpanJson
         {
             WriteLiteralHelper(propertyName.EncodedUtf8Bytes, JsonUtf8Constant.NullValue);
             _tokenType = JsonTokenType.Null;
+        }
+
+        internal void WriteNullSection(ReadOnlySpan<byte> escapedPropertyNameSection)
+        {
+            if (_options.Indented)
+            {
+                ReadOnlySpan<byte> escapedName =
+                    escapedPropertyNameSection.Slice(1, escapedPropertyNameSection.Length - 3);
+
+                WriteLiteralHelper(escapedName, JsonUtf8Constant.NullValue);
+                _tokenType = JsonTokenType.Null;
+            }
+            else
+            {
+                Debug.Assert(escapedPropertyNameSection.Length <= JsonSharedConstant.MaxUnescapedTokenSize - 3);
+
+                ReadOnlySpan<byte> span = JsonUtf8Constant.NullValue;
+
+                WriteLiteralSection(escapedPropertyNameSection, span);
+
+                SetFlagToAddListSeparatorBeforeNextItem();
+                _tokenType = JsonTokenType.Null;
+            }
         }
 
         private void WriteLiteralHelper(in ReadOnlySpan<byte> utf8PropertyName, in ReadOnlySpan<byte> value)
@@ -245,8 +269,8 @@ namespace SpanJson
 
             int length = EscapingHelper.GetMaxEscapedLength(propertyName.Length, firstEscapeIndexProp);
 
-            Span<char> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc char[length] :
+            Span<char> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocCharThresholdU ?
+                stackalloc char[JsonSharedConstant.StackallocCharThreshold] :
                 (propertyArray = ArrayPool<char>.Shared.Rent(length));
 
             EscapingHelper.EscapeString(propertyName, escapedPropertyName, _options.EscapeHandling, firstEscapeIndexProp, _options.Encoder, out int written);
@@ -260,7 +284,7 @@ namespace SpanJson
             }
 #endif
 
-            if (propertyArray is object)
+            if (propertyArray is not null)
             {
                 ArrayPool<char>.Shared.Return(propertyArray);
             }
@@ -275,8 +299,8 @@ namespace SpanJson
 
             int length = EscapingHelper.GetMaxEscapedLength(utf8PropertyName.Length, firstEscapeIndexProp);
 
-            Span<byte> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc byte[length] :
+            Span<byte> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocByteThresholdU ?
+                stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (propertyArray = ArrayPool<byte>.Shared.Rent(length));
 
             EscapingHelper.EscapeString(utf8PropertyName, escapedPropertyName, _options.EscapeHandling, firstEscapeIndexProp, _options.Encoder, out int written);
@@ -290,7 +314,7 @@ namespace SpanJson
             }
 #endif
 
-            if (propertyArray is object)
+            if (propertyArray is not null)
             {
                 ArrayPool<byte>.Shared.Return(propertyArray);
             }
@@ -383,6 +407,35 @@ namespace SpanJson
             pos += valueLen;
         }
 
+        // AggressiveInlining used since this is only called from one location.
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void WriteLiteralSection(ReadOnlySpan<byte> escapedPropertyNameSection, ReadOnlySpan<byte> value)
+        {
+            int nameLen = escapedPropertyNameSection.Length;
+            int valueLen = value.Length;
+            Debug.Assert(valueLen <= JsonSharedConstant.MaxUnescapedTokenSize);
+            Debug.Assert(nameLen < int.MaxValue - valueLen - 1);
+
+            int minRequired = nameLen + valueLen;
+            int maxRequired = minRequired + 1; // Optionally, 1 list separator
+
+            ref var pos = ref _pos;
+            EnsureUnsafe(pos, maxRequired);
+
+            ref byte output = ref PinnableAddress;
+
+            if ((uint)_currentDepth > JsonSharedConstant.TooBigOrNegative)
+            {
+                Unsafe.Add(ref output, pos++) = JsonUtf8Constant.ListSeparator;
+            }
+
+            BinaryUtil.CopyMemory(ref MemoryMarshal.GetReference(escapedPropertyNameSection), ref Unsafe.Add(ref output, pos), nameLen);
+            pos += nameLen;
+
+            BinaryUtil.CopyMemory(ref MemoryMarshal.GetReference(value), ref Unsafe.Add(ref output, pos), valueLen);
+            pos += valueLen;
+        }
+
         private void WriteLiteralIndented(in ReadOnlySpan<char> escapedPropertyName, in ReadOnlySpan<byte> value)
         {
             int indent = Indentation;
@@ -470,6 +523,22 @@ namespace SpanJson
 
             BinaryUtil.CopyMemory(ref MemoryMarshal.GetReference(value), ref Unsafe.Add(ref output, pos), valueLen);
             pos += valueLen;
+        }
+
+        internal void WritePropertyName(bool value)
+        {
+            Span<byte> utf8PropertyName;
+            unsafe
+            {
+                // Cannot create a span directly since it gets assigned to parameter and passed down.
+                byte* ptr = stackalloc byte[JsonSharedConstant.MaximumFormatBooleanLength];
+                utf8PropertyName = new Span<byte>(ptr, JsonSharedConstant.MaximumFormatBooleanLength);
+            }
+
+            bool result = Utf8Formatter.TryFormat(value, utf8PropertyName, out int bytesWritten);
+            Debug.Assert(result);
+
+            WritePropertyNameUnescaped(utf8PropertyName.Slice(0, bytesWritten));
         }
     }
 }

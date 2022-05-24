@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Xml.Linq;
 using SpanJson.Resolvers;
 using SpanJson.Shared.Fixture;
 using Xunit;
@@ -55,6 +56,52 @@ namespace SpanJson.Tests
             }
         }
 
+        public class CtorAdditional : IEquatable<CtorAdditional>
+        {
+            [JsonConstructor]
+            public CtorAdditional(int value, string key)
+            {
+                Key = key;
+                Value = value;
+            }
+
+            public string Key { get; }
+            public int Value { get; }
+
+
+            public string Additional { get; set; }
+
+            public bool Equals(CtorAdditional other)
+            {
+                if (ReferenceEquals(null, other)) return false;
+                if (ReferenceEquals(this, other)) return true;
+                return Key == other.Key && Value == other.Value && Additional == other.Additional;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((CtorAdditional)obj);
+            }
+
+            public override int GetHashCode()
+            {
+#if NET
+                return HashCode.Combine(Key, Value, Additional);
+#else
+                unchecked
+                {
+                    var hashCode = (Key != null ? Key.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (Additional != null ? Additional.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ Value;
+                    return hashCode;
+                }
+#endif
+            }
+        }
+
         public class DefaultDO : IEquatable<DefaultDO>
         {
             [JsonConstructor]
@@ -79,7 +126,7 @@ namespace SpanJson.Tests
                 if (ReferenceEquals(null, obj)) return false;
                 if (ReferenceEquals(this, obj)) return true;
                 if (obj.GetType() != this.GetType()) return false;
-                return Equals((DefaultDO) obj);
+                return Equals((DefaultDO)obj);
             }
 
             public override int GetHashCode()
@@ -112,7 +159,7 @@ namespace SpanJson.Tests
             public override bool Equals(object obj)
             {
                 if (ReferenceEquals(null, obj)) return false;
-                return obj is NamedDO && Equals((NamedDO) obj);
+                return obj is NamedDO && Equals((NamedDO)obj);
             }
 
             public override int GetHashCode()
@@ -122,6 +169,24 @@ namespace SpanJson.Tests
                     return ((Key != null ? Key.GetHashCode() : 0) * 397) ^ Value;
                 }
             }
+        }
+
+        [Fact]
+        public void TestCtorAdditionalUtf8()
+        {
+            var ctorAdditional = new CtorAdditional(5, "Hello") { Additional = "World" };
+            var serialized = JsonSerializer.Generic.Utf8.Serialize(ctorAdditional);
+            var deserialized = JsonSerializer.Generic.Utf8.Deserialize<CtorAdditional>(serialized);
+            Assert.Equal(ctorAdditional, deserialized);
+        }
+
+        [Fact]
+        public void TestCtorAdditionalUtf16()
+        {
+            var ctorAdditional = new CtorAdditional(5, "Hello") { Additional = "World" };
+            var serialized = JsonSerializer.Generic.Utf16.Serialize(ctorAdditional);
+            var deserialized = JsonSerializer.Generic.Utf16.Deserialize<CtorAdditional>(serialized);
+            Assert.Equal(ctorAdditional, deserialized);
         }
 
         [Fact]
@@ -312,7 +377,7 @@ namespace SpanJson.Tests
                         args[i] = fixture.Create(parameterType);
                     }
 
-                    yield return new object[] {Activator.CreateInstance(closedType, args)};
+                    yield return new object[] { Activator.CreateInstance(closedType, args) };
                 }
             }
         }
@@ -349,7 +414,7 @@ namespace SpanJson.Tests
         {
             public CustomResolver() : base(new SpanJsonOptions())
             {
-              
+
             }
 
             protected override void TryGetAnnotatedAttributeConstructor(Type type, out ConstructorInfo constructor, out JsonConstructorAttribute attribute)
@@ -365,7 +430,8 @@ namespace SpanJson.Tests
                 if (TryGetBaseClassJsonConstructorAttribute(type, out attribute))
                 {
                     // We basically take the one with the most parameters, this needs to match the dictionary // TODO find better method
-                    constructor = type.GetConstructors(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).OrderByDescending(a => a.GetParameters().Length)
+                    constructor = type.GetConstructors(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
+                        .OrderByDescending(a => a.GetParameters().Length)
                         .FirstOrDefault();
                     return;
                 }
@@ -374,5 +440,59 @@ namespace SpanJson.Tests
                 attribute = default;
             }
         }
+
+#if NET
+        [Fact]
+        public void SerializeDeserializePositionalRecordUtf16()
+        {
+            var person = new PositionalRecord("Hello", "World");
+            var serialized = JsonSerializer.Generic.Utf16.Serialize(person);
+            Assert.NotNull(serialized);
+            var deserialized = JsonSerializer.Generic.Utf16.Deserialize<PositionalRecord>(serialized);
+            Assert.NotNull(deserialized);
+            Assert.Equal(person, deserialized);
+        }
+
+        [Fact]
+        public void SerializeDeserializePositionalRecordUtf8()
+        {
+            var positionalRecord = new PositionalRecord("Hello", "World");
+            var serialized = JsonSerializer.Generic.Utf8.Serialize(positionalRecord);
+            Assert.NotNull(serialized);
+            var deserialized = JsonSerializer.Generic.Utf8.Deserialize<PositionalRecord>(serialized);
+            Assert.NotNull(deserialized);
+            Assert.Equal(positionalRecord, deserialized);
+        }
+
+        [Fact]
+        public void SerializeDeserializePositionalRecordExceptionsUtf16()
+        {
+            var positionalRecord = new PositionalRecordExceptions("Hello", "World") {AnotherName = "Universe"};
+            var serialized = JsonSerializer.Generic.Utf16.Serialize(positionalRecord);
+            Assert.NotNull(serialized);
+            var deserialized = JsonSerializer.Generic.Utf16.Deserialize<PositionalRecordExceptions>(serialized);
+            Assert.NotNull(deserialized);
+            Assert.Equal(positionalRecord, deserialized);
+        }
+
+        [Fact]
+        public void SerializeDeserializePositionalRecordExceptionsUtf8()
+        {
+            var positionalRecord = new PositionalRecordExceptions("Hello", "World") {AnotherName = "Universe"};
+            var serialized = JsonSerializer.Generic.Utf8.Serialize(positionalRecord);
+            Assert.NotNull(serialized);
+            var deserialized = JsonSerializer.Generic.Utf8.Deserialize<PositionalRecordExceptions>(serialized);
+            Assert.NotNull(deserialized);
+            Assert.Equal(positionalRecord, deserialized);
+        }
+
+
+        public record PositionalRecord(string Name, string Title);
+
+        public record PositionalRecordExceptions(string Name, string Title)
+        {
+            public string AnotherName { get; init; }
+        }
+#endif
     }
 }

@@ -20,11 +20,11 @@ namespace SpanJson.Formatters
             var writerParameter = Expression.Parameter(typeof(JsonWriter<TSymbol>).MakeByRefType(), "writer");
             var valueParameter = Expression.Parameter(typeof(T), "value");
             MethodInfo writerMethodInfo = null;
-            if ((uint)Unsafe.SizeOf<TSymbol>() == JsonSharedConstant.ByteSize)
+            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
             {
                 writerMethodInfo = FindPublicInstanceMethod(writerParameter.Type, nameof(JsonWriter<TSymbol>.WriteUtf8Verbatim), typeof(byte[]));
             }
-            else if ((uint)Unsafe.SizeOf<TSymbol>() == JsonSharedConstant.CharSize)
+            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
             {
                 writerMethodInfo = FindPublicInstanceMethod(writerParameter.Type, nameof(JsonWriter<TSymbol>.WriteUtf16Verbatim), typeof(string));
             }
@@ -39,11 +39,11 @@ namespace SpanJson.Formatters
                 Expression valueConstant = null;
                 // TODO Enum (NamingPolicy、StringEscapeHandling)
                 var formattedValue = escapeFunctor(GetFormattedValue(name));
-                if ((uint)Unsafe.SizeOf<TSymbol>() == JsonSharedConstant.ByteSize)
+                if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
                 {
                     valueConstant = Expression.Constant(TextEncodings.UTF8NoBOM.GetBytes(formattedValue));
                 }
-                else if ((uint)Unsafe.SizeOf<TSymbol>() == JsonSharedConstant.CharSize)
+                else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
                 {
                     valueConstant = Expression.Constant(formattedValue);
                 }
@@ -80,7 +80,7 @@ namespace SpanJson.Formatters
             var lengthExpression = Expression.Assign(lengthParameter, Expression.PropertyOrField(nameSpan, "Length"));
             var byteNameSpan = Expression.Variable(typeof(ReadOnlySpan<byte>), "byteNameSpan");
             var parameters = new List<ParameterExpression> { nameSpan, lengthParameter, returnValue };
-            if ((uint)Unsafe.SizeOf<TSymbol>() == JsonSharedConstant.CharSize)
+            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
             {
                 var asBytesMethodInfo = FindGenericMethod(typeof(MemoryMarshal), nameof(MemoryMarshal.AsBytes), BindingFlags.Public | BindingFlags.Static,
                     typeof(char), typeof(ReadOnlySpan<>));

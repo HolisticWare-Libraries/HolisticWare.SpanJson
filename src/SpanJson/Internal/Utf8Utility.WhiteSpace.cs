@@ -15,7 +15,7 @@ namespace SpanJson.Internal
         /// Returns the index in <paramref name="utf8Data"/> where the first non-whitespace character
         /// appears, or the input length if the data contains only whitespace characters.
         /// </summary>
-        public static int GetIndexOfFirstNonWhiteSpaceChar(ReadOnlySpan<byte> utf8Data)
+        public static int GetIndexOfFirstNonWhiteSpaceChar(in ReadOnlySpan<byte> utf8Data)
         {
             return (int)GetIndexOfFirstNonWhiteSpaceChar(ref MemoryMarshal.GetReference(utf8Data), utf8Data.Length);
         }
@@ -75,7 +75,7 @@ namespace SpanJson.Internal
         /// begins, or 0 if the data contains only whitespace characters, or the span length if the
         /// data does not end with any whitespace characters.
         /// </summary>
-        public static int GetIndexOfTrailingWhiteSpaceSequence(ReadOnlySpan<byte> utf8Data)
+        public static int GetIndexOfTrailingWhiteSpaceSequence(in ReadOnlySpan<byte> utf8Data)
         {
             return (int)GetIndexOfTrailingWhiteSpaceSequence(ref MemoryMarshal.GetReference(utf8Data), utf8Data.Length);
         }

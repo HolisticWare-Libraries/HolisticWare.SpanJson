@@ -19,22 +19,30 @@ namespace SpanJson.Document
         {
             private readonly JsonElement _target;
             private int _curIdx;
-            private readonly int _endIdx;
+            private readonly int _endIdxOrVersion;
 
             internal ObjectEnumerator(JsonElement target)
             {
-                Debug.Assert(target.TokenType == JsonTokenType.BeginObject);
-
                 _target = target;
                 _curIdx = -1;
-                _endIdx = _target._parent.GetEndIndex(_target._idx, includeEndElement: false);
+
+                Debug.Assert(target.TokenType == JsonTokenType.BeginObject);
+                _endIdxOrVersion = target._parent.GetEndIndex(_target._idx, includeEndElement: false);
             }
 
             /// <inheritdoc />
-            public JsonProperty Current =>
-                (uint)_curIdx > JsonSharedConstant.TooBigOrNegative ?
-                    default :
-                    new JsonProperty(new JsonElement(_target._parent, _curIdx));
+            public JsonProperty Current
+            {
+                get
+                {
+                    if ((uint)_curIdx > JsonSharedConstant.TooBigOrNegative)
+                    {
+                        return default;
+                    }
+
+                    return new JsonProperty(new JsonElement(_target._parent, _curIdx));
+                }
+            }
 
             /// <summary>
             ///   Returns an enumerator that iterates the properties of an object.
@@ -65,7 +73,7 @@ namespace SpanJson.Document
             /// <inheritdoc />
             public void Dispose()
             {
-                _curIdx = _endIdx;
+                _curIdx = _endIdxOrVersion;
             }
 
             /// <inheritdoc />
@@ -80,7 +88,7 @@ namespace SpanJson.Document
             /// <inheritdoc />
             public bool MoveNext()
             {
-                if (_curIdx >= _endIdx)
+                if (_curIdx >= _endIdxOrVersion)
                 {
                     return false;
                 }
@@ -97,7 +105,7 @@ namespace SpanJson.Document
                 // _curIdx is now pointing at a property name, move one more to get the value
                 _curIdx += JsonDocument.DbRow.Size;
 
-                return _curIdx < _endIdx;
+                return _curIdx < _endIdxOrVersion;
             }
         }
     }

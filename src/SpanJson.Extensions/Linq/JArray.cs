@@ -160,7 +160,7 @@ namespace SpanJson.Linq
 
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            if (_dynamicJson is object) { _dynamicJson = null; }
+            if (_dynamicJson is not null) { _dynamicJson = null; }
             base.OnCollectionChanged(e);
         }
     }

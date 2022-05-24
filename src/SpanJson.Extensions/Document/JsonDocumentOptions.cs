@@ -4,7 +4,6 @@
 
 using System;
 using System.Diagnostics;
-using SpanJson.Internal;
 
 namespace SpanJson.Document
 {
@@ -34,7 +33,7 @@ namespace SpanJson.Document
         /// </remarks>
         public JsonCommentHandling CommentHandling
         {
-            readonly get =>  _commentHandling;
+            readonly get => _commentHandling;
             set
             {
                 Debug.Assert(value >= 0);

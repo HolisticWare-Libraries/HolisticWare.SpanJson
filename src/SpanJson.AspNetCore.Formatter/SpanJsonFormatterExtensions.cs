@@ -28,7 +28,7 @@ namespace SpanJson.AspNetCore.Formatter
         }
 
         /// <summary>
-        /// Uses SpanJson in UTF8 mode with ASP.NET Core 2.1 defaults (IncludeNull, CamelCase, Enum as Ints)
+        /// Uses SpanJson in UTF8 mode with ASP.NET Core 3.0 defaults (IncludeNull, CamelCase, Enum as Ints)
         /// </summary>
         public static IMvcCoreBuilder AddSpanJson(this IMvcCoreBuilder mvcBuilder)
         {
@@ -37,7 +37,7 @@ namespace SpanJson.AspNetCore.Formatter
         }
 
         /// <summary>
-        /// Uses SpanJson in UTF8 mode with ASP.NET Core 2.1 defaults (IncludeNull, CamelCase, Enum as Ints)
+        /// Uses SpanJson in UTF8 mode with ASP.NET Core 3.0 defaults (IncludeNull, CamelCase, Enum as Ints)
         /// </summary>
         public static IMvcBuilder AddSpanJson(this IMvcBuilder mvcBuilder)
         {
@@ -50,8 +50,8 @@ namespace SpanJson.AspNetCore.Formatter
         {
             serviceCollection.Configure<MvcOptions>(config =>
             {
-                config.InputFormatters.Clear();
                 config.OutputFormatters.Clear();
+                config.InputFormatters.Clear();
                 config.InputFormatters.Add(new SpanJsonInputFormatter<TResolver>());
                 config.OutputFormatters.Add(new SpanJsonOutputFormatter<TResolver>());
             });

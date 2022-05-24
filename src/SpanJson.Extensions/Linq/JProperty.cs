@@ -40,7 +40,7 @@ namespace SpanJson.Linq
 
             public IEnumerator<JToken> GetEnumerator()
             {
-                if (_token is object)
+                if (_token is not null)
                 {
                     yield return _token;
                 }
@@ -68,7 +68,7 @@ namespace SpanJson.Linq
 
             public void CopyTo(JToken[] array, int arrayIndex)
             {
-                if (_token is object)
+                if (_token is not null)
                 {
                     array[arrayIndex] = _token;
                 }
@@ -84,7 +84,7 @@ namespace SpanJson.Linq
                 return false;
             }
 
-            public int Count => (_token is object) ? 1 : 0;
+            public int Count => (_token is not null) ? 1 : 0;
 
             public bool IsReadOnly => false;
 
@@ -201,9 +201,9 @@ namespace SpanJson.Linq
         internal override bool InsertItem(int index, JToken item, bool skipParentCheck)
         {
             // don't add comments to JProperty
-            if (item is object && item.Type == JTokenType.Comment) { return false; }
+            if (item is not null && item.Type == JTokenType.Comment) { return false; }
 
-            if (Value is object) { ThrowHelper2.ThrowJsonException_Cannot_have_multiple_values_JProperty(); }
+            if (Value is not null) { ThrowHelper2.ThrowJsonException_Cannot_have_multiple_values_JProperty(); }
 
             return base.InsertItem(0, item, false);
         }
@@ -217,7 +217,7 @@ namespace SpanJson.Linq
         {
             JToken value = (content as JProperty)?.Value;
 
-            if (value is object && value.Type != JTokenType.Null)
+            if (value is not null && value.Type != JTokenType.Null)
             {
                 Value = value;
             }

@@ -295,7 +295,7 @@ namespace SpanJson.Internal.DoubleConversion
                 current = next_non_space;
             }
 
-            if (infinity_symbol_ is object)
+            if (infinity_symbol_ is not null)
             {
                 if (ConsumeFirstCharacter(ref current, infinity_symbol_, 0))
                 {
@@ -318,7 +318,7 @@ namespace SpanJson.Internal.DoubleConversion
                 }
             }
 
-            if (nan_symbol_ is object)
+            if (nan_symbol_ is not null)
             {
                 if (ConsumeFirstCharacter(ref current, nan_symbol_, 0))
                 {

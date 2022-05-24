@@ -76,7 +76,7 @@ namespace SpanJson.Linq
 
         internal override int GetDeepHashCode()
         {
-            int valueHashCode = (_value is object) ? _value.GetHashCode() : 0;
+            int valueHashCode = (_value is not null) ? _value.GetHashCode() : 0;
 
             // GetHashCode on an enum boxes so cast to int
             return ((int)_valueType).GetHashCode() ^ valueHashCode;

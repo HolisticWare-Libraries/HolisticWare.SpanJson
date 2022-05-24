@@ -49,7 +49,7 @@ namespace SpanJson.Linq
         {
             get
             {
-                if (_token is object) { return _token; }
+                if (_token is not null) { return _token; }
 
                 return _value;
             }
@@ -105,7 +105,7 @@ namespace SpanJson.Linq
             _current = _parent;
             _parent = _parent.Parent;
 
-            if (_parent is object && _parent.Type == JTokenType.Property)
+            if (_parent is not null && _parent.Type == JTokenType.Property)
             {
                 _parent = _parent.Parent;
             }
@@ -157,7 +157,7 @@ namespace SpanJson.Linq
 
         internal void AddValue(JValue value)
         {
-            if (_parent is object)
+            if (_parent is not null)
             {
                 // TryAdd will return false if an invalid JToken type is added.
                 // For example, a JComment can't be added to a JObject.

@@ -245,7 +245,7 @@ namespace SpanJson.Utilities
                 resultMetaObject = new DynamicMetaObject(convert, resultMetaObject.Restrictions);
             }
 
-            if (fallbackInvoke is object)
+            if (fallbackInvoke is not null)
             {
                 resultMetaObject = fallbackInvoke(resultMetaObject);
             }

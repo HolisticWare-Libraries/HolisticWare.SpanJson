@@ -1,6 +1,5 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
 using System;
 using System.Diagnostics;
@@ -124,7 +123,7 @@ namespace SpanJson
         private bool PopFromArray()
         {
             int index = _currentDepth - AllocationFreeMaxDepth - 1;
-            Debug.Assert(_array is object);
+            Debug.Assert(_array is not null);
             Debug.Assert(index >= 0, $"Get - Negative - index: {index}, arrayLength: {_array.Length}");
 
             int elementIndex = Div32Rem(index, out int extraBits);
@@ -136,6 +135,7 @@ namespace SpanJson
 
         private void DoubleArray(int minSize)
         {
+            Debug.Assert(_array is not null);
             Debug.Assert(_array.Length < int.MaxValue / 2, $"Array too large - arrayLength: {_array.Length}");
             Debug.Assert(minSize >= 0 && minSize >= _array.Length);
 

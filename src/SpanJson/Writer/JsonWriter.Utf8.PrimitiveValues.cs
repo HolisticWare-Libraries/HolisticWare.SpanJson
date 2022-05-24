@@ -118,11 +118,7 @@
 
         public void WriteUtf8Single(float value)
         {
-#if NETSTANDARD2_0 || NET471 || NET451
-            if (float.IsNaN(value) || float.IsInfinity(value))
-#else
-            if (!float.IsFinite(value))
-#endif
+            if (!JsonHelpers.IsFinite(value))
             {
                 ThrowHelper.ThrowArgumentException_InvalidFloatValueForJson();
             }
@@ -137,11 +133,7 @@
 
         public void WriteUtf8Double(double value)
         {
-#if NETSTANDARD2_0 || NET471 || NET451
-            if (double.IsNaN(value) || double.IsInfinity(value))
-#else
-            if (!double.IsFinite(value))
-#endif
+            if (!JsonHelpers.IsFinite(value))
             {
                 ThrowHelper.ThrowArgumentException_InvalidDoubleValueForJson();
             }
@@ -223,13 +215,7 @@
 
             WriteUtf8DoubleQuote(ref pinnableAddr, ref pos);
 
-            Span<byte> tempSpan = stackalloc byte[JsonSharedConstant.MaximumFormatDateTimeOffsetLength];
-            bool result = DateTimeFormatter.TryFormat(value, tempSpan, out int bytesWritten);
-            Debug.Assert(result);
-            DateTimeFormatter.TrimDateTimeOffset(tempSpan.Slice(0, bytesWritten), out bytesWritten);
-
-            tempSpan.Slice(0, bytesWritten).CopyTo(Utf8FreeSpan);
-            pos += bytesWritten;
+            DateTimeFormatter.WriteDateTimeTrimmed(ref pinnableAddr, ref pos, value);
 
             WriteUtf8DoubleQuote(ref pinnableAddr, ref pos);
         }
@@ -248,13 +234,7 @@
 
             WriteUtf8DoubleQuote(ref pinnableAddr, ref pos);
 
-            Span<byte> tempSpan = stackalloc byte[JsonSharedConstant.MaximumFormatDateTimeOffsetLength];
-            bool result = DateTimeFormatter.TryFormat(value, tempSpan, out int bytesWritten);
-            Debug.Assert(result);
-            DateTimeFormatter.TrimDateTimeOffset(tempSpan.Slice(0, bytesWritten), out bytesWritten);
-
-            tempSpan.Slice(0, bytesWritten).CopyTo(Utf8FreeSpan);
-            pos += bytesWritten;
+            DateTimeFormatter.WriteDateTimeOffsetTrimmed(ref pinnableAddr, ref pos, value);
 
             WriteUtf8DoubleQuote(ref pinnableAddr, ref pos);
         }

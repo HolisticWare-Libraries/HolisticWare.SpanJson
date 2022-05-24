@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace SpanJson.Document
 {
-    public sealed partial class JsonDocument
+    partial class JsonDocument
     {
         // SizeOrLength - offset - 0 - size - 4
         // NumberOfRows - offset - 4 - size - 4

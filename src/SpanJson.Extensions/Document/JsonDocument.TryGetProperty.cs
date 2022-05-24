@@ -9,7 +9,7 @@ using SpanJson.Internal;
 
 namespace SpanJson.Document
 {
-    public sealed partial class JsonDocument
+    partial class JsonDocument
     {
         internal bool TryGetNamedPropertyValue(int index, in ReadOnlySpan<char> propertyName, out JsonElement value)
         {
@@ -30,9 +30,9 @@ namespace SpanJson.Document
             int startIndex = index + DbRow.Size;
             int endIndex = checked(row.NumberOfRows * DbRow.Size + index);
 
-            if ((uint)maxBytes < JsonSharedConstant.StackallocThreshold)
+            if ((uint)maxBytes < JsonSharedConstant.StackallocByteThresholdU)
             {
-                Span<byte> utf8Name = stackalloc byte[JsonSharedConstant.StackallocMaxLength];
+                Span<byte> utf8Name = stackalloc byte[JsonSharedConstant.StackallocByteThreshold];
                 int len = JsonReaderHelper.GetUtf8FromText(propertyName, utf8Name);
                 utf8Name = utf8Name.Slice(0, len);
 
@@ -142,6 +142,7 @@ namespace SpanJson.Document
             out JsonElement value)
         {
             ReadOnlySpan<byte> documentSpan = _utf8Json.Span;
+            Span<byte> utf8UnescapedStack = stackalloc byte[JsonSharedConstant.StackallocByteThreshold];
 
             // Move to the row before the EndObject
             int index = endIndex - DbRow.Size;
@@ -186,8 +187,8 @@ namespace SpanJson.Document
                             
                             try
                             {
-                                Span<byte> utf8Unescaped = (uint)remaining <= JsonSharedConstant.StackallocThreshold ?
-                                    stackalloc byte[remaining] :
+                                Span<byte> utf8Unescaped = remaining <= utf8UnescapedStack.Length ?
+                                    utf8UnescapedStack :
                                     (rented = ArrayPool<byte>.Shared.Rent(remaining));
 
                                 // Only unescape the part we haven't processed.
@@ -203,7 +204,7 @@ namespace SpanJson.Document
                             }
                             finally
                             {
-                                if (rented is object)
+                                if (rented is not null)
                                 {
                                     //rented.AsSpan(0, written).Clear();
                                     ArrayPool<byte>.Shared.Return(rented);

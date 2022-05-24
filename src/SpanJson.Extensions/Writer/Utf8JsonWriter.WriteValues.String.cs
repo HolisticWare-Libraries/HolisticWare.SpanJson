@@ -21,10 +21,8 @@ namespace SpanJson
         /// Thrown if this would result in invalid JSON being written (while validation is enabled).
         /// </exception>
         public void WriteStringValue(in JsonEncodedText value)
-            => WriteStringValueHelper(value.EncodedUtf8Bytes);
-
-        private void WriteStringValueHelper(in ReadOnlySpan<byte> utf8Value)
         {
+            ReadOnlySpan<byte> utf8Value = value.EncodedUtf8Bytes;
             Debug.Assert(utf8Value.Length <= JsonSharedConstant.MaxUnescapedTokenSize);
 
             WriteStringByOptions(utf8Value);
@@ -104,7 +102,11 @@ namespace SpanJson
 
         private void WriteStringByOptions(in ReadOnlySpan<char> value)
         {
-            ValidateWritingValue();
+            if (!_options.SkipValidation)
+            {
+                ValidateWritingValue();
+            }
+
             if (_options.Indented)
             {
                 WriteStringIndented(value);
@@ -187,8 +189,8 @@ namespace SpanJson
 
             int length = EscapingHelper.GetMaxEscapedLength(value.Length, firstEscapeIndexVal);
 
-            Span<char> escapedValue = (uint)length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc char[length] :
+            Span<char> escapedValue = (uint)length <= JsonSharedConstant.StackallocCharThresholdU ?
+                stackalloc char[JsonSharedConstant.StackallocCharThreshold] :
                 (valueArray = ArrayPool<char>.Shared.Rent(length));
 
             EscapingHelper.EscapeString(value, escapedValue, _options.EscapeHandling, firstEscapeIndexVal, _options.Encoder, out int written);
@@ -202,7 +204,7 @@ namespace SpanJson
             }
 #endif
 
-            if (valueArray is object)
+            if (valueArray is not null)
             {
                 ArrayPool<char>.Shared.Return(valueArray);
             }
@@ -249,7 +251,11 @@ namespace SpanJson
 
         private void WriteStringByOptions(in ReadOnlySpan<byte> utf8Value)
         {
-            ValidateWritingValue();
+            if (!_options.SkipValidation)
+            {
+                ValidateWritingValue();
+            }
+
             if (_options.Indented)
             {
                 WriteStringIndented(utf8Value);
@@ -334,8 +340,8 @@ namespace SpanJson
 
             int length = EscapingHelper.GetMaxEscapedLength(utf8Value.Length, firstEscapeIndexVal);
 
-            Span<byte> escapedValue = (uint)length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc byte[length] :
+            Span<byte> escapedValue = (uint)length <= JsonSharedConstant.StackallocByteThresholdU ?
+                stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (valueArray = ArrayPool<byte>.Shared.Rent(length));
 
             EscapingHelper.EscapeString(utf8Value, escapedValue, _options.EscapeHandling, firstEscapeIndexVal, _options.Encoder, out int written);
@@ -349,10 +355,24 @@ namespace SpanJson
             }
 #endif
 
-            if (valueArray is object)
+            if (valueArray is not null)
             {
                 ArrayPool<byte>.Shared.Return(valueArray);
             }
+        }
+
+        /// <summary>
+        /// Writes a number as a JSON string. The string value is not escaped.
+        /// </summary>
+        /// <param name="utf8Value"></param>
+        internal void WriteNumberValueAsStringUnescaped(in ReadOnlySpan<byte> utf8Value)
+        {
+            // The value has been validated prior to calling this method.
+
+            WriteStringByOptions(utf8Value);
+
+            SetFlagToAddListSeparatorBeforeNextItem();
+            _tokenType = JsonTokenType.String;
         }
     }
 }

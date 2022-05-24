@@ -1,5 +1,6 @@
 ﻿using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Diagnosers;
+using BenchmarkDotNet.Environments;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Order;
 
@@ -9,8 +10,8 @@ namespace SpanJson.Benchmarks
     {
         public MyConfig()
         {
-            Add(Job.Default.WithUnrollFactor(2));
-            Add(MemoryDiagnoser.Default);
+            AddJob(Job.ShortRun.WithRuntime(CoreRuntime.Core60));
+            AddDiagnoser(MemoryDiagnoser.Default);
             Orderer = new DefaultOrderer(SummaryOrderPolicy.Default, MethodOrderPolicy.Alphabetical);
         }
     }

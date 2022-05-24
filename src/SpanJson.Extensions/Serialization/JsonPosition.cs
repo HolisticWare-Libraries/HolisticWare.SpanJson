@@ -128,8 +128,8 @@ namespace SpanJson.Serialization
 
                         int length = EscapingHelper.GetMaxEscapedLength(propertySpan.Length, propertyIdx);
 
-                        Span<char> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocThreshold ?
-                            stackalloc char[length] :
+                        Span<char> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocCharThresholdU ?
+                            stackalloc char[JsonSharedConstant.StackallocCharThreshold] :
                             (propertyArray = ArrayPool<char>.Shared.Rent(length));
 
                         EscapingHelper.Default.EscapeString(propertySpan, escapedPropertyName, propertyIdx, out int written);
@@ -139,7 +139,7 @@ namespace SpanJson.Serialization
                         sb.Append(escapedPropertyName.Slice(0, written));
 #endif
 
-                        if (propertyArray is object)
+                        if (propertyArray is not null)
                         {
                             ArrayPool<char>.Shared.Return(propertyArray);
                         }
@@ -171,14 +171,14 @@ namespace SpanJson.Serialization
         internal static string BuildPath(List<JsonPosition> positions, JsonPosition? currentPosition)
         {
             int capacity = 0;
-            if (positions is object)
+            if (positions is not null)
             {
                 for (int i = 0; i < positions.Count; i++)
                 {
                     capacity += positions[i].CalculateLength();
                 }
             }
-            if (currentPosition is object)
+            if (currentPosition is not null)
             {
                 capacity += currentPosition.GetValueOrDefault().CalculateLength();
             }
@@ -186,14 +186,14 @@ namespace SpanJson.Serialization
             StringBuilder sb = new StringBuilder(capacity);
             StringWriter writer = null;
             char[] buffer = null;
-            if (positions is object)
+            if (positions is not null)
             {
                 foreach (JsonPosition state in positions)
                 {
                     state.WriteTo(sb, ref writer, ref buffer);
                 }
             }
-            if (currentPosition is object)
+            if (currentPosition is not null)
             {
                 currentPosition.GetValueOrDefault().WriteTo(sb, ref writer, ref buffer);
             }
@@ -218,7 +218,7 @@ namespace SpanJson.Serialization
 
             message += "Path '{0}'".FormatWith(CultureInfo.InvariantCulture, path);
 
-            if (lineInfo is object && lineInfo.HasLineInfo())
+            if (lineInfo is not null && lineInfo.HasLineInfo())
             {
                 message += ", line {0}, position {1}".FormatWith(CultureInfo.InvariantCulture, lineInfo.LineNumber, lineInfo.LinePosition);
             }

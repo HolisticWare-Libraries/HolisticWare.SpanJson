@@ -1,6 +1,5 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
 using System;
 using System.Buffers;
@@ -15,18 +14,16 @@ namespace SpanJson
     partial struct Utf8JsonWriter
     {
         /// <summary>
-        /// Writes the pre-encoded property name and raw bytes value (as a base 64 encoded JSON string) as part of a name/value pair of a JSON object.
+        /// Writes the pre-encoded property name and raw bytes value (as a Base64 encoded JSON string) as part of a name/value pair of a JSON object.
         /// </summary>
         /// <param name="propertyName">The JSON-encoded name of the property to write.</param>
-        /// <param name="bytes">The Base64-encoded data to write.</param>
+        /// <param name="bytes">The binary data to write as Base64 encoded text.</param>
         /// <exception cref="InvalidOperationException">
         /// Thrown if this would result in invalid JSON being written (while validation is enabled).
         /// </exception>
         public void WriteBase64String(in JsonEncodedText propertyName, in ReadOnlySpan<byte> bytes)
-            => WriteBase64StringHelper(propertyName.EncodedUtf8Bytes, bytes);
-
-        private void WriteBase64StringHelper(in ReadOnlySpan<byte> utf8PropertyName, in ReadOnlySpan<byte> bytes)
         {
+            ReadOnlySpan<byte> utf8PropertyName = propertyName.EncodedUtf8Bytes;
             Debug.Assert(utf8PropertyName.Length <= JsonSharedConstant.MaxUnescapedTokenSize);
 
             JsonWriterHelper.ValidateBytes(bytes);
@@ -41,7 +38,7 @@ namespace SpanJson
         /// Writes the property name and raw bytes value (as a Base64 encoded JSON string) as part of a name/value pair of a JSON object.
         /// </summary>
         /// <param name="propertyName">The name of the property to write.</param>
-        /// <param name="bytes">The Base64-encoded data to write.</param>
+        /// <param name="bytes">The binary data to write as Base64 encoded text.</param>
         /// <exception cref="ArgumentException">
         /// Thrown when the specified property name is too large.
         /// </exception>
@@ -61,10 +58,10 @@ namespace SpanJson
         }
 
         /// <summary>
-        /// Writes the property name and raw bytes value (as a base 64 encoded JSON string) as part of a name/value pair of a JSON object.
+        /// Writes the property name and raw bytes value (as a Base64 encoded JSON string) as part of a name/value pair of a JSON object.
         /// </summary>
         /// <param name="propertyName">The name of the property to write.</param>
-        /// <param name="bytes">The Base64-encoded data to write.</param>
+        /// <param name="bytes">The binary data to write as Base64 encoded text.</param>
         /// <exception cref="ArgumentException">
         /// Thrown when the specified property name is too large.
         /// </exception>
@@ -85,10 +82,10 @@ namespace SpanJson
         }
 
         /// <summary>
-        /// Writes the property name and raw bytes value (as a base 64 encoded JSON string) as part of a name/value pair of a JSON object.
+        /// Writes the property name and raw bytes value (as a Base64 encoded JSON string) as part of a name/value pair of a JSON object.
         /// </summary>
         /// <param name="utf8PropertyName">The UTF-8 encoded name of the property to write.</param>
-        /// <param name="bytes">The Base64-encoded data to write.</param>
+        /// <param name="bytes">The binary data to write as Base64 encoded text.</param>
         /// <exception cref="ArgumentException">
         /// Thrown when the specified property name is too large.
         /// </exception>
@@ -149,8 +146,8 @@ namespace SpanJson
 
             int length = EscapingHelper.GetMaxEscapedLength(propertyName.Length, firstEscapeIndexProp);
 
-            Span<char> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc char[length] :
+            Span<char> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocCharThresholdU ?
+                stackalloc char[JsonSharedConstant.StackallocCharThreshold] :
                 (propertyArray = ArrayPool<char>.Shared.Rent(length));
 
             EscapingHelper.EscapeString(propertyName, escapedPropertyName, _options.EscapeHandling, firstEscapeIndexProp, _options.Encoder, out int written);
@@ -164,7 +161,7 @@ namespace SpanJson
             }
 #endif
 
-            if (propertyArray is object)
+            if (propertyArray is not null)
             {
                 ArrayPool<char>.Shared.Return(propertyArray);
             }
@@ -179,8 +176,8 @@ namespace SpanJson
 
             int length = EscapingHelper.GetMaxEscapedLength(utf8PropertyName.Length, firstEscapeIndexProp);
 
-            Span<byte> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc byte[length] :
+            Span<byte> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocByteThresholdU ?
+                stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (propertyArray = ArrayPool<byte>.Shared.Rent(length));
 
             EscapingHelper.EscapeString(utf8PropertyName, escapedPropertyName, _options.EscapeHandling, firstEscapeIndexProp, _options.Encoder, out int written);
@@ -194,7 +191,7 @@ namespace SpanJson
             }
 #endif
 
-            if (propertyArray is object)
+            if (propertyArray is not null)
             {
                 ArrayPool<byte>.Shared.Return(propertyArray);
             }

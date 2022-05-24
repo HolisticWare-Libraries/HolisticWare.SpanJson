@@ -27,7 +27,7 @@ namespace SpanJson
     ///     an <see cref="InvalidOperationException"/> with a context specific error message.
     ///   </para>
     ///   <para>
-    ///     To be able to format the output with indentation and whitespace OR to skip validation, create an instance of 
+    ///     To be able to format the output with indentation and whitespace OR to skip validation, create an instance of
     ///     <see cref="JsonWriterOptions"/> and pass that in to the writer.
     ///   </para>
     /// </remarks>
@@ -58,6 +58,8 @@ namespace SpanJson
         public JsonWriterOptions Options => _options;
 
         private int Indentation => CurrentDepth * JsonSharedConstant.SpacesPerIndent;
+
+        internal JsonTokenType TokenType => _tokenType;
 
         /// <summary>
         /// Tracks the recursive depth of the nested objects / arrays within the JSON text
@@ -111,8 +113,6 @@ namespace SpanJson
             _currentDepth = default;
             _options = options;
 
-            // Only allocate if the user writes a JSON payload beyond the depth that the _allocationFreeContainer can handle.
-            // This way we avoid allocations in the common, default cases, and allocate lazily.
             _bitStack = default;
 
             _pos = 0;
@@ -146,8 +146,6 @@ namespace SpanJson
             _currentDepth = default;
             _options = options;
 
-            // Only allocate if the user writes a JSON payload beyond the depth that the _allocationFreeContainer can handle.
-            // This way we avoid allocations in the common, default cases, and allocate lazily.
             _bitStack = default;
 
             _pos = 0;
@@ -186,7 +184,7 @@ namespace SpanJson
             if (toReturn is null) { return; }
 
             var arrayPool = _arrayPool;
-            if (arrayPool is object)
+            if (arrayPool is not null)
             {
                 arrayPool.Return(toReturn);
                 _arrayPool = null;
@@ -219,7 +217,7 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.NoInlining)]
         private void CheckAndResizeBuffer(int alreadyWritten, int sizeHint)
         {
-            Debug.Assert(_borrowedBuffer is object);
+            Debug.Assert(_borrowedBuffer is not null);
 
             const int MinimumBufferSize = 256;
 
@@ -525,8 +523,8 @@ namespace SpanJson
 
             int length = EscapingHelper.GetMaxEscapedLength(utf8PropertyName.Length, firstEscapeIndexProp);
 
-            Span<byte> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc byte[length] :
+            Span<byte> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocByteThresholdU ?
+                stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (propertyArray = ArrayPool<byte>.Shared.Rent(length));
 
             EscapingHelper.EscapeString(utf8PropertyName, escapedPropertyName, _options.EscapeHandling, firstEscapeIndexProp, _options.Encoder, out int written);
@@ -540,7 +538,7 @@ namespace SpanJson
             }
 #endif
 
-            if (propertyArray is object)
+            if (propertyArray is not null)
             {
                 ArrayPool<byte>.Shared.Return(propertyArray);
             }
@@ -681,8 +679,8 @@ namespace SpanJson
 
             int length = EscapingHelper.GetMaxEscapedLength(propertyName.Length, firstEscapeIndexProp);
 
-            Span<char> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocThreshold ?
-                stackalloc char[length] :
+            Span<char> escapedPropertyName = (uint)length <= JsonSharedConstant.StackallocCharThresholdU ?
+                stackalloc char[JsonSharedConstant.StackallocCharThreshold] :
                 (propertyArray = ArrayPool<char>.Shared.Rent(length));
 
             EscapingHelper.EscapeString(propertyName, escapedPropertyName, _options.EscapeHandling, firstEscapeIndexProp, _options.Encoder, out int written);
@@ -696,7 +694,7 @@ namespace SpanJson
             }
 #endif
 
-            if (propertyArray is object)
+            if (propertyArray is not null)
             {
                 ArrayPool<char>.Shared.Return(propertyArray);
             }

@@ -12,7 +12,7 @@ namespace SpanJson.Internal
     using System.Runtime.Intrinsics.X86;
 #endif
 
-    internal static partial class SpanHelpers
+    partial class SpanHelpers
     {
         #region -- Contains --
 

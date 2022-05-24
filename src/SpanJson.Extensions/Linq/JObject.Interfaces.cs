@@ -83,7 +83,7 @@ namespace SpanJson.Linq
         public bool TryGetValue(string propertyName, out JToken value)
         {
             JProperty property = Property(propertyName);
-            if (property is object)
+            if (property is not null)
             {
                 value = property.Value;
                 return true;
