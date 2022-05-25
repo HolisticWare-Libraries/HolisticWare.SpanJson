@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpanJson.Extensions", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpanJson.Annotations", "src\SpanJson.Annotations\SpanJson.Annotations.csproj", "{4EA99EFD-04AC-414D-AB6D-3CE31EA371B7}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NodaTime.Serialization.JsonNet", "src\NodaTime.Serialization.JsonNet\NodaTime.Serialization.JsonNet.csproj", "{9A2FD205-DFA4-48FF-9CE1-8485E840AB9B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NodaTime.Serialization.JsonSpan", "src\NodaTime.Serialization.JsonSpan\NodaTime.Serialization.JsonSpan.csproj", "{4C7113B4-B6E7-4364-ACA2-068FAE5BA437}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +41,14 @@ Global
 		{4EA99EFD-04AC-414D-AB6D-3CE31EA371B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4EA99EFD-04AC-414D-AB6D-3CE31EA371B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4EA99EFD-04AC-414D-AB6D-3CE31EA371B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A2FD205-DFA4-48FF-9CE1-8485E840AB9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A2FD205-DFA4-48FF-9CE1-8485E840AB9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A2FD205-DFA4-48FF-9CE1-8485E840AB9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A2FD205-DFA4-48FF-9CE1-8485E840AB9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C7113B4-B6E7-4364-ACA2-068FAE5BA437}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C7113B4-B6E7-4364-ACA2-068FAE5BA437}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C7113B4-B6E7-4364-ACA2-068FAE5BA437}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C7113B4-B6E7-4364-ACA2-068FAE5BA437}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +58,8 @@ Global
 		{F3CE83BB-CF99-495C-8362-6733418FC41F} = {B51B4CA6-C3AE-48E2-B499-9FBED9296F76}
 		{E50E897B-CBE5-49AF-8AF0-6EB6E010B182} = {B51B4CA6-C3AE-48E2-B499-9FBED9296F76}
 		{4EA99EFD-04AC-414D-AB6D-3CE31EA371B7} = {B51B4CA6-C3AE-48E2-B499-9FBED9296F76}
+		{9A2FD205-DFA4-48FF-9CE1-8485E840AB9B} = {B51B4CA6-C3AE-48E2-B499-9FBED9296F76}
+		{4C7113B4-B6E7-4364-ACA2-068FAE5BA437} = {B51B4CA6-C3AE-48E2-B499-9FBED9296F76}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FEEFB390-E34D-4BA7-8E75-63CAB99BC709}

@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\nuget.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;netstandard2.0</TargetFrameworks>
+    <RootNamespace>NodaTime.Serialization.JsonSpan</RootNamespace>
+    <AssemblyName>NodaTime.Serialization.JsonSpan</AssemblyName>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <NoWarn>$(NoWarn);1701;1702;</NoWarn>
+    <Deterministic>True</Deterministic>
+  </PropertyGroup>
+
+  <PropertyGroup Label="NuGet">
+    <PackageId>NodaTime.Serialization.JsonSpan</PackageId>
+    <Title>NodaTime.Serialization.JsonSpan.</Title>
+    <Description>Provides serialization support between Noda Time and SpanJson.</Description>
+    <PackageTags>nodatime;json;spanjson</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NodaTime" Version="$(NodaTimePackageVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SpanJson\SpanJson.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\version.props" />
+</Project>

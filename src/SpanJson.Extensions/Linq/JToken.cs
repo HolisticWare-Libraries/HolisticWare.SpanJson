@@ -377,7 +377,7 @@ namespace SpanJson.Linq
             switch (_annotations)
             {
                 case null:
-                    _annotations = (annotation is not null[]) ? new[] { annotation } : annotation;
+                    _annotations = (annotation is object[]) ? new[] { annotation } : annotation;
                     break;
 
                 case object[] annotations:
@@ -620,7 +620,7 @@ namespace SpanJson.Linq
 
         internal void CopyAnnotations(JToken target, JToken source)
         {
-            if (source._annotations is not null[] annotations)
+            if (source._annotations is object[] annotations)
             {
                 target._annotations = annotations.ToArray();
             }
