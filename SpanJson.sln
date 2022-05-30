@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28922.388
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B51B4CA6-C3AE-48E2-B499-9FBED9296F76}"
 EndProject
@@ -30,6 +30,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpanJson.Linq.Tests", "tests\SpanJson.Linq.Tests\SpanJson.Linq.Tests.csproj", "{860C1905-6468-41C1-B0BF-FE737B1B828E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpanJson.Annotations", "src\SpanJson.Annotations\SpanJson.Annotations.csproj", "{F34EE21C-55C3-4D0A-8842-E44A192E67CA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NodaTime.Serialization.JsonNet", "src\NodaTime.Serialization.JsonNet\NodaTime.Serialization.JsonNet.csproj", "{22A5F764-4C3B-40E3-8AAA-DB1DFEAA4E6B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NodaTime.Serialization.JsonSpan", "src\NodaTime.Serialization.JsonSpan\NodaTime.Serialization.JsonSpan.csproj", "{C5FD98DF-77ED-48A0-804C-FD3CB2F8AC04}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NodaTime.Serialization.JsonSpan.Tests", "tests\NodaTime.Serialization.JsonSpan.Tests\NodaTime.Serialization.JsonSpan.Tests.csproj", "{8DCC26F7-EDE2-49E6-A897-F0AC36D9A7F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +87,18 @@ Global
 		{F34EE21C-55C3-4D0A-8842-E44A192E67CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F34EE21C-55C3-4D0A-8842-E44A192E67CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F34EE21C-55C3-4D0A-8842-E44A192E67CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22A5F764-4C3B-40E3-8AAA-DB1DFEAA4E6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22A5F764-4C3B-40E3-8AAA-DB1DFEAA4E6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22A5F764-4C3B-40E3-8AAA-DB1DFEAA4E6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22A5F764-4C3B-40E3-8AAA-DB1DFEAA4E6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5FD98DF-77ED-48A0-804C-FD3CB2F8AC04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5FD98DF-77ED-48A0-804C-FD3CB2F8AC04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5FD98DF-77ED-48A0-804C-FD3CB2F8AC04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5FD98DF-77ED-48A0-804C-FD3CB2F8AC04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DCC26F7-EDE2-49E6-A897-F0AC36D9A7F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DCC26F7-EDE2-49E6-A897-F0AC36D9A7F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DCC26F7-EDE2-49E6-A897-F0AC36D9A7F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DCC26F7-EDE2-49E6-A897-F0AC36D9A7F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -97,6 +115,9 @@ Global
 		{3F5C8C55-6472-423E-BB60-DF03EBC3738D} = {F8B2B379-E132-4DFA-A407-89EF3B657145}
 		{860C1905-6468-41C1-B0BF-FE737B1B828E} = {F8B2B379-E132-4DFA-A407-89EF3B657145}
 		{F34EE21C-55C3-4D0A-8842-E44A192E67CA} = {B51B4CA6-C3AE-48E2-B499-9FBED9296F76}
+		{22A5F764-4C3B-40E3-8AAA-DB1DFEAA4E6B} = {B51B4CA6-C3AE-48E2-B499-9FBED9296F76}
+		{C5FD98DF-77ED-48A0-804C-FD3CB2F8AC04} = {B51B4CA6-C3AE-48E2-B499-9FBED9296F76}
+		{8DCC26F7-EDE2-49E6-A897-F0AC36D9A7F6} = {F8B2B379-E132-4DFA-A407-89EF3B657145}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FEEFB390-E34D-4BA7-8E75-63CAB99BC709}

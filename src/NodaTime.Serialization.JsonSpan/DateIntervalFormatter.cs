@@ -70,12 +70,12 @@
             {
                 var propertyName = reader.ReadUtf16VerbatimNameSpan();
 
-                if (propertyName.SequenceEqual(startEncodedText.ToString().AsSpan()))
+                if (propertyName.Equals(startEncodedText.ToString().AsSpan(), StringComparison.OrdinalIgnoreCase))
                 {
                     startLocalDate = LocalDateFormatter.Default.Deserialize(ref reader, resolver);
                 }
 
-                if (propertyName.SequenceEqual(endEncodedText.ToString().AsSpan()))
+                if (propertyName.Equals(endEncodedText.ToString().AsSpan(), StringComparison.OrdinalIgnoreCase))
                 {
                     endLocalDate = LocalDateFormatter.Default.Deserialize(ref reader, resolver);
                 }
