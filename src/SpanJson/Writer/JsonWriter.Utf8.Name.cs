@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using System.Text.Encodings.Web;
     using SpanJson.Internal;
 
     partial struct JsonWriter<TSymbol>
@@ -20,7 +21,7 @@
             UnsafeMemory.WriteRaw(ref pinnableAddr, ref MemoryMarshal.GetReference(utf8Text), utf8Text.Length, ref _pos);
             WriteUtf8DoubleQuote(ref pinnableAddr, ref pos);
 
-            Unsafe.AddByteOffset(ref pinnableAddr, (IntPtr)pos++) = JsonUtf8Constant.NameSeparator;
+            WriteUtf8NameSeparator(ref pinnableAddr, ref pos);
         }
 
         public void WriteUtf8Name(string value)
@@ -34,17 +35,17 @@
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void WriteUtf8Name(string value, JsonEscapeHandling escapeHandling)
+        public void WriteUtf8Name(string value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
         {
-            WriteUtf8Name(value.AsSpan(), escapeHandling);
+            WriteUtf8Name(value.AsSpan(), escapeHandling, encoder);
         }
 
-        public void WriteUtf8Name(in ReadOnlySpan<char> value, JsonEscapeHandling escapeHandling)
+        public void WriteUtf8Name(in ReadOnlySpan<char> value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
         {
             switch (escapeHandling)
             {
                 case JsonEscapeHandling.EscapeNonAscii:
-                    WriteUtf8StringEscapeNonAsciiValue(value, true);
+                    WriteUtf8StringEscapeNonAscii(value, true, encoder);
                     break;
 
                 case JsonEscapeHandling.EscapeHtml:
@@ -69,7 +70,7 @@
             WriteUtf8DoubleQuote(ref pinnableAddr, ref pos);
             UnsafeMemory.WriteRaw(ref pinnableAddr, ref MemoryMarshal.GetReference(value), value.Length, ref pos);
             WriteUtf8DoubleQuote(ref pinnableAddr, ref pos);
-            Unsafe.AddByteOffset(ref pinnableAddr, (IntPtr)pos++) = JsonUtf8Constant.NameSeparator;
+            WriteUtf8NameSeparator(ref pinnableAddr, ref pos);
         }
     }
 }

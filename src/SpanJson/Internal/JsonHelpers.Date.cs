@@ -28,7 +28,7 @@ namespace SpanJson.Internal
             public byte OffsetToken;
         }
 
-        public static string FormatDateTimeOffset(DateTimeOffset value)
+        internal static string FormatDateTimeOffset(DateTimeOffset value)
         {
             Span<byte> span = stackalloc byte[JsonSharedConstant.MaximumFormatDateTimeOffsetLength];
 
@@ -37,7 +37,7 @@ namespace SpanJson.Internal
             return JsonReaderHelper.GetTextFromUtf8(span.Slice(0, bytesWritten));
         }
 
-        public static string FormatDateTime(DateTime value)
+        internal static string FormatDateTime(DateTime value)
         {
             Span<byte> span = stackalloc byte[JsonSharedConstant.MaximumFormatDateTimeOffsetLength];
 
@@ -46,7 +46,7 @@ namespace SpanJson.Internal
             return JsonReaderHelper.GetTextFromUtf8(span.Slice(0, bytesWritten));
         }
 
-        public static bool TryParseAsISO(in ReadOnlySpan<char> source, out DateTime value)
+        internal static bool TryParseAsISO(in ReadOnlySpan<char> source, out DateTime value)
         {
             if (!IsValidDateTimeOffsetParseLength(source.Length))
             {
@@ -81,7 +81,7 @@ namespace SpanJson.Internal
             return false;
         }
 
-        public static bool TryParseAsISO(in ReadOnlySpan<char> source, out DateTimeOffset value)
+        internal static bool TryParseAsISO(in ReadOnlySpan<char> source, out DateTimeOffset value)
         {
             if (!IsValidDateTimeOffsetParseLength(source.Length))
             {
@@ -117,7 +117,7 @@ namespace SpanJson.Internal
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsValidDateTimeOffsetParseLength(int length)
+        internal static bool IsValidDateTimeOffsetParseLength(int length)
         {
             return IsInRangeInclusive(length, JsonSharedConstant.MinimumDateTimeParseLength, JsonSharedConstant.MaximumEscapedDateTimeOffsetParseLength);
         }
@@ -126,7 +126,7 @@ namespace SpanJson.Internal
         /// <param name="source">UTF-8 source to parse.</param>
         /// <param name="value">The parsed <see cref="DateTime"/> if successful.</param>
         /// <returns>"true" if successfully parsed.</returns>
-        public static bool TryParseAsISO(in ReadOnlySpan<byte> source, out DateTime value)
+        internal static bool TryParseAsISO(in ReadOnlySpan<byte> source, out DateTime value)
         {
             if (!TryParseDateTimeOffset(source, out Utf8DateTimeParseData parseData))
             {
@@ -157,7 +157,7 @@ namespace SpanJson.Internal
         /// <param name="source">UTF-8 source to parse.</param>
         /// <param name="value">The parsed <see cref="DateTimeOffset"/> if successful.</param>
         /// <returns>"true" if successfully parsed.</returns>
-        public static bool TryParseAsISO(in ReadOnlySpan<byte> source, out DateTimeOffset value)
+        internal static bool TryParseAsISO(in ReadOnlySpan<byte> source, out DateTimeOffset value)
         {
             if (!TryParseDateTimeOffset(source, out Utf8DateTimeParseData parseData))
             {

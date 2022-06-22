@@ -190,7 +190,7 @@ namespace SpanJson.Formatters
                 writer.Write<#= utfName #>Null();
                 return;
             }
-            writer.Write<#= utfName #><#= t.Name #>(value, resolver.EscapeHandling);
+            writer.Write<#= utfName #><#= t.Name #>(value, resolver.EscapeHandling, resolver.Encoder);
 <# } #>
 <# else if(t == typeof(char)) { #>
             writer.Write<#= utfName #><#= t.Name #>(value, resolver.EscapeHandling);

@@ -19,7 +19,7 @@ namespace SpanJson.Tests.Resources {
     // 类通过类似于 ResGen 或 Visual Studio 的工具自动生成的。
     // 若要添加或移除成员，请编辑 .ResX 文件，然后重新运行 ResGen
     // (以 /str 作为命令选项)，或重新生成 VS 项目。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Strings {
@@ -47,8 +47,8 @@ namespace SpanJson.Tests.Resources {
         }
         
         /// <summary>
-        ///   重写当前线程的 CurrentUICulture 属性
-        ///   重写当前线程的 CurrentUICulture 属性。
+        ///   重写当前线程的 CurrentUICulture 属性，对
+        ///   使用此强类型资源类的所有资源查找执行重写。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
         internal static global::System.Globalization.CultureInfo Culture {
@@ -117,11 +117,38 @@ namespace SpanJson.Tests.Resources {
         }
         
         /// <summary>
+        ///   查找类似 Cannot allocate a buffer of size {0}. 的本地化字符串。
+        /// </summary>
+        internal static string BufferMaximumSizeExceeded {
+            get {
+                return ResourceManager.GetString("BufferMaximumSizeExceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Cannot advance past the end of the buffer, which has a size of {0}. 的本地化字符串。
         /// </summary>
         internal static string BufferWriterAdvancedTooFar {
             get {
                 return ResourceManager.GetString("BufferWriterAdvancedTooFar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 {&quot;customers&quot;:[{&quot;id&quot;:-6444715464212907024,&quot;email&quot;:&quot;Donald_Robel8@yahoo.com&quot;,&quot;accepts_marketing&quot;:true,&quot;created_at&quot;:&quot;2020-09-16T11:09:51.4336179+01:00&quot;,&quot;updated_at&quot;:&quot;2020-09-16T00:38:54.0476046+01:00&quot;,&quot;first_name&quot;:&quot;Claud&quot;,&quot;last_name&quot;:&quot;Schamberger&quot;,&quot;orders_count&quot;:828600420,&quot;state&quot;:&quot;Florida&quot;,&quot;total_spent&quot;:&quot;Investment Account&quot;,&quot;last_order_id&quot;:-6250163298268487517,&quot;note&quot;:&quot;Innovative&quot;,&quot;verified_email&quot;:false,&quot;multipass_identifier&quot;:&quot;Sierra Leone&quot;,&quot;tax_exempt&quot;:true,&quot;tags&quot;:&quot;Center&quot;,&quot;last_order_name&quot;:&quot;Architect&quot;,&quot;defaul [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        /// </summary>
+        internal static string CustomerSearchApi107KB {
+            get {
+                return ResourceManager.GetString("CustomerSearchApi107KB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 {&quot;customers&quot;:[{&quot;id&quot;:-935344204198316476,&quot;email&quot;:&quot;Eric61@hotmail.com&quot;,&quot;accepts_marketing&quot;:false,&quot;created_at&quot;:&quot;2020-09-16T03:00:37.9507057+01:00&quot;,&quot;updated_at&quot;:&quot;2020-09-15T14:59:58.4926562+01:00&quot;,&quot;first_name&quot;:&quot;Dedric&quot;,&quot;last_name&quot;:&quot;Reinger&quot;,&quot;orders_count&quot;:1672035651,&quot;state&quot;:&quot;Delaware&quot;,&quot;total_spent&quot;:&quot;invoice&quot;,&quot;last_order_id&quot;:-611951626428354704,&quot;note&quot;:&quot;Assistant&quot;,&quot;verified_email&quot;:true,&quot;multipass_identifier&quot;:&quot;supply-chains&quot;,&quot;tax_exempt&quot;:false,&quot;tags&quot;:&quot;Cloned&quot;,&quot;last_order_name&quot;:&quot;Handmade Concrete Chicken&quot;,&quot;default_ [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        /// </summary>
+        internal static string CustomerSearchApi108KB {
+            get {
+                return ResourceManager.GetString("CustomerSearchApi108KB", resourceCulture);
             }
         }
         
@@ -446,6 +473,24 @@ namespace SpanJson.Tests.Resources {
         internal static string LargeJson {
             get {
                 return ResourceManager.GetString("LargeJson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur viverra neque at erat laoreet, at sagittis arcu efficitur. Ut pulvinar eros nec odio cursus eleifend. Maecenas viverra elementum porttitor. Nullam mi velit, malesuada commodo tristique eu, mollis a velit. Morbi. 的本地化字符串。
+        /// </summary>
+        internal static string LoremIpsum40Words {
+            get {
+                return ResourceManager.GetString("LoremIpsum40Words", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIGFkaXBpc2NpbmcgZWxpdC4gQ3VyYWJpdHVyIHZpdmVycmEgbmVxdWUgYXQgZXJhdCBsYW9yZWV0LCBhdCBzYWdpdHRpcyBhcmN1IGVmZmljaXR1ci4gVXQgcHVsdmluYXIgZXJvcyBuZWMgb2RpbyBjdXJzdXMgZWxlaWZlbmQuIE1hZWNlbmFzIHZpdmVycmEgZWxlbWVudHVtIHBvcnR0aXRvci4gTnVsbGFtIG1pIHZlbGl0LCBtYWxlc3VhZGEgY29tbW9kbyB0cmlzdGlxdWUgZXUsIG1vbGxpcyBhIHZlbGl0LiBNb3JiaS4= 的本地化字符串。
+        /// </summary>
+        internal static string LoremIpsum40WordsBase64 {
+            get {
+                return ResourceManager.GetString("LoremIpsum40WordsBase64", resourceCulture);
             }
         }
         

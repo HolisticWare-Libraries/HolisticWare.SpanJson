@@ -10117,7 +10117,7 @@ namespace SpanJson.Formatters
                 writer.WriteUtf16Null();
                 return;
             }
-            writer.WriteUtf16String(value, resolver.EscapeHandling);
+            writer.WriteUtf16String(value, resolver.EscapeHandling, resolver.Encoder);
         }
 
         public String Deserialize(ref JsonReader<Char> reader, IJsonFormatterResolver<Char> resolver)
@@ -10265,7 +10265,7 @@ namespace SpanJson.Formatters
                 writer.WriteUtf8Null();
                 return;
             }
-            writer.WriteUtf8String(value, resolver.EscapeHandling);
+            writer.WriteUtf8String(value, resolver.EscapeHandling, resolver.Encoder);
         }
 
         public String Deserialize(ref JsonReader<Byte> reader, IJsonFormatterResolver<Byte> resolver)

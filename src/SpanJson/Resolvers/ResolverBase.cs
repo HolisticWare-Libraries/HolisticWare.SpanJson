@@ -645,18 +645,17 @@ namespace SpanJson.Resolvers
 
         public JsonEncodedText GetEncodedDictionaryKey(string dictionaryKey)
         {
-            //return JsonEncodedText.Encode(ResolveDictionaryKey(dictionaryKey), JsonEscapeHandling.EscapeNonAscii);
-            return EscapingHelper.GetEncodedText(ResolveDictionaryKey(dictionaryKey), _escapeHandling);
+            return JsonHelpers.GetEncodedText(ResolveDictionaryKey(dictionaryKey), _escapeHandling, _encoder);
         }
 
         public JsonEncodedText GetEncodedExtensionDataName(string extensionDataName)
         {
-            return EscapingHelper.GetEncodedText(ResolveExtensionDataName(extensionDataName), _escapeHandling);
+            return JsonHelpers.GetEncodedText(ResolveExtensionDataName(extensionDataName), _escapeHandling, _encoder);
         }
 
         public JsonEncodedText GetEncodedPropertyName(string propertyName)
         {
-            return EscapingHelper.GetEncodedText(ResolvePropertyName(propertyName), _escapeHandling);
+            return JsonHelpers.GetEncodedText(ResolvePropertyName(propertyName), _escapeHandling, _encoder);
         }
 
         // CustomJsonFormatterResolver

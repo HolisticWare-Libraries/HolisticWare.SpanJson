@@ -94,11 +94,7 @@ namespace SpanJson.Tests
         [InlineData(null)]
         public static void NameEquals_InvalidInstance_Throws(string text)
         {
-#if NETFRAMEWORK
-            const string ErrorMessage = "对象的当前状态使该操作无效。";
-#else
-            const string ErrorMessage = "Operation is not valid due to the current state of the object.";
-#endif
+            string ErrorMessage = new InvalidOperationException().Message;
             JsonProperty prop = default;
             AssertExtensions.Throws<InvalidOperationException>(() => prop.NameEquals(text), ErrorMessage);
             AssertExtensions.Throws<InvalidOperationException>(() => prop.NameEquals(text.AsSpan()), ErrorMessage);

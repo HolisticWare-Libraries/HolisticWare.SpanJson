@@ -12,7 +12,7 @@ namespace SpanJson.Formatters
         {
             if (value is null) { return; }
 
-            var encodedName = EscapingHelper.GetEncodedText(value.Name, resolver.EscapeHandling);
+            var encodedName = JsonHelpers.GetEncodedText(value.Name, resolver.EscapeHandling, resolver.Encoder);
             writer.WriteUtf8Name(encodedName);
             var pv = value.Value;
             if (pv is not null)
@@ -30,7 +30,7 @@ namespace SpanJson.Formatters
         {
             if (value is null) { return; }
 
-            var encodedName = EscapingHelper.GetEncodedText(value.Name, resolver.EscapeHandling);
+            var encodedName = JsonHelpers.GetEncodedText(value.Name, resolver.EscapeHandling, resolver.Encoder);
             writer.WriteUtf16Name(encodedName);
             var pv = value.Value;
             if (pv is not null)

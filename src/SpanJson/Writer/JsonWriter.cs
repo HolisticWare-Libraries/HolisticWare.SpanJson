@@ -5,6 +5,7 @@
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+using System.Text.Encodings.Web;
     using System.Threading;
     using SpanJson.Internal;
 
@@ -424,15 +425,15 @@
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void WriteName(string name, JsonEscapeHandling escapeHandling)
+        public void WriteName(string name, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
         {
             if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
             {
-                WriteUtf8Name(name, escapeHandling);
+                WriteUtf8Name(name, escapeHandling, encoder);
             }
             else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
             {
-                WriteUtf16Name(name, escapeHandling);
+                WriteUtf16Name(name, escapeHandling, encoder);
             }
             else
             {
@@ -441,15 +442,15 @@
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void WriteName(in ReadOnlySpan<char> name, JsonEscapeHandling escapeHandling)
+        public void WriteName(in ReadOnlySpan<char> name, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
         {
             if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
             {
-                WriteUtf8Name(name, escapeHandling);
+                WriteUtf8Name(name, escapeHandling, encoder);
             }
             else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
             {
-                WriteUtf16Name(name, escapeHandling);
+                WriteUtf16Name(name, escapeHandling, encoder);
             }
             else
             {
@@ -475,15 +476,15 @@
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void WriteString(string value, JsonEscapeHandling escapeHandling)
+        public void WriteString(string value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
         {
             if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
             {
-                WriteUtf8String(value, escapeHandling);
+                WriteUtf8String(value, escapeHandling, encoder);
             }
             else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
             {
-                WriteUtf16String(value, escapeHandling);
+                WriteUtf16String(value, escapeHandling, encoder);
             }
             else
             {
@@ -509,15 +510,15 @@
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void WriteString(in ReadOnlySpan<char> value, JsonEscapeHandling escapeHandling)
+        public void WriteString(in ReadOnlySpan<char> value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
         {
             if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
             {
-                WriteUtf8String(value, escapeHandling);
+                WriteUtf8String(value, escapeHandling, encoder);
             }
             else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
             {
-                WriteUtf16String(value, escapeHandling);
+                WriteUtf16String(value, escapeHandling, encoder);
             }
             else
             {

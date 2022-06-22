@@ -1,6 +1,5 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
 using System;
 using System.Buffers;
@@ -42,11 +41,7 @@ namespace SpanJson.Tests
         [Fact]
         public static void EmptyJsonMultiSegmentIsInvalid()
         {
-#if NET452
-            ReadOnlyMemory<byte> dataMemory = new byte[0];
-#else
             ReadOnlyMemory<byte> dataMemory = Array.Empty<byte>();
-#endif
 
             var firstSegment = new BufferSegment<byte>(dataMemory.Slice(0, 0));
             ReadOnlyMemory<byte> secondMem = dataMemory.Slice(0, 0);
@@ -492,6 +487,12 @@ namespace SpanJson.Tests
         [MemberData(nameof(LargeTestCases))]
         public static void TestJsonReaderLargeUtf8SegmentSizeOne(bool compactData, TestCaseType type, string jsonString)
         {
+            // Skipping really large JSON on Browser to prevent OOM
+            //if (PlatformDetection.IsBrowser && (type == TestCaseType.Json40KB || type == TestCaseType.Json400KB || type == TestCaseType.ProjectLockJson))
+            //{
+            //    return;
+            //}
+
             ReadFullySegmentSizeOne(compactData, type, jsonString);
         }
 
@@ -568,6 +569,8 @@ namespace SpanJson.Tests
         [MemberData(nameof(SmallTestCases))]
         public static void TestPartialJsonReaderMultiSegment(bool compactData, TestCaseType type, string jsonString)
         {
+            _ = type;
+
             // Remove all formatting/indendation
             if (compactData)
             {
@@ -607,6 +610,8 @@ namespace SpanJson.Tests
         [MemberData(nameof(SmallTestCases))]
         public static void TestPartialJsonReaderSlicesMultiSegment(bool compactData, TestCaseType type, string jsonString)
         {
+            _ = type;
+
             // Remove all formatting/indendation
             if (compactData)
             {
@@ -687,7 +692,7 @@ namespace SpanJson.Tests
             Assert.Equal(JsonTokenType.None, json.TokenType);
             Assert.Equal(0, json.CurrentDepth);
             Assert.Equal(0, json.BytesConsumed);
-            Assert.Equal(false, json.HasValueSequence);
+            Assert.False(json.HasValueSequence);
             Assert.True(json.ValueSpan.SequenceEqual(default));
             Assert.True(json.ValueSequence.IsEmpty);
 
@@ -698,7 +703,7 @@ namespace SpanJson.Tests
             Assert.Equal(previous, current);
             Assert.Equal(0, json.CurrentDepth);
             Assert.Equal(0, json.BytesConsumed);
-            Assert.Equal(false, json.HasValueSequence);
+            Assert.False(json.HasValueSequence);
             Assert.True(json.ValueSpan.SequenceEqual(default));
             Assert.True(json.ValueSequence.IsEmpty);
 
@@ -714,7 +719,7 @@ namespace SpanJson.Tests
             Assert.Equal(lastToken, json.TokenType);
             Assert.Equal(0, json.CurrentDepth);
             Assert.Equal(dataUtf8.Length, json.BytesConsumed);
-            Assert.Equal(false, json.HasValueSequence);
+            Assert.False(json.HasValueSequence);
             Assert.True(json.ValueSpan.SequenceEqual(default));
             Assert.True(json.ValueSequence.IsEmpty);
 
@@ -725,7 +730,7 @@ namespace SpanJson.Tests
             Assert.Equal(lastToken, json.TokenType);
             Assert.Equal(0, json.CurrentDepth);
             Assert.Equal(dataUtf8.Length, json.BytesConsumed);
-            Assert.Equal(false, json.HasValueSequence);
+            Assert.False(json.HasValueSequence);
             Assert.True(json.ValueSpan.SequenceEqual(default));
             Assert.True(json.ValueSequence.IsEmpty);
 
@@ -898,6 +903,82 @@ namespace SpanJson.Tests
                 Assert.Equal(expectedString, actualStrSequence);
 
                 Assert.Equal(0, utf8JsonReader.TokenStartIndex);
+            }
+        }
+
+        [Fact]
+        public static void TestMultiSegmentStringConversionToDateTime()
+        {
+            string jsonString = "\"1997-07-16\"";
+            string expectedString = "1997-07-16";
+            int expectedTokenLength = 10;
+            DateTime expectedDateTime = DateTime.Parse(expectedString);
+
+            byte[] utf8 = Encoding.UTF8.GetBytes(jsonString);
+
+            ReadOnlySequence<byte> sequence = JsonTestHelper.CreateSegments(utf8);
+
+            for (int j = 0; j < utf8.Length; j++)
+            {
+                var utf8JsonReader = new Utf8JsonReader(sequence.Slice(0, j), isFinalBlock: false, default);
+                ReadDateTimeHelper(ref utf8JsonReader, expectedDateTime, expectedTokenLength);
+
+                Assert.Equal(0, utf8JsonReader.TokenStartIndex);
+
+                long consumed = utf8JsonReader.BytesConsumed;
+                utf8JsonReader = new Utf8JsonReader(sequence.Slice(consumed), isFinalBlock: true, utf8JsonReader.CurrentState);
+                ReadDateTimeHelper(ref utf8JsonReader, expectedDateTime, expectedTokenLength);
+            }
+        }
+
+        private static void ReadDateTimeHelper(ref Utf8JsonReader jsonReader, DateTime expectedValue, long expectedTokenLength)
+        {
+            while (jsonReader.Read())
+            {
+                if (jsonReader.TokenType == JsonTokenType.String)
+                {
+                    long tokenLength = jsonReader.HasValueSequence ? jsonReader.ValueSequence.Length : jsonReader.ValueSpan.Length;
+                    Assert.Equal(expectedTokenLength, tokenLength);
+                    Assert.Equal(expectedValue, jsonReader.GetDateTime());
+                }
+            }
+        }
+
+        [Fact]
+        public static void TestMultiSegmentStringConversionToDateTimeOffset()
+        {
+            string jsonString = "\"1997-07-16\"";
+            string expectedString = "1997-07-16";
+            int expectedTokenLength = 10;
+            DateTimeOffset expectedDateTimeOffset = DateTimeOffset.Parse(expectedString);
+
+            byte[] utf8 = Encoding.UTF8.GetBytes(jsonString);
+
+            ReadOnlySequence<byte> sequence = JsonTestHelper.CreateSegments(utf8);
+
+            for (int j = 0; j < utf8.Length; j++)
+            {
+                var utf8JsonReader = new Utf8JsonReader(sequence.Slice(0, j), isFinalBlock: false, default);
+                ReadDateTimeOffsetHelper(ref utf8JsonReader, expectedDateTimeOffset, expectedTokenLength);
+
+                Assert.Equal(0, utf8JsonReader.TokenStartIndex);
+
+                long consumed = utf8JsonReader.BytesConsumed;
+                utf8JsonReader = new Utf8JsonReader(sequence.Slice(consumed), isFinalBlock: true, utf8JsonReader.CurrentState);
+                ReadDateTimeOffsetHelper(ref utf8JsonReader, expectedDateTimeOffset, expectedTokenLength);
+            }
+        }
+
+        private static void ReadDateTimeOffsetHelper(ref Utf8JsonReader jsonReader, DateTimeOffset expectedValue, long expectedTokenLength)
+        {
+            while (jsonReader.Read())
+            {
+                if (jsonReader.TokenType == JsonTokenType.String)
+                {
+                    long tokenLength = jsonReader.HasValueSequence ? jsonReader.ValueSequence.Length : jsonReader.ValueSpan.Length;
+                    Assert.Equal(expectedTokenLength, tokenLength);
+                    Assert.Equal(expectedValue, jsonReader.GetDateTimeOffset());
+                }
             }
         }
 
@@ -1506,29 +1587,6 @@ namespace SpanJson.Tests
         [InlineData("//abc", "abc", 2)]
         [InlineData("//abc", "abc", 3)]
         [InlineData("//abc", "abc", 100)]
-        public static void JsonWithSingleLineCommentWithNoLineEndingsNonFinalBlockMultiSegment1(string jsonString, string expectedComment, int segmentSize)
-        {
-            byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
-            var state = new JsonReaderState(options: new JsonReaderOptions { CommentHandling = JsonCommentHandling.Allow });
-            ReadOnlySequence<byte> sequence = JsonTestHelper.GetSequence(dataUtf8, segmentSize);
-            var json = new Utf8JsonReader(sequence, isFinalBlock: false, state);
-
-            Assert.False(json.Read());
-        }
-
-        [Theory]
-        [InlineData("//", "", 1)]
-        [InlineData("//", "", 2)]
-        [InlineData("//", "", 3)]
-        [InlineData("//", "", 100)]
-        [InlineData("//a", "a", 1)]
-        [InlineData("//a", "a", 2)]
-        [InlineData("//a", "a", 3)]
-        [InlineData("//a", "a", 100)]
-        [InlineData("//abc", "abc", 1)]
-        [InlineData("//abc", "abc", 2)]
-        [InlineData("//abc", "abc", 3)]
-        [InlineData("//abc", "abc", 100)]
         public static void JsonWithSingleLineCommentWithRegularLineEndingMultiSegment(string jsonStringWithoutLineEnding, string expectedComment, int segmentSize)
         {
             foreach (string lineEnding in new string[] { "\r", "\r ", "\r\n", "\r\n ", "\n", "\n ", "" })
@@ -1783,6 +1841,7 @@ namespace SpanJson.Tests
         [InlineData("{\"Property1\": {\"Property1.1\": 42} // comment\n,5}")]
         [InlineData("{\"Property1\": {\"Property1.1\": 42}, // comment\n // comment\n5}")]
         [InlineData("{// comment\n5}")]
+        //[SkipOnCoreClr("https://github.com/dotnet/runtime/issues/45464", RuntimeConfiguration.Checked)]
         public static void ReadInvalidJsonStringsWithComments(string jsonString)
         {
             byte[] input = Encoding.UTF8.GetBytes(jsonString);

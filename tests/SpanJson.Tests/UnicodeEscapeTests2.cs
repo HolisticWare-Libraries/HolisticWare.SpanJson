@@ -150,7 +150,7 @@ namespace SpanJson.Tests
             string json = writer.ToString();
 
             Assert.Equal(8, json.Length);
-            Assert.Equal(@"""\u5f20""", json);
+            Assert.Equal(@"""\u5f20""", json, true);
 
             var reader = new JsonReader<char>(json.AsSpan());
 

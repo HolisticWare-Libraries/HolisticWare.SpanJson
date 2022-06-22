@@ -1,6 +1,5 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
 using System;
 using System.Buffers;
@@ -611,27 +610,30 @@ namespace SpanJson.Tests
             {
                 if (json.TokenType == JsonTokenType.Number)
                 {
-#if !(NET || NETCOREAPP3_0_OR_GREATER)
-                    // Full framework throws for overflow rather than returning Infinity
-                    // This was fixed for .NET Core 3.0 in order to be IEEE 754 compliant
+                    //if (PlatformDetection.IsNetFramework)
+                    //{
+                    //    // .NET Framework throws for overflow rather than returning Infinity
+                    //    // This was fixed for .NET Core 3.0 in order to be IEEE 754 compliant
 
-                    Assert.False(json.TryGetSingle(out float _));
+                    //    Assert.False(json.TryGetSingle(out float _));
 
-                    try
+                    //    try
+                    //    {
+                    //        json.GetSingle();
+                    //        Assert.True(false, $"Expected {nameof(FormatException)}.");
+                    //    }
+                    //    catch (FormatException)
+                    //    {
+                    //        /* Expected exception */
+                    //    }
+                    //}
+                    //else
                     {
-                        json.GetSingle();
-                        Assert.True(false, $"Expected {nameof(FormatException)}.");
-                    }
-                    catch (FormatException)
-                    {
-                        /* Expected exception */
-                    }
-#else
-                    Assert.True(json.TryGetSingle(out float floatValue));
-                    Assert.Equal(expectedFloat, floatValue);
+                        Assert.True(json.TryGetSingle(out float floatValue));
+                        Assert.Equal(expectedFloat, floatValue);
 
-                    Assert.Equal(expectedFloat, json.GetSingle());
-#endif
+                        Assert.Equal(expectedFloat, json.GetSingle());
+                    }
 
                     Assert.True(json.TryGetDouble(out double doubleValue));
                     Assert.Equal(expectedDouble, doubleValue);
@@ -654,27 +656,30 @@ namespace SpanJson.Tests
             {
                 if (json.TokenType == JsonTokenType.Number)
                 {
-#if !(NET || NETCOREAPP3_0_OR_GREATER)
-                    // Full framework throws for overflow rather than returning Infinity
-                    // This was fixed for .NET Core 3.0 in order to be IEEE 754 compliant
+                    //if (PlatformDetection.IsNetFramework)
+                    //{
+                    //    // .NET Framework throws for overflow rather than returning Infinity
+                    //    // This was fixed for .NET Core 3.0 in order to be IEEE 754 compliant
 
-                    Assert.False(json.TryGetDouble(out double _));
+                    //    Assert.False(json.TryGetDouble(out double _));
 
-                    try
+                    //    try
+                    //    {
+                    //        json.GetDouble();
+                    //        Assert.True(false, $"Expected {nameof(FormatException)}.");
+                    //    }
+                    //    catch (FormatException)
+                    //    {
+                    //        /* Expected exception */
+                    //    }
+                    //}
+                    //else
                     {
-                        json.GetDouble();
-                        Assert.True(false, $"Expected {nameof(FormatException)}.");
-                    }
-                    catch (FormatException)
-                    {
-                        /* Expected exception */
-                    }
-#else
-                    Assert.True(json.TryGetDouble(out double actual));
-                    Assert.Equal(expected, actual);
+                        Assert.True(json.TryGetDouble(out double actual));
+                        Assert.Equal(expected, actual);
 
-                    Assert.Equal(expected, json.GetDouble());
-#endif
+                        Assert.Equal(expected, json.GetDouble());
+                    }
                 }
             }
 
@@ -1098,7 +1103,6 @@ namespace SpanJson.Tests
             }
         }
 
-#if !NET452
         [Theory]
         [MemberData(nameof(InvalidUTF8Strings))]
         public static void TestingGetStringInvalidUTF8(byte[] dataUtf8)
@@ -1134,7 +1138,6 @@ namespace SpanJson.Tests
                 }
             }
         }
-#endif
 
         [Fact]
         public static void GetBase64Unescapes()
@@ -1155,27 +1158,9 @@ namespace SpanJson.Tests
         }
 
         [Theory]
-        [InlineData("\"ABC=\"")]
-        [InlineData("\"AB+D\"")]
-        [InlineData("\"ABCD\"")]
-        [InlineData("\"ABC/\"")]
-        [InlineData("\"++++\"")]
-        [InlineData(null)]  // Large randomly generated string
+        [MemberData(nameof(JsonBase64TestData.ValidBase64Tests), MemberType = typeof(JsonBase64TestData))]
         public static void ValidBase64(string jsonString)
         {
-            if (jsonString == null)
-            {
-                var random = new Random(42);
-                var charArray = new char[502];
-                charArray[0] = '"';
-                for (int i = 1; i < charArray.Length; i++)
-                {
-                    charArray[i] = (char)random.Next('A', 'Z'); // ASCII values (between 65 and 90) that constitute valid base 64 string.
-                }
-                charArray[charArray.Length - 1] = '"';
-                jsonString = new string(charArray);
-            }
-
             byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
             var json = new Utf8JsonReader(dataUtf8, isFinalBlock: true, state: default);
@@ -1190,28 +1175,9 @@ namespace SpanJson.Tests
         }
 
         [Theory]
-        [InlineData("\"ABC===\"")]
-        [InlineData("\"ABC\"")]
-        [InlineData("\"ABC!\"")]
-        [InlineData(null)]  // Large randomly generated string
+        [MemberData(nameof(JsonBase64TestData.InvalidBase64Tests), MemberType = typeof(JsonBase64TestData))]
         public static void InvalidBase64(string jsonString)
         {
-            if (jsonString == null)
-            {
-                var random = new Random(42);
-                var charArray = new char[500];
-                charArray[0] = '"';
-                for (int i = 1; i < charArray.Length; i++)
-                {
-                    charArray[i] = (char)random.Next('?', '\\'); // ASCII values (between 63 and 91) that don't need to be escaped.
-                }
-
-                charArray[256] = '\\';
-                charArray[257] = '"';
-                charArray[charArray.Length - 1] = '"';
-                jsonString = new string(charArray);
-            }
-
             byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
             var json = new Utf8JsonReader(dataUtf8, isFinalBlock: true, state: default);
@@ -1371,27 +1337,27 @@ namespace SpanJson.Tests
         [MemberData(nameof(JsonGuidTestData.ValidGuidTests), MemberType = typeof(JsonGuidTestData))]
         public static void TryGetGuid_HasValueSequence_RetrievesGuid(string testString, string expectedString)
         {
-            TryGetGuid_HasValueSequence_RetrievesGuid0(testString, expectedString, isFinalBlock: true);
-            TryGetGuid_HasValueSequence_RetrievesGuid0(testString, expectedString, isFinalBlock: false);
-        }
+            static void Test(string testString, string expectedString, bool isFinalBlock)
+            {
+                byte[] dataUtf8 = Encoding.UTF8.GetBytes($"\"{testString}\"");
+                ReadOnlySequence<byte> sequence = JsonTestHelper.GetSequence(dataUtf8, 1);
+                var json = new Utf8JsonReader(sequence, isFinalBlock: isFinalBlock, state: default);
 
-        private static void TryGetGuid_HasValueSequence_RetrievesGuid0(string testString, string expectedString, bool isFinalBlock)
-        {
-            byte[] dataUtf8 = Encoding.UTF8.GetBytes($"\"{testString}\"");
-            ReadOnlySequence<byte> sequence = JsonTestHelper.GetSequence(dataUtf8, 1);
-            var json = new Utf8JsonReader(sequence, isFinalBlock: isFinalBlock, state: default);
+                Guid expected = new Guid(expectedString);
 
-            Guid expected = new Guid(expectedString);
+                Assert.True(json.Read(), "json.Read()");
+                Assert.Equal(JsonTokenType.String, json.TokenType);
 
-            Assert.True(json.Read(), "json.Read()");
-            Assert.Equal(JsonTokenType.String, json.TokenType);
+                Assert.True(json.HasValueSequence, "json.HasValueSequence");
+                Assert.False(json.ValueSequence.IsEmpty, "json.ValueSequence.IsEmpty");
+                Assert.True(json.ValueSpan.IsEmpty, "json.ValueSpan.IsEmpty");
+                Assert.True(json.TryGetGuid(out Guid actual), "TryGetGuid");
+                Assert.Equal(expected, actual);
+                Assert.Equal(expected, json.GetGuid());
+            }
 
-            Assert.True(json.HasValueSequence, "json.HasValueSequence");
-            Assert.False(json.ValueSequence.IsEmpty, "json.ValueSequence.IsEmpty");
-            Assert.True(json.ValueSpan.IsEmpty, "json.ValueSpan.IsEmpty");
-            Assert.True(json.TryGetGuid(out Guid actual), "TryGetGuid");
-            Assert.Equal(expected, actual);
-            Assert.Equal(expected, json.GetGuid());
+            Test(testString, expectedString, isFinalBlock: true);
+            Test(testString, expectedString, isFinalBlock: false);
         }
 
         [Theory]
@@ -1414,25 +1380,25 @@ namespace SpanJson.Tests
         [MemberData(nameof(JsonGuidTestData.InvalidGuidTests), MemberType = typeof(JsonGuidTestData))]
         public static void TryGetGuid_HasValueSequence_False(string testString)
         {
-            TryGetGuid_HasValueSequence_False0(testString, isFinalBlock: true);
-            TryGetGuid_HasValueSequence_False0(testString, isFinalBlock: false);
-        }
+            static void Test(string testString, bool isFinalBlock)
+            {
+                byte[] dataUtf8 = Encoding.UTF8.GetBytes($"\"{testString}\"");
+                ReadOnlySequence<byte> sequence = JsonTestHelper.GetSequence(dataUtf8, 1);
+                var json = new Utf8JsonReader(sequence, isFinalBlock: isFinalBlock, state: default);
 
-        private static void TryGetGuid_HasValueSequence_False0(string testString, bool isFinalBlock)
-        {
-            byte[] dataUtf8 = Encoding.UTF8.GetBytes($"\"{testString}\"");
-            ReadOnlySequence<byte> sequence = JsonTestHelper.GetSequence(dataUtf8, 1);
-            var json = new Utf8JsonReader(sequence, isFinalBlock: isFinalBlock, state: default);
+                Assert.True(json.Read(), "json.Read()");
+                Assert.Equal(JsonTokenType.String, json.TokenType);
+                Assert.True(json.HasValueSequence, "json.HasValueSequence");
+                // If the string is empty, the ValueSequence is empty, because it contains all 0 bytes between the two characters
+                Assert.Equal(string.IsNullOrEmpty(testString), json.ValueSequence.IsEmpty);
+                Assert.False(json.TryGetGuid(out Guid actual), "json.TryGetGuid(out Guid actual)");
+                Assert.Equal(Guid.Empty, actual);
 
-            Assert.True(json.Read(), "json.Read()");
-            Assert.Equal(JsonTokenType.String, json.TokenType);
-            Assert.True(json.HasValueSequence, "json.HasValueSequence");
-            // If the string is empty, the ValueSequence is empty, because it contains all 0 bytes between the two characters
-            Assert.Equal(string.IsNullOrEmpty(testString), json.ValueSequence.IsEmpty);
-            Assert.False(json.TryGetGuid(out Guid actual), "json.TryGetGuid(out Guid actual)");
-            Assert.Equal(Guid.Empty, actual);
+                JsonTestHelper.AssertThrows<FormatException>(json, (jsonReader) => jsonReader.GetGuid());
+            }
 
-            JsonTestHelper.AssertThrows<FormatException>(json, (jsonReader) => jsonReader.GetGuid());
+            Test(testString, isFinalBlock: true);
+            Test(testString, isFinalBlock: false);
         }
     }
 }

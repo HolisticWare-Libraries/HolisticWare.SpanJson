@@ -40,7 +40,7 @@
             if (reader.ReadUtf8IsNull()) { return null; }
 
             var escapedVal = reader.ReadUtf8VerbatimStringSpan(out int idx);
-            var timeZoneId = EscapingHelper.GetUnescapedTextFromUtf8WithCache(escapedVal, idx);
+            var timeZoneId = JsonHelpers.GetUnescapedTextFromUtf8WithCache(escapedVal, idx);
             return _provider[timeZoneId] as T;
         }
 
@@ -56,7 +56,7 @@
         {
             if (value == null) { writer.WriteUtf8Null(); return; }
 
-            var encodedVal = EscapingHelper.GetEncodedText(value.Id, resolver.EscapeHandling, resolver.Encoder);
+            var encodedVal = JsonHelpers.GetEncodedText(value.Id, resolver.EscapeHandling, resolver.Encoder);
             writer.WriteUtf8String(encodedVal);
         }
 
@@ -64,7 +64,7 @@
         {
             if (value == null) { writer.WriteUtf16Null(); return; }
 
-            var encodedVal = EscapingHelper.GetEncodedText(value.Id, resolver.EscapeHandling, resolver.Encoder);
+            var encodedVal = JsonHelpers.GetEncodedText(value.Id, resolver.EscapeHandling, resolver.Encoder);
             writer.WriteUtf16String(encodedVal);
         }
     }

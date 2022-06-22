@@ -2,6 +2,7 @@
 {
     using System;
     using System.Runtime.CompilerServices;
+using System.Text.Encodings.Web;
 
     partial struct JsonWriter<TSymbol>
     {
@@ -18,7 +19,7 @@
             pos += utf16Text.Length;
             WriteUtf16DoubleQuote(ref pinnableAddr, ref pos);
 
-            Unsafe.Add(ref pinnableAddr, pos++) = JsonUtf16Constant.NameSeparator;
+            WriteUtf16NameSeparator(ref pinnableAddr, ref pos);
         }
 
         public void WriteUtf16Name(string value)
@@ -32,17 +33,17 @@
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void WriteUtf16Name(string value, JsonEscapeHandling escapeHandling)
+        public void WriteUtf16Name(string value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
         {
-            WriteUtf16Name(value.AsSpan(), escapeHandling);
+            WriteUtf16Name(value.AsSpan(), escapeHandling, encoder);
         }
 
-        public void WriteUtf16Name(in ReadOnlySpan<char> value, JsonEscapeHandling escapeHandling)
+        public void WriteUtf16Name(in ReadOnlySpan<char> value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
         {
             switch (escapeHandling)
             {
                 case JsonEscapeHandling.EscapeNonAscii:
-                    WriteUtf16StringEscapeNonAsciiValue(value, true);
+                    WriteUtf16StringEscapeNonAscii(value, true, encoder);
                     break;
 
                 case JsonEscapeHandling.EscapeHtml:
@@ -68,7 +69,7 @@
             pos += value.Length;
             WriteUtf16DoubleQuote(ref pinnableAddr, ref pos);
 
-            Unsafe.Add(ref pinnableAddr, pos++) = JsonUtf16Constant.NameSeparator;
+            WriteUtf16NameSeparator(ref pinnableAddr, ref pos);
         }
     }
 }

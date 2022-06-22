@@ -96,7 +96,11 @@ namespace SpanJson
             if ((uint)value.Length > (uint)JsonSharedConstant.MaxCharacterTokenSize) { ThrowHelper.ThrowArgumentException_ValueTooLarge(value.Length); }
 
             int expectedByteCount = JsonReaderHelper.GetUtf8ByteCount(value);
-            byte[] utf8Bytes = ArrayPool<byte>.Shared.Rent(expectedByteCount);
+
+            byte[] utf8Array = null;
+            Span<byte> utf8Bytes = (uint)expectedByteCount <= JsonSharedConstant.StackallocByteThresholdU ?
+                stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
+                (utf8Bytes = ArrayPool<byte>.Shared.Rent(expectedByteCount));
 
             JsonEncodedText encodedText;
 
@@ -105,11 +109,10 @@ namespace SpanJson
             int actualByteCount = JsonReaderHelper.GetUtf8FromText(value, utf8Bytes);
             Debug.Assert(expectedByteCount == actualByteCount);
 
-            encodedText = EncodeHelper(utf8Bytes.AsSpan(0, actualByteCount), escapeHandling, encoder);
+            encodedText = EncodeHelper(utf8Bytes.Slice(0, actualByteCount), escapeHandling, encoder);
 
             // On the basis that this is user data, go ahead and clear it.
-            //utf8Bytes.AsSpan(0, expectedByteCount).Clear();
-            ArrayPool<byte>.Shared.Return(utf8Bytes);
+            if (utf8Array is not null) { ArrayPool<byte>.Shared.Return(utf8Array); }
 
             return encodedText;
         }
@@ -139,7 +142,7 @@ namespace SpanJson
         {
             int idx = EscapingHelper.NeedsEscaping(utf8Value, escapeHandling, encoder);
 
-            if ((uint)idx > JsonSharedConstant.TooBigOrNegative) // -1
+            if ((uint)idx >= (uint)utf8Value.Length) // -1
             {
                 return new JsonEncodedText(utf8Value.ToArray());
             }

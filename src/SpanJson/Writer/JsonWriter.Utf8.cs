@@ -102,8 +102,7 @@
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void WriteUtf8DoubleQuote(ref byte destination, ref int pos)
         {
-            Unsafe.AddByteOffset(ref destination, (IntPtr)pos) = JsonUtf8Constant.String;
-            pos++;
+            Unsafe.AddByteOffset(ref destination, (IntPtr)pos++) = JsonUtf8Constant.String;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

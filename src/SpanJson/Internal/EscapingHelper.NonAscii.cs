@@ -48,6 +48,7 @@ namespace SpanJson.Internal
             private static readonly ConcurrentDictionary<string, JsonEncodedText> s_encodedTextCache =
                 new ConcurrentDictionary<string, JsonEncodedText>(StringComparer.Ordinal);
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private static bool NeedsEscapingNoBoundsCheck(char value) => 0u >= (uint)AllowList[value] ? true : false;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -107,7 +108,7 @@ namespace SpanJson.Internal
                     ref byte sourceSpace = ref MemoryMarshal.GetReference(utf8Value);
                     ref byte destSpace = ref MemoryMarshal.GetReference(destination);
                     uint nlen = (uint)utf8Value.Length;
-                    while ((uint)indexOfFirstByteToEscape < (uint)utf8Value.Length)
+                    while ((uint)indexOfFirstByteToEscape < nlen)
                     {
                         byte val = Unsafe.Add(ref sourceSpace, indexOfFirstByteToEscape);
                         if (IsAsciiValue(val))

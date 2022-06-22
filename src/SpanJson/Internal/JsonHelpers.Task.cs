@@ -8,7 +8,7 @@ namespace SpanJson.Internal
     {
         /// <summary>TBD</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsCompletedSuccessfully(this Task task)
+        internal static bool IsCompletedSuccessfully(this Task task)
         {
 #if NETSTANDARD2_0
             return task.IsCompleted && !task.IsFaulted && !task.IsCanceled;
@@ -19,7 +19,7 @@ namespace SpanJson.Internal
 
         /// <summary>TBD</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsCompletedSuccessfully<T>(this Task<T> task)
+        internal static bool IsCompletedSuccessfully<T>(this Task<T> task)
         {
 #if NETSTANDARD2_0
             return task.IsCompleted && !task.IsFaulted && !task.IsCanceled;

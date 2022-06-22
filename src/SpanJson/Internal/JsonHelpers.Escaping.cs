@@ -11,20 +11,24 @@ namespace SpanJson.Internal
 {
     static partial class JsonHelpers
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static byte[] GetEscapedPropertyNameSection(in ReadOnlySpan<byte> utf8Value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder)
-        {
-            int idx = EscapingHelper.NeedsEscaping(utf8Value, escapeHandling, encoder);
+        #region -- GetEncodedText --
 
-            if (idx != -1)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static JsonEncodedText GetEncodedText(string text, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
+        {
+            switch (escapeHandling)
             {
-                return GetEscapedPropertyNameSection(utf8Value, escapeHandling, idx, encoder);
-            }
-            else
-            {
-                return GetPropertyNameSection(utf8Value);
+                case JsonEscapeHandling.EscapeNonAscii:
+                    return EscapingHelper.NonAscii.GetEncodedText(text, encoder);
+                case JsonEscapeHandling.EscapeHtml:
+                    return EscapingHelper.Html.GetEncodedText(text);
+                case JsonEscapeHandling.Default:
+                default:
+                    return EscapingHelper.Default.GetEncodedText(text);
             }
         }
+
+        #endregion
 
         public static byte[] EscapeValue(in ReadOnlySpan<byte> utf8Value, JsonEscapeHandling escapeHandling = JsonEscapeHandling.Default, JavaScriptEncoder encoder = null)
         {
@@ -70,7 +74,7 @@ namespace SpanJson.Internal
             ReadOnlySpan<char> utf16Value = input;
 #endif
             var firstEscapeIndex = EscapingHelper.NeedsEscaping(utf16Value, escapeHandling, encoder);
-            if ((uint)firstEscapeIndex > (uint)utf16Value.Length) // -1
+            if ((uint)firstEscapeIndex >= (uint)utf16Value.Length) // -1
             {
                 return input;
             }
@@ -83,7 +87,7 @@ namespace SpanJson.Internal
             if (utf16Value.IsEmpty) { return string.Empty; }
 
             var firstEscapeIndex = EscapingHelper.NeedsEscaping(utf16Value, escapeHandling, encoder);
-            if ((uint)firstEscapeIndex > JsonSharedConstant.TooBigOrNegative) // -1
+            if ((uint)firstEscapeIndex >= (uint)utf16Value.Length) // -1
             {
                 return utf16Value.ToString();
             }
@@ -114,6 +118,19 @@ namespace SpanJson.Internal
             {
                 if (tempArray is not null) { ArrayPool<char>.Shared.Return(tempArray); }
             }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static byte[] GetEscapedPropertyNameSection(in ReadOnlySpan<byte> utf8Value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder)
+        {
+            int idx = EscapingHelper.NeedsEscaping(utf8Value, escapeHandling, encoder);
+
+            if ((uint)idx >= (uint)utf8Value.Length)
+            {
+                return GetPropertyNameSection(utf8Value);
+            }
+
+            return GetEscapedPropertyNameSection(utf8Value, escapeHandling, idx, encoder);
         }
 
         private static byte[] GetEscapedPropertyNameSection(in ReadOnlySpan<byte> utf8Value, JsonEscapeHandling escapeHandling, int firstEscapeIndexVal, JavaScriptEncoder encoder)

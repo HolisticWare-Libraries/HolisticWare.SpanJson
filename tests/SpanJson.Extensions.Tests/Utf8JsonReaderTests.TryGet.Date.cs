@@ -1,6 +1,5 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
 using System;
 using System.Globalization;
@@ -151,8 +150,8 @@ namespace SpanJson.Tests
         }
 
         [Fact]
-        // https://github.com/dotnet/corefx/issues/39067.
-        public static void Regression39067_TestingDateTimeMinValue()
+        // https://github.com/dotnet/runtime/issues/30095
+        public static void TestingDateTimeMinValue_UtcOffsetGreaterThan0()
         {
             string jsonString = @"""0001-01-01T00:00:00""";
             string expectedString = "0001-01-01T00:00:00";
@@ -203,6 +202,56 @@ namespace SpanJson.Tests
 
             // Test upstream serializer.
             Assert.Equal(DateTime.Parse(expectedString), JsonSerializer.Generic.Utf16.Deserialize<DateTime>(jsonString));
+        }
+
+        [Theory]
+        [MemberData(nameof(JsonDateTimeTestData.InvalidISO8601Tests), MemberType = typeof(JsonDateTimeTestData))]
+        public static void TryGetDateTime_HasValueSequence_False(string testString)
+        {
+            static void Test(string testString, bool isFinalBlock)
+            {
+                byte[] dataUtf8 = Encoding.UTF8.GetBytes(testString);
+                var sequence = JsonTestHelper.GetSequence(dataUtf8, 1);
+                var json = new Utf8JsonReader(sequence, isFinalBlock: isFinalBlock, state: default);
+
+                Assert.True(json.Read(), "json.Read()");
+                Assert.Equal(JsonTokenType.String, json.TokenType);
+                Assert.True(json.HasValueSequence, "json.HasValueSequence");
+                // If the string is empty, the ValueSequence is empty, because it contains all 0 bytes between the two characters
+                Assert.Equal(string.IsNullOrEmpty(testString), json.ValueSequence.IsEmpty);
+                Assert.False(json.TryGetDateTime(out DateTime actual), "json.TryGetDateTime(out DateTime actual)");
+                Assert.Equal(DateTime.MinValue, actual);
+
+                JsonTestHelper.AssertThrows<FormatException>(json, (jsonReader) => jsonReader.GetDateTime());
+            }
+
+            Test(testString, isFinalBlock: true);
+            Test(testString, isFinalBlock: false);
+        }
+
+        [Theory]
+        [MemberData(nameof(JsonDateTimeTestData.InvalidISO8601Tests), MemberType = typeof(JsonDateTimeTestData))]
+        public static void TryGetDateTimeOffset_HasValueSequence_False(string testString)
+        {
+            static void Test(string testString, bool isFinalBlock)
+            {
+                byte[] dataUtf8 = Encoding.UTF8.GetBytes(testString);
+                var sequence = JsonTestHelper.GetSequence(dataUtf8, 1);
+                var json = new Utf8JsonReader(sequence, isFinalBlock: isFinalBlock, state: default);
+
+                Assert.True(json.Read(), "json.Read()");
+                Assert.Equal(JsonTokenType.String, json.TokenType);
+                Assert.True(json.HasValueSequence, "json.HasValueSequence");
+                // If the string is empty, the ValueSequence is empty, because it contains all 0 bytes between the two characters
+                Assert.Equal(string.IsNullOrEmpty(testString), json.ValueSequence.IsEmpty);
+                Assert.False(json.TryGetDateTimeOffset(out DateTimeOffset actual), "json.TryGetDateTimeOffset(out DateTimeOffset actual)");
+                Assert.Equal(DateTimeOffset.MinValue, actual);
+
+                JsonTestHelper.AssertThrows<FormatException>(json, (jsonReader) => jsonReader.GetDateTimeOffset());
+            }
+
+            Test(testString, isFinalBlock: true);
+            Test(testString, isFinalBlock: false);
         }
     }
 }

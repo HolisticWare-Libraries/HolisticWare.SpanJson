@@ -9,14 +9,13 @@ using System.Reflection;
 
 namespace SpanJson.Internal
 {
-    internal static partial class JsonHelpers
+    public static partial class JsonHelpers
     {
 #if NETSTANDARD2_0
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static HashSet<TSource> ToHashSet<TSource>(this IEnumerable<TSource> source) => source.ToHashSet(comparer: null);
+        internal static HashSet<TSource> ToHashSet<TSource>(this IEnumerable<TSource> source) => source.ToHashSet(comparer: null);
 
-        public static HashSet<TSource> ToHashSet<TSource>(this IEnumerable<TSource> source, IEqualityComparer<TSource> comparer)
+        internal static HashSet<TSource> ToHashSet<TSource>(this IEnumerable<TSource> source, IEqualityComparer<TSource> comparer)
         {
             if (source is null)
             {
@@ -67,7 +66,6 @@ namespace SpanJson.Internal
             s_referenceTypeCache.TryAdd(type, result);
             return result;
         }
-
 #endif
 
         // borrowed from https://github.com/dotnet/corefx/blob/8135319caa7e457ed61053ca1418313b88057b51/src/System.Text.Json/src/System/Text/Json/JsonHelpers.cs#L11
@@ -185,7 +183,7 @@ namespace SpanJson.Internal
         /// <summary>
         /// Emulates Dictionary.TryAdd on netstandard.
         /// </summary>
-        internal static bool TryAdd<TKey, TValue>(Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
+        public static bool TryAdd<TKey, TValue>(Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
         {
 #if NETFRAMEWORK || NETSTANDARD2_0
             if (!dictionary.ContainsKey(key))

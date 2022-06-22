@@ -1,6 +1,5 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
 using System;
 using System.Buffers;
@@ -630,7 +629,6 @@ namespace SpanJson.Tests
             Assert.False(json.ValueTextEquals(lookup));
         }
 
-#if !NETFRAMEWORK
         // NOTE: LookupOverflow test is constrained to run on Windows and MacOSX because it causes
         //       problems on Linux due to the way deferred memory allocation works. On Linux, the allocation can
         //       succeed even if there is not enough memory but then the test may get killed by the OOM killer at the
@@ -658,9 +656,9 @@ namespace SpanJson.Tests
                 json.ValueTextEquals(jsonString.AsSpan(1, jsonString.Length - 2));
                 Assert.True(false, $"Expected OverflowException was not thrown when calling ValueTextEquals with large lookup string");
             }
-            catch (OverflowException) { }
+            catch (OverflowException)
+            { }
         }
-#endif
 
         [Theory]
         [InlineData("/*comment*/[1234, true, false, /*comment*/ null, {}]/*comment*/")]
