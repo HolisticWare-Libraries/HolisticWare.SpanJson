@@ -124,7 +124,7 @@ namespace SpanJson.Serialization
         /// <param name="input">Input</param>
         /// <param name="type">Object Type</param>
         /// <returns>Deserialized object</returns>
-        public object Deserialize(in ArraySegment<char> input, Type type)
+        public object Deserialize(ArraySegment<char> input, Type type)
         {
             if (type is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.type); }
 
@@ -265,7 +265,7 @@ namespace SpanJson.Serialization
         /// <param name="input">Input</param>
         /// <param name="type">Object Type</param>
         /// <returns>Deserialized object</returns>
-        public object Deserialize(in ArraySegment<byte> input, Type type)
+        public object Deserialize(ArraySegment<byte> input, Type type)
         {
             if (type is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.type); }
 

@@ -120,7 +120,7 @@
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void WriteFourDigits(uint value, ref byte b, IntPtr offset)
         {
-            Debug.Assert(0 <= value && value <= 9999);
+            Debug.Assert(/*0 <= value && */value <= 9999);
 
             var temp = '0' + value;
             value /= 10u;
@@ -142,7 +142,7 @@
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void WriteTwoDigits(uint value, ref byte b, IntPtr offset)
         {
-            Debug.Assert(0 <= value && value <= 99);
+            Debug.Assert(/*0 <= value && */value <= 99);
 
             var temp = '0' + value;
             value /= 10u;

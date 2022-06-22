@@ -168,7 +168,11 @@ namespace SpanJson
                     return Formatter.Deserialize(ref jsonReader, Resolver);
                 }
 
+#if !NETSTANDARD2_0
                 public static T InnerDeserialize(in ArraySegment<TSymbol> input)
+#else
+                public static T InnerDeserialize(ArraySegment<TSymbol> input)
+#endif
                 {
                     var jsonReader = new JsonReader<TSymbol>(input);
                     return Formatter.Deserialize(ref jsonReader, Resolver);

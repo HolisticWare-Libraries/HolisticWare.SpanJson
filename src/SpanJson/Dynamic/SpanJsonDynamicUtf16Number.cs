@@ -9,7 +9,16 @@ namespace SpanJson.Dynamic
         public SpanJsonDynamicUtf16Number(in ReadOnlySpan<char> span) : base(span, span.IndexOf(JsonUtf16Constant.Period) != -1) { }
         internal SpanJsonDynamicUtf16Number(in ReadOnlySpan<char> span, bool isFloat) : base(span, isFloat) { }
 
-        public SpanJsonDynamicUtf16Number(in ArraySegment<char> data) : base(data, data.AsSpan().IndexOf(JsonUtf16Constant.Period) != -1) { }
-        internal SpanJsonDynamicUtf16Number(in ArraySegment<char> data, bool isFloat) : base(data, isFloat) { }
+        public SpanJsonDynamicUtf16Number(
+#if !NETSTANDARD2_0
+            in
+#endif
+            ArraySegment<char> data) : base(data, data.AsSpan().IndexOf(JsonUtf16Constant.Period) != -1) { }
+
+        internal SpanJsonDynamicUtf16Number(
+#if !NETSTANDARD2_0
+            in
+#endif
+            ArraySegment<char> data, bool isFloat) : base(data, isFloat) { }
     }
 }

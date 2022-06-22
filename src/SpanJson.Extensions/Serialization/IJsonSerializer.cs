@@ -25,7 +25,7 @@ namespace SpanJson.Serialization
 
         T Deserialize<T>(string input);
         T Deserialize<T>(char[] input);
-        T Deserialize<T>(in ArraySegment<char> input);
+        T Deserialize<T>(ArraySegment<char> input);
         T Deserialize<T>(in ReadOnlyMemory<char> input);
         T Deserialize<T>(in ReadOnlySpan<char> input);
         ValueTask<T> DeserializeAsync<T>(TextReader reader, CancellationToken cancellationToken = default);
@@ -35,7 +35,7 @@ namespace SpanJson.Serialization
         ValueTask SerializeAsync<T>(T input, Stream stream, CancellationToken cancellationToken = default);
 
         T Deserialize<T>(byte[] input);
-        T Deserialize<T>(in ArraySegment<byte> input);
+        T Deserialize<T>(ArraySegment<byte> input);
         T Deserialize<T>(in ReadOnlyMemory<byte> input);
         T Deserialize<T>(in ReadOnlySpan<byte> input);
         ValueTask<T> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default);
@@ -47,7 +47,7 @@ namespace SpanJson.Serialization
 
         object Deserialize(string input, Type type);
         object Deserialize(char[] input, Type type);
-        object Deserialize(in ArraySegment<char> input, Type type);
+        object Deserialize(ArraySegment<char> input, Type type);
         object Deserialize(in ReadOnlyMemory<char> input, Type type);
         object Deserialize(in ReadOnlySpan<char> input, Type type);
         ValueTask<object> DeserializeAsync(TextReader reader, Type type, CancellationToken cancellationToken = default);
@@ -57,7 +57,7 @@ namespace SpanJson.Serialization
         ValueTask SerializeObjectAsync(object input, Stream stream, CancellationToken cancellationToken = default);
 
         object Deserialize(byte[] input, Type type);
-        object Deserialize(in ArraySegment<byte> input, Type type);
+        object Deserialize(ArraySegment<byte> input, Type type);
         object Deserialize(in ReadOnlyMemory<byte> input, Type type);
         object Deserialize(in ReadOnlySpan<byte> input, Type type);
         ValueTask<object> DeserializeAsync(Stream stream, Type type, CancellationToken cancellationToken = default);

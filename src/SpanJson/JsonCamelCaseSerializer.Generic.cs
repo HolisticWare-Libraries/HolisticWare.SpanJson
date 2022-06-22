@@ -93,7 +93,11 @@ namespace SpanJson
                 /// <param name="input">Input</param>
                 /// <returns>Deserialized object</returns>
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if !NETSTANDARD2_0
                 public static T Deserialize<T>(in ArraySegment<char> input)
+#else
+                public static T Deserialize<T>(ArraySegment<char> input)
+#endif
                 {
                     return JsonSerializer.Generic.Inner<T, char, ExcludeNullsCamelCaseResolver<char>>.InnerDeserialize(input);
                 }
@@ -188,7 +192,11 @@ namespace SpanJson
                 /// <param name="input">Input</param>
                 /// <returns>Deserialized object</returns>
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if !NETSTANDARD2_0
                 public static T Deserialize<T>(in ArraySegment<byte> input)
+#else
+                public static T Deserialize<T>(ArraySegment<byte> input)
+#endif
                 {
                     return JsonSerializer.Generic.Inner<T, byte, ExcludeNullsCamelCaseResolver<byte>>.InnerDeserialize(input);
                 }

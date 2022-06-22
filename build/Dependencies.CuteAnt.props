@@ -2,133 +2,32 @@
   <!-- Shared Package Versions -->
   <PropertyGroup Label="Package Versions">
     <!-- core packages -->
-    <CuteAntCoreAbstractionsPackageVersion>3.1.0-rtm-220530-01</CuteAntCoreAbstractionsPackageVersion>
-    <CuteAntCorePackageVersion>3.1.0-rtm-220530-01</CuteAntCorePackageVersion>
-    <CuteAntAsyncExPackageVersion>3.1.0-rtm-220530-01</CuteAntAsyncExPackageVersion>
-    <CuteAntRuntimePackageVersion>3.1.0-rtm-220530-01</CuteAntRuntimePackageVersion>
+    <CuteAntCoreAbstractionsPackageVersion>3.1.0-rtm-220612-01</CuteAntCoreAbstractionsPackageVersion>
+    <CuteAntCorePackageVersion>3.1.0-rtm-220612-01</CuteAntCorePackageVersion>
+    <CuteAntAsyncExPackageVersion>3.1.0-rtm-220612-01</CuteAntAsyncExPackageVersion>
+    <CuteAntRuntimePackageVersion>3.1.0-rtm-220612-01</CuteAntRuntimePackageVersion>
 
     <LinqOptimizerCSharpStrongNamePackageVersion>0.7.0-rtm-1912022030</LinqOptimizerCSharpStrongNamePackageVersion>
 
-    <EasyEventStoreAbstractionsPackageVersion>5.0.2008.521</EasyEventStoreAbstractionsPackageVersion>
-    <EasyEventStoreAutoSubscribingPackageVersion>5.0.2008.521</EasyEventStoreAutoSubscribingPackageVersion>
-    <EasyEventStoreCorePackageVersion>5.0.2008.521</EasyEventStoreCorePackageVersion>
-
-    <GrEmitSignedPackageVersion>3.1.1</GrEmitSignedPackageVersion>
-    <GrobExpCompilerSignedPackageVersion>1.2.13</GrobExpCompilerSignedPackageVersion>
-
-    <HangfireAspNetUnofficialPackageVersion>1.6.17-preview2-180227-01</HangfireAspNetUnofficialPackageVersion>
-    <HangfireAspNetCoreUnofficialPackageVersion>1.6.17-preview2-180227-01</HangfireAspNetCoreUnofficialPackageVersion>
-    <HangfireCoreUnofficialPackageVersion>1.6.17-preview2-180227-01</HangfireCoreUnofficialPackageVersion>
-    <HangfireMongoUnofficialPackageVersion>0.5.9-preview2-180227-01</HangfireMongoUnofficialPackageVersion>
-    <HangfireRedisUnofficialPackageVersion>1.7.2-preview2-180227-01</HangfireRedisUnofficialPackageVersion>
-    <NCrontabUnofficialPackageVersion>3.3.0-preview2-180227-01</NCrontabUnofficialPackageVersion>
-
-    <NetTopologySuiteUnofficialPackageVersion>2.0.0-pre-190807-01</NetTopologySuiteUnofficialPackageVersion>
-    <NetTopologySuiteIOPostGisUnofficialPackageVersion>2.0.0-pre-190807-01</NetTopologySuiteIOPostGisUnofficialPackageVersion>
-    <NetTopologySuiteIOSqlServerBytesUnofficialPackageVersion>2.0.0-pre-190807-01</NetTopologySuiteIOSqlServerBytesUnofficialPackageVersion>
-
-    <NodaTimeSerializationJsonNetUnofficialPackageVersion>3.2.2-rtm-220525-01</NodaTimeSerializationJsonNetUnofficialPackageVersion>
-    <NodaTimeSerializationJsonSpanPackageVersion>3.2.2-rtm-220525-01</NodaTimeSerializationJsonSpanPackageVersion>
+    <NodaTimeSerializationJsonNetUnofficialPackageVersion>3.2.3-rtm-220530-01</NodaTimeSerializationJsonNetUnofficialPackageVersion>
+    <NodaTimeSerializationJsonSpanPackageVersion>3.2.3-rtm-220530-01</NodaTimeSerializationJsonSpanPackageVersion>
     <NodaTimeSerializationMessagePackSpanPackageVersion>3.0.0-rtm-200429-01</NodaTimeSerializationMessagePackSpanPackageVersion>
 
-    <!-- Caching related packages -->
-    <!--<CuteAntAspNetRedisSessionProviderPackageVersion>2.1.0-rc1-180512-01</CuteAntAspNetRedisSessionProviderPackageVersion>-->
-    <CuteAntCacheManagerPackageVersion>2.1.0-rc1-180512-01</CuteAntCacheManagerPackageVersion>
-    <CuteAntCacheManagerAbstractionsPackageVersion>2.1.0-rc1-180512-01</CuteAntCacheManagerAbstractionsPackageVersion>
-    <CuteAntCacheManagerConfigurationPackageVersion>2.1.0-rc1-180512-01</CuteAntCacheManagerConfigurationPackageVersion>
-    <CuteAntCacheManagerInMemoryPackageVersion>2.1.0-rc1-180512-01</CuteAntCacheManagerInMemoryPackageVersion>
-    <CuteAntCacheManagerRedisPackageVersion>2.1.0-rc1-180512-01</CuteAntCacheManagerRedisPackageVersion>
-    <CuteAntCacheManagerSerializationJsonPackageVersion>2.1.0-rc1-180512-01</CuteAntCacheManagerSerializationJsonPackageVersion>
-    <CuteAntCacheManagerSerializationMessagePackPackageVersion>2.1.0-rc1-180512-01</CuteAntCacheManagerSerializationMessagePackPackageVersion>
-    <CuteAntCacheManagerSerializationProtobufPackageVersion>2.1.0-rc1-180512-01</CuteAntCacheManagerSerializationProtobufPackageVersion>
-
-    <!-- Configuration related packages -->
-    <YamlExtensionsConfigurationPackageVersion>2.2.0-rtm-181205-01</YamlExtensionsConfigurationPackageVersion>
-    <HoconUnofficialPackageVersion>1.0.1-rtm-190419-01</HoconUnofficialPackageVersion>
-    <HoconConfigurationUnofficialPackageVersion>1.0.1-rtm-190419-01</HoconConfigurationUnofficialPackageVersion>
-    <HoconExtensionsConfigurationUnofficialPackageVersion>1.0.1-rtm-190419-01</HoconExtensionsConfigurationUnofficialPackageVersion>
-
     <!-- Database related packages -->
-    <ConsulExtensionsPackageVersion>2.2.0-rtm-181220-01</ConsulExtensionsPackageVersion>
-    <ClosedXMLUnofficialPackageVersion>0.95.0-rtm-191118-01</ClosedXMLUnofficialPackageVersion>
-    <ClosedXMLReportUnofficialPackageVersion>0.2.0-rtm-190912-01</ClosedXMLReportUnofficialPackageVersion>
-    <CsvHelperUnofficialPackageVersion>12.2.1-rtm-191118-01</CsvHelperUnofficialPackageVersion>
-    <MySqlConnectorUnofficialPackageVersion>0.57.0-rtm-190807-01</MySqlConnectorUnofficialPackageVersion>
-    <MySqlConnectorAuthenticationEd25519UnofficialPackageVersion>0.57.0-rtm-190807-01</MySqlConnectorAuthenticationEd25519UnofficialPackageVersion>
-    <NpgsqlUnofficialPackageVersion>4.0.8-rtm-190807-01</NpgsqlUnofficialPackageVersion>
-    <NpgsqlNetTopologySuiteUnofficialPackageVersion>4.0.8-rtm-190807-01</NpgsqlNetTopologySuiteUnofficialPackageVersion>
-    <CuteAntExtensionsRedisPackageVersion>2.1.0-rc1-180512-01</CuteAntExtensionsRedisPackageVersion>
-    <CuteAntWingsPackageVersion>3.0.0-rtm-220525-01</CuteAntWingsPackageVersion>
-    <CuteAntWingsAbstractionsPackageVersion>3.0.0-rtm-220525-01</CuteAntWingsAbstractionsPackageVersion>
-    <CuteAntWingsMySqlPackageVersion>3.0.0-rtm-220525-01</CuteAntWingsMySqlPackageVersion>
-    <CuteAntWingsOraclePackageVersion>3.0.0-rtm-220525-01</CuteAntWingsOraclePackageVersion>
-    <CuteAntWingsPostgreSQLPackageVersion>3.0.0-rtm-220525-01</CuteAntWingsPostgreSQLPackageVersion>
-    <CuteAntWingsSqlitePackageVersion>3.0.0-rtm-220525-01</CuteAntWingsSqlitePackageVersion>
-    <CuteAntWingsSqlServerPackageVersion>3.0.0-rtm-220525-01</CuteAntWingsSqlServerPackageVersion>
-    <CuteAntWingsSqlServerConvertersPackageVersion>3.0.0-rtm-220525-01</CuteAntWingsSqlServerConvertersPackageVersion>
+    <CuteAntWingsPackageVersion>6.1.0-rtm-220618-01</CuteAntWingsPackageVersion>
+    <CuteAntWingsAbstractionsPackageVersion>6.1.0-rtm-220618-01</CuteAntWingsAbstractionsPackageVersion>
+    <CuteAntWingsMySqlPackageVersion>6.1.0-rtm-220618-01</CuteAntWingsMySqlPackageVersion>
+    <CuteAntWingsPostgreSQLPackageVersion>6.1.0-rtm-220618-01</CuteAntWingsPostgreSQLPackageVersion>
+    <CuteAntWingsSqlitePackageVersion>6.1.0-rtm-220618-01</CuteAntWingsSqlitePackageVersion>
+    <CuteAntWingsSqliteDataPackageVersion>6.1.0-rtm-220618-01</CuteAntWingsSqliteDataPackageVersion>
+    <CuteAntWingsSqlServerPackageVersion>6.1.0-rtm-220618-01</CuteAntWingsSqlServerPackageVersion>
+    <CuteAntWingsSqlServerDataPackageVersion>6.1.0-rtm-220618-01</CuteAntWingsSqlServerDataPackageVersion>
+    <CuteAntWingsSqlServerConvertersPackageVersion>6.1.0-rtm-220618-01</CuteAntWingsSqlServerConvertersPackageVersion>
 
     <!-- H5 related packages -->
-    <FluidUnofficialPackageVersion>2.0.0-rc-220506-01</FluidUnofficialPackageVersion>
+    <FluidUnofficialPackageVersion>2.0.0-rc-220531-01</FluidUnofficialPackageVersion>
     <EsprimaUnofficialPackageVersion>2.0.0-beta-220412-01</EsprimaUnofficialPackageVersion>
     <JintUnofficialPackageVersion>3.0.0-beta-220412-01</JintUnofficialPackageVersion>
-
-    <!-- Hosting related packages -->
-    <CuteAntHostingPackageVersion>2.1.0-rc1-180512-01</CuteAntHostingPackageVersion>
-    <CuteAntHostingAbstractionsPackageVersion>2.1.0-rc1-180512-01</CuteAntHostingAbstractionsPackageVersion>
-
-    <!-- Ioc related packages -->
-
-    <!-- Logging related packages -->
-    <NLogExtensionsLoggingUnofficialPackageVersion>2.2.0-rtm-190501-01</NLogExtensionsLoggingUnofficialPackageVersion>
-    <NLogWebAspNetCoreUnofficialPackageVersion>2.2.0-rtm-190501-01</NLogWebAspNetCoreUnofficialPackageVersion>
-    <NLogWebUnofficialPackageVersion>2.2.0-rtm-190501-01</NLogWebUnofficialPackageVersion>
-    <SerilogExtensionsLoggingFileUnofficialPackageVersion>2.2.0-rtm-190222-01</SerilogExtensionsLoggingFileUnofficialPackageVersion>
-    <SerilogExtensionsLoggingUnofficialPackageVersion>2.2.0-rtm-190222-01</SerilogExtensionsLoggingUnofficialPackageVersion>
-
-    <!-- Network related packages -->
-    <AkkaCoreUnofficialPackageVersion>1.4.2009.1814</AkkaCoreUnofficialPackageVersion>
-    <AkkaUnofficialPackageVersion>1.4.2009.1814</AkkaUnofficialPackageVersion>
-    <AkkaTestKitUnofficialPackageVersion>1.4.2009.1814</AkkaTestKitUnofficialPackageVersion>
-    <AkkaTestKitXunit2UnofficialPackageVersion>1.4.2009.1814</AkkaTestKitXunit2UnofficialPackageVersion>
-    <AkkaTestsSharedUnofficialPackageVersion>1.4.2009.1814</AkkaTestsSharedUnofficialPackageVersion>
-
-    <AkkaCoordinationUnofficialPackageVersion>1.4.2009.1814</AkkaCoordinationUnofficialPackageVersion>
-    <AkkaDistributedDataUnofficialPackageVersion>1.4.2009.1814</AkkaDistributedDataUnofficialPackageVersion>
-    <AkkaDistributedDataLightningDBUnofficialPackageVersion>1.4.2009.1814</AkkaDistributedDataLightningDBUnofficialPackageVersion>
-    <AkkaClusterUnofficialPackageVersion>1.4.2009.1814</AkkaClusterUnofficialPackageVersion>
-    <AkkaClusterMetricsUnofficialPackageVersion>1.4.2009.1814</AkkaClusterMetricsUnofficialPackageVersion>
-    <AkkaClusterShardingUnofficialPackageVersion>1.4.2009.1814</AkkaClusterShardingUnofficialPackageVersion>
-    <AkkaClusterToolsUnofficialPackageVersion>1.4.2009.1814</AkkaClusterToolsUnofficialPackageVersion>
-    <AkkaClusterTestKitUnofficialPackageVersion>1.4.2009.1814</AkkaClusterTestKitUnofficialPackageVersion>
-    <AkkaRemoteUnofficialPackageVersion>1.4.2009.1814</AkkaRemoteUnofficialPackageVersion>
-    <AkkaRemoteTestKitUnofficialPackageVersion>1.4.2009.1814</AkkaRemoteTestKitUnofficialPackageVersion>
-
-    <AkkaDICoreUnofficialPackageVersion>1.4.2009.1814</AkkaDICoreUnofficialPackageVersion>
-    <AkkaDIAutoFacUnofficialPackageVersion>1.4.2009.1814</AkkaDIAutoFacUnofficialPackageVersion>
-    <AkkaDITestKitUnofficialPackageVersion>1.4.2009.1814</AkkaDITestKitUnofficialPackageVersion>
-
-    <AkkaLoggerNLogUnofficialPackageVersion>1.4.2009.1814</AkkaLoggerNLogUnofficialPackageVersion>
-    <AkkaLoggerSerilogUnofficialPackageVersion>1.4.2009.1814</AkkaLoggerSerilogUnofficialPackageVersion>
-
-    <AkkaExtensionEventStorePackageVersion>1.4.2009.1814</AkkaExtensionEventStorePackageVersion>
-
-    <AkkaPersistenceUnofficialPackageVersion>1.4.2009.1814</AkkaPersistenceUnofficialPackageVersion>
-    <AkkaPersistenceQueryUnofficialPackageVersion>1.4.2009.1814</AkkaPersistenceQueryUnofficialPackageVersion>
-    <AkkaPersistenceTCKUnofficialPackageVersion>1.4.2009.1814</AkkaPersistenceTCKUnofficialPackageVersion>
-    <AkkaPersistenceTestKitUnofficialPackageVersion>1.4.2009.1814</AkkaPersistenceTestKitUnofficialPackageVersion>
-    <AkkaPersistenceTestKitXunit2UnofficialPackageVersion>1.4.2009.1814</AkkaPersistenceTestKitXunit2UnofficialPackageVersion>
-    <AkkaPersistenceEventStoreUnofficialPackageVersion>1.4.2009.1814</AkkaPersistenceEventStoreUnofficialPackageVersion>
-    <AkkaPersistenceMongoDbUnofficialPackageVersion>1.4.2009.1814</AkkaPersistenceMongoDbUnofficialPackageVersion>
-
-    <AkkaSerializationHyperionUnofficialPackageVersion>1.4.2009.1814</AkkaSerializationHyperionUnofficialPackageVersion>
-    <AkkaSerializationMessagePackLZ4PackageVersion>1.4.2009.1814</AkkaSerializationMessagePackLZ4PackageVersion>
-    <AkkaSerializationProtobufPackageVersion>1.4.2009.1814</AkkaSerializationProtobufPackageVersion>
-    <AkkaSerializationProtobufNetPackageVersion>1.4.2009.1814</AkkaSerializationProtobufNetPackageVersion>
-    <AkkaSerializationTestKitUnofficialPackageVersion>1.4.2009.1814</AkkaSerializationTestKitUnofficialPackageVersion>
-
-    <AkkaStreamsUnofficialPackageVersion>1.4.2009.1814</AkkaStreamsUnofficialPackageVersion>
-    <AkkaStreamsEventStorePackageVersion>1.4.2009.1814</AkkaStreamsEventStorePackageVersion>
-    <AkkaStreamsTestKitUnofficialPackageVersion>1.4.2009.1814</AkkaStreamsTestKitUnofficialPackageVersion>
 
     <ReactiveStreamsSignedPackageVersion>1.4.2009.1814</ReactiveStreamsSignedPackageVersion>
     <ReactiveStreamsTCKSignedPackageVersion>1.4.2009.1814</ReactiveStreamsTCKSignedPackageVersion>
@@ -151,11 +50,10 @@
     <MessagePackImmutableCollectionUnofficialPackageVersion>1.1.0-rtm-200401-01</MessagePackImmutableCollectionUnofficialPackageVersion>
     <MessagePackLZ4UnofficialPackageVersion>1.1.0-rtm-200401-01</MessagePackLZ4UnofficialPackageVersion>
     <MessagePackUnofficialPackageVersion>1.1.0-rtm-200401-01</MessagePackUnofficialPackageVersion>
-    <ServiceStackTextNet40PackageVersion>5.5.0-rtm-190310-01</ServiceStackTextNet40PackageVersion>
-    <ServiceStackTextUnofficialPackageVersion>5.7.0-rtm-191112-01</ServiceStackTextUnofficialPackageVersion>
-    <SpanJsonAnnotationsPackageVersion>3.2.2</SpanJsonAnnotationsPackageVersion>
-    <SpanJsonUnofficialPackageVersion>3.2.2-rtm-220525-01</SpanJsonUnofficialPackageVersion>
-    <SpanJsonExtensionsPackageVersion>3.2.2-rtm-220525-01</SpanJsonExtensionsPackageVersion>
-    <SpanJsonAspNetCoreFormatterUnofficialPackageVersion>3.2.2-rtm-220525-01</SpanJsonAspNetCoreFormatterUnofficialPackageVersion>
+    <ServiceStackTextUnofficialPackageVersion>6.0.3-rtm-220602-01</ServiceStackTextUnofficialPackageVersion>
+    <SpanJsonAnnotationsPackageVersion>3.2.3</SpanJsonAnnotationsPackageVersion>
+    <SpanJsonUnofficialPackageVersion>3.2.3-rtm-220530-01</SpanJsonUnofficialPackageVersion>
+    <SpanJsonExtensionsPackageVersion>3.2.3-rtm-220530-01</SpanJsonExtensionsPackageVersion>
+    <SpanJsonAspNetCoreFormatterUnofficialPackageVersion>3.2.3-rtm-220530-01</SpanJsonAspNetCoreFormatterUnofficialPackageVersion>
   </PropertyGroup>
 </Project>

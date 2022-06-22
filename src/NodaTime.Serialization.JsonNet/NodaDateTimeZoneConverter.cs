@@ -15,6 +15,7 @@ namespace NodaTime.Serialization.JsonNet
     {
         private readonly IDateTimeZoneProvider provider;
 
+        /// <summary>TBD</summary>
         /// <param name="provider">Provides the <see cref="DateTimeZone"/> that corresponds to each time zone ID in the JSON string.</param>
         public NodaDateTimeZoneConverter(IDateTimeZoneProvider provider)
         {

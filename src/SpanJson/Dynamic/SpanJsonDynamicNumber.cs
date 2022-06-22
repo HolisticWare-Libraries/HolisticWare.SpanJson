@@ -9,7 +9,11 @@ namespace SpanJson.Dynamic
 
         protected SpanJsonDynamicNumber(in ReadOnlySpan<TSymbol> span, bool isFloat) : base(span, isFloat) { }
 
+#if !NETSTANDARD2_0
         protected SpanJsonDynamicNumber(in ArraySegment<TSymbol> data, bool isFloat) : base(data, isFloat) { }
+#else
+        protected SpanJsonDynamicNumber(ArraySegment<TSymbol> data, bool isFloat) : base(data, isFloat) { }
+#endif
 
         protected override BaseDynamicTypeConverter<TSymbol> Converter => DynamicConverter;
 

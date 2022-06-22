@@ -24,8 +24,9 @@
 
         private readonly IDateTimeZoneProvider _provider;
 
-        public DateTimeZoneFormatter() : this(DateTimeZoneProviders.Serialization) { }
+        public DateTimeZoneFormatter() : this(NodaTime.Xml.XmlSerializationSettings.DateTimeZoneProvider) { }
 
+        /// <summary>TBD</summary>
         /// <param name="provider">Provides the <see cref="DateTimeZone"/> that corresponds to each time zone ID in the JSON string.</param>
         public DateTimeZoneFormatter(IDateTimeZoneProvider provider)
         {

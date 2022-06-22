@@ -21,7 +21,11 @@ namespace SpanJson.Linq
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if !NETSTANDARD2_0
         public static JToken Parse(in ArraySegment<byte> utf8Json)
+#else
+        public static JToken Parse(ArraySegment<byte> utf8Json)
+#endif
         {
             if (utf8Json.IsEmpty()) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.utf8Json); }
 

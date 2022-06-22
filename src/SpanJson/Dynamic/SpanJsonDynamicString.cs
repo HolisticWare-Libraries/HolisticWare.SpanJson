@@ -28,7 +28,11 @@ namespace SpanJson.Dynamic
 
         protected SpanJsonDynamicString(in ReadOnlySpan<TSymbol> span, bool isFloat) : base(span, isFloat) { }
 
+#if !NETSTANDARD2_0
         protected SpanJsonDynamicString(in ArraySegment<TSymbol> data, bool isFloat) : base(data, isFloat) { }
+#else
+        protected SpanJsonDynamicString(ArraySegment<TSymbol> data, bool isFloat) : base(data, isFloat) { }
+#endif
 
         protected override BaseDynamicTypeConverter<TSymbol> Converter => DynamicConverter;
 
@@ -86,7 +90,7 @@ namespace SpanJson.Dynamic
 #endif
                     }
                 }
-                catch (Exception) { }
+                catch { }
 
                 value = default;
                 return false;

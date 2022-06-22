@@ -114,7 +114,7 @@ namespace SpanJson.Serialization
         /// <param name="input">Input</param>
         /// <returns>Deserialized object</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Deserialize<T>(in ArraySegment<char> input)
+        public T Deserialize<T>(ArraySegment<char> input)
         {
             if (IsPolymorphically<T>())
             {
@@ -240,7 +240,7 @@ namespace SpanJson.Serialization
         /// <param name="input">Input</param>
         /// <returns>Deserialized object</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Deserialize<T>(in ArraySegment<byte> input)
+        public T Deserialize<T>(ArraySegment<byte> input)
         {
             if (IsPolymorphically<T>())
             {

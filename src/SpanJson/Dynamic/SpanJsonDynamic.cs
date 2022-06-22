@@ -14,7 +14,11 @@ namespace SpanJson.Dynamic
             IsFloat = isFloat;
         }
 
+#if !NETSTANDARD2_0
         protected SpanJsonDynamic(in ArraySegment<TSymbol> data, bool isFloat)
+#else
+        protected SpanJsonDynamic(ArraySegment<TSymbol> data, bool isFloat)
+#endif
         {
             Symbols = data;
             IsFloat = isFloat;

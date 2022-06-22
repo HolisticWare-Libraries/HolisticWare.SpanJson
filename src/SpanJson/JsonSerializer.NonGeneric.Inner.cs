@@ -110,7 +110,11 @@ namespace SpanJson
                     return invoker.FromByteArrayDeserializer(input);
                 }
 
+#if !NETSTANDARD2_0
                 public static object InnerDeserialize(in ArraySegment<TSymbol> input, Type type)
+#else
+                public static object InnerDeserialize(ArraySegment<TSymbol> input, Type type)
+#endif
                 {
                     if (type is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.type); }
 

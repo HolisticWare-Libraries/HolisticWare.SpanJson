@@ -12,29 +12,24 @@
     <BenchmarkDotNetDiagnosticsWindowsPackageVersion>0.13.1</BenchmarkDotNetDiagnosticsWindowsPackageVersion>
     <NBenchPackageVersion>2.0.1</NBenchPackageVersion>
 
-    <AlbaPackageVersion>4.0.0</AlbaPackageVersion>
-    <BogusPackageVersion>33.0.2</BogusPackageVersion>
+    <AlbaPackageVersion>6.1.0</AlbaPackageVersion>
+    <BogusPackageVersion>34.0.2</BogusPackageVersion>
     <FluentAssertions4PackageVersion>4.19.4</FluentAssertions4PackageVersion>
-    <FluentAssertions5PackageVersion>6.6.0</FluentAssertions5PackageVersion>
-    <FluentAssertionsPackageVersion>6.6.0</FluentAssertionsPackageVersion>
-    <MoqPackageVersion>4.17.2</MoqPackageVersion>
+    <FluentAssertions5PackageVersion>6.7.0</FluentAssertions5PackageVersion>
+    <FluentAssertionsPackageVersion>6.7.0</FluentAssertionsPackageVersion>
+    <MoqPackageVersion>4.18.1</MoqPackageVersion>
     <NSubstitutePackageVersion>4.3.0</NSubstitutePackageVersion>
     <ReportGeneratorPackageVersion>5.1.4</ReportGeneratorPackageVersion>
     <ShouldlyPackageVersion>4.0.3</ShouldlyPackageVersion>
 
     <xUnitPackageVersion>2.4.1</xUnitPackageVersion>
-    <xUnitAnalyzersPackageVersion>0.10.0</xUnitAnalyzersPackageVersion>
+    <xUnitAnalyzersPackageVersion>0.12.0-pre.19</xUnitAnalyzersPackageVersion>
     <xUnitRunnerVsPackageVersion>2.4.5</xUnitRunnerVsPackageVersion>
     <xUnitRunnerConsolePackageVersion>2.4.1</xUnitRunnerConsolePackageVersion>
     <xUnitRunnerUtilityPackageVersion>2.4.1</xUnitRunnerUtilityPackageVersion>
-    <xUnitCombinatorialPackageVersion>1.4.1</xUnitCombinatorialPackageVersion>
+    <xUnitCombinatorialPackageVersion>1.5.7-beta</xUnitCombinatorialPackageVersion>
     <xUnitSkippableFactPackageVersion>1.4.13</xUnitSkippableFactPackageVersion>
-    <xUnitStaFactPackageVersion>1.0.37</xUnitStaFactPackageVersion>
-
-    <xUnitAnalyzersDevPackageVersion>0.12.0-pre.19</xUnitAnalyzersDevPackageVersion>
-    <xUnitDevPackageVersion>2.4.2-pre.12</xUnitDevPackageVersion>
-    <xUnitRunnerVsDevPackageVersion>2.4.3</xUnitRunnerVsDevPackageVersion>
-    <xUnitRunnerUtilityDevPackageVersion>2.4.2-pre.12</xUnitRunnerUtilityDevPackageVersion>
+    <xUnitStaFactPackageVersion>1.1.11</xUnitStaFactPackageVersion>
 
     <NUnit2PackageVersion>2.6.4</NUnit2PackageVersion>
     <NUnit2TestAdapterPackageVersion>2.2.0</NUnit2TestAdapterPackageVersion>
@@ -46,7 +41,7 @@
     <NUnitDevPackageVersion>3.13.3</NUnitDevPackageVersion>
     <NUnit3TestAdapterDevPackageVersion>4.2.1</NUnit3TestAdapterDevPackageVersion>
 
-    <SimpleFixtureNSubstitutePackageVersion>3.0.6</SimpleFixtureNSubstitutePackageVersion>
-    <SimpleFixturexUnitPackageVersion>3.0.6</SimpleFixturexUnitPackageVersion>
+    <SimpleFixtureNSubstitutePackageVersion>4.0.0-Nightly188</SimpleFixtureNSubstitutePackageVersion>
+    <SimpleFixturexUnitPackageVersion>4.0.0-Nightly188</SimpleFixturexUnitPackageVersion>
   </PropertyGroup>
 </Project>

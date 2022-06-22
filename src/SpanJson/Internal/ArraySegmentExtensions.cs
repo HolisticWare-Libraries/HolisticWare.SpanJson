@@ -6,14 +6,22 @@ namespace SpanJson.Internal
     public static class ArraySegmentExtensions
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if !NETSTANDARD2_0
         public static bool IsEmpty<T>(this in ArraySegment<T> segment)
+#else
+        public static bool IsEmpty<T>(this ArraySegment<T> segment)
+#endif
         {
             var array = segment.Array;
             return array is null || 0U >= (uint)array.Length ? true : false;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if !NETSTANDARD2_0
         public static bool NonEmpty<T>(this in ArraySegment<T> segment)
+#else
+        public static bool NonEmpty<T>(this ArraySegment<T> segment)
+#endif
         {
             var array = segment.Array;
             return array is not null && (uint)array.Length > 0u ? true : false;
@@ -21,7 +29,7 @@ namespace SpanJson.Internal
 
 #if NETSTANDARD2_0 || NET471 || NET451
 
-        public static ArraySegment<T> Slice<T>(this in ArraySegment<T> segment, int index)
+        public static ArraySegment<T> Slice<T>(this ArraySegment<T> segment, int index)
         {
             var array = segment.Array;
             if (array is null)
@@ -38,7 +46,7 @@ namespace SpanJson.Internal
             return new ArraySegment<T>(array!, segment.Offset + index, count - index);
         }
 
-        public static ArraySegment<T> Slice<T>(this in ArraySegment<T> segment, int index, int length)
+        public static ArraySegment<T> Slice<T>(this ArraySegment<T> segment, int index, int length)
         {
             var array = segment.Array;
             if (array is null)

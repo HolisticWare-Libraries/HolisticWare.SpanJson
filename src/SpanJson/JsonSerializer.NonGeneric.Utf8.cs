@@ -111,7 +111,11 @@ namespace SpanJson
                 /// <param name="type">Object Type</param>
                 /// <returns>Deserialized object</returns>
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if !NETSTANDARD2_0
                 public static object Deserialize(in ArraySegment<byte> input, Type type)
+#else
+                public static object Deserialize(ArraySegment<byte> input, Type type)
+#endif
                 {
                     return Inner<byte, ExcludeNullsOriginalCaseResolver<byte>>.InnerDeserialize(input, type);
                 }
@@ -122,7 +126,11 @@ namespace SpanJson
                 /// <param name="type">Object Type</param>
                 /// <returns>Deserialized object</returns>
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if !NETSTANDARD2_0
                 public static object Deserialize<TResolver>(in ArraySegment<byte> input, Type type)
+#else
+                public static object Deserialize<TResolver>(ArraySegment<byte> input, Type type)
+#endif
                     where TResolver : IJsonFormatterResolver<byte, TResolver>, new()
                 {
                     return Inner<byte, TResolver>.InnerDeserialize(input, type);
