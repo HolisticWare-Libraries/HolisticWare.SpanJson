@@ -101,7 +101,7 @@ namespace SpanJson.Helpers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsByRefLike(this Type type)
         {
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
             if (!type.IsValueType)
             {
                 return false;

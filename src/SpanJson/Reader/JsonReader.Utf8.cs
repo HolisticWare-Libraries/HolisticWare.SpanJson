@@ -462,7 +462,7 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static CombGuid ParseUtf8CombGuid(in ReadOnlySpan<byte> span, int pos)
         {
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
             if (CombGuid.TryParse(TextEncodings.Utf8.GetString(span), CombGuidSequentialSegmentType.Comb, out CombGuid result))
 #else
             if (CombGuid.TryParse(span, CombGuidSequentialSegmentType.Comb, out CombGuid result, out var bytesConsumed) && span.Length == bytesConsumed)
@@ -484,7 +484,7 @@ namespace SpanJson
             try
             {
                 JsonReaderHelper.Unescape(input, utf8Unescaped, backslashIdx, out var written);
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                 if (CombGuid.TryParse(TextEncodings.Utf8.GetString(utf8Unescaped.Slice(0, written)), CombGuidSequentialSegmentType.Comb, out CombGuid result))
 #else
                 if (CombGuid.TryParse(utf8Unescaped.Slice(0, written), CombGuidSequentialSegmentType.Comb, out CombGuid result, out var bytesConsumed) && written == bytesConsumed)
@@ -626,7 +626,7 @@ namespace SpanJson
                 // We should also get info about how many escaped chars exist from here
                 if (TryFindEndOfUtf8String(ref stringStart, length - (uint)pos, out int stringLength, out backslashIdx))
                 {
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                     unsafe
                     {
                         var result = new ReadOnlySpan<byte>(Unsafe.AsPointer(ref Unsafe.AddByteOffset(ref stringStart, (IntPtr)1)), stringLength - 1);
@@ -678,7 +678,7 @@ namespace SpanJson
                 // We should also get info about how many escaped chars exist from here
                 if (TryFindEndOfUtf8String(ref stringStart, length - (uint)pos, out int stringLength, out _))
                 {
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                     unsafe
                     {
                         var result = new ReadOnlySpan<byte>(Unsafe.AsPointer(ref stringStart), stringLength + 1);

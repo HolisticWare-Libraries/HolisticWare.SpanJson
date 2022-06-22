@@ -88,7 +88,7 @@ namespace SpanJson.Serialization
             {
                 return (T)DeserializerPool.DeserializeObject(input, typeof(T));
             }
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
             return JsonSerializer.Generic.Inner<T, char, TUtf16Resolver>.InnerDeserialize(input.AsSpan());
 #else
             return JsonSerializer.Generic.Inner<T, char, TUtf16Resolver>.InnerDeserialize(input);

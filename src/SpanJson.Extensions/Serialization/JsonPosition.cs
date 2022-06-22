@@ -133,7 +133,7 @@ namespace SpanJson.Serialization
                             (propertyArray = ArrayPool<char>.Shared.Rent(length));
 
                         EscapingHelper.Default.EscapeString(propertySpan, escapedPropertyName, propertyIdx, out int written);
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                         sb.Append(escapedPropertyName.Slice(0, written).ToString());
 #else
                         sb.Append(escapedPropertyName.Slice(0, written));

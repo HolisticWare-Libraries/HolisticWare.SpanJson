@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
@@ -11,7 +11,7 @@ namespace SpanJson.Internal
 {
     internal static partial class JsonHelpers
     {
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static HashSet<TSource> ToHashSet<TSource>(this IEnumerable<TSource> source) => source.ToHashSet(comparer: null);
@@ -156,7 +156,7 @@ namespace SpanJson.Internal
         [MethodImpl(InlineMethod.AggressiveOptimization)]
         public static bool IsFinite(double value)
         {
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
             return !(double.IsNaN(value) || double.IsInfinity(value));
 #else
             return double.IsFinite(value);
@@ -166,7 +166,7 @@ namespace SpanJson.Internal
         [MethodImpl(InlineMethod.AggressiveOptimization)]
         public static bool IsFinite(float value)
         {
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
             return !(float.IsNaN(value) || float.IsInfinity(value));
 #else
             return float.IsFinite(value);

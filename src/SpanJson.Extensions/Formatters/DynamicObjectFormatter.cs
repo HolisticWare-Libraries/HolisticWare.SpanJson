@@ -30,7 +30,7 @@ namespace SpanJson.Formatters
                         (valueArray = ArrayPool<byte>.Shared.Rent(maxRequired));
                     var written = TextEncodings.Utf8.GetBytes(utf16Json, utf8Json);
 
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                     unsafe
                     {
                         writer.WriteUtf8Verbatim(new ReadOnlySpan<byte>(Unsafe.AsPointer(ref MemoryMarshal.GetReference(utf8Json)), written));
@@ -97,7 +97,7 @@ namespace SpanJson.Formatters
                         (valueArray = ArrayPool<char>.Shared.Rent(maxRequired));
                     var written = TextEncodings.Utf8.GetChars(utf8Json, utf16Json);
 
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                     unsafe
                     {
                         writer.WriteUtf16Verbatim(new ReadOnlySpan<char>(Unsafe.AsPointer(ref MemoryMarshal.GetReference(utf16Json)), written));

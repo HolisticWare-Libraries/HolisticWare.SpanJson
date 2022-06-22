@@ -88,7 +88,7 @@ namespace SpanJson.Formatters
 
                         var written = TextEncodings.Utf8.GetChars(bValue.Symbols, utf16Span);
 
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                         unsafe
                         {
                             writer.WriteUtf16Verbatim(new ReadOnlySpan<char>(Unsafe.AsPointer(ref MemoryMarshal.GetReference(utf16Span)), written));
@@ -114,7 +114,7 @@ namespace SpanJson.Formatters
 
                         var written = TextEncodings.Utf8.GetBytes(cValue.Symbols, utf8Span);
 
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                         unsafe
                         {
                             writer.WriteUtf8Verbatim(new ReadOnlySpan<byte>(Unsafe.AsPointer(ref MemoryMarshal.GetReference(utf8Span)), written));

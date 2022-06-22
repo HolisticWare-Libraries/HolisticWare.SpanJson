@@ -307,7 +307,7 @@
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteUtf8Version(Version value)
         {
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
             WriteUtf8String(value.ToString());
 #else
             ref var pos = ref _pos;

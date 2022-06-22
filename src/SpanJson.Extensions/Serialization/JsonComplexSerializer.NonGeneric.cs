@@ -97,7 +97,7 @@ namespace SpanJson.Serialization
                 return DeserializerPool.DeserializeObject(input, type);
             }
             var invoker = Utf16Invokers.GetOrAdd(type, Utf16InvokerFactory);
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
             return invoker.Deserializer(input.AsSpan());
 #else
             return invoker.Deserializer(input);

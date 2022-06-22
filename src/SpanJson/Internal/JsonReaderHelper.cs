@@ -181,7 +181,7 @@ namespace SpanJson.Internal
             Debug.Assert(!utf8Unescaped.IsEmpty);
 
             if (utf8Unescaped.Length == JsonSharedConstant.MaximumFormatGuidLength &&
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                 CombGuid.TryParse(TextEncodings.Utf8.GetString(utf8Unescaped), CombGuidSequentialSegmentType.Comb, out CombGuid tmp)
 #else
                 CombGuid.TryParse(utf8Unescaped, CombGuidSequentialSegmentType.Comb, out CombGuid tmp, out _)

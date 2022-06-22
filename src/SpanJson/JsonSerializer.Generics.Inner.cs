@@ -201,7 +201,7 @@ namespace SpanJson
                     var input = reader.ReadToEndAsync();
                     if (input.IsCompletedSuccessfully())
                     {
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                         return new ValueTask<T>(InnerDeserialize(MemoryMarshal.Cast<char, TSymbol>(input.Result.AsSpan())));
 #else
                         return new ValueTask<T>(InnerDeserialize(MemoryMarshal.Cast<char, TSymbol>(input.Result)));
@@ -214,7 +214,7 @@ namespace SpanJson
                 private static async ValueTask<T> AwaitDeserializeAsync(Task<string> task)
                 {
                     var input = await task.ConfigureAwait(false);
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                     return InnerDeserialize(MemoryMarshal.Cast<char, TSymbol>(input.AsSpan()));
 #else
                     return InnerDeserialize(MemoryMarshal.Cast<char, TSymbol>(input));
@@ -229,12 +229,10 @@ namespace SpanJson
                 {
                     if (stream is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.stream); }
 
-#if !NET451
                     if (stream is MemoryStream ms && ms.TryGetBuffer(out var buffer))
                     {
                         return InnerDeserialize((ArraySegment<TSymbol>)(object)buffer);
                     }
-#endif
 
                     ArraySegment<byte> drained = await stream.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
                     try

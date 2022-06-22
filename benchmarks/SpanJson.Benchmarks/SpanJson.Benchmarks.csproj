@@ -27,8 +27,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\SpanJson.Extensions\SpanJson.Extensions.csproj" />
     <ProjectReference Include="..\..\src\SpanJson\SpanJson.csproj" />
-    <ProjectReference Include="..\SpanJson.Resources\SpanJson.Resources.csproj" />
-    <ProjectReference Include="..\SpanJson.Shared\SpanJson.Shared.csproj" />
+    <ProjectReference Include="..\..\tests\SpanJson.Resources\SpanJson.Resources.csproj" />
+    <ProjectReference Include="..\..\tests\SpanJson.Shared\SpanJson.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

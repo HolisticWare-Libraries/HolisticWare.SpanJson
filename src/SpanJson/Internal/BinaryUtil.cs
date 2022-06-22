@@ -9,51 +9,16 @@ namespace SpanJson.Internal
     {
         const int ArrayMaxSize = 0x7FFFFFC7; // https://msdn.microsoft.com/en-us/library/system.array
 
-#if NET451
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void CopyMemory(byte[] src, int srcOffset, byte[] dst, int dstOffset, int count)
-        {
-            Buffer.BlockCopy(src, srcOffset, dst, dstOffset, count);
-        }
-#elif NET471
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void CopyMemory(byte[] src, int srcOffset, byte[] dst, int dstOffset, int count)
-        {
-            fixed (byte* source = &src[srcOffset])
-            {
-                fixed (byte* destination = &dst[dstOffset])
-                {
-                    Buffer.MemoryCopy(source, destination, count, count);
-                }
-            }
-        }
-#else
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void CopyMemory(byte[] src, int srcOffset, byte[] dst, int dstOffset, int count)
         {
             Unsafe.CopyBlockUnaligned(ref dst[dstOffset], ref src[srcOffset], unchecked((uint)count));
         }
-#endif
-
-#if NET471
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void CopyMemory(ref byte source, ref byte destination, int length)
-        {
-            fixed (byte* src = &source)
-            {
-                fixed (byte* dst = &destination)
-                {
-                    Buffer.MemoryCopy(src, dst, length, length);
-                }
-            }
-        }
-#else
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void CopyMemory(ref byte src, ref byte dst, int length)
         {
             Unsafe.CopyBlockUnaligned(ref dst, ref src, unchecked((uint)length));
         }
-#endif
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void EnsureCapacity(ref byte[] bytes, int offset, int appendLength)

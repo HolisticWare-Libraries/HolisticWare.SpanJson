@@ -11,11 +11,7 @@ namespace SpanJson.Internal
 
             static EmptyArray()
             {
-#if NET451
-                Instance = new T[0];
-#else
                 Instance = Array.Empty<T>();
-#endif
             }
         }
 

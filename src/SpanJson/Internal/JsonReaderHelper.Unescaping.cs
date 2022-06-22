@@ -213,9 +213,6 @@ namespace SpanJson.Internal
 
         public static string TranscodeHelper(in ReadOnlySpan<byte> utf8Text)
         {
-#if NET451
-            return TextEncodings.Utf8.GetString(utf8Text);
-#else
             try
             {
 #if NET || NETCOREAPP || NETSTANDARD2_1_OR_GREATER
@@ -241,7 +238,6 @@ namespace SpanJson.Internal
                 // Therefore, wrapping the DecoderFallbackException around an InvalidOperationException.
                 throw ThrowHelper.GetInvalidOperationException_ReadInvalidUTF8(ex);
             }
-#endif
         }
 
         public static int GetUtf8ByteCount(in ReadOnlySpan<char> text)
@@ -277,7 +273,7 @@ namespace SpanJson.Internal
         {
             try
             {
-#if NET || NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+#if !NETSTANDARD2_0
                 return TextEncodings.UTF8NoBOM.GetBytes(text, dest);
 #else
                 if (text.IsEmpty) { return 0; }
@@ -305,11 +301,8 @@ namespace SpanJson.Internal
 
         public static string GetTextFromUtf8(in ReadOnlySpan<byte> utf8Text)
         {
-#if NET || NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+#if !NETSTANDARD2_0
             return TextEncodings.UTF8NoBOM.GetString(utf8Text);
-#else
-#if NET451
-            return TextEncodings.Utf8.GetString(utf8Text);
 #else
             if (utf8Text.IsEmpty)
             {
@@ -323,7 +316,6 @@ namespace SpanJson.Internal
                     return TextEncodings.UTF8NoBOM.GetString(bytePtr, utf8Text.Length);
                 }
             }
-#endif
 #endif
         }
 

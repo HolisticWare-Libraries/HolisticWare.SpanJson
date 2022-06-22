@@ -275,7 +275,7 @@ namespace SpanJson.Linq.JsonPath
                         }
 
                         var indexer = _expression.Slice(start, length);
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                         int index = int.Parse(indexer.ToString());
 #else
                         int index = int.Parse(indexer);
@@ -289,7 +289,7 @@ namespace SpanJson.Linq.JsonPath
                         if (length > 0)
                         {
                             var indexer = _expression.Slice(start, length);
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                             int index = int.Parse(indexer.ToString());
 #else
                             int index = int.Parse(indexer);
@@ -315,7 +315,7 @@ namespace SpanJson.Linq.JsonPath
                         }
 
                         var indexer = _expression.Slice(start, length);
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                         int index = int.Parse(indexer.ToString());
 #else
                         int index = int.Parse(indexer);
@@ -339,7 +339,7 @@ namespace SpanJson.Linq.JsonPath
                     }
 
                     var indexer = _expression.Slice(start, length);
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                     indexes.Add(int.Parse(indexer.ToString()));
 #else
                     indexes.Add(int.Parse(indexer));
@@ -372,7 +372,7 @@ namespace SpanJson.Linq.JsonPath
                     if (length > 0)
                     {
                         var indexer = _expression.Slice(start, length);
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                         int index = int.Parse(indexer.ToString());
 #else
                         int index = int.Parse(indexer);

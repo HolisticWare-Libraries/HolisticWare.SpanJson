@@ -122,7 +122,7 @@ namespace SpanJson
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public static T Deserialize<T>(string input)
                 {
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                     return Inner<T, char, ExcludeNullsOriginalCaseResolver<char>>.InnerDeserialize(input.AsSpan());
 #else
                     return Inner<T, char, ExcludeNullsOriginalCaseResolver<char>>.InnerDeserialize(input);
@@ -138,7 +138,7 @@ namespace SpanJson
                 public static T Deserialize<T, TResolver>(string input)
                     where TResolver : IJsonFormatterResolver<char, TResolver>, new()
                 {
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                     return Inner<T, char, TResolver>.InnerDeserialize(input.AsSpan());
 #else
                     return Inner<T, char, TResolver>.InnerDeserialize(input);

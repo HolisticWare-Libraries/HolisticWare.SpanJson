@@ -78,7 +78,7 @@ namespace SpanJson.Dynamic
                         {
                             data = reader.ReadString();
                         }
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                         value = Enum.Parse(destinationType, data, false);
                         return true;
 #else

@@ -100,11 +100,7 @@ namespace SpanJson.Internal
             switch (escapeHandling)
             {
                 case JsonEscapeHandling.EscapeNonAscii:
-#if !NET451
                     return NonAscii.GetEncodedText(text, encoder);
-#else
-                    return NonAscii.GetEncodedText(text);
-#endif
                 case JsonEscapeHandling.EscapeHtml:
                     return Html.GetEncodedText(text);
                 case JsonEscapeHandling.Default:
@@ -199,11 +195,7 @@ namespace SpanJson.Internal
             switch (escapeHandling)
             {
                 case JsonEscapeHandling.EscapeNonAscii:
-#if !NET451
                     NonAscii.EscapeString(utf8Source, destination, indexOfFirstByteToEscape, encoder, out written);
-#else
-                    NonAscii.EscapeString(utf8Source, destination, indexOfFirstByteToEscape, out written);
-#endif
                     break;
                 case JsonEscapeHandling.EscapeHtml:
                     Html.EscapeString(utf8Source, destination, indexOfFirstByteToEscape, out written);
@@ -221,11 +213,7 @@ namespace SpanJson.Internal
             switch (escapeHandling)
             {
                 case JsonEscapeHandling.EscapeNonAscii:
-#if !NET451
                     NonAscii.EscapeString(utf16Source, destination, indexOfFirstByteToEscape, encoder, out written);
-#else
-                    NonAscii.EscapeString(utf16Source, destination, indexOfFirstByteToEscape, out written);
-#endif
                     break;
                 case JsonEscapeHandling.EscapeHtml:
                     Html.EscapeString(utf16Source, destination, indexOfFirstByteToEscape, out written);
@@ -241,12 +229,12 @@ namespace SpanJson.Internal
         {
             if (string.IsNullOrEmpty(input)) { return input; }
 
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
             ReadOnlySpan<char> source = input.AsSpan();
 #else
             ReadOnlySpan<char> source = input;
 #endif
-            var firstEscapeIndex = NeedsEscaping(source, escapeHandling);
+            var firstEscapeIndex = NeedsEscaping(source, escapeHandling, encoder);
             if ((uint)firstEscapeIndex > JsonSharedConstant.TooBigOrNegative) // -1
             {
                 return input;
@@ -275,7 +263,7 @@ namespace SpanJson.Internal
         {
             if (input.IsEmpty) { return string.Empty; }
 
-            var firstEscapeIndex = NeedsEscaping(input, escapeHandling);
+            var firstEscapeIndex = NeedsEscaping(input, escapeHandling, encoder);
             if ((uint)firstEscapeIndex > JsonSharedConstant.TooBigOrNegative) // -1
             {
                 return input.ToString();

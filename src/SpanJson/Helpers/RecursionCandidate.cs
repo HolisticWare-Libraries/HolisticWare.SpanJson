@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using CuteAnt.Reflection;
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
 using SpanJson.Internal;
 #endif
 
@@ -33,7 +33,7 @@ namespace SpanJson.Helpers
 
     public sealed class RecursionCandidate<T> : RecursionCandidate
     {
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
         public static readonly bool IsRecursionCandidate = JsonHelpers.IsReferenceOrContainsReferences<T>() && CheckForRecursiveType(typeof(T));
 #else
         public static readonly bool IsRecursionCandidate = RuntimeHelpers.IsReferenceOrContainsReferences<T>() && CheckForRecursiveType(typeof(T));

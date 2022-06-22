@@ -56,7 +56,7 @@ namespace SpanJson.Formatters
                     (valueArray = ArrayPool<char>.Shared.Rent(maxRequired));
                 var written = TextEncodings.Utf8.GetChars(utf8Json, utf16Json);
 
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                 unsafe
                 {
                     writer.WriteUtf16Verbatim(new ReadOnlySpan<char>(Unsafe.AsPointer(ref MemoryMarshal.GetReference(utf16Json)), written));

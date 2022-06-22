@@ -27,7 +27,7 @@ namespace SpanJson.Internal
             return array is not null && (uint)array.Length > 0u ? true : false;
         }
 
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
 
         public static ArraySegment<T> Slice<T>(this ArraySegment<T> segment, int index)
         {

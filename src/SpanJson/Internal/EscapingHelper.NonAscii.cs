@@ -56,7 +56,6 @@ namespace SpanJson.Internal
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static bool NeedsEscaping(char value) => ((uint)value > byte.MaxValue || 0u >= AllowList[value]) ? true : false;
 
-#if !NET451
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static JsonEncodedText GetEncodedText(string text, JavaScriptEncoder encoder)
             {
@@ -70,12 +69,12 @@ namespace SpanJson.Internal
                 }
             }
 
-            public static int NeedsEscaping(in ReadOnlySpan<byte> value, JavaScriptEncoder encoder = null)
+            public static int NeedsEscaping(in ReadOnlySpan<byte> value, JavaScriptEncoder encoder)
             {
                 return (encoder ?? JavaScriptEncoder.Default).FindFirstCharacterToEncodeUtf8(value);
             }
 
-            public static unsafe int NeedsEscaping(in ReadOnlySpan<char> value, JavaScriptEncoder encoder = null)
+            public static unsafe int NeedsEscaping(in ReadOnlySpan<char> value, JavaScriptEncoder encoder)
             {
                 // Some implementations of JavaScriptEncoder.FindFirstCharacterToEncode may not accept
                 // null pointers and guard against that. Hence, check up-front to return -1.
@@ -222,8 +221,6 @@ namespace SpanJson.Internal
 
                 written += encoderCharsWritten;
             }
-
-#endif
         }
     }
 }

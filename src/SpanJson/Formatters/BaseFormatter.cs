@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
 using SpanJson.Internal;
 #endif
 
@@ -32,7 +32,7 @@ namespace SpanJson.Formatters
             // Then we specifically check for string as it is very common
             // A null value can be serialized by both (doesn't matter, but we need to handle null for the runtime type check)
             // Checking for things like IsValueType and/or IsSealed is actually several times more expensive than the type comparison
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
             if (!JsonHelpers.IsReferenceOrContainsReferences<T>() || typeof(T) == typeof(string) || value is null || value.GetType() == typeof(T))
 #else
             if (!RuntimeHelpers.IsReferenceOrContainsReferences<T>() || typeof(T) == typeof(string) || value is null || value.GetType() == typeof(T))

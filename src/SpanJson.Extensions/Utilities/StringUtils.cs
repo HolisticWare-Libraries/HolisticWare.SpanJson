@@ -75,7 +75,7 @@ namespace SpanJson.Utilities
             return sw;
         }
 
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
         public static bool StartsWith(this string source, char value)
         {
             return (source.Length > 0 && source[0] == value);

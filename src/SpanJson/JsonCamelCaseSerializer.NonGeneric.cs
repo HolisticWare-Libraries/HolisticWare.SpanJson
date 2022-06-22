@@ -66,7 +66,7 @@ namespace SpanJson
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public static object Deserialize(string input, Type type)
                 {
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                     return JsonSerializer.NonGeneric.Inner<char, ExcludeNullsCamelCaseResolver<char>>.InnerDeserialize(input.AsSpan(), type);
 #else
                     return JsonSerializer.NonGeneric.Inner<char, ExcludeNullsCamelCaseResolver<char>>.InnerDeserialize(input, type);

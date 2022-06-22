@@ -10,7 +10,7 @@
     using System.Runtime.InteropServices;
     using CuteAnt;
     using SpanJson.Helpers;
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
     using SpanJson.Internal.DoubleConversion;
 #endif
 
@@ -127,7 +127,7 @@
             }
 
             ref var pos = ref _pos;
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
             var buffer = TinyMemoryPool<byte>.GetBuffer();
             var count = DoubleToStringConverter.GetBytes(ref buffer, 0, value);
             EnsureUnsafe(pos, count);
@@ -159,7 +159,7 @@
             }
 
             ref var pos = ref _pos;
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
             var buffer = TinyMemoryPool<byte>.GetBuffer();
             var count = DoubleToStringConverter.GetBytes(ref buffer, 0, value);
             EnsureUnsafe(pos, count);
@@ -203,7 +203,7 @@
         public void WriteUtf16Decimal(decimal value)
         {
             ref var pos = ref _pos;
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
             var utf16Text = value.ToString("G", CultureInfo.InvariantCulture);
             var written = utf16Text.Length;
             EnsureUnsafe(pos, written);
@@ -361,7 +361,7 @@
 
             ref char pinnableAddr = ref Utf16PinnableAddress;
             WriteUtf16DoubleQuote(ref pinnableAddr, ref pos);
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
             var utf16Text = value.ToString();
             utf16Text.AsSpan().CopyTo(Utf16FreeSpan);
             pos += utf16Text.Length;

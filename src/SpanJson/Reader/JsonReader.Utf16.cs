@@ -72,7 +72,7 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float ReadUtf16Single()
         {
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
             return float.Parse(ReadUtf16NumberSpan().ToString(), NumberStyles.Float, CultureInfo.InvariantCulture);
 #else
             return float.Parse(ReadUtf16NumberSpan(), NumberStyles.Float, CultureInfo.InvariantCulture);
@@ -82,7 +82,7 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public double ReadUtf16Double()
         {
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
             return double.Parse(ReadUtf16NumberSpan().ToString(), NumberStyles.Float, CultureInfo.InvariantCulture);
 #else
             return double.Parse(ReadUtf16NumberSpan(), NumberStyles.Float, CultureInfo.InvariantCulture);
@@ -262,7 +262,7 @@ namespace SpanJson
                     case 'u':
                         {
                             if (int.TryParse(span.Slice(pos, 4)
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                                 .ToString()
 #endif
                                 , NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out var value))
@@ -508,7 +508,7 @@ namespace SpanJson
         private static CombGuid ParseUtf16CombGuid(in ReadOnlySpan<char> span, int pos)
         {
             if (CombGuid.TryParse(span
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                 .ToString()
 #endif
                 , CombGuidSequentialSegmentType.Comb, out CombGuid value))
@@ -530,7 +530,7 @@ namespace SpanJson
             {
                 UnescapeUtf16Chars(input, ref utf16Unescaped);
                 if (CombGuid.TryParse(utf16Unescaped
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                     .ToString()
 #endif
                     , CombGuidSequentialSegmentType.Comb, out CombGuid value))
@@ -559,7 +559,7 @@ namespace SpanJson
         {
             var span = ReadUtf16VerbatimNameSpan(out int escapedCharsSize);
 
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
             return 0u >= (uint)escapedCharsSize ? span : UnescapeUtf16(span, escapedCharsSize).AsSpan();
 #else
             return 0u >= (uint)escapedCharsSize ? span : UnescapeUtf16(span, escapedCharsSize);
@@ -642,7 +642,7 @@ namespace SpanJson
         {
             var span = ReadUtf16VerbatimStringSpan(out int escapedCharSize);
 
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
             return 0u >= (uint)escapedCharSize ? span : UnescapeUtf16(span, escapedCharSize).AsSpan();
 #else
             return 0u >= (uint)escapedCharSize ? span : UnescapeUtf16(span, escapedCharSize);
@@ -670,14 +670,14 @@ namespace SpanJson
         }
 
         internal static
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
             unsafe
 #endif
             string UnescapeUtf16(in ReadOnlySpan<char> span, int escapedCharSize)
         {
             var unescapedLength = span.Length - escapedCharSize;
             var result = new string('\0', unescapedLength);
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
             var writeableSpan = new Span<char>(Unsafe.AsPointer(ref MemoryMarshal.GetReference(result.AsSpan())), unescapedLength);
 #else
             var writeableSpan = MemoryMarshal.CreateSpan(ref MemoryMarshal.GetReference(result.AsSpan()), unescapedLength);
@@ -735,7 +735,7 @@ namespace SpanJson
                         case 'u':
                             {
                                 if (int.TryParse(span.Slice(index, 4)
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                                     .ToString()
 #endif
                                     , NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out var value))
@@ -788,7 +788,7 @@ namespace SpanJson
                 // We should also get info about how many escaped chars exist from here
                 if (TryFindEndOfUtf16String(ref stringStart, length - (uint)pos, ref stringLength, out escapedCharsSize))
                 {
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                     unsafe
                     {
                         var result = new ReadOnlySpan<char>(Unsafe.AsPointer(ref Unsafe.Add(ref stringStart, 1)), stringLength - 1);
@@ -842,7 +842,7 @@ namespace SpanJson
                 // We should also get info about how many escaped chars exist from here
                 if (TryFindEndOfUtf16String(ref stringStart, length - (uint)pos, ref stringLength, out _))
                 {
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                     unsafe
                     {
                         var result = new ReadOnlySpan<char>(Unsafe.AsPointer(ref stringStart), stringLength + 1);
@@ -887,7 +887,7 @@ namespace SpanJson
         public decimal ReadUtf16Decimal()
         {
             return decimal.Parse(ReadUtf16NumberSpan()
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                 .ToString()
 #endif
                 , NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture);

@@ -839,7 +839,7 @@ namespace SpanJson.Document
             Debug.Assert(segment.IndexOf(JsonUtf8Constant.BackSlash) == -1);
 
             if (segment.Length == JsonSharedConstant.MaximumFormatGuidLength &&
-#if NETSTANDARD2_0 || NET471 || NET451
+#if NETSTANDARD2_0
                 CombGuid.TryParse(TextEncodings.Utf8.GetString(segment), CombGuidSequentialSegmentType.Comb, out CombGuid tmp)
 #else
                 CombGuid.TryParse(segment, CombGuidSequentialSegmentType.Comb, out CombGuid tmp, out _)
