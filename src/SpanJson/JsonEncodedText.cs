@@ -41,7 +41,7 @@ namespace SpanJson
         private JsonEncodedText(string value)
         {
             Debug.Assert(value is not null);
-            
+
             _value = value;
             _utf8Value = TextEncodings.UTF8NoBOM.GetBytes(value);
         }
@@ -87,13 +87,13 @@ namespace SpanJson
             }
             else
             {
-                return new JsonEncodedText(EscapingHelper.EscapeString(value, escapeHandling, encoder));
+                return new JsonEncodedText(JsonHelpers.EscapeValue(value, escapeHandling, encoder));
             }
         }
 
         private static JsonEncodedText TranscodeAndEncode(in ReadOnlySpan<char> value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder)
         {
-            //JsonWriterHelper.ValidateValue(value);
+            if ((uint)value.Length > (uint)JsonSharedConstant.MaxCharacterTokenSize) { ThrowHelper.ThrowArgumentException_ValueTooLarge(value.Length); }
 
             int expectedByteCount = JsonReaderHelper.GetUtf8ByteCount(value);
             byte[] utf8Bytes = ArrayPool<byte>.Shared.Rent(expectedByteCount);
@@ -130,7 +130,8 @@ namespace SpanJson
                 return new JsonEncodedText(JsonHelpers.Empty<byte>());
             }
 
-            //JsonWriterHelper.ValidateValue(utf8Value);
+            if ((uint)utf8Value.Length > (uint)JsonSharedConstant.MaxUnescapedTokenSize) { ThrowHelper.ThrowArgumentException_ValueTooLarge(utf8Value.Length); }
+
             return EncodeHelper(utf8Value, escapeHandling, encoder);
         }
 

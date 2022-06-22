@@ -258,9 +258,20 @@ namespace SpanJson
             throw new ArgumentException($"Cannot encode invalid UTF-8 text as JSON. Invalid input: '{builder}'.");
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static ArgumentException GetArgumentException_ReadInvalidUTF16(EncoderFallbackException innerException)
         {
             return new ArgumentException("Cannot transcode invalid UTF-16 string to UTF-8 JSON text.", innerException);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void ThrowArgumentException_ValueTooLarge(int tokenLength)
+        {
+            throw GetException();
+            ArgumentException GetException()
+            {
+                return new ArgumentException(string.Format("The JSON value of length {0} is too large and not supported.", tokenLength));
+            }
         }
 
         #endregion

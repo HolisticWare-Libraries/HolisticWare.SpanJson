@@ -225,69 +225,6 @@ namespace SpanJson.Internal
             }
         }
 
-        public static string EscapeString(string input, JsonEscapeHandling escapeHandling = JsonEscapeHandling.Default, JavaScriptEncoder encoder = null)
-        {
-            if (string.IsNullOrEmpty(input)) { return input; }
-
-#if NETSTANDARD2_0
-            ReadOnlySpan<char> source = input.AsSpan();
-#else
-            ReadOnlySpan<char> source = input;
-#endif
-            var firstEscapeIndex = NeedsEscaping(source, escapeHandling, encoder);
-            if ((uint)firstEscapeIndex > JsonSharedConstant.TooBigOrNegative) // -1
-            {
-                return input;
-            }
-            else
-            {
-                char[] tempArray = null;
-                var length = GetMaxEscapedLength(source.Length, firstEscapeIndex);
-                try
-                {
-                    Span<char> escapedName = (uint)length <= JsonSharedConstant.StackallocCharThresholdU ?
-                        stackalloc char[JsonSharedConstant.StackallocCharThreshold] :
-                        (tempArray = ArrayPool<char>.Shared.Rent(length));
-                    EscapeString(source, escapedName, escapeHandling, firstEscapeIndex, encoder, out int written);
-
-                    return escapedName.Slice(0, written).ToString();
-                }
-                finally
-                {
-                    if (tempArray is not null) { ArrayPool<char>.Shared.Return(tempArray); }
-                }
-            }
-        }
-
-        public static string EscapeString(in ReadOnlySpan<char> input, JsonEscapeHandling escapeHandling = JsonEscapeHandling.Default, JavaScriptEncoder encoder = null)
-        {
-            if (input.IsEmpty) { return string.Empty; }
-
-            var firstEscapeIndex = NeedsEscaping(input, escapeHandling, encoder);
-            if ((uint)firstEscapeIndex > JsonSharedConstant.TooBigOrNegative) // -1
-            {
-                return input.ToString();
-            }
-            else
-            {
-                char[] tempArray = null;
-                var length = GetMaxEscapedLength(input.Length, firstEscapeIndex);
-                try
-                {
-                    Span<char> escapedName = (uint)length <= JsonSharedConstant.StackallocCharThresholdU ?
-                        stackalloc char[JsonSharedConstant.StackallocCharThreshold] :
-                        (tempArray = ArrayPool<char>.Shared.Rent(length));
-                    EscapeString(input, escapedName, escapeHandling, firstEscapeIndex, encoder, out int written);
-
-                    return escapedName.Slice(0, written).ToString();
-                }
-                finally
-                {
-                    if (tempArray is not null) { ArrayPool<char>.Shared.Return(tempArray); }
-                }
-            }
-        }
-
         #endregion
 
         #region == EscapeChar ==
