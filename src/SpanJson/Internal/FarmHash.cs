@@ -45,22 +45,22 @@ namespace SpanJson.Internal
         // port of farmhash.cc, 32bit only
 
         // Magic numbers for 32-bit hashing.  Copied from Murmur3.
-        const uint c1 = 0xcc9e2d51;
-        const uint c2 = 0x1b873593;
+        private const uint c1 = 0xcc9e2d51;
+        private const uint c2 = 0x1b873593;
 
-        static unsafe uint Fetch32(byte* p)
+        private static unsafe uint Fetch32(byte* p)
         {
             return *(uint*)p;
         }
 
-        static uint Rotate32(uint val, int shift)
+        private static uint Rotate32(uint val, int shift)
         {
             return (0u >= (uint)shift) ? val : ((val >> shift) | (val << (32 - shift)));
         }
 
         // A 32-bit to 32-bit integer hash copied from Murmur3.
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static uint fmix(uint h)
+        private static uint fmix(uint h)
         {
             unchecked
             {
@@ -74,7 +74,7 @@ namespace SpanJson.Internal
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static uint Mur(uint a, uint h)
+        private static uint Mur(uint a, uint h)
         {
             unchecked
             {
@@ -90,7 +90,7 @@ namespace SpanJson.Internal
 
         // 0-4
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static unsafe uint Hash32Len0to4(byte[] s, int offset, uint len)
+        private static unsafe uint Hash32Len0to4(byte[] s, int offset, uint len)
         {
             unchecked
             {
@@ -106,7 +106,7 @@ namespace SpanJson.Internal
             }
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static unsafe uint Hash32Len0to4(in ReadOnlySpan<byte> span, uint len)
+        private static unsafe uint Hash32Len0to4(in ReadOnlySpan<byte> span, uint len)
         {
             unchecked
             {
@@ -124,7 +124,7 @@ namespace SpanJson.Internal
 
         // 5-12
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static unsafe uint Hash32Len5to12(byte* s, uint len)
+        private static unsafe uint Hash32Len5to12(byte* s, uint len)
         {
             unchecked
             {
@@ -138,7 +138,7 @@ namespace SpanJson.Internal
 
         // 13-24
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static unsafe uint Hash32Len13to24(byte* s, uint len)
+        private static unsafe uint Hash32Len13to24(byte* s, uint len)
         {
             unchecked
             {
@@ -160,7 +160,7 @@ namespace SpanJson.Internal
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static unsafe uint Hash32(byte* s, uint len)
+        private static unsafe uint Hash32(byte* s, uint len)
         {
             if (len <= 24)
             {
@@ -248,26 +248,8 @@ namespace SpanJson.Internal
 
         // port from farmhash.cc
 
-        struct pair
-        {
-            public ulong first;
-            public ulong second;
-
-            public pair(ulong first, ulong second)
-            {
-                this.first = first;
-                this.second = second;
-            }
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static pair make_pair(ulong first, ulong second)
-        {
-            return new pair(first, second);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static void swap(ref ulong x, ref ulong z)
+        private static void swap(ref ulong x, ref ulong z)
         {
             var temp = z;
             z = x;
@@ -275,30 +257,30 @@ namespace SpanJson.Internal
         }
 
         // Some primes between 2^63 and 2^64 for various uses.
-        const ulong k0 = 0xc3a5c85c97cb3127UL;
-        const ulong k1 = 0xb492b66fbe98f273UL;
-        const ulong k2 = 0x9ae16a3b2f90404fUL;
+        private const ulong k0 = 0xc3a5c85c97cb3127UL;
+        private const ulong k1 = 0xb492b66fbe98f273UL;
+        private const ulong k2 = 0x9ae16a3b2f90404fUL;
 
-        static unsafe ulong Fetch64(byte* p)
+        private static unsafe ulong Fetch64(byte* p)
         {
             return *(ulong*)p;
         }
 
-        static ulong Rotate64(ulong val, int shift)
+        private static ulong Rotate64(ulong val, int shift)
         {
             return (0u >= (uint)shift) ? val : (val >> shift) | (val << (64 - shift));
         }
 
         // farmhashna.cc
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static ulong ShiftMix(ulong val)
+        private static ulong ShiftMix(ulong val)
         {
             return val ^ (val >> 47);
         }
 
         // farmhashna.cc
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static ulong HashLen16(ulong u, ulong v, ulong mul)
+        private static ulong HashLen16(ulong u, ulong v, ulong mul)
         {
             unchecked
             {
@@ -314,7 +296,7 @@ namespace SpanJson.Internal
 
         // farmhashxo.cc
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static unsafe ulong Hash64(byte* s, uint len)
+        private static unsafe ulong Hash64(byte* s, uint len)
         {
             if (len <= 16)
             {
@@ -350,7 +332,7 @@ namespace SpanJson.Internal
 
         // 0-16 farmhashna.cc
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static unsafe ulong HashLen0to16(byte* s, uint len)
+        private static unsafe ulong HashLen0to16(byte* s, uint len)
         {
             unchecked
             {
@@ -363,12 +345,14 @@ namespace SpanJson.Internal
                     ulong d = (Rotate64(a, 25) + b) * mul;
                     return HashLen16(c, d, mul);
                 }
+
                 if (len >= 4)
                 {
                     ulong mul = k2 + len * 2;
                     ulong a = Fetch32(s);
                     return HashLen16(len + (a << 3), Fetch32(s + len - 4), mul);
                 }
+
                 if (len > 0)
                 {
                     ushort a = s[0];
@@ -378,13 +362,14 @@ namespace SpanJson.Internal
                     uint z = len + ((uint)c << 2);
                     return ShiftMix(y * k2 ^ z * k0) * k2;
                 }
+
                 return k2;
             }
         }
 
         // 17-32 farmhashna.cc
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static unsafe ulong HashLen17to32(byte* s, uint len)
+        private static unsafe ulong HashLen17to32(byte* s, uint len)
         {
             unchecked
             {
@@ -393,14 +378,16 @@ namespace SpanJson.Internal
                 ulong b = Fetch64(s + 8);
                 ulong c = Fetch64(s + len - 8) * mul;
                 ulong d = Fetch64(s + len - 16) * k2;
-                return HashLen16(Rotate64(a + b, 43) + Rotate64(c, 30) + d,
-                                 a + Rotate64(b + k2, 18) + c, mul);
+                return HashLen16(
+                    Rotate64(a + b, 43) + Rotate64(c, 30) + d,
+                    a + Rotate64(b + k2, 18) + c,
+                    mul);
             }
         }
 
         // farmhashxo.cc
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static unsafe ulong H32(byte* s, uint len, ulong mul, ulong seed0 = 0, ulong seed1 = 0)
+        private static unsafe ulong H32(byte* s, uint len, ulong mul, ulong seed0 = 0, ulong seed1 = 0)
         {
             unchecked
             {
@@ -418,7 +405,7 @@ namespace SpanJson.Internal
 
         // 33-64 farmhashxo.cc
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static unsafe ulong HashLen33to64(byte* s, uint len)
+        private static unsafe ulong HashLen33to64(byte* s, uint len)
         {
             const ulong mul0 = k2 - 30;
 
@@ -433,7 +420,7 @@ namespace SpanJson.Internal
 
         // 65-96 farmhashxo.cc
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static unsafe ulong HashLen65to96(byte* s, uint len)
+        private static unsafe ulong HashLen65to96(byte* s, uint len)
         {
             const ulong mul0 = k2 - 114;
 
@@ -451,7 +438,7 @@ namespace SpanJson.Internal
         // Return a 16-byte hash for 48 bytes.  Quick and dirty.
         // Callers do best to use "random-looking" values for a and b.
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static unsafe pair WeakHashLen32WithSeeds(ulong w, ulong x, ulong y, ulong z, ulong a, ulong b)
+        private static unsafe void WeakHashLen32WithSeeds(ulong w, ulong x, ulong y, ulong z, ulong a, ulong b, out ulong first, out ulong second)
         {
             unchecked
             {
@@ -461,26 +448,30 @@ namespace SpanJson.Internal
                 a += x;
                 a += y;
                 b += Rotate64(a, 44);
-                return make_pair(a + z, b + c);
+                first = a + z;
+                second = b + c;
             }
         }
 
         // farmhashna.cc
         // Return a 16-byte hash for s[0] ... s[31], a, and b.  Quick and dirty.
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static unsafe pair WeakHashLen32WithSeeds(byte* s, ulong a, ulong b)
+        private static unsafe void WeakHashLen32WithSeeds(byte* s, ulong a, ulong b, out ulong first, out ulong second)
         {
-            return WeakHashLen32WithSeeds(Fetch64(s),
-                                          Fetch64(s + 8),
-                                          Fetch64(s + 16),
-                                          Fetch64(s + 24),
-                                          a,
-                                          b);
+            WeakHashLen32WithSeeds(
+                Fetch64(s),
+                Fetch64(s + 8),
+                Fetch64(s + 16),
+                Fetch64(s + 24),
+                a,
+                b,
+                out first,
+                out second);
         }
 
         // na(97-256) farmhashna.cc
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static unsafe ulong Hash64NA(byte* s, uint len)
+        private static unsafe ulong Hash64NA(byte* s, uint len)
         {
             const ulong seed = 81;
 
@@ -491,8 +482,10 @@ namespace SpanJson.Internal
                 ulong x = seed;
                 ulong y = seed * k1 + 113;
                 ulong z = ShiftMix(y * k2 + 113) * k2;
-                var v = make_pair(0, 0);
-                var w = make_pair(0, 0);
+                ulong v_first = 0;
+                ulong v_second = 0;
+                ulong w_first = 0;
+                ulong w_second = 0;
                 x = x * k2 + Fetch64(s);
 
                 // Set end so that after the loop we have 1 to 64 bytes left to process.
@@ -501,39 +494,38 @@ namespace SpanJson.Internal
 
                 do
                 {
-                    x = Rotate64(x + y + v.first + Fetch64(s + 8), 37) * k1;
-                    y = Rotate64(y + v.second + Fetch64(s + 48), 42) * k1;
-                    x ^= w.second;
-                    y += v.first + Fetch64(s + 40);
-                    z = Rotate64(z + w.first, 33) * k1;
-                    v = WeakHashLen32WithSeeds(s, v.second * k1, x + w.first);
-                    w = WeakHashLen32WithSeeds(s + 32, z + w.second, y + Fetch64(s + 16));
+                    x = Rotate64(x + y + v_first + Fetch64(s + 8), 37) * k1;
+                    y = Rotate64(y + v_second + Fetch64(s + 48), 42) * k1;
+                    x ^= w_second;
+                    y += v_first + Fetch64(s + 40);
+                    z = Rotate64(z + w_first, 33) * k1;
+                    WeakHashLen32WithSeeds(s, v_second * k1, x + w_first, out v_first, out v_second);
+                    WeakHashLen32WithSeeds(s + 32, z + w_second, y + Fetch64(s + 16), out w_first, out w_second);
                     swap(ref z, ref x);
                     s += 64;
                 } while (s != end);
                 ulong mul = k1 + ((z & 0xff) << 1);
+
                 // Make s point to the last 64 bytes of input.
                 s = last64;
-                w.first += ((len - 1) & 63);
-                v.first += w.first;
-                w.first += v.first;
-                x = Rotate64(x + y + v.first + Fetch64(s + 8), 37) * mul;
-                y = Rotate64(y + v.second + Fetch64(s + 48), 42) * mul;
-                x ^= w.second * 9;
-                y += v.first * 9 + Fetch64(s + 40);
-                z = Rotate64(z + w.first, 33) * mul;
-                v = WeakHashLen32WithSeeds(s, v.second * mul, x + w.first);
-                w = WeakHashLen32WithSeeds(s + 32, z + w.second, y + Fetch64(s + 16));
+                w_first += (len - 1) & 63;
+                v_first += w_first;
+                w_first += v_first;
+                x = Rotate64(x + y + v_first + Fetch64(s + 8), 37) * mul;
+                y = Rotate64(y + v_second + Fetch64(s + 48), 42) * mul;
+                x ^= w_second * 9;
+                y += (v_first * 9) + Fetch64(s + 40);
+                z = Rotate64(z + w_first, 33) * mul;
+                WeakHashLen32WithSeeds(s, v_second * mul, x + w_first, out v_first, out v_second);
+                WeakHashLen32WithSeeds(s + 32, z + w_second, y + Fetch64(s + 16), out w_first, out w_second);
                 swap(ref z, ref x);
-                return HashLen16(HashLen16(v.first, w.first, mul) + ShiftMix(y) * k0 + z,
-                                 HashLen16(v.second, w.second, mul) + x,
-                                 mul);
+                return HashLen16(HashLen16(v_first, w_first, mul) + (ShiftMix(y) * k0) + z, HashLen16(v_second, w_second, mul) + x, mul);
             }
         }
 
         // farmhashuo.cc
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static ulong H(ulong x, ulong y, ulong mul, int r)
+        private static ulong H(ulong x, ulong y, ulong mul, int r)
         {
             unchecked
             {
@@ -546,7 +538,7 @@ namespace SpanJson.Internal
 
         // uo(257-) farmhashuo.cc, Hash64WithSeeds
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static unsafe ulong Hash64UO(byte* s, uint len)
+        private static unsafe ulong Hash64UO(byte* s, uint len)
         {
             const ulong seed0 = 81;
             const ulong seed1 = 0;
@@ -558,8 +550,10 @@ namespace SpanJson.Internal
                 ulong x = seed0;
                 ulong y = seed1 * k2 + 113;
                 ulong z = ShiftMix(y * k2) * k2;
-                var v = make_pair(seed0, seed1);
-                var w = make_pair(0, 0);
+                ulong v_first = seed0;
+                ulong v_second = seed1;
+                ulong w_first = 0;
+                ulong w_second = 0;
                 ulong u = x - z;
                 x *= k2;
                 ulong mul = k2 + (u & 0x82);
@@ -581,62 +575,60 @@ namespace SpanJson.Internal
                     x += a0 + a1;
                     y += a2;
                     z += a3;
-                    v.first += a4;
-                    v.second += a5 + a1;
-                    w.first += a6;
-                    w.second += a7;
+                    v_first += a4;
+                    v_second += a5 + a1;
+                    w_first += a6;
+                    w_second += a7;
 
                     x = Rotate64(x, 26);
                     x *= 9;
                     y = Rotate64(y, 29);
                     z *= mul;
-                    v.first = Rotate64(v.first, 33);
-                    v.second = Rotate64(v.second, 30);
-                    w.first ^= x;
-                    w.first *= 9;
+                    v_first = Rotate64(v_first, 33);
+                    v_second = Rotate64(v_second, 30);
+                    w_first ^= x;
+                    w_first *= 9;
                     z = Rotate64(z, 32);
-                    z += w.second;
-                    w.second += z;
+                    z += w_second;
+                    w_second += z;
                     z *= 9;
                     swap(ref u, ref y);
 
                     z += a0 + a6;
-                    v.first += a2;
-                    v.second += a3;
-                    w.first += a4;
-                    w.second += a5 + a6;
+                    v_first += a2;
+                    v_second += a3;
+                    w_first += a4;
+                    w_second += a5 + a6;
                     x += a1;
                     y += a7;
 
-                    y += v.first;
-                    v.first += x - y;
-                    v.second += w.first;
-                    w.first += v.second;
-                    w.second += x - y;
-                    x += w.second;
-                    w.second = Rotate64(w.second, 34);
+                    y += v_first;
+                    v_first += x - y;
+                    v_second += w_first;
+                    w_first += v_second;
+                    w_second += x - y;
+                    x += w_second;
+                    w_second = Rotate64(w_second, 34);
                     swap(ref u, ref z);
                     s += 64;
                 } while (s != end);
+
                 // Make s point to the last 64 bytes of input.
                 s = last64;
                 u *= 9;
-                v.second = Rotate64(v.second, 28);
-                v.first = Rotate64(v.first, 20);
-                w.first += ((len - 1) & 63);
+                v_second = Rotate64(v_second, 28);
+                v_first = Rotate64(v_first, 20);
+                w_first += (len - 1) & 63;
                 u += y;
                 y += u;
-                x = Rotate64(y - x + v.first + Fetch64(s + 8), 37) * mul;
-                y = Rotate64(y ^ v.second ^ Fetch64(s + 48), 42) * mul;
-                x ^= w.second * 9;
-                y += v.first + Fetch64(s + 40);
-                z = Rotate64(z + w.first, 33) * mul;
-                v = WeakHashLen32WithSeeds(s, v.second * mul, x + w.first);
-                w = WeakHashLen32WithSeeds(s + 32, z + w.second, y + Fetch64(s + 16));
-                return H(HashLen16(v.first + x, w.first ^ y, mul) + z - u,
-                         H(v.second + y, w.second + z, k2, 30) ^ x,
-                         k2,
-                         31);
+                x = Rotate64(y - x + v_first + Fetch64(s + 8), 37) * mul;
+                y = Rotate64(y ^ v_second ^ Fetch64(s + 48), 42) * mul;
+                x ^= w_second * 9;
+                y += v_first + Fetch64(s + 40);
+                z = Rotate64(z + w_first, 33) * mul;
+                WeakHashLen32WithSeeds(s, v_second * mul, x + w_first, out v_first, out v_second);
+                WeakHashLen32WithSeeds(s + 32, z + w_second, y + Fetch64(s + 16), out w_first, out w_second);
+                return H(HashLen16(v_first + x, w_first ^ y, mul) + z - u, H(v_second + y, w_second + z, k2, 30) ^ x, k2, 31);
             }
         }
 
