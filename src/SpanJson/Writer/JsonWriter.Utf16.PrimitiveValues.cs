@@ -1,7 +1,6 @@
 ﻿namespace SpanJson
 {
     using System;
-    using System.Buffers;
     using System.Diagnostics;
     using System.Globalization;
     using System.Runtime.CompilerServices;
@@ -10,9 +9,6 @@
     using System.Runtime.InteropServices;
     using CuteAnt;
     using SpanJson.Helpers;
-#if NETSTANDARD2_0
-    using SpanJson.Internal.DoubleConversion;
-#endif
 
     partial struct JsonWriter<TSymbol>
     {
@@ -127,27 +123,34 @@
             }
 
             ref var pos = ref _pos;
-#if NETSTANDARD2_0
-            var buffer = TinyMemoryPool<byte>.GetBuffer();
-            var count = DoubleToStringConverter.GetBytes(ref buffer, 0, value);
-            EnsureUnsafe(pos, count);
-            ref char pinnableAddr = ref Utf16PinnableAddress;
-            ref byte utf8Source = ref buffer[0];
-            var offset = (IntPtr)0;
-            for (int i = 0; i < count; i++)
-            {
-                Unsafe.Add(ref pinnableAddr, pos + i) = (char)Unsafe.AddByteOffset(ref utf8Source, offset + i);
-            }
-            pos += count;
+            EnsureUnsafe(pos, JsonSharedConstant.MaximumFormatSingleLength);
+
+            bool result = TryFormatUtf16Single(value, Utf16FreeSpan, out int written);
+            Debug.Assert(result);
+            pos += written;
+        }
+
+        private static bool TryFormatUtf16Single(float value, Span<char> destination, out int written)
+        {
+            const string FormatString = "G9";
+#if !NETSTANDARD2_0
+            return value.TryFormat(destination, out written, format: FormatString, provider: CultureInfo.InvariantCulture);
 #else
-            EnsureUnsafe(pos, JsonSharedConstant.MaximumFormatDoubleLength);
-            var result = value.TryFormat(Utf16FreeSpan, out var written, provider: CultureInfo.InvariantCulture);
-            if (result)
+
+            string utf16Text = value.ToString(FormatString, System.Globalization.CultureInfo.InvariantCulture);
+
+            // Copy the value to the destination, if it's large enough.
+
+            if ((uint)utf16Text.Length > (uint)destination.Length)
             {
-                pos += written;
-                return;
+                written = 0;
+                return false;
             }
-            WriteFloatingPoint(ref this, value, ref pos);
+
+            utf16Text.AsSpan().CopyTo(destination);
+            written = utf16Text.Length;
+
+            return true;
 #endif
         }
 
@@ -159,41 +162,35 @@
             }
 
             ref var pos = ref _pos;
-#if NETSTANDARD2_0
-            var buffer = TinyMemoryPool<byte>.GetBuffer();
-            var count = DoubleToStringConverter.GetBytes(ref buffer, 0, value);
-            EnsureUnsafe(pos, count);
-            ref char pinnableAddr = ref Utf16PinnableAddress;
-            ref byte utf8Source = ref buffer[0];
-            var offset = (IntPtr)0;
-            for (int i = 0; i < count; i++)
-            {
-                Unsafe.Add(ref pinnableAddr, pos + i) = (char)Unsafe.AddByteOffset(ref utf8Source, offset + i);
-            }
-            pos += count;
-#else
-            EnsureUnsafe(pos, JsonSharedConstant.MaximumFormatDoubleLength);
-            var result = value.TryFormat(Utf16FreeSpan, out var written, provider: CultureInfo.InvariantCulture);
-            if (result)
-            {
-                pos += written;
-                return;
-            }
-            WriteFloatingPoint(ref this, value, ref pos);
-#endif
+            EnsureUnsafe(pos, JsonSharedConstant.MaximumFormatSingleLength);
+
+            bool result = TryFormatUtf16Double(value, Utf16FreeSpan, out int written);
+            Debug.Assert(result);
+            pos += written;
         }
 
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private static void WriteFloatingPoint<T>(ref JsonWriter<TSymbol> writer, T value, ref int pos) where T : IFormattable
+        private static bool TryFormatUtf16Double(double value, Span<char> destination, out int written)
         {
-            StandardFormat format = 'G';
-            string formatString = format.ToString();
-            string utf16Text = value.ToString(formatString, CultureInfo.InvariantCulture);
+            const string FormatString = "G17";
+#if !NETSTANDARD2_0
+            return value.TryFormat(destination, out written, format: FormatString, provider: CultureInfo.InvariantCulture);
+#else
 
-            int length = utf16Text.Length;
-            writer.EnsureUnsafe(pos, length);
-            utf16Text.AsSpan().CopyTo(writer.Utf16FreeSpan);
-            pos += length;
+            string utf16Text = value.ToString(FormatString, CultureInfo.InvariantCulture);
+
+            // Copy the value to the destination, if it's large enough.
+
+            if ((uint)utf16Text.Length > (uint)destination.Length)
+            {
+                written = 0;
+                return false;
+            }
+
+            utf16Text.AsSpan().CopyTo(destination);
+            written = utf16Text.Length;
+
+            return true;
+#endif
         }
 
         #endregion

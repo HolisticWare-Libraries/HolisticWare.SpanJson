@@ -184,8 +184,7 @@
             bool result = TryFormat(value, tempSpan, out var bytesWritten);
             Debug.Assert(result);
             TrimDateTimeOffset(tempSpan.Slice(0, bytesWritten), out bytesWritten);
-            BinaryUtil.CopyMemory(ref MemoryMarshal.GetReference(tempSpan), ref Unsafe.Add(ref outputSpace, pos), bytesWritten);
-            pos += bytesWritten;
+            UnsafeMemory.WriteRaw(ref outputSpace, ref MemoryMarshal.GetReference(tempSpan), bytesWritten, ref pos);
         }
 
         public static void WriteDateTimeOffsetTrimmed(Span<byte> buffer, DateTimeOffset value, out int bytesWritten)
@@ -203,8 +202,7 @@
             bool result = TryFormat(value, tempSpan, out var bytesWritten);
             Debug.Assert(result);
             TrimDateTimeOffset(tempSpan.Slice(0, bytesWritten), out bytesWritten);
-            BinaryUtil.CopyMemory(ref MemoryMarshal.GetReference(tempSpan), ref Unsafe.Add(ref outputSpace, pos), bytesWritten);
-            pos += bytesWritten;
+            UnsafeMemory.WriteRaw(ref outputSpace, ref MemoryMarshal.GetReference(tempSpan), bytesWritten, ref pos);
         }
 
         /// <summary>

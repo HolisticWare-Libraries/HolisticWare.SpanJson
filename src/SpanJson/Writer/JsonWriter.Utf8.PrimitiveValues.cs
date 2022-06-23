@@ -4,11 +4,12 @@
     using System.Buffers.Text;
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
-    using System.Runtime.InteropServices;
     using CuteAnt;
     using SpanJson.Helpers;
     using SpanJson.Internal;
-    using SpanJson.Internal.DoubleConversion;
+#if NETSTANDARD2_0
+    using System.Runtime.InteropServices;
+#endif
 
     partial struct JsonWriter<TSymbol>
     {
@@ -123,12 +124,58 @@
                 ThrowHelper.ThrowArgumentException_InvalidFloatValueForJson();
             }
 
-            var buffer = TinyMemoryPool<byte>.GetBuffer();
-            var count = DoubleToStringConverter.GetBytes(ref buffer, 0, value);
-
             ref var pos = ref _pos;
-            EnsureUnsafe(pos, count);
-            UnsafeMemory.WriteRaw(ref Utf8PinnableAddress, ref buffer[0], count, ref pos);
+            EnsureUnsafe(pos, JsonSharedConstant.MaximumFormatSingleLength);
+
+            bool result = TryFormatUtf8Single(value, Utf8FreeSpan, out int bytesWritten);
+            Debug.Assert(result);
+            pos += bytesWritten;
+        }
+
+        private static bool TryFormatUtf8Single(float value, Span<byte> destination, out int bytesWritten)
+        {
+            // Frameworks that are not .NET Core 3.0 or higher do not produce roundtrippable strings by
+            // default. Further, the Utf8Formatter on older frameworks does not support taking a precision
+            // specifier for 'G' nor does it represent other formats such as 'R'. As such, we duplicate
+            // the .NET Core 3.0 logic of forwarding to the UTF16 formatter and transcoding it back to UTF8,
+            // with some additional changes to remove dependencies on Span APIs which don't exist downlevel.
+
+#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+            return Utf8Formatter.TryFormat(value, destination, out bytesWritten);
+#else
+            const string FormatString = "G9";
+
+            string utf16Text = value.ToString(FormatString, System.Globalization.CultureInfo.InvariantCulture);
+
+            // Copy the value to the destination, if it's large enough.
+
+            if ((uint)utf16Text.Length > (uint)destination.Length)
+            {
+                bytesWritten = 0;
+                return false;
+            }
+
+            try
+            {
+                byte[] bytes = System.Text.Encoding.UTF8.GetBytes(utf16Text);
+
+                if ((uint)bytes.Length > (uint)destination.Length)
+                {
+                    bytesWritten = 0;
+                    return false;
+                }
+
+                bytes.CopyTo(destination);
+                bytesWritten = bytes.Length;
+
+                return true;
+            }
+            catch
+            {
+                bytesWritten = 0;
+                return false;
+            }
+#endif
         }
 
         public void WriteUtf8Double(double value)
@@ -138,12 +185,58 @@
                 ThrowHelper.ThrowArgumentException_InvalidDoubleValueForJson();
             }
 
-            var buffer = TinyMemoryPool<byte>.GetBuffer();
-            var count = DoubleToStringConverter.GetBytes(ref buffer, 0, value);
-
             ref var pos = ref _pos;
-            EnsureUnsafe(pos, count);
-            UnsafeMemory.WriteRaw(ref Utf8PinnableAddress, ref buffer[0], count, ref pos);
+            EnsureUnsafe(pos, JsonSharedConstant.MaximumFormatDoubleLength);
+
+            bool result = TryFormatUtf8Double(value, Utf8FreeSpan, out int bytesWritten);
+            Debug.Assert(result);
+            pos += bytesWritten;
+        }
+
+        private static bool TryFormatUtf8Double(double value, Span<byte> destination, out int bytesWritten)
+        {
+            // Frameworks that are not .NET Core 3.0 or higher do not produce roundtrippable strings by
+            // default. Further, the Utf8Formatter on older frameworks does not support taking a precision
+            // specifier for 'G' nor does it represent other formats such as 'R'. As such, we duplicate
+            // the .NET Core 3.0 logic of forwarding to the UTF16 formatter and transcoding it back to UTF8,
+            // with some additional changes to remove dependencies on Span APIs which don't exist downlevel.
+
+#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+            return Utf8Formatter.TryFormat(value, destination, out bytesWritten);
+#else
+            const string FormatString = "G17";
+
+            string utf16Text = value.ToString(FormatString, System.Globalization.CultureInfo.InvariantCulture);
+
+            // Copy the value to the destination, if it's large enough.
+
+            if ((uint)utf16Text.Length > (uint)destination.Length)
+            {
+                bytesWritten = 0;
+                return false;
+            }
+
+            try
+            {
+                byte[] bytes = System.Text.Encoding.UTF8.GetBytes(utf16Text);
+
+                if ((uint)bytes.Length > (uint)destination.Length)
+                {
+                    bytesWritten = 0;
+                    return false;
+                }
+
+                bytes.CopyTo(destination);
+                bytesWritten = bytes.Length;
+
+                return true;
+            }
+            catch
+            {
+                bytesWritten = 0;
+                return false;
+            }
+#endif
         }
 
         #endregion
@@ -287,7 +380,7 @@
             ref byte pinnableAddr = ref Utf8PinnableAddress;
 
             WriteUtf8DoubleQuote(ref pinnableAddr, ref pos);
-#if NET || NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+#if !NETSTANDARD2_0
             value.TryFormat(Utf8FreeSpan, CombGuidFormatStringType.Comb32Digits, out int bytesWritten);
             pos += bytesWritten;
 #else
