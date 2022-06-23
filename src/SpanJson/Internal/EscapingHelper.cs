@@ -1313,12 +1313,16 @@ namespace SpanJson.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void WriteDoubleQuote(ref char destSpace, ref int pos)
         {
-            Unsafe.Add(ref destSpace, pos++) = JsonUtf16Constant.ReverseSolidus;
-            Unsafe.Add(ref destSpace, pos++) = 'u';
-            Unsafe.Add(ref destSpace, pos++) = '0';
-            Unsafe.Add(ref destSpace, pos++) = '0';
-            Unsafe.Add(ref destSpace, pos++) = '2';
-            Unsafe.Add(ref destSpace, pos++) = '2';
+            nint offset = pos;
+            ref char current = ref Add(ref destSpace, offset);
+            current = JsonUtf16Constant.ReverseSolidus;
+            Add(ref current, 1) = 'u';
+            Add(ref current, 2) = '0';
+            Add(ref current, 3) = '0';
+            offset += 4; current = ref Add(ref destSpace, offset);
+            current = '2';
+            Add(ref current, 1) = '2';
+            pos += 6;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1337,12 +1341,16 @@ namespace SpanJson.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void WriteSlash(ref char destSpace, ref int pos)
         {
-            Unsafe.Add(ref destSpace, pos++) = JsonUtf16Constant.ReverseSolidus;
-            Unsafe.Add(ref destSpace, pos++) = 'u';
-            Unsafe.Add(ref destSpace, pos++) = '0';
-            Unsafe.Add(ref destSpace, pos++) = '0';
-            Unsafe.Add(ref destSpace, pos++) = '2';
-            Unsafe.Add(ref destSpace, pos++) = 'f';
+            nint offset = pos;
+            ref char current = ref Add(ref destSpace, offset);
+            current = JsonUtf16Constant.ReverseSolidus;
+            Add(ref current, 1) = 'u';
+            Add(ref current, 2) = '0';
+            Add(ref current, 3) = '0';
+            offset += 4; current = ref Add(ref destSpace, offset);
+            current = '2';
+            Add(ref current, 1) = 'f';
+            pos += 6;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1361,12 +1369,16 @@ namespace SpanJson.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void WriteDoubleChar(ref char destSpace, char firstToEscape, char secondToEscape, ref int pos)
         {
-            Unsafe.Add(ref destSpace, pos++) = JsonUtf16Constant.ReverseSolidus;
-            Unsafe.Add(ref destSpace, pos++) = 'u';
-            Unsafe.Add(ref destSpace, pos++) = '0';
-            Unsafe.Add(ref destSpace, pos++) = '0';
-            Unsafe.Add(ref destSpace, pos++) = firstToEscape;
-            Unsafe.Add(ref destSpace, pos++) = secondToEscape;
+            nint offset = pos;
+            ref char current = ref Add(ref destSpace, offset);
+            current = JsonUtf16Constant.ReverseSolidus;
+            Add(ref current, 1) = 'u';
+            Add(ref current, 2) = '0';
+            Add(ref current, 3) = '0';
+            offset += 4; current = ref Add(ref destSpace, offset);
+            current = firstToEscape;
+            Add(ref current, 1) = secondToEscape;
+            pos += 6;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1385,12 +1397,16 @@ namespace SpanJson.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void WriteHexChar(ref char destSpace, int toEscape, ref int pos)
         {
-            Unsafe.Add(ref destSpace, pos++) = JsonUtf16Constant.ReverseSolidus;
-            Unsafe.Add(ref destSpace, pos++) = 'u';
-            Unsafe.Add(ref destSpace, pos++) = HexConverter.ToCharLower(toEscape >> 12);
-            Unsafe.Add(ref destSpace, pos++) = HexConverter.ToCharLower(toEscape >> 8);
-            Unsafe.Add(ref destSpace, pos++) = HexConverter.ToCharLower(toEscape >> 4);
-            Unsafe.Add(ref destSpace, pos++) = HexConverter.ToCharLower(toEscape);
+            nint offset = pos;
+            ref char current = ref Add(ref destSpace, offset);
+            current = JsonUtf16Constant.ReverseSolidus;
+            Add(ref current, 1) = 'u';
+            Add(ref current, 2) = HexConverter.ToCharLower(toEscape >> 12);
+            Add(ref current, 3) = HexConverter.ToCharLower(toEscape >> 8);
+            offset += 4; current = ref Add(ref destSpace, offset);
+            current = HexConverter.ToCharLower(toEscape >> 4);
+            Add(ref current, 1) = HexConverter.ToCharLower(toEscape);
+            pos += 6;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1433,5 +1449,9 @@ namespace SpanJson.Internal
                     return false;
             }
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static ref char Add(ref char source, nint elementOffset)
+            => ref Unsafe.Add(ref source, (IntPtr)elementOffset);
     }
 }

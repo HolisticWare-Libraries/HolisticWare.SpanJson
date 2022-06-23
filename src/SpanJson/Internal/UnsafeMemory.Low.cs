@@ -37,9 +37,7 @@
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void WriteRaw1(ref byte destination, ref byte source, ref int idx)
         {
-            Unsafe.AddByteOffset(ref destination, (IntPtr)idx) = source;
-
-            idx += 1;
+            Unsafe.AddByteOffset(ref destination, (IntPtr)idx++) = source;
         }
     }
 
@@ -48,9 +46,7 @@
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void WriteRaw1(ref byte destination, ref byte source, ref int idx)
         {
-            Unsafe.AddByteOffset(ref destination, (IntPtr)idx) = source;
-
-            idx += 1;
+            Unsafe.AddByteOffset(ref destination, (IntPtr)idx++) = source;
         }
     }
 }
