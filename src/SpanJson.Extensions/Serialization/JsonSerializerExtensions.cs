@@ -322,7 +322,7 @@ namespace SpanJson.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static byte[] SerializeToByteArrayInternal(NJsonSerializer jsonSerializer, BufferManagerOutputStream outputStream, object value, Type type)
         {
-            using (NJsonTextWriter jsonWriter = new NJsonTextWriter(new StreamWriterX(outputStream, UTF8NoBOM)))
+            using (NJsonTextWriter jsonWriter = new NJsonTextWriter(new StreamWriter(outputStream, UTF8NoBOM, 4096, leaveOpen: true)))
             {
                 jsonWriter.ArrayPool = JsonConvertX.GlobalCharacterArrayPool;
                 jsonWriter.CloseOutput = false;
@@ -449,7 +449,7 @@ namespace SpanJson.Serialization
 
         private static ArraySegment<byte> SerializeToMemoryPoolInternal(NJsonSerializer jsonSerializer, BufferManagerOutputStream outputStream, object value, Type type)
         {
-            using (NJsonTextWriter jsonWriter = new NJsonTextWriter(new StreamWriterX(outputStream, UTF8NoBOM)))
+            using (NJsonTextWriter jsonWriter = new NJsonTextWriter(new StreamWriter(outputStream, UTF8NoBOM, 4096, leaveOpen: true)))
             {
                 jsonWriter.ArrayPool = JsonConvertX.GlobalCharacterArrayPool;
                 jsonWriter.CloseOutput = false;
@@ -496,7 +496,7 @@ namespace SpanJson.Serialization
                     jsonSerializer.CheckAdditionalContent = true;
                 }
 
-                using (var reader = new NJsonTextReader(new StreamReaderX(new MemoryStream(value, offset, count), Encoding.UTF8)))
+                using (var reader = new NJsonTextReader(new StreamReader(new MemoryStream(value, offset, count), Encoding.UTF8)))
                 {
                     reader.ArrayPool = JsonConvertX.GlobalCharacterArrayPool;
                     reader.CloseInput = false;
@@ -543,7 +543,7 @@ namespace SpanJson.Serialization
                     jsonSerializer.CheckAdditionalContent = true;
                 }
 
-                using (var reader = new NJsonTextReader(new StreamReaderX(new MemoryStream(value, offset, count), Encoding.UTF8)))
+                using (var reader = new NJsonTextReader(new StreamReader(new MemoryStream(value, offset, count), Encoding.UTF8)))
                 {
                     reader.ArrayPool = JsonConvertX.GlobalCharacterArrayPool;
                     reader.CloseInput = false;
@@ -572,7 +572,7 @@ namespace SpanJson.Serialization
         /// <returns>A JSON string representation of the object.</returns>
         public static void SerializeToStream(this NJsonSerializer jsonSerializer, Stream outputStream, object value, Type type = null)
         {
-            using (NJsonTextWriter jsonWriter = new NJsonTextWriter(new StreamWriterX(outputStream, UTF8NoBOM)))
+            using (NJsonTextWriter jsonWriter = new NJsonTextWriter(new StreamWriter(outputStream, UTF8NoBOM, 4096, leaveOpen: true)))
             {
                 jsonWriter.ArrayPool = JsonConvertX.GlobalCharacterArrayPool;
                 jsonWriter.CloseOutput = false;
@@ -679,7 +679,7 @@ namespace SpanJson.Serialization
                     jsonSerializer.CheckAdditionalContent = true;
                 }
 
-                using (var reader = new NJsonTextReader(new StreamReaderX(inputStream, Encoding.UTF8)))
+                using (var reader = new NJsonTextReader(new StreamReader(inputStream, Encoding.UTF8, true, bufferSize: 4096, leaveOpen: true)))
                 {
                     reader.ArrayPool = JsonConvertX.GlobalCharacterArrayPool;
                     reader.CloseInput = false;
@@ -930,7 +930,7 @@ namespace SpanJson.Serialization
         /// <param name="target">The target object to populate values onto.</param>
         public static void PopulateObject(this NJsonSerializer jsonSerializer, object target, byte[] value, int offset, int count)
         {
-            using (var jsonReader = new NJsonTextReader(new StreamReaderX(new MemoryStream(value, offset, count), Encoding.UTF8)))
+            using (var jsonReader = new NJsonTextReader(new StreamReader(new MemoryStream(value, offset, count), Encoding.UTF8)))
             {
                 jsonReader.ArrayPool = JsonConvertX.GlobalCharacterArrayPool;
                 jsonReader.CloseInput = false;
