@@ -409,7 +409,7 @@
             ref byte pinnableAddr = ref Utf8PinnableAddress;
 
             WriteUtf8DoubleQuote(ref pinnableAddr, ref pos);
-            Span<char> tempSpan = TinyMemoryPool<char>.GetBuffer();
+            Span<char> tempSpan = stackalloc char[JsonSharedConstant.StackallocCharThreshold];
             var result = value.TryFormat(tempSpan, out var charsWritten);
             Debug.Assert(result);
             pos += TextEncodings.UTF8NoBOM.GetBytes(tempSpan.Slice(0, charsWritten), Utf8FreeSpan);

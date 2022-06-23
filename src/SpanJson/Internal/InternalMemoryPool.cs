@@ -21,16 +21,4 @@
             return s_buffer;
         }
     }
-
-    internal static class TinyMemoryPool<TSymbol> where TSymbol : struct
-    {
-        [ThreadStatic]
-        static TSymbol[] s_buffer = null;
-
-        public static TSymbol[] GetBuffer()
-        {
-            if (s_buffer is null) { s_buffer = new TSymbol[256]; }
-            return s_buffer;
-        }
-    }
 }
