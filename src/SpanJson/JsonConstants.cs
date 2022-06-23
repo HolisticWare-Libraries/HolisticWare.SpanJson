@@ -19,9 +19,6 @@ namespace SpanJson
 
         public const uint TooBigOrNegative = int.MaxValue;
 
-        public const int ByteSize = sizeof(byte);
-        public const int CharSize = sizeof(char);
-
         // \u2028 and \u2029 are considered respectively line and paragraph separators
         // UTF-8 representation for them is E2, 80, A8/A9
         public const byte StartingByteOfNonStandardSeparator = 0xE2;

@@ -75,7 +75,7 @@ namespace SpanJson.Formatters
 
         private static ReadKeyDelegate BuildNameToKeyDelegate()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 if (typeof(TKey).IsInteger()) // the integer values are quoted
                 {
@@ -103,7 +103,7 @@ namespace SpanJson.Formatters
                 return ReadStringKey;
             }
 
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 if (typeof(TKey).IsInteger()) // the integer values need to be quoted
                 {

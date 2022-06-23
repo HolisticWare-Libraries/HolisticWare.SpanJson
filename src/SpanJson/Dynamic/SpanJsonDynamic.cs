@@ -40,7 +40,7 @@ namespace SpanJson.Dynamic
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override string ToString()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 var jsonRaw = Symbols;
                 var temp = jsonRaw.Array;
@@ -48,7 +48,7 @@ namespace SpanJson.Dynamic
                 return Encoding.UTF8.GetString(bytes, jsonRaw.Offset, jsonRaw.Count);
             }
 
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 var jsonRaw = Symbols;
                 var temp = jsonRaw.Array;

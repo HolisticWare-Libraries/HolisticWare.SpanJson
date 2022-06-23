@@ -10,11 +10,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteSByte(SByte value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8SByte(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16SByte(value);
             }
@@ -27,11 +27,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteInt16(Int16 value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Int16(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Int16(value);
             }
@@ -44,11 +44,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteInt32(Int32 value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Int32(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Int32(value);
             }
@@ -61,11 +61,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteInt64(Int64 value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Int64(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Int64(value);
             }
@@ -78,11 +78,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteByte(Byte value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Byte(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Byte(value);
             }
@@ -95,11 +95,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteUInt16(UInt16 value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8UInt16(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16UInt16(value);
             }
@@ -112,11 +112,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteUInt32(UInt32 value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8UInt32(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16UInt32(value);
             }
@@ -129,11 +129,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteUInt64(UInt64 value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8UInt64(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16UInt64(value);
             }
@@ -146,11 +146,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteSingle(Single value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Single(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Single(value);
             }
@@ -163,11 +163,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteDouble(Double value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Double(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Double(value);
             }
@@ -180,11 +180,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteDecimal(Decimal value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Decimal(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Decimal(value);
             }
@@ -197,11 +197,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteBoolean(Boolean value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Boolean(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Boolean(value);
             }
@@ -214,11 +214,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteChar(Char value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Char(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Char(value);
             }
@@ -231,11 +231,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteDateTime(DateTime value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8DateTime(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16DateTime(value);
             }
@@ -248,11 +248,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteDateTimeOffset(DateTimeOffset value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8DateTimeOffset(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16DateTimeOffset(value);
             }
@@ -265,11 +265,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteTimeSpan(TimeSpan value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8TimeSpan(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16TimeSpan(value);
             }
@@ -282,11 +282,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteGuid(Guid value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Guid(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Guid(value);
             }
@@ -299,11 +299,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteString(String value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8String(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16String(value);
             }
@@ -316,11 +316,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteVersion(Version value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Version(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Version(value);
             }
@@ -333,11 +333,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteUri(Uri value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Uri(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Uri(value);
             }

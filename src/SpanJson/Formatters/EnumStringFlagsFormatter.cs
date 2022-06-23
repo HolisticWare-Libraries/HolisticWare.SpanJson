@@ -55,13 +55,13 @@ namespace SpanJson.Formatters
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static TSymbol GetSeparator()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 var sepChar = (byte) ',';
                 return Unsafe.As<byte, TSymbol>(ref sepChar);
             }
 
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 var sepChar = ',';
                 return Unsafe.As<char, TSymbol>(ref sepChar);

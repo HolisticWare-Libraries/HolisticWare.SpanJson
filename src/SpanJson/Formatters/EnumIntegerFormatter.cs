@@ -29,11 +29,11 @@ namespace SpanJson.Formatters
             var writerParameter = Expression.Parameter(typeof(JsonWriter<TSymbol>).MakeByRefType(), "writer");
             var valueParameter = Expression.Parameter(typeof(T), "value");
             string methodName = null;
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 methodName = $"WriteUtf8{underlyingType.Name}";
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 methodName = $"WriteUtf16{underlyingType.Name}";
             }
@@ -54,11 +54,11 @@ namespace SpanJson.Formatters
             var underlyingType = Enum.GetUnderlyingType(typeof(T));
             var readerParameter = Expression.Parameter(typeof(JsonReader<TSymbol>).MakeByRefType(), "reader");
             string methodName = null;
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 methodName = $"ReadUtf8{underlyingType.Name}";
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 methodName = $"ReadUtf16{underlyingType.Name}";
             }

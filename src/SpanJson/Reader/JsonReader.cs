@@ -23,7 +23,7 @@ namespace SpanJson
             _length = (uint)input.Length;
             _pos = 0;
 
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 var utf8Json = Unsafe.As<TSymbol[], byte[]>(ref input);
                 _utf8Span = new ReadOnlySpan<byte>(utf8Json);
@@ -31,7 +31,7 @@ namespace SpanJson
                 _utf16Span = null;
                 _utf16Json = default;
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 var utf16Json = Unsafe.As<TSymbol[], char[]>(ref input);
                 _utf16Span = new ReadOnlySpan<char>(utf16Json);
@@ -51,7 +51,7 @@ namespace SpanJson
             _length = (uint)input.Count;
             _pos = 0;
 
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 var utf8Json = Unsafe.As<ArraySegment<TSymbol>, ArraySegment<byte>>(ref input);
                 _utf8Span = new ReadOnlySpan<byte>(utf8Json.Array, utf8Json.Offset, utf8Json.Count);
@@ -59,7 +59,7 @@ namespace SpanJson
                 _utf16Span = null;
                 _utf16Json = default;
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 var utf16Json = Unsafe.As<ArraySegment<TSymbol>, ArraySegment<char>>(ref input);
                 _utf16Span = new ReadOnlySpan<char>(utf16Json.Array, utf16Json.Offset, utf16Json.Count);
@@ -81,14 +81,14 @@ namespace SpanJson
 
             MemoryMarshal.TryGetArray(input, out ArraySegment<TSymbol> tmp);
 
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 _utf8Json = Unsafe.As<ArraySegment<TSymbol>, ArraySegment<byte>>(ref tmp);
                 _utf8Span = MemoryMarshal.Cast<TSymbol, byte>(input.Span);
                 _utf16Json = default;
                 _utf16Span = null;
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 _utf16Json = Unsafe.As<ArraySegment<TSymbol>, ArraySegment<char>>(ref tmp);
                 _utf16Span = MemoryMarshal.Cast<TSymbol, char>(input.Span);
@@ -109,12 +109,12 @@ namespace SpanJson
             _utf16Json = default;
             _utf8Json = default;
 
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 _utf8Span = MemoryMarshal.Cast<TSymbol, byte>(input);
                 _utf16Span = null;
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 _utf16Span = MemoryMarshal.Cast<TSymbol, char>(input);
                 _utf8Span = null;
@@ -130,11 +130,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ReadBeginArrayOrThrow()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 ReadUtf8BeginArrayOrThrow();
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 ReadUtf16BeginArrayOrThrow();
             }
@@ -147,12 +147,12 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryReadIsEndArrayOrValueSeparator(ref int count)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 return TryReadUtf8IsEndArrayOrValueSeparator(ref count);
             }
 
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 return TryReadUtf16IsEndArrayOrValueSeparator(ref count);
             }
@@ -163,12 +163,12 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public object ReadDynamic()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 return ReadUtf8Dynamic();
             }
 
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 return ReadUtf16Dynamic();
             }
@@ -179,12 +179,12 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool ReadIsNull()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 return ReadUtf8IsNull();
             }
 
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 return ReadUtf16IsNull();
             }
@@ -195,12 +195,12 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public string ReadEscapedName()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 return ReadUtf8EscapedName();
             }
 
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 return ReadUtf16EscapedName();
             }
@@ -211,12 +211,12 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ReadOnlySpan<TSymbol> ReadEscapedNameSpan()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 return MemoryMarshal.Cast<byte, TSymbol>(ReadUtf8EscapedNameSpan());
             }
 
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 return MemoryMarshal.Cast<char, TSymbol>(ReadUtf16EscapedNameSpan());
             }
@@ -227,7 +227,7 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ReadOnlySpan<TSymbol> ReadVerbatimNameSpan()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 //ref var pos = ref _pos;
                 //ref byte bStart = ref MemoryMarshal.GetReference(_bytes);
@@ -235,7 +235,7 @@ namespace SpanJson
                 return MemoryMarshal.Cast<byte, TSymbol>(ReadUtf8VerbatimNameSpan());
             }
 
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 //SkipWhitespaceUtf16();
                 return MemoryMarshal.Cast<char, TSymbol>(ReadUtf16VerbatimNameSpan());
@@ -247,12 +247,12 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryReadIsEndObjectOrValueSeparator(ref int count)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 return TryReadUtf8IsEndObjectOrValueSeparator(ref count);
             }
 
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 return TryReadUtf16IsEndObjectOrValueSeparator(ref count);
             }
@@ -263,11 +263,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ReadBeginObjectOrThrow()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 ReadUtf8BeginObjectOrThrow();
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 ReadUtf16BeginObjectOrThrow();
             }
@@ -280,11 +280,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ReadEndObjectOrThrow()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 ReadUtf8EndObjectOrThrow();
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 ReadUtf16EndObjectOrThrow();
             }
@@ -297,11 +297,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ReadEndArrayOrThrow()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 ReadUtf8EndArrayOrThrow();
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 ReadUtf16EndArrayOrThrow();
             }
@@ -314,12 +314,12 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ReadOnlySpan<TSymbol> ReadStringSpan()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 return MemoryMarshal.Cast<byte, TSymbol>(ReadUtf8StringSpan());
             }
 
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 return MemoryMarshal.Cast<char, TSymbol>(ReadUtf16StringSpan());
             }
@@ -330,12 +330,12 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ReadOnlySpan<TSymbol> ReadVerbatimStringSpan()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 return MemoryMarshal.Cast<byte, TSymbol>(ReadUtf8VerbatimStringSpan());
             }
 
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 return MemoryMarshal.Cast<char, TSymbol>(ReadUtf16VerbatimStringSpan());
             }
@@ -348,13 +348,13 @@ namespace SpanJson
         public ReadOnlySpan<TSymbol> ReadVerbatimStringSpanUnsafe()
         {
             ref var pos = ref _pos;
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 ref byte bStart = ref MemoryMarshal.GetReference(_utf8Span);
                 return MemoryMarshal.Cast<byte, TSymbol>(ReadUtf8StringSpanInternal(ref bStart, ref pos, _length, out _));
             }
 
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 ref var cStart = ref MemoryMarshal.GetReference(_utf16Span);
                 return MemoryMarshal.Cast<char, TSymbol>(ReadUtf16StringSpanInternal(ref cStart, ref pos, _length, out _));
@@ -366,11 +366,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SkipNextSegment()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 SkipNextUtf8Segment();
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 SkipNextUtf16Segment();
             }
@@ -383,11 +383,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SkipNextValue(JsonTokenType tokenType)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 SkipNextUtf8Value(tokenType);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 SkipNextUtf16Value(tokenType);
             }
@@ -400,12 +400,12 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public JsonTokenType ReadNextToken()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 return ReadUtf8NextToken();
             }
 
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 return ReadUtf16NextToken();
             }
@@ -416,12 +416,12 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ReadOnlySpan<TSymbol> ReadNumberSpan()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 return MemoryMarshal.Cast<byte, TSymbol>(ReadUtf8NumberSpan());
             }
 
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 return MemoryMarshal.Cast<char, TSymbol>(ReadUtf16NumberSpan());
             }
@@ -432,11 +432,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ReadSymbolOrThrow(TSymbol symbol)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 ReadUtf8SymbolOrThrow(Unsafe.As<TSymbol, byte>(ref symbol));
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 ReadUtf16SymbolOrThrow(Unsafe.As<TSymbol, char>(ref symbol));
             }
@@ -449,12 +449,12 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public CuteAnt.CombGuid ReadCombGuid()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 return ReadUtf8CombGuid();
             }
 
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 return ReadUtf16CombGuid();
             }
@@ -465,12 +465,12 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public byte[] ReadBytesFromBase64()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 return ReadUtf8BytesFromBase64();
             }
 
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 return ReadUtf16BytesFromBase64();
             }

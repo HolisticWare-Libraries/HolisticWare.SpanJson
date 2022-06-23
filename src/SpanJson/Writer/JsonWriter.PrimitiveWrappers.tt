@@ -42,11 +42,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Write<#= t.Name #>(<#= t.Name #> value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8<#= t.Name #>(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16<#= t.Name #>(value);
             }

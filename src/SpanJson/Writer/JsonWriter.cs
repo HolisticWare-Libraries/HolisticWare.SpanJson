@@ -93,12 +93,12 @@ using System.Text.Encodings.Web;
                 _arrayPool = ArrayPool<TSymbol>.Shared;
                 _borrowedBuffer = _arrayPool.Rent(InternalMemoryPool<TSymbol>.InitialCapacity);
             }
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 _utf8Span = _utf8Buffer = _borrowedBuffer as byte[];
                 _utf16Span = _utf16Buffer = null;
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 _utf16Span = _utf16Buffer = _borrowedBuffer as char[];
                 _utf8Span = _utf8Buffer = null;
@@ -120,12 +120,12 @@ using System.Text.Encodings.Web;
 
             _arrayPool = ArrayPool<TSymbol>.Shared;
             _borrowedBuffer = _arrayPool.Rent(initialCapacity);
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 _utf8Span = _utf8Buffer = _borrowedBuffer as byte[];
                 _utf16Span = _utf16Buffer = null;
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 _utf16Span = _utf16Buffer = _borrowedBuffer as char[];
                 _utf8Span = _utf8Buffer = null;
@@ -205,12 +205,12 @@ using System.Text.Encodings.Web;
                 if (useThreadLocal) { _arrayPool = ArrayPool<TSymbol>.Shared; }
 
                 _borrowedBuffer = _arrayPool.Rent(newSize);
-                if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+                if (SymbolHelper<TSymbol>.IsUtf8)
                 {
                     _utf8Span = _utf8Buffer = _borrowedBuffer as byte[];
                     _utf16Span = _utf16Buffer = null;
                 }
-                else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+                else if (SymbolHelper<TSymbol>.IsUtf16)
                 {
                     _utf16Span = _utf16Buffer = _borrowedBuffer as char[];
                     _utf8Span = _utf8Buffer = null;
@@ -253,11 +253,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteEndArray()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8EndArray();
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16EndArray();
             }
@@ -271,11 +271,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteBeginArray()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8BeginArray();
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16BeginArray();
             }
@@ -289,11 +289,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteBeginObject()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8BeginObject();
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16BeginObject();
             }
@@ -307,11 +307,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteEndObject()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8EndObject();
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16EndObject();
             }
@@ -324,11 +324,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteValueSeparator()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8ValueSeparator();
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16ValueSeparator();
             }
@@ -341,11 +341,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteNull()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Null();
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Null();
             }
@@ -358,11 +358,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteChar(char value, JsonEscapeHandling escapeHandling)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Char(value, escapeHandling);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Char(value, escapeHandling);
             }
@@ -376,11 +376,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteName(in JsonEncodedText name)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Name(name);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Name(name);
             }
@@ -393,11 +393,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteName(string name)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Name(name);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Name(name);
             }
@@ -410,11 +410,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteName(in ReadOnlySpan<char> name)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Name(name);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Name(name);
             }
@@ -427,11 +427,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteName(string name, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Name(name, escapeHandling, encoder);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Name(name, escapeHandling, encoder);
             }
@@ -444,11 +444,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteName(in ReadOnlySpan<char> name, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Name(name, escapeHandling, encoder);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Name(name, escapeHandling, encoder);
             }
@@ -461,11 +461,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteString(in JsonEncodedText value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8String(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16String(value);
             }
@@ -478,11 +478,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteString(string value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8String(value, escapeHandling, encoder);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16String(value, escapeHandling, encoder);
             }
@@ -495,11 +495,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteString(in ReadOnlySpan<char> value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8String(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16String(value);
             }
@@ -512,11 +512,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteString(in ReadOnlySpan<char> value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8String(value, escapeHandling, encoder);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16String(value, escapeHandling, encoder);
             }
@@ -529,11 +529,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteVerbatim(in ReadOnlySpan<TSymbol> values)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Verbatim(MemoryMarshal.Cast<TSymbol, byte>(values));
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Verbatim(MemoryMarshal.Cast<TSymbol, char>(values));
             }
@@ -546,11 +546,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteNewLine()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Verbatim(JsonUtf8Constant.NewLine);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Verbatim(JsonUtf16Constant.NewLine);
             }
@@ -563,11 +563,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteIndentation(int count)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Indentation(count);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Indentation(count);
             }
@@ -580,11 +580,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteDoubleQuote()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8DoubleQuote();
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16DoubleQuote();
             }
@@ -597,11 +597,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteNameSeparator()
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8NameSeparator();
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16NameSeparator();
             }
@@ -615,11 +615,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteVerbatimNameSpan(in ReadOnlySpan<TSymbol> values)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8VerbatimNameSpan(MemoryMarshal.Cast<TSymbol, byte>(values));
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16VerbatimNameSpan(MemoryMarshal.Cast<TSymbol, char>(values));
             }
@@ -632,11 +632,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteCombGuid(CuteAnt.CombGuid value)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8CombGuid(value);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16CombGuid(value);
             }
@@ -649,11 +649,11 @@ using System.Text.Encodings.Web;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteBase64String(in ReadOnlySpan<byte> bytes)
         {
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 WriteUtf8Base64String(bytes);
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 WriteUtf16Base64String(bytes);
             }

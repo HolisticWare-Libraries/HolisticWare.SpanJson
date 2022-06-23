@@ -63,11 +63,11 @@ namespace SpanJson.Dynamic
         {
             var result = new Dictionary<Type, ConvertDelegate>();
             string utfType = null;
-            if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 utfType = "Utf8";
             }
-            else if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            else if (SymbolHelper<TSymbol>.IsUtf16)
             {
                 utfType = "Utf16";
             }

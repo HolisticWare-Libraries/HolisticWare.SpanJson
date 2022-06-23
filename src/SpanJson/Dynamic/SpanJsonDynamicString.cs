@@ -70,7 +70,7 @@ namespace SpanJson.Dynamic
                     if (destinationType.IsEnum || (destinationType = Nullable.GetUnderlyingType(destinationType)) is not null)
                     {
                         string data;
-                        if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+                        if (SymbolHelper<TSymbol>.IsUtf8)
                         {
                             data = TextEncodings.Utf8.GetStringWithCache(reader.ReadUtf8StringSpan()); // Eunm 基本不需要Json转义
                         }
@@ -304,7 +304,7 @@ namespace SpanJson.Dynamic
                 return _value;
             }
 
-            //if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.ByteSize))
+            //if (SymbolHelper<TSymbol>.IsUtf8)
             //{
             //    var jsonRaw = Symbols;
             //    var temp = jsonRaw.Array;
@@ -313,7 +313,7 @@ namespace SpanJson.Dynamic
             //    return _value;
             //}
 
-            //if (0u >= (uint)(Unsafe.SizeOf<TSymbol>() - JsonSharedConstant.CharSize))
+            //if (SymbolHelper<TSymbol>.IsUtf16)
             //{
             //    var jsonRaw = Symbols;
             //    var temp = jsonRaw.Array;

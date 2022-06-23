@@ -38,13 +38,13 @@ namespace SpanJson.Helpers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsWhiteSpace<T>(T value) where T : struct
         {
-            if ((uint)Unsafe.SizeOf<T>() == JsonSharedConstant.ByteSize) // if (typeof(T) == typeof(byte))
+            if (SymbolHelper<T>.IsUtf8)
             {
                 var b = Unsafe.As<T, byte>(ref value);
-                return char.IsWhiteSpace((char) b);
+                return char.IsWhiteSpace((char)b);
             }
 
-            if ((uint)Unsafe.SizeOf<T>() == JsonSharedConstant.CharSize) // if (typeof(T) == typeof(char))
+            if (SymbolHelper<T>.IsUtf16)
             {
                 var c = Unsafe.As<T, char>(ref value);
                 return char.IsWhiteSpace(c);
