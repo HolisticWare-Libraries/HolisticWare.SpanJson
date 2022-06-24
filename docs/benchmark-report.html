@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Benchmark.AllSerializerBenchmark_BytesInOut-20220623-174213</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet=v0.13.1, OS=Windows 10.0.19044.1766 (21H2)
+Intel Xeon CPU E5-2666 v3 2.90GHz, 1 CPU, 20 logical and 10 physical cores
+.NET SDK=6.0.301
+  [Host]   : .NET 6.0.6 (6.0.622.26707), X64 RyuJIT
+  ShortRun : .NET 6.0.6 (6.0.622.26707), X64 RyuJIT
+</code></pre>
+<pre><code>Job=ShortRun  Jit=RyuJit  Platform=X64  
+Runtime=.NET 6.0  IterationCount=1  LaunchCount=1  
+WarmupCount=1  
+</code></pre>
+
+<table>
+<thead><tr><th>                      Method</th><th>Serializer</th><th>  Mean</th><th>Error</th><th>DataSize</th><th>Gen 0</th><th>Gen 1</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>_PrimitiveBoolDeserialize</td><td>MessagePack_v1</td><td>28.86 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveBoolDeserialize</td><td>MessagePack_v2</td><td>64.70 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveBoolDeserialize</td><td>MsgPack_v2_opt</td><td>65.11 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveBoolDeserialize</td><td>SpanJson</td><td>34.18 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveBoolDeserialize</td><td>SystemTextJson</td><td>114.97 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveBoolSerialize</td><td>MessagePack_v1</td><td>50.53 ns</td><td>NA</td><td>1 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveBoolSerialize</td><td>MessagePack_v2</td><td>83.77 ns</td><td>NA</td><td>1 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveBoolSerialize</td><td>MsgPack_v2_opt</td><td>85.65 ns</td><td>NA</td><td>1 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveBoolSerialize</td><td>SpanJson</td><td>52.52 ns</td><td>NA</td><td>5 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveBoolSerialize</td><td>SystemTextJson</td><td>131.04 ns</td><td>NA</td><td>5 B</td><td>0.0141</td><td>-</td><td>184 B</td>
+</tr><tr><td>_PrimitiveByteDeserialize</td><td>MessagePack_v1</td><td>28.74 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveByteDeserialize</td><td>MessagePack_v2</td><td>65.90 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveByteDeserialize</td><td>MsgPack_v2_opt</td><td>65.40 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveByteDeserialize</td><td>SpanJson</td><td>31.98 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveByteDeserialize</td><td>SystemTextJson</td><td>116.66 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveBytesDeserialize</td><td>MessagePack_v1</td><td>56.38 ns</td><td>NA</td><td>-</td><td>0.0098</td><td>-</td><td>128 B</td>
+</tr><tr><td>_PrimitiveBytesDeserialize</td><td>MessagePack_v2</td><td>190.36 ns</td><td>NA</td><td>-</td><td>0.0098</td><td>-</td><td>128 B</td>
+</tr><tr><td>_PrimitiveBytesDeserialize</td><td>MsgPack_v2_opt</td><td>213.52 ns</td><td>NA</td><td>-</td><td>0.0098</td><td>-</td><td>128 B</td>
+</tr><tr><td>_PrimitiveBytesDeserialize</td><td>SpanJson</td><td>1,502.38 ns</td><td>NA</td><td>-</td><td>0.0095</td><td>-</td><td>128 B</td>
+</tr><tr><td>_PrimitiveBytesDeserialize</td><td>SystemTextJson</td><td>235.17 ns</td><td>NA</td><td>-</td><td>0.0098</td><td>-</td><td>128 B</td>
+</tr><tr><td>_PrimitiveByteSerialize</td><td>MessagePack_v1</td><td>50.21 ns</td><td>NA</td><td>2 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveByteSerialize</td><td>MessagePack_v2</td><td>81.19 ns</td><td>NA</td><td>2 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveByteSerialize</td><td>MsgPack_v2_opt</td><td>81.91 ns</td><td>NA</td><td>2 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveByteSerialize</td><td>SpanJson</td><td>58.02 ns</td><td>NA</td><td>3 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveByteSerialize</td><td>SystemTextJson</td><td>149.04 ns</td><td>NA</td><td>3 B</td><td>0.0141</td><td>-</td><td>184 B</td>
+</tr><tr><td>_PrimitiveBytesSerialize</td><td>MessagePack_v1</td><td>73.76 ns</td><td>NA</td><td>102 B</td><td>0.0098</td><td>-</td><td>128 B</td>
+</tr><tr><td>_PrimitiveBytesSerialize</td><td>MessagePack_v2</td><td>121.33 ns</td><td>NA</td><td>102 B</td><td>0.0098</td><td>-</td><td>128 B</td>
+</tr><tr><td>_PrimitiveBytesSerialize</td><td>MsgPack_v2_opt</td><td>106.92 ns</td><td>NA</td><td>102 B</td><td>0.0098</td><td>-</td><td>128 B</td>
+</tr><tr><td>_PrimitiveBytesSerialize</td><td>SpanJson</td><td>958.93 ns</td><td>NA</td><td>351 B</td><td>0.0286</td><td>-</td><td>384 B</td>
+</tr><tr><td>_PrimitiveBytesSerialize</td><td>SystemTextJson</td><td>210.04 ns</td><td>NA</td><td>138 B</td><td>0.0243</td><td>-</td><td>320 B</td>
+</tr><tr><td>_PrimitiveCharDeserialize</td><td>MessagePack_v1</td><td>29.57 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveCharDeserialize</td><td>MessagePack_v2</td><td>80.41 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveCharDeserialize</td><td>MsgPack_v2_opt</td><td>77.01 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveCharDeserialize</td><td>SpanJson</td><td>50.28 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveCharDeserialize</td><td>SystemTextJson</td><td>245.99 ns</td><td>NA</td><td>-</td><td>0.0017</td><td>-</td><td>24 B</td>
+</tr><tr><td>_PrimitiveCharSerialize</td><td>MessagePack_v1</td><td>50.78 ns</td><td>NA</td><td>3 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveCharSerialize</td><td>MessagePack_v2</td><td>88.20 ns</td><td>NA</td><td>3 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveCharSerialize</td><td>MsgPack_v2_opt</td><td>85.89 ns</td><td>NA</td><td>3 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveCharSerialize</td><td>SpanJson</td><td>77.62 ns</td><td>NA</td><td>5 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveCharSerialize</td><td>SystemTextJson</td><td>245.94 ns</td><td>NA</td><td>8 B</td><td>0.0138</td><td>-</td><td>184 B</td>
+</tr><tr><td>_PrimitiveDateTimeDeserialize</td><td>MessagePack_v1</td><td>43.69 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveDateTimeDeserialize</td><td>MessagePack_v2</td><td>95.92 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveDateTimeDeserialize</td><td>MsgPack_v2_opt</td><td>90.27 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveDateTimeDeserialize</td><td>SpanJson</td><td>148.33 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveDateTimeDeserialize</td><td>SystemTextJson</td><td>230.80 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveDateTimeSerialize</td><td>MessagePack_v1</td><td>95.93 ns</td><td>NA</td><td>15 B</td><td>0.0030</td><td>-</td><td>40 B</td>
+</tr><tr><td>_PrimitiveDateTimeSerialize</td><td>MessagePack_v2</td><td>143.69 ns</td><td>NA</td><td>15 B</td><td>0.0029</td><td>-</td><td>40 B</td>
+</tr><tr><td>_PrimitiveDateTimeSerialize</td><td>MsgPack_v2_opt</td><td>108.30 ns</td><td>NA</td><td>9 B</td><td>0.0030</td><td>-</td><td>40 B</td>
+</tr><tr><td>_PrimitiveDateTimeSerialize</td><td>SpanJson</td><td>139.95 ns</td><td>NA</td><td>32 B</td><td>0.0041</td><td>-</td><td>56 B</td>
+</tr><tr><td>_PrimitiveDateTimeSerialize</td><td>SystemTextJson</td><td>206.89 ns</td><td>NA</td><td>32 B</td><td>0.0157</td><td>-</td><td>208 B</td>
+</tr><tr><td>_PrimitiveGuidDeserialize</td><td>MessagePack_v1</td><td>87.52 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveGuidDeserialize</td><td>MessagePack_v2</td><td>204.48 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveGuidDeserialize</td><td>MsgPack_v2_opt</td><td>159.33 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveGuidDeserialize</td><td>SpanJson</td><td>NA</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveGuidDeserialize</td><td>SystemTextJson</td><td>252.04 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveGuidSerialize</td><td>MessagePack_v1</td><td>103.98 ns</td><td>NA</td><td>38 B</td><td>0.0049</td><td>-</td><td>64 B</td>
+</tr><tr><td>_PrimitiveGuidSerialize</td><td>MessagePack_v2</td><td>133.80 ns</td><td>NA</td><td>38 B</td><td>0.0048</td><td>-</td><td>64 B</td>
+</tr><tr><td>_PrimitiveGuidSerialize</td><td>MsgPack_v2_opt</td><td>90.61 ns</td><td>NA</td><td>18 B</td><td>0.0036</td><td>-</td><td>48 B</td>
+</tr><tr><td>_PrimitiveGuidSerialize</td><td>SpanJson</td><td>86.24 ns</td><td>NA</td><td>38 B</td><td>0.0049</td><td>-</td><td>64 B</td>
+</tr><tr><td>_PrimitiveGuidSerialize</td><td>SystemTextJson</td><td>168.82 ns</td><td>NA</td><td>38 B</td><td>0.0165</td><td>-</td><td>216 B</td>
+</tr><tr><td>_PrimitiveIntDeserialize</td><td>MessagePack_v1</td><td>30.90 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveIntDeserialize</td><td>MessagePack_v2</td><td>72.62 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveIntDeserialize</td><td>MsgPack_v2_opt</td><td>73.68 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveIntDeserialize</td><td>SpanJson</td><td>39.80 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveIntDeserialize</td><td>SystemTextJson</td><td>148.83 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveIntSerialize</td><td>MessagePack_v1</td><td>59.74 ns</td><td>NA</td><td>5 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveIntSerialize</td><td>MessagePack_v2</td><td>84.44 ns</td><td>NA</td><td>5 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveIntSerialize</td><td>MsgPack_v2_opt</td><td>84.99 ns</td><td>NA</td><td>5 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveIntSerialize</td><td>SpanJson</td><td>72.28 ns</td><td>NA</td><td>8 B</td><td>0.0030</td><td>-</td><td>40 B</td>
+</tr><tr><td>_PrimitiveIntSerialize</td><td>SystemTextJson</td><td>144.92 ns</td><td>NA</td><td>8 B</td><td>0.0145</td><td>-</td><td>192 B</td>
+</tr><tr><td>_PrimitiveLongDeserialize</td><td>MessagePack_v1</td><td>32.21 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveLongDeserialize</td><td>MessagePack_v2</td><td>73.72 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveLongDeserialize</td><td>MsgPack_v2_opt</td><td>78.62 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveLongDeserialize</td><td>SpanJson</td><td>60.17 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveLongDeserialize</td><td>SystemTextJson</td><td>201.52 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveLongSerialize</td><td>MessagePack_v1</td><td>58.99 ns</td><td>NA</td><td>9 B</td><td>0.0030</td><td>-</td><td>40 B</td>
+</tr><tr><td>_PrimitiveLongSerialize</td><td>MessagePack_v2</td><td>92.29 ns</td><td>NA</td><td>9 B</td><td>0.0030</td><td>-</td><td>40 B</td>
+</tr><tr><td>_PrimitiveLongSerialize</td><td>MsgPack_v2_opt</td><td>91.76 ns</td><td>NA</td><td>9 B</td><td>0.0030</td><td>-</td><td>40 B</td>
+</tr><tr><td>_PrimitiveLongSerialize</td><td>SpanJson</td><td>79.85 ns</td><td>NA</td><td>19 B</td><td>0.0036</td><td>-</td><td>48 B</td>
+</tr><tr><td>_PrimitiveLongSerialize</td><td>SystemTextJson</td><td>168.47 ns</td><td>NA</td><td>19 B</td><td>0.0153</td><td>-</td><td>200 B</td>
+</tr><tr><td>_PrimitiveSByteDeserialize</td><td>MessagePack_v1</td><td>28.20 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveSByteDeserialize</td><td>MessagePack_v2</td><td>74.88 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveSByteDeserialize</td><td>MsgPack_v2_opt</td><td>93.24 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveSByteDeserialize</td><td>SpanJson</td><td>32.11 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveSByteDeserialize</td><td>SystemTextJson</td><td>118.44 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveSByteSerialize</td><td>MessagePack_v1</td><td>49.85 ns</td><td>NA</td><td>1 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveSByteSerialize</td><td>MessagePack_v2</td><td>83.37 ns</td><td>NA</td><td>1 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveSByteSerialize</td><td>MsgPack_v2_opt</td><td>90.06 ns</td><td>NA</td><td>1 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveSByteSerialize</td><td>SpanJson</td><td>57.71 ns</td><td>NA</td><td>3 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveSByteSerialize</td><td>SystemTextJson</td><td>127.79 ns</td><td>NA</td><td>3 B</td><td>0.0141</td><td>-</td><td>184 B</td>
+</tr><tr><td>_PrimitiveShortDeserialize</td><td>MessagePack_v1</td><td>30.52 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveShortDeserialize</td><td>MessagePack_v2</td><td>73.70 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveShortDeserialize</td><td>MsgPack_v2_opt</td><td>92.96 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveShortDeserialize</td><td>SpanJson</td><td>34.63 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveShortDeserialize</td><td>SystemTextJson</td><td>120.97 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveShortSerialize</td><td>MessagePack_v1</td><td>50.82 ns</td><td>NA</td><td>3 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveShortSerialize</td><td>MessagePack_v2</td><td>89.15 ns</td><td>NA</td><td>3 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveShortSerialize</td><td>MsgPack_v2_opt</td><td>91.94 ns</td><td>NA</td><td>3 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveShortSerialize</td><td>SpanJson</td><td>69.71 ns</td><td>NA</td><td>5 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveShortSerialize</td><td>SystemTextJson</td><td>143.73 ns</td><td>NA</td><td>5 B</td><td>0.0141</td><td>-</td><td>184 B</td>
+</tr><tr><td>_PrimitiveStringDeserialize</td><td>MessagePack_v1</td><td>71.45 ns</td><td>NA</td><td>-</td><td>0.0030</td><td>-</td><td>40 B</td>
+</tr><tr><td>_PrimitiveStringDeserialize</td><td>MessagePack_v2</td><td>113.38 ns</td><td>NA</td><td>-</td><td>0.0029</td><td>-</td><td>40 B</td>
+</tr><tr><td>_PrimitiveStringDeserialize</td><td>MsgPack_v2_opt</td><td>119.45 ns</td><td>NA</td><td>-</td><td>0.0029</td><td>-</td><td>40 B</td>
+</tr><tr><td>_PrimitiveStringDeserialize</td><td>SpanJson</td><td>68.25 ns</td><td>NA</td><td>-</td><td>0.0030</td><td>-</td><td>40 B</td>
+</tr><tr><td>_PrimitiveStringDeserialize</td><td>SystemTextJson</td><td>161.81 ns</td><td>NA</td><td>-</td><td>0.0029</td><td>-</td><td>40 B</td>
+</tr><tr><td>_PrimitiveStringSerialize</td><td>MessagePack_v1</td><td>85.65 ns</td><td>NA</td><td>9 B</td><td>0.0030</td><td>-</td><td>40 B</td>
+</tr><tr><td>_PrimitiveStringSerialize</td><td>MessagePack_v2</td><td>110.73 ns</td><td>NA</td><td>9 B</td><td>0.0030</td><td>-</td><td>40 B</td>
+</tr><tr><td>_PrimitiveStringSerialize</td><td>MsgPack_v2_opt</td><td>118.40 ns</td><td>NA</td><td>9 B</td><td>0.0029</td><td>-</td><td>40 B</td>
+</tr><tr><td>_PrimitiveStringSerialize</td><td>SpanJson</td><td>114.62 ns</td><td>NA</td><td>10 B</td><td>0.0030</td><td>-</td><td>40 B</td>
+</tr><tr><td>_PrimitiveStringSerialize</td><td>SystemTextJson</td><td>175.71 ns</td><td>NA</td><td>10 B</td><td>0.0145</td><td>-</td><td>192 B</td>
+</tr><tr><td>_PrimitiveUIntDeserialize</td><td>MessagePack_v1</td><td>30.53 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveUIntDeserialize</td><td>MessagePack_v2</td><td>72.61 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveUIntDeserialize</td><td>MsgPack_v2_opt</td><td>72.84 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveUIntDeserialize</td><td>SpanJson</td><td>40.83 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveUIntDeserialize</td><td>SystemTextJson</td><td>127.32 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveUIntSerialize</td><td>MessagePack_v1</td><td>58.16 ns</td><td>NA</td><td>5 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveUIntSerialize</td><td>MessagePack_v2</td><td>86.03 ns</td><td>NA</td><td>5 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveUIntSerialize</td><td>MsgPack_v2_opt</td><td>83.04 ns</td><td>NA</td><td>5 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveUIntSerialize</td><td>SpanJson</td><td>76.31 ns</td><td>NA</td><td>10 B</td><td>0.0030</td><td>-</td><td>40 B</td>
+</tr><tr><td>_PrimitiveUIntSerialize</td><td>SystemTextJson</td><td>146.50 ns</td><td>NA</td><td>10 B</td><td>0.0145</td><td>-</td><td>192 B</td>
+</tr><tr><td>_PrimitiveULongDeserialize</td><td>MessagePack_v1</td><td>31.64 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveULongDeserialize</td><td>MessagePack_v2</td><td>75.78 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveULongDeserialize</td><td>MsgPack_v2_opt</td><td>73.40 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveULongDeserialize</td><td>SpanJson</td><td>64.81 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveULongDeserialize</td><td>SystemTextJson</td><td>158.58 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveULongSerialize</td><td>MessagePack_v1</td><td>58.66 ns</td><td>NA</td><td>9 B</td><td>0.0030</td><td>-</td><td>40 B</td>
+</tr><tr><td>_PrimitiveULongSerialize</td><td>MessagePack_v2</td><td>90.79 ns</td><td>NA</td><td>9 B</td><td>0.0030</td><td>-</td><td>40 B</td>
+</tr><tr><td>_PrimitiveULongSerialize</td><td>MsgPack_v2_opt</td><td>92.16 ns</td><td>NA</td><td>9 B</td><td>0.0030</td><td>-</td><td>40 B</td>
+</tr><tr><td>_PrimitiveULongSerialize</td><td>SpanJson</td><td>83.71 ns</td><td>NA</td><td>19 B</td><td>0.0036</td><td>-</td><td>48 B</td>
+</tr><tr><td>_PrimitiveULongSerialize</td><td>SystemTextJson</td><td>158.57 ns</td><td>NA</td><td>19 B</td><td>0.0153</td><td>-</td><td>200 B</td>
+</tr><tr><td>_PrimitiveUShortDeserialize</td><td>MessagePack_v1</td><td>29.05 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveUShortDeserialize</td><td>MessagePack_v2</td><td>78.12 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveUShortDeserialize</td><td>MsgPack_v2_opt</td><td>81.67 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveUShortDeserialize</td><td>SpanJson</td><td>31.26 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveUShortDeserialize</td><td>SystemTextJson</td><td>123.55 ns</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>_PrimitiveUShortSerialize</td><td>MessagePack_v1</td><td>50.03 ns</td><td>NA</td><td>3 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveUShortSerialize</td><td>MessagePack_v2</td><td>83.51 ns</td><td>NA</td><td>3 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveUShortSerialize</td><td>MsgPack_v2_opt</td><td>82.02 ns</td><td>NA</td><td>3 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveUShortSerialize</td><td>SpanJson</td><td>63.23 ns</td><td>NA</td><td>5 B</td><td>0.0024</td><td>-</td><td>32 B</td>
+</tr><tr><td>_PrimitiveUShortSerialize</td><td>SystemTextJson</td><td>140.67 ns</td><td>NA</td><td>5 B</td><td>0.0141</td><td>-</td><td>184 B</td>
+</tr><tr><td>AccessTokenDeserialize</td><td>MessagePack_v1</td><td>282.61 ns</td><td>NA</td><td>-</td><td>0.0153</td><td>-</td><td>200 B</td>
+</tr><tr><td>AccessTokenDeserialize</td><td>MessagePack_v2</td><td>376.50 ns</td><td>NA</td><td>-</td><td>0.0153</td><td>-</td><td>200 B</td>
+</tr><tr><td>AccessTokenDeserialize</td><td>MsgPack_v2_opt</td><td>382.10 ns</td><td>NA</td><td>-</td><td>0.0153</td><td>-</td><td>200 B</td>
+</tr><tr><td>AccessTokenDeserialize</td><td>SpanJson</td><td>437.29 ns</td><td>NA</td><td>-</td><td>0.0167</td><td>-</td><td>224 B</td>
+</tr><tr><td>AccessTokenDeserialize</td><td>SystemTextJson</td><td>963.16 ns</td><td>NA</td><td>-</td><td>0.0477</td><td>-</td><td>632 B</td>
+</tr><tr><td>AccessTokenSerialize</td><td>MessagePack_v1</td><td>313.01 ns</td><td>NA</td><td>40 B</td><td>0.0048</td><td>-</td><td>64 B</td>
+</tr><tr><td>AccessTokenSerialize</td><td>MessagePack_v2</td><td>335.78 ns</td><td>NA</td><td>40 B</td><td>0.0048</td><td>-</td><td>64 B</td>
+</tr><tr><td>AccessTokenSerialize</td><td>MsgPack_v2_opt</td><td>303.11 ns</td><td>NA</td><td>34 B</td><td>0.0048</td><td>-</td><td>64 B</td>
+</tr><tr><td>AccessTokenSerialize</td><td>SpanJson</td><td>333.51 ns</td><td>NA</td><td>122 B</td><td>0.0114</td><td>-</td><td>152 B</td>
+</tr><tr><td>AccessTokenSerialize</td><td>SystemTextJson</td><td>675.20 ns</td><td>NA</td><td>122 B</td><td>0.0486</td><td>-</td><td>648 B</td>
+</tr><tr><td>AccountMergeDeserialize</td><td>MessagePack_v1</td><td>127.91 ns</td><td>NA</td><td>-</td><td>0.0036</td><td>-</td><td>48 B</td>
+</tr><tr><td>AccountMergeDeserialize</td><td>MessagePack_v2</td><td>210.42 ns</td><td>NA</td><td>-</td><td>0.0036</td><td>-</td><td>48 B</td>
+</tr><tr><td>AccountMergeDeserialize</td><td>MsgPack_v2_opt</td><td>215.74 ns</td><td>NA</td><td>-</td><td>0.0033</td><td>-</td><td>48 B</td>
+</tr><tr><td>AccountMergeDeserialize</td><td>SpanJson</td><td>287.18 ns</td><td>NA</td><td>-</td><td>0.0033</td><td>-</td><td>48 B</td>
+</tr><tr><td>AccountMergeDeserialize</td><td>SystemTextJson</td><td>809.99 ns</td><td>NA</td><td>-</td><td>0.0029</td><td>-</td><td>48 B</td>
+</tr><tr><td>AccountMergeSerialize</td><td>MessagePack_v1</td><td>173.71 ns</td><td>NA</td><td>26 B</td><td>0.0041</td><td>-</td><td>56 B</td>
+</tr><tr><td>AccountMergeSerialize</td><td>MessagePack_v2</td><td>207.86 ns</td><td>NA</td><td>26 B</td><td>0.0038</td><td>-</td><td>56 B</td>
+</tr><tr><td>AccountMergeSerialize</td><td>MsgPack_v2_opt</td><td>188.10 ns</td><td>NA</td><td>20 B</td><td>0.0036</td><td>-</td><td>48 B</td>
+</tr><tr><td>AccountMergeSerialize</td><td>SpanJson</td><td>210.11 ns</td><td>NA</td><td>102 B</td><td>0.0095</td><td>-</td><td>128 B</td>
+</tr><tr><td>AccountMergeSerialize</td><td>SystemTextJson</td><td>450.70 ns</td><td>NA</td><td>102 B</td><td>0.0210</td><td>-</td><td>280 B</td>
+</tr><tr><td>AnswerDeserialize</td><td>MessagePack_v1</td><td>3,312.66 ns</td><td>NA</td><td>-</td><td>0.1373</td><td>-</td><td>1,816 B</td>
+</tr><tr><td>AnswerDeserialize</td><td>MessagePack_v2</td><td>3,709.34 ns</td><td>NA</td><td>-</td><td>0.1373</td><td>-</td><td>1,816 B</td>
+</tr><tr><td>AnswerDeserialize</td><td>MsgPack_v2_opt</td><td>3,695.02 ns</td><td>NA</td><td>-</td><td>0.1373</td><td>-</td><td>1,816 B</td>
+</tr><tr><td>AnswerDeserialize</td><td>SpanJson</td><td>4,764.38 ns</td><td>NA</td><td>-</td><td>0.1373</td><td>-</td><td>1,864 B</td>
+</tr><tr><td>AnswerDeserialize</td><td>SystemTextJson</td><td>13,295.63 ns</td><td>NA</td><td>-</td><td>0.1678</td><td>-</td><td>2,272 B</td>
+</tr><tr><td>AnswerSerialize</td><td>MessagePack_v1</td><td>2,721.62 ns</td><td>NA</td><td>470 B</td><td>0.0343</td><td>-</td><td>496 B</td>
+</tr><tr><td>AnswerSerialize</td><td>MessagePack_v2</td><td>2,675.26 ns</td><td>NA</td><td>470 B</td><td>0.0343</td><td>-</td><td>496 B</td>
+</tr><tr><td>AnswerSerialize</td><td>MsgPack_v2_opt</td><td>2,682.95 ns</td><td>NA</td><td>434 B</td><td>0.0343</td><td>-</td><td>464 B</td>
+</tr><tr><td>AnswerSerialize</td><td>SpanJson</td><td>3,506.09 ns</td><td>NA</td><td>1843 B</td><td>0.1411</td><td>-</td><td>1,880 B</td>
+</tr><tr><td>AnswerSerialize</td><td>SystemTextJson</td><td>7,810.11 ns</td><td>NA</td><td>1790 B</td><td>0.1678</td><td>-</td><td>2,312 B</td>
+</tr><tr><td>BadgeCountDeserialize</td><td>MessagePack_v1</td><td>114.93 ns</td><td>NA</td><td>-</td><td>0.0029</td><td>-</td><td>40 B</td>
+</tr><tr><td>BadgeCountDeserialize</td><td>MessagePack_v2</td><td>186.25 ns</td><td>NA</td><td>-</td><td>0.0029</td><td>-</td><td>40 B</td>
+</tr><tr><td>BadgeCountDeserialize</td><td>MsgPack_v2_opt</td><td>184.20 ns</td><td>NA</td><td>-</td><td>0.0029</td><td>-</td><td>40 B</td>
+</tr><tr><td>BadgeCountDeserialize</td><td>SpanJson</td><td>172.62 ns</td><td>NA</td><td>-</td><td>0.0029</td><td>-</td><td>40 B</td>
+</tr><tr><td>BadgeCountDeserialize</td><td>SystemTextJson</td><td>566.41 ns</td><td>NA</td><td>-</td><td>0.0029</td><td>-</td><td>40 B</td>
+</tr><tr><td>BadgeCountSerialize</td><td>MessagePack_v1</td><td>121.35 ns</td><td>NA</td><td>16 B</td><td>0.0029</td><td>-</td><td>40 B</td>
+</tr><tr><td>BadgeCountSerialize</td><td>MessagePack_v2</td><td>159.24 ns</td><td>NA</td><td>16 B</td><td>0.0029</td><td>-</td><td>40 B</td>
+</tr><tr><td>BadgeCountSerialize</td><td>MsgPack_v2_opt</td><td>170.30 ns</td><td>NA</td><td>16 B</td><td>0.0029</td><td>-</td><td>40 B</td>
+</tr><tr><td>BadgeCountSerialize</td><td>SpanJson</td><td>140.94 ns</td><td>NA</td><td>59 B</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>BadgeCountSerialize</td><td>SystemTextJson</td><td>338.95 ns</td><td>NA</td><td>59 B</td><td>0.0181</td><td>-</td><td>240 B</td>
+</tr><tr><td>BadgeDeserialize</td><td>MessagePack_v1</td><td>766.27 ns</td><td>NA</td><td>-</td><td>0.0334</td><td>-</td><td>440 B</td>
+</tr><tr><td>BadgeDeserialize</td><td>MessagePack_v2</td><td>923.66 ns</td><td>NA</td><td>-</td><td>0.0334</td><td>-</td><td>440 B</td>
+</tr><tr><td>BadgeDeserialize</td><td>MsgPack_v2_opt</td><td>971.63 ns</td><td>NA</td><td>-</td><td>0.0324</td><td>-</td><td>440 B</td>
+</tr><tr><td>BadgeDeserialize</td><td>SpanJson</td><td>1,009.51 ns</td><td>NA</td><td>-</td><td>0.0324</td><td>-</td><td>440 B</td>
+</tr><tr><td>BadgeDeserialize</td><td>SystemTextJson</td><td>2,961.34 ns</td><td>NA</td><td>-</td><td>0.0648</td><td>-</td><td>848 B</td>
+</tr><tr><td>BadgeSerialize</td><td>MessagePack_v1</td><td>634.29 ns</td><td>NA</td><td>101 B</td><td>0.0095</td><td>-</td><td>128 B</td>
+</tr><tr><td>BadgeSerialize</td><td>MessagePack_v2</td><td>731.18 ns</td><td>NA</td><td>101 B</td><td>0.0095</td><td>-</td><td>128 B</td>
+</tr><tr><td>BadgeSerialize</td><td>MsgPack_v2_opt</td><td>710.31 ns</td><td>NA</td><td>101 B</td><td>0.0095</td><td>-</td><td>128 B</td>
+</tr><tr><td>BadgeSerialize</td><td>SpanJson</td><td>710.91 ns</td><td>NA</td><td>397 B</td><td>0.0324</td><td>-</td><td>424 B</td>
+</tr><tr><td>BadgeSerialize</td><td>SystemTextJson</td><td>1,809.86 ns</td><td>NA</td><td>369 B</td><td>0.0668</td><td>-</td><td>888 B</td>
+</tr><tr><td>ClosedDetailsDeserialize</td><td>MessagePack_v1</td><td>914.51 ns</td><td>NA</td><td>-</td><td>0.0448</td><td>-</td><td>592 B</td>
+</tr><tr><td>ClosedDetailsDeserialize</td><td>MessagePack_v2</td><td>1,080.70 ns</td><td>NA</td><td>-</td><td>0.0439</td><td>-</td><td>592 B</td>
+</tr><tr><td>ClosedDetailsDeserialize</td><td>MsgPack_v2_opt</td><td>1,107.50 ns</td><td>NA</td><td>-</td><td>0.0439</td><td>-</td><td>592 B</td>
+</tr><tr><td>ClosedDetailsDeserialize</td><td>SpanJson</td><td>NA</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>ClosedDetailsDeserialize</td><td>SystemTextJson</td><td>3,675.21 ns</td><td>NA</td><td>-</td><td>0.0801</td><td>-</td><td>1,048 B</td>
+</tr><tr><td>ClosedDetailsSerialize</td><td>MessagePack_v1</td><td>722.53 ns</td><td>NA</td><td>107 B</td><td>0.0095</td><td>-</td><td>136 B</td>
+</tr><tr><td>ClosedDetailsSerialize</td><td>MessagePack_v2</td><td>814.57 ns</td><td>NA</td><td>107 B</td><td>0.0095</td><td>-</td><td>136 B</td>
+</tr><tr><td>ClosedDetailsSerialize</td><td>MsgPack_v2_opt</td><td>782.07 ns</td><td>NA</td><td>107 B</td><td>0.0095</td><td>-</td><td>136 B</td>
+</tr><tr><td>ClosedDetailsSerialize</td><td>SpanJson</td><td>814.70 ns</td><td>NA</td><td>440 B</td><td>0.0353</td><td>-</td><td>472 B</td>
+</tr><tr><td>ClosedDetailsSerialize</td><td>SystemTextJson</td><td>2,199.06 ns</td><td>NA</td><td>429 B</td><td>0.0725</td><td>-</td><td>952 B</td>
+</tr><tr><td>CommentDeserialize</td><td>MessagePack_v1</td><td>1,496.25 ns</td><td>NA</td><td>-</td><td>0.0534</td><td>-</td><td>720 B</td>
+</tr><tr><td>CommentDeserialize</td><td>MessagePack_v2</td><td>1,683.79 ns</td><td>NA</td><td>-</td><td>0.0534</td><td>-</td><td>720 B</td>
+</tr><tr><td>CommentDeserialize</td><td>MsgPack_v2_opt</td><td>1,555.23 ns</td><td>NA</td><td>-</td><td>0.0534</td><td>-</td><td>720 B</td>
+</tr><tr><td>CommentDeserialize</td><td>SpanJson</td><td>1,820.25 ns</td><td>NA</td><td>-</td><td>0.0534</td><td>-</td><td>720 B</td>
+</tr><tr><td>CommentDeserialize</td><td>SystemTextJson</td><td>5,386.19 ns</td><td>NA</td><td>-</td><td>0.0839</td><td>-</td><td>1,128 B</td>
+</tr><tr><td>CommentSerialize</td><td>MessagePack_v1</td><td>1,116.30 ns</td><td>NA</td><td>181 B</td><td>0.0153</td><td>-</td><td>208 B</td>
+</tr><tr><td>CommentSerialize</td><td>MessagePack_v2</td><td>1,180.78 ns</td><td>NA</td><td>181 B</td><td>0.0153</td><td>-</td><td>208 B</td>
+</tr><tr><td>CommentSerialize</td><td>MsgPack_v2_opt</td><td>1,132.56 ns</td><td>NA</td><td>175 B</td><td>0.0153</td><td>-</td><td>200 B</td>
+</tr><tr><td>CommentSerialize</td><td>SpanJson</td><td>1,255.21 ns</td><td>NA</td><td>728 B</td><td>0.0572</td><td>-</td><td>768 B</td>
+</tr><tr><td>CommentSerialize</td><td>SystemTextJson</td><td>3,092.54 ns</td><td>NA</td><td>698 B</td><td>0.0916</td><td>-</td><td>1,232 B</td>
+</tr><tr><td>ErrorDeserialize</td><td>MessagePack_v1</td><td>197.06 ns</td><td>NA</td><td>-</td><td>0.0091</td><td>-</td><td>120 B</td>
+</tr><tr><td>ErrorDeserialize</td><td>MessagePack_v2</td><td>257.59 ns</td><td>NA</td><td>-</td><td>0.0091</td><td>-</td><td>120 B</td>
+</tr><tr><td>ErrorDeserialize</td><td>MsgPack_v2_opt</td><td>272.32 ns</td><td>NA</td><td>-</td><td>0.0091</td><td>-</td><td>120 B</td>
+</tr><tr><td>ErrorDeserialize</td><td>SpanJson</td><td>231.00 ns</td><td>NA</td><td>-</td><td>0.0091</td><td>-</td><td>120 B</td>
+</tr><tr><td>ErrorDeserialize</td><td>SystemTextJson</td><td>573.22 ns</td><td>NA</td><td>-</td><td>0.0086</td><td>-</td><td>120 B</td>
+</tr><tr><td>ErrorSerialize</td><td>MessagePack_v1</td><td>175.91 ns</td><td>NA</td><td>24 B</td><td>0.0036</td><td>-</td><td>48 B</td>
+</tr><tr><td>ErrorSerialize</td><td>MessagePack_v2</td><td>212.14 ns</td><td>NA</td><td>24 B</td><td>0.0036</td><td>-</td><td>48 B</td>
+</tr><tr><td>ErrorSerialize</td><td>MsgPack_v2_opt</td><td>210.76 ns</td><td>NA</td><td>24 B</td><td>0.0036</td><td>-</td><td>48 B</td>
+</tr><tr><td>ErrorSerialize</td><td>SpanJson</td><td>219.67 ns</td><td>NA</td><td>71 B</td><td>0.0072</td><td>-</td><td>96 B</td>
+</tr><tr><td>ErrorSerialize</td><td>SystemTextJson</td><td>361.48 ns</td><td>NA</td><td>71 B</td><td>0.0186</td><td>-</td><td>248 B</td>
+</tr><tr><td>EventDeserialize</td><td>MessagePack_v1</td><td>312.89 ns</td><td>NA</td><td>-</td><td>0.0110</td><td>-</td><td>144 B</td>
+</tr><tr><td>EventDeserialize</td><td>MessagePack_v2</td><td>360.83 ns</td><td>NA</td><td>-</td><td>0.0110</td><td>-</td><td>144 B</td>
+</tr><tr><td>EventDeserialize</td><td>MsgPack_v2_opt</td><td>361.38 ns</td><td>NA</td><td>-</td><td>0.0110</td><td>-</td><td>144 B</td>
+</tr><tr><td>EventDeserialize</td><td>SpanJson</td><td>424.82 ns</td><td>NA</td><td>-</td><td>0.0110</td><td>-</td><td>144 B</td>
+</tr><tr><td>EventDeserialize</td><td>SystemTextJson</td><td>960.29 ns</td><td>NA</td><td>-</td><td>0.0105</td><td>-</td><td>144 B</td>
+</tr><tr><td>EventSerialize</td><td>MessagePack_v1</td><td>276.05 ns</td><td>NA</td><td>40 B</td><td>0.0048</td><td>-</td><td>64 B</td>
+</tr><tr><td>EventSerialize</td><td>MessagePack_v2</td><td>306.19 ns</td><td>NA</td><td>40 B</td><td>0.0048</td><td>-</td><td>64 B</td>
+</tr><tr><td>EventSerialize</td><td>MsgPack_v2_opt</td><td>299.47 ns</td><td>NA</td><td>34 B</td><td>0.0048</td><td>-</td><td>64 B</td>
+</tr><tr><td>EventSerialize</td><td>SpanJson</td><td>331.97 ns</td><td>NA</td><td>139 B</td><td>0.0124</td><td>-</td><td>168 B</td>
+</tr><tr><td>EventSerialize</td><td>SystemTextJson</td><td>537.80 ns</td><td>NA</td><td>125 B</td><td>0.0229</td><td>-</td><td>304 B</td>
+</tr><tr><td>FlagOptionDeserialize</td><td>MessagePack_v1</td><td>866.67 ns</td><td>NA</td><td>-</td><td>0.0305</td><td>-</td><td>400 B</td>
+</tr><tr><td>FlagOptionDeserialize</td><td>MessagePack_v2</td><td>813.47 ns</td><td>NA</td><td>-</td><td>0.0305</td><td>-</td><td>400 B</td>
+</tr><tr><td>FlagOptionDeserialize</td><td>MsgPack_v2_opt</td><td>828.01 ns</td><td>NA</td><td>-</td><td>0.0305</td><td>-</td><td>400 B</td>
+</tr><tr><td>FlagOptionDeserialize</td><td>SpanJson</td><td>NA</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>FlagOptionDeserialize</td><td>SystemTextJson</td><td>2,926.06 ns</td><td>NA</td><td>-</td><td>0.0610</td><td>-</td><td>832 B</td>
+</tr><tr><td>FlagOptionSerialize</td><td>MessagePack_v1</td><td>577.45 ns</td><td>NA</td><td>68 B</td><td>0.0067</td><td>-</td><td>96 B</td>
+</tr><tr><td>FlagOptionSerialize</td><td>MessagePack_v2</td><td>603.18 ns</td><td>NA</td><td>68 B</td><td>0.0067</td><td>-</td><td>96 B</td>
+</tr><tr><td>FlagOptionSerialize</td><td>MsgPack_v2_opt</td><td>632.43 ns</td><td>NA</td><td>68 B</td><td>0.0067</td><td>-</td><td>96 B</td>
+</tr><tr><td>FlagOptionSerialize</td><td>SpanJson</td><td>580.80 ns</td><td>NA</td><td>378 B</td><td>0.0305</td><td>-</td><td>400 B</td>
+</tr><tr><td>FlagOptionSerialize</td><td>SystemTextJson</td><td>1,511.33 ns</td><td>NA</td><td>397 B</td><td>0.0706</td><td>-</td><td>928 B</td>
+</tr><tr><td>InboxItemDeserialize</td><td>MessagePack_v1</td><td>2,501.61 ns</td><td>NA</td><td>-</td><td>0.1068</td><td>-</td><td>1,408 B</td>
+</tr><tr><td>InboxItemDeserialize</td><td>MessagePack_v2</td><td>2,219.49 ns</td><td>NA</td><td>-</td><td>0.1068</td><td>-</td><td>1,408 B</td>
+</tr><tr><td>InboxItemDeserialize</td><td>MsgPack_v2_opt</td><td>2,220.93 ns</td><td>NA</td><td>-</td><td>0.1068</td><td>-</td><td>1,408 B</td>
+</tr><tr><td>InboxItemDeserialize</td><td>SpanJson</td><td>2,845.44 ns</td><td>NA</td><td>-</td><td>0.1106</td><td>-</td><td>1,480 B</td>
+</tr><tr><td>InboxItemDeserialize</td><td>SystemTextJson</td><td>6,507.93 ns</td><td>NA</td><td>-</td><td>0.1373</td><td>-</td><td>1,888 B</td>
+</tr><tr><td>InboxItemSerialize</td><td>MessagePack_v1</td><td>1,572.59 ns</td><td>NA</td><td>277 B</td><td>0.0229</td><td>-</td><td>304 B</td>
+</tr><tr><td>InboxItemSerialize</td><td>MessagePack_v2</td><td>1,799.83 ns</td><td>NA</td><td>277 B</td><td>0.0229</td><td>-</td><td>304 B</td>
+</tr><tr><td>InboxItemSerialize</td><td>MsgPack_v2_opt</td><td>1,580.10 ns</td><td>NA</td><td>253 B</td><td>0.0191</td><td>-</td><td>280 B</td>
+</tr><tr><td>InboxItemSerialize</td><td>SpanJson</td><td>1,921.04 ns</td><td>NA</td><td>930 B</td><td>0.0725</td><td>-</td><td>960 B</td>
+</tr><tr><td>InboxItemSerialize</td><td>SystemTextJson</td><td>3,706.96 ns</td><td>NA</td><td>899 B</td><td>0.1068</td><td>-</td><td>1,424 B</td>
+</tr><tr><td>InfoDeserialize</td><td>MessagePack_v1</td><td>2,487.84 ns</td><td>NA</td><td>-</td><td>0.1144</td><td>-</td><td>1,544 B</td>
+</tr><tr><td>InfoDeserialize</td><td>MessagePack_v2</td><td>2,731.88 ns</td><td>NA</td><td>-</td><td>0.1068</td><td>-</td><td>1,400 B</td>
+</tr><tr><td>InfoDeserialize</td><td>MsgPack_v2_opt</td><td>2,596.07 ns</td><td>NA</td><td>-</td><td>0.1068</td><td>-</td><td>1,400 B</td>
+</tr><tr><td>InfoDeserialize</td><td>SpanJson</td><td>3,631.32 ns</td><td>NA</td><td>-</td><td>0.1106</td><td>-</td><td>1,472 B</td>
+</tr><tr><td>InfoDeserialize</td><td>SystemTextJson</td><td>8,959.53 ns</td><td>NA</td><td>-</td><td>0.1373</td><td>-</td><td>1,880 B</td>
+</tr><tr><td>InfoSerialize</td><td>MessagePack_v1</td><td>2,028.54 ns</td><td>NA</td><td>313 B</td><td>0.0343</td><td>-</td><td>480 B</td>
+</tr><tr><td>InfoSerialize</td><td>MessagePack_v2</td><td>1,884.13 ns</td><td>NA</td><td>313 B</td><td>0.0248</td><td>-</td><td>344 B</td>
+</tr><tr><td>InfoSerialize</td><td>MsgPack_v2_opt</td><td>1,662.22 ns</td><td>NA</td><td>308 B</td><td>0.0248</td><td>-</td><td>336 B</td>
+</tr><tr><td>InfoSerialize</td><td>SpanJson</td><td>2,201.30 ns</td><td>NA</td><td>1082 B</td><td>0.0839</td><td>-</td><td>1,112 B</td>
+</tr><tr><td>InfoSerialize</td><td>SystemTextJson</td><td>4,135.25 ns</td><td>NA</td><td>1070 B</td><td>0.1144</td><td>-</td><td>1,584 B</td>
+</tr><tr><td>MigrationInfoDeserialize</td><td>MessagePack_v1</td><td>1,683.46 ns</td><td>NA</td><td>-</td><td>0.0935</td><td>-</td><td>1,232 B</td>
+</tr><tr><td>MigrationInfoDeserialize</td><td>MessagePack_v2</td><td>1,979.44 ns</td><td>NA</td><td>-</td><td>0.0916</td><td>-</td><td>1,232 B</td>
+</tr><tr><td>MigrationInfoDeserialize</td><td>MsgPack_v2_opt</td><td>2,005.67 ns</td><td>NA</td><td>-</td><td>0.0916</td><td>-</td><td>1,232 B</td>
+</tr><tr><td>MigrationInfoDeserialize</td><td>SpanJson</td><td>2,374.39 ns</td><td>NA</td><td>-</td><td>0.0992</td><td>-</td><td>1,304 B</td>
+</tr><tr><td>MigrationInfoDeserialize</td><td>SystemTextJson</td><td>5,578.98 ns</td><td>NA</td><td>-</td><td>0.1297</td><td>-</td><td>1,712 B</td>
+</tr><tr><td>MigrationInfoSerialize</td><td>MessagePack_v1</td><td>1,450.29 ns</td><td>NA</td><td>238 B</td><td>0.0191</td><td>-</td><td>264 B</td>
+</tr><tr><td>MigrationInfoSerialize</td><td>MessagePack_v2</td><td>1,415.23 ns</td><td>NA</td><td>238 B</td><td>0.0191</td><td>-</td><td>264 B</td>
+</tr><tr><td>MigrationInfoSerialize</td><td>MsgPack_v2_opt</td><td>1,548.95 ns</td><td>NA</td><td>214 B</td><td>0.0172</td><td>-</td><td>240 B</td>
+</tr><tr><td>MigrationInfoSerialize</td><td>SpanJson</td><td>NA</td><td>NA</td><td>783 B</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>MigrationInfoSerialize</td><td>SystemTextJson</td><td>3,119.31 ns</td><td>NA</td><td>766 B</td><td>0.0954</td><td>-</td><td>1,288 B</td>
+</tr><tr><td>MobileAssociationBonusDeserialize</td><td>MessagePack_v1</td><td>204.04 ns</td><td>NA</td><td>-</td><td>0.0072</td><td>-</td><td>96 B</td>
+</tr><tr><td>MobileAssociationBonusDeserialize</td><td>MessagePack_v2</td><td>257.64 ns</td><td>NA</td><td>-</td><td>0.0072</td><td>-</td><td>96 B</td>
+</tr><tr><td>MobileAssociationBonusDeserialize</td><td>MsgPack_v2_opt</td><td>265.53 ns</td><td>NA</td><td>-</td><td>0.0072</td><td>-</td><td>96 B</td>
+</tr><tr><td>MobileAssociationBonusDeserialize</td><td>SpanJson</td><td>270.10 ns</td><td>NA</td><td>-</td><td>0.0072</td><td>-</td><td>96 B</td>
+</tr><tr><td>MobileAssociationBonusDeserialize</td><td>SystemTextJson</td><td>736.54 ns</td><td>NA</td><td>-</td><td>0.0067</td><td>-</td><td>96 B</td>
+</tr><tr><td>MobileAssociationBonusSerialize</td><td>MessagePack_v1</td><td>186.48 ns</td><td>NA</td><td>29 B</td><td>0.0041</td><td>-</td><td>56 B</td>
+</tr><tr><td>MobileAssociationBonusSerialize</td><td>MessagePack_v2</td><td>221.17 ns</td><td>NA</td><td>29 B</td><td>0.0041</td><td>-</td><td>56 B</td>
+</tr><tr><td>MobileAssociationBonusSerialize</td><td>MsgPack_v2_opt</td><td>215.65 ns</td><td>NA</td><td>29 B</td><td>0.0041</td><td>-</td><td>56 B</td>
+</tr><tr><td>MobileAssociationBonusSerialize</td><td>SpanJson</td><td>275.93 ns</td><td>NA</td><td>92 B</td><td>0.0091</td><td>-</td><td>120 B</td>
+</tr><tr><td>MobileAssociationBonusSerialize</td><td>SystemTextJson</td><td>428.55 ns</td><td>NA</td><td>92 B</td><td>0.0205</td><td>-</td><td>272 B</td>
+</tr><tr><td>MobileBadgeAwardDeserialize</td><td>MessagePack_v1</td><td>455.79 ns</td><td>NA</td><td>-</td><td>0.0200</td><td>-</td><td>264 B</td>
+</tr><tr><td>MobileBadgeAwardDeserialize</td><td>MessagePack_v2</td><td>563.88 ns</td><td>NA</td><td>-</td><td>0.0200</td><td>-</td><td>264 B</td>
+</tr><tr><td>MobileBadgeAwardDeserialize</td><td>MsgPack_v2_opt</td><td>584.20 ns</td><td>NA</td><td>-</td><td>0.0200</td><td>-</td><td>264 B</td>
+</tr><tr><td>MobileBadgeAwardDeserialize</td><td>SpanJson</td><td>668.75 ns</td><td>NA</td><td>-</td><td>0.0200</td><td>-</td><td>264 B</td>
+</tr><tr><td>MobileBadgeAwardDeserialize</td><td>SystemTextJson</td><td>1,796.71 ns</td><td>NA</td><td>-</td><td>0.0191</td><td>-</td><td>264 B</td>
+</tr><tr><td>MobileBadgeAwardSerialize</td><td>MessagePack_v1</td><td>395.76 ns</td><td>NA</td><td>63 B</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>MobileBadgeAwardSerialize</td><td>MessagePack_v2</td><td>443.53 ns</td><td>NA</td><td>63 B</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>MobileBadgeAwardSerialize</td><td>MsgPack_v2_opt</td><td>456.49 ns</td><td>NA</td><td>63 B</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>MobileBadgeAwardSerialize</td><td>SpanJson</td><td>464.38 ns</td><td>NA</td><td>225 B</td><td>0.0191</td><td>-</td><td>256 B</td>
+</tr><tr><td>MobileBadgeAwardSerialize</td><td>SystemTextJson</td><td>878.05 ns</td><td>NA</td><td>212 B</td><td>0.0296</td><td>-</td><td>392 B</td>
+</tr><tr><td>MobileBannerAdDeserialize</td><td>MessagePack_v1</td><td>395.32 ns</td><td>NA</td><td>-</td><td>0.0181</td><td>-</td><td>240 B</td>
+</tr><tr><td>MobileBannerAdDeserialize</td><td>MessagePack_v2</td><td>474.81 ns</td><td>NA</td><td>-</td><td>0.0181</td><td>-</td><td>240 B</td>
+</tr><tr><td>MobileBannerAdDeserialize</td><td>MsgPack_v2_opt</td><td>557.83 ns</td><td>NA</td><td>-</td><td>0.0181</td><td>-</td><td>240 B</td>
+</tr><tr><td>MobileBannerAdDeserialize</td><td>SpanJson</td><td>526.59 ns</td><td>NA</td><td>-</td><td>0.0200</td><td>-</td><td>264 B</td>
+</tr><tr><td>MobileBannerAdDeserialize</td><td>SystemTextJson</td><td>1,411.48 ns</td><td>NA</td><td>-</td><td>0.0496</td><td>-</td><td>672 B</td>
+</tr><tr><td>MobileBannerAdImageDeserialize</td><td>MessagePack_v1</td><td>167.97 ns</td><td>NA</td><td>-</td><td>0.0060</td><td>-</td><td>80 B</td>
+</tr><tr><td>MobileBannerAdImageDeserialize</td><td>MessagePack_v2</td><td>233.07 ns</td><td>NA</td><td>-</td><td>0.0057</td><td>-</td><td>80 B</td>
+</tr><tr><td>MobileBannerAdImageDeserialize</td><td>MsgPack_v2_opt</td><td>250.11 ns</td><td>NA</td><td>-</td><td>0.0060</td><td>-</td><td>80 B</td>
+</tr><tr><td>MobileBannerAdImageDeserialize</td><td>SpanJson</td><td>205.30 ns</td><td>NA</td><td>-</td><td>0.0060</td><td>-</td><td>80 B</td>
+</tr><tr><td>MobileBannerAdImageDeserialize</td><td>SystemTextJson</td><td>581.86 ns</td><td>NA</td><td>-</td><td>0.0057</td><td>-</td><td>80 B</td>
+</tr><tr><td>MobileBannerAdImageSerialize</td><td>MessagePack_v1</td><td>157.82 ns</td><td>NA</td><td>20 B</td><td>0.0036</td><td>-</td><td>48 B</td>
+</tr><tr><td>MobileBannerAdImageSerialize</td><td>MessagePack_v2</td><td>195.15 ns</td><td>NA</td><td>20 B</td><td>0.0036</td><td>-</td><td>48 B</td>
+</tr><tr><td>MobileBannerAdImageSerialize</td><td>MsgPack_v2_opt</td><td>191.94 ns</td><td>NA</td><td>20 B</td><td>0.0036</td><td>-</td><td>48 B</td>
+</tr><tr><td>MobileBannerAdImageSerialize</td><td>SpanJson</td><td>198.92 ns</td><td>NA</td><td>62 B</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>MobileBannerAdImageSerialize</td><td>SystemTextJson</td><td>359.75 ns</td><td>NA</td><td>62 B</td><td>0.0181</td><td>-</td><td>240 B</td>
+</tr><tr><td>MobileBannerAdSerialize</td><td>MessagePack_v1</td><td>310.92 ns</td><td>NA</td><td>45 B</td><td>0.0052</td><td>-</td><td>72 B</td>
+</tr><tr><td>MobileBannerAdSerialize</td><td>MessagePack_v2</td><td>345.12 ns</td><td>NA</td><td>45 B</td><td>0.0052</td><td>-</td><td>72 B</td>
+</tr><tr><td>MobileBannerAdSerialize</td><td>MsgPack_v2_opt</td><td>343.54 ns</td><td>NA</td><td>45 B</td><td>0.0052</td><td>-</td><td>72 B</td>
+</tr><tr><td>MobileBannerAdSerialize</td><td>SpanJson</td><td>364.64 ns</td><td>NA</td><td>149 B</td><td>0.0134</td><td>-</td><td>176 B</td>
+</tr><tr><td>MobileBannerAdSerialize</td><td>SystemTextJson</td><td>953.36 ns</td><td>NA</td><td>149 B</td><td>0.0505</td><td>-</td><td>672 B</td>
+</tr><tr><td>MobileCareersJobAdDeserialize</td><td>MessagePack_v1</td><td>384.26 ns</td><td>NA</td><td>-</td><td>0.0181</td><td>-</td><td>240 B</td>
+</tr><tr><td>MobileCareersJobAdDeserialize</td><td>MessagePack_v2</td><td>459.66 ns</td><td>NA</td><td>-</td><td>0.0181</td><td>-</td><td>240 B</td>
+</tr><tr><td>MobileCareersJobAdDeserialize</td><td>MsgPack_v2_opt</td><td>459.29 ns</td><td>NA</td><td>-</td><td>0.0181</td><td>-</td><td>240 B</td>
+</tr><tr><td>MobileCareersJobAdDeserialize</td><td>SpanJson</td><td>507.28 ns</td><td>NA</td><td>-</td><td>0.0181</td><td>-</td><td>240 B</td>
+</tr><tr><td>MobileCareersJobAdDeserialize</td><td>SystemTextJson</td><td>1,184.68 ns</td><td>NA</td><td>-</td><td>0.0172</td><td>-</td><td>240 B</td>
+</tr><tr><td>MobileCareersJobAdSerialize</td><td>MessagePack_v1</td><td>323.29 ns</td><td>NA</td><td>56 B</td><td>0.0057</td><td>-</td><td>80 B</td>
+</tr><tr><td>MobileCareersJobAdSerialize</td><td>MessagePack_v2</td><td>350.30 ns</td><td>NA</td><td>56 B</td><td>0.0057</td><td>-</td><td>80 B</td>
+</tr><tr><td>MobileCareersJobAdSerialize</td><td>MsgPack_v2_opt</td><td>357.12 ns</td><td>NA</td><td>56 B</td><td>0.0057</td><td>-</td><td>80 B</td>
+</tr><tr><td>MobileCareersJobAdSerialize</td><td>SpanJson</td><td>409.88 ns</td><td>NA</td><td>160 B</td><td>0.0138</td><td>-</td><td>184 B</td>
+</tr><tr><td>MobileCareersJobAdSerialize</td><td>SystemTextJson</td><td>718.22 ns</td><td>NA</td><td>160 B</td><td>0.0248</td><td>-</td><td>336 B</td>
+</tr><tr><td>MobileCommunityBulletinDeserialize</td><td>MessagePack_v1</td><td>639.52 ns</td><td>NA</td><td>-</td><td>0.0315</td><td>-</td><td>416 B</td>
+</tr><tr><td>MobileCommunityBulletinDeserialize</td><td>MessagePack_v2</td><td>828.50 ns</td><td>NA</td><td>-</td><td>0.0315</td><td>-</td><td>416 B</td>
+</tr><tr><td>MobileCommunityBulletinDeserialize</td><td>MsgPack_v2_opt</td><td>831.81 ns</td><td>NA</td><td>-</td><td>0.0315</td><td>-</td><td>416 B</td>
+</tr><tr><td>MobileCommunityBulletinDeserialize</td><td>SpanJson</td><td>948.48 ns</td><td>NA</td><td>-</td><td>0.0334</td><td>-</td><td>440 B</td>
+</tr><tr><td>MobileCommunityBulletinDeserialize</td><td>SystemTextJson</td><td>2,277.31 ns</td><td>NA</td><td>-</td><td>0.0648</td><td>-</td><td>848 B</td>
+</tr><tr><td>MobileCommunityBulletinSerialize</td><td>MessagePack_v1</td><td>529.90 ns</td><td>NA</td><td>88 B</td><td>0.0076</td><td>-</td><td>112 B</td>
+</tr><tr><td>MobileCommunityBulletinSerialize</td><td>MessagePack_v2</td><td>577.73 ns</td><td>NA</td><td>88 B</td><td>0.0076</td><td>-</td><td>112 B</td>
+</tr><tr><td>MobileCommunityBulletinSerialize</td><td>MsgPack_v2_opt</td><td>592.90 ns</td><td>NA</td><td>88 B</td><td>0.0076</td><td>-</td><td>112 B</td>
+</tr><tr><td>MobileCommunityBulletinSerialize</td><td>SpanJson</td><td>614.60 ns</td><td>NA</td><td>356 B</td><td>0.0286</td><td>-</td><td>376 B</td>
+</tr><tr><td>MobileCommunityBulletinSerialize</td><td>SystemTextJson</td><td>1,449.69 ns</td><td>NA</td><td>333 B</td><td>0.0648</td><td>-</td><td>864 B</td>
+</tr><tr><td>MobileFeedDeserialize</td><td>MessagePack_v1</td><td>7,000.86 ns</td><td>NA</td><td>-</td><td>0.3204</td><td>0.0076</td><td>4,248 B</td>
+</tr><tr><td>MobileFeedDeserialize</td><td>MessagePack_v2</td><td>8,074.03 ns</td><td>NA</td><td>-</td><td>0.3204</td><td>0.0076</td><td>4,248 B</td>
+</tr><tr><td>MobileFeedDeserialize</td><td>MsgPack_v2_opt</td><td>7,527.84 ns</td><td>NA</td><td>-</td><td>0.3204</td><td>-</td><td>4,248 B</td>
+</tr><tr><td>MobileFeedDeserialize</td><td>SpanJson</td><td>8,567.58 ns</td><td>NA</td><td>-</td><td>0.3510</td><td>-</td><td>4,656 B</td>
+</tr><tr><td>MobileFeedDeserialize</td><td>SystemTextJson</td><td>24,889.09 ns</td><td>NA</td><td>-</td><td>0.3662</td><td>-</td><td>5,064 B</td>
+</tr><tr><td>MobileFeedSerialize</td><td>MessagePack_v1</td><td>4,947.85 ns</td><td>NA</td><td>811 B</td><td>0.0610</td><td>-</td><td>840 B</td>
+</tr><tr><td>MobileFeedSerialize</td><td>MessagePack_v2</td><td>4,951.14 ns</td><td>NA</td><td>811 B</td><td>0.0610</td><td>-</td><td>840 B</td>
+</tr><tr><td>MobileFeedSerialize</td><td>MsgPack_v2_opt</td><td>5,178.53 ns</td><td>NA</td><td>811 B</td><td>0.0610</td><td>-</td><td>840 B</td>
+</tr><tr><td>MobileFeedSerialize</td><td>SpanJson</td><td>5,601.78 ns</td><td>NA</td><td>3167 B</td><td>0.2365</td><td>-</td><td>3,184 B</td>
+</tr><tr><td>MobileFeedSerialize</td><td>SystemTextJson</td><td>14,422.43 ns</td><td>NA</td><td>3140 B</td><td>0.2747</td><td>-</td><td>3,664 B</td>
+</tr><tr><td>MobileInboxItemDeserialize</td><td>MessagePack_v1</td><td>505.08 ns</td><td>NA</td><td>-</td><td>0.0238</td><td>-</td><td>320 B</td>
+</tr><tr><td>MobileInboxItemDeserialize</td><td>MessagePack_v2</td><td>628.68 ns</td><td>NA</td><td>-</td><td>0.0238</td><td>-</td><td>320 B</td>
+</tr><tr><td>MobileInboxItemDeserialize</td><td>MsgPack_v2_opt</td><td>636.74 ns</td><td>NA</td><td>-</td><td>0.0238</td><td>-</td><td>320 B</td>
+</tr><tr><td>MobileInboxItemDeserialize</td><td>SpanJson</td><td>680.71 ns</td><td>NA</td><td>-</td><td>0.0238</td><td>-</td><td>320 B</td>
+</tr><tr><td>MobileInboxItemDeserialize</td><td>SystemTextJson</td><td>1,890.14 ns</td><td>NA</td><td>-</td><td>0.0229</td><td>-</td><td>320 B</td>
+</tr><tr><td>MobileInboxItemSerialize</td><td>MessagePack_v1</td><td>500.36 ns</td><td>NA</td><td>84 B</td><td>0.0076</td><td>-</td><td>112 B</td>
+</tr><tr><td>MobileInboxItemSerialize</td><td>MessagePack_v2</td><td>472.98 ns</td><td>NA</td><td>84 B</td><td>0.0076</td><td>-</td><td>112 B</td>
+</tr><tr><td>MobileInboxItemSerialize</td><td>MsgPack_v2_opt</td><td>484.89 ns</td><td>NA</td><td>84 B</td><td>0.0076</td><td>-</td><td>112 B</td>
+</tr><tr><td>MobileInboxItemSerialize</td><td>SpanJson</td><td>556.40 ns</td><td>NA</td><td>256 B</td><td>0.0219</td><td>-</td><td>288 B</td>
+</tr><tr><td>MobileInboxItemSerialize</td><td>SystemTextJson</td><td>1,022.88 ns</td><td>NA</td><td>256 B</td><td>0.0324</td><td>-</td><td>440 B</td>
+</tr><tr><td>MobilePrivilegeDeserialize</td><td>MessagePack_v1</td><td>401.07 ns</td><td>NA</td><td>-</td><td>0.0186</td><td>-</td><td>248 B</td>
+</tr><tr><td>MobilePrivilegeDeserialize</td><td>MessagePack_v2</td><td>504.42 ns</td><td>NA</td><td>-</td><td>0.0181</td><td>-</td><td>248 B</td>
+</tr><tr><td>MobilePrivilegeDeserialize</td><td>MsgPack_v2_opt</td><td>512.35 ns</td><td>NA</td><td>-</td><td>0.0181</td><td>-</td><td>248 B</td>
+</tr><tr><td>MobilePrivilegeDeserialize</td><td>SpanJson</td><td>514.26 ns</td><td>NA</td><td>-</td><td>0.0181</td><td>-</td><td>248 B</td>
+</tr><tr><td>MobilePrivilegeDeserialize</td><td>SystemTextJson</td><td>1,366.25 ns</td><td>NA</td><td>-</td><td>0.0172</td><td>-</td><td>248 B</td>
+</tr><tr><td>MobilePrivilegeSerialize</td><td>MessagePack_v1</td><td>339.40 ns</td><td>NA</td><td>61 B</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>MobilePrivilegeSerialize</td><td>MessagePack_v2</td><td>366.03 ns</td><td>NA</td><td>61 B</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>MobilePrivilegeSerialize</td><td>MsgPack_v2_opt</td><td>433.28 ns</td><td>NA</td><td>61 B</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>MobilePrivilegeSerialize</td><td>SpanJson</td><td>426.10 ns</td><td>NA</td><td>231 B</td><td>0.0196</td><td>-</td><td>256 B</td>
+</tr><tr><td>MobilePrivilegeSerialize</td><td>SystemTextJson</td><td>817.73 ns</td><td>NA</td><td>231 B</td><td>0.0305</td><td>-</td><td>408 B</td>
+</tr><tr><td>MobileQuestionDeserialize</td><td>MessagePack_v1</td><td>557.67 ns</td><td>NA</td><td>-</td><td>0.0238</td><td>-</td><td>312 B</td>
+</tr><tr><td>MobileQuestionDeserialize</td><td>MessagePack_v2</td><td>607.05 ns</td><td>NA</td><td>-</td><td>0.0238</td><td>-</td><td>312 B</td>
+</tr><tr><td>MobileQuestionDeserialize</td><td>MsgPack_v2_opt</td><td>726.71 ns</td><td>NA</td><td>-</td><td>0.0238</td><td>-</td><td>312 B</td>
+</tr><tr><td>MobileQuestionDeserialize</td><td>SpanJson</td><td>667.36 ns</td><td>NA</td><td>-</td><td>0.0248</td><td>-</td><td>336 B</td>
+</tr><tr><td>MobileQuestionDeserialize</td><td>SystemTextJson</td><td>1,885.33 ns</td><td>NA</td><td>-</td><td>0.0534</td><td>-</td><td>744 B</td>
+</tr><tr><td>MobileQuestionSerialize</td><td>MessagePack_v1</td><td>429.59 ns</td><td>NA</td><td>73 B</td><td>0.0076</td><td>-</td><td>104 B</td>
+</tr><tr><td>MobileQuestionSerialize</td><td>MessagePack_v2</td><td>463.52 ns</td><td>NA</td><td>73 B</td><td>0.0076</td><td>-</td><td>104 B</td>
+</tr><tr><td>MobileQuestionSerialize</td><td>MsgPack_v2_opt</td><td>509.59 ns</td><td>NA</td><td>73 B</td><td>0.0076</td><td>-</td><td>104 B</td>
+</tr><tr><td>MobileQuestionSerialize</td><td>SpanJson</td><td>481.96 ns</td><td>NA</td><td>292 B</td><td>0.0238</td><td>-</td><td>320 B</td>
+</tr><tr><td>MobileQuestionSerialize</td><td>SystemTextJson</td><td>1,113.35 ns</td><td>NA</td><td>292 B</td><td>0.0610</td><td>-</td><td>816 B</td>
+</tr><tr><td>MobileRepChangeDeserialize</td><td>MessagePack_v1</td><td>307.70 ns</td><td>NA</td><td>-</td><td>0.0143</td><td>-</td><td>192 B</td>
+</tr><tr><td>MobileRepChangeDeserialize</td><td>MessagePack_v2</td><td>400.93 ns</td><td>NA</td><td>-</td><td>0.0143</td><td>-</td><td>192 B</td>
+</tr><tr><td>MobileRepChangeDeserialize</td><td>MsgPack_v2_opt</td><td>397.74 ns</td><td>NA</td><td>-</td><td>0.0143</td><td>-</td><td>192 B</td>
+</tr><tr><td>MobileRepChangeDeserialize</td><td>SpanJson</td><td>400.26 ns</td><td>NA</td><td>-</td><td>0.0143</td><td>-</td><td>192 B</td>
+</tr><tr><td>MobileRepChangeDeserialize</td><td>SystemTextJson</td><td>1,015.68 ns</td><td>NA</td><td>-</td><td>0.0134</td><td>-</td><td>192 B</td>
+</tr><tr><td>MobileRepChangeSerialize</td><td>MessagePack_v1</td><td>305.65 ns</td><td>NA</td><td>47 B</td><td>0.0052</td><td>-</td><td>72 B</td>
+</tr><tr><td>MobileRepChangeSerialize</td><td>MessagePack_v2</td><td>303.48 ns</td><td>NA</td><td>47 B</td><td>0.0052</td><td>-</td><td>72 B</td>
+</tr><tr><td>MobileRepChangeSerialize</td><td>MsgPack_v2_opt</td><td>307.87 ns</td><td>NA</td><td>47 B</td><td>0.0052</td><td>-</td><td>72 B</td>
+</tr><tr><td>MobileRepChangeSerialize</td><td>SpanJson</td><td>344.02 ns</td><td>NA</td><td>135 B</td><td>0.0119</td><td>-</td><td>160 B</td>
+</tr><tr><td>MobileRepChangeSerialize</td><td>SystemTextJson</td><td>640.11 ns</td><td>NA</td><td>135 B</td><td>0.0238</td><td>-</td><td>312 B</td>
+</tr><tr><td>MobileUpdateNoticeDeserialize</td><td>MessagePack_v1</td><td>199.46 ns</td><td>NA</td><td>-</td><td>0.0091</td><td>-</td><td>120 B</td>
+</tr><tr><td>MobileUpdateNoticeDeserialize</td><td>MessagePack_v2</td><td>241.39 ns</td><td>NA</td><td>-</td><td>0.0091</td><td>-</td><td>120 B</td>
+</tr><tr><td>MobileUpdateNoticeDeserialize</td><td>MsgPack_v2_opt</td><td>245.43 ns</td><td>NA</td><td>-</td><td>0.0091</td><td>-</td><td>120 B</td>
+</tr><tr><td>MobileUpdateNoticeDeserialize</td><td>SpanJson</td><td>217.08 ns</td><td>NA</td><td>-</td><td>0.0091</td><td>-</td><td>120 B</td>
+</tr><tr><td>MobileUpdateNoticeDeserialize</td><td>SystemTextJson</td><td>589.62 ns</td><td>NA</td><td>-</td><td>0.0086</td><td>-</td><td>120 B</td>
+</tr><tr><td>MobileUpdateNoticeSerialize</td><td>MessagePack_v1</td><td>171.09 ns</td><td>NA</td><td>20 B</td><td>0.0036</td><td>-</td><td>48 B</td>
+</tr><tr><td>MobileUpdateNoticeSerialize</td><td>MessagePack_v2</td><td>206.93 ns</td><td>NA</td><td>20 B</td><td>0.0036</td><td>-</td><td>48 B</td>
+</tr><tr><td>MobileUpdateNoticeSerialize</td><td>MsgPack_v2_opt</td><td>208.14 ns</td><td>NA</td><td>20 B</td><td>0.0036</td><td>-</td><td>48 B</td>
+</tr><tr><td>MobileUpdateNoticeSerialize</td><td>SpanJson</td><td>195.57 ns</td><td>NA</td><td>82 B</td><td>0.0083</td><td>-</td><td>112 B</td>
+</tr><tr><td>MobileUpdateNoticeSerialize</td><td>SystemTextJson</td><td>367.85 ns</td><td>NA</td><td>82 B</td><td>0.0200</td><td>-</td><td>264 B</td>
+</tr><tr><td>NetworkUserDeserialize</td><td>MessagePack_v1</td><td>505.00 ns</td><td>NA</td><td>-</td><td>0.0181</td><td>-</td><td>240 B</td>
+</tr><tr><td>NetworkUserDeserialize</td><td>MessagePack_v2</td><td>665.94 ns</td><td>NA</td><td>-</td><td>0.0181</td><td>-</td><td>240 B</td>
+</tr><tr><td>NetworkUserDeserialize</td><td>MsgPack_v2_opt</td><td>754.12 ns</td><td>NA</td><td>-</td><td>0.0181</td><td>-</td><td>240 B</td>
+</tr><tr><td>NetworkUserDeserialize</td><td>SpanJson</td><td>917.55 ns</td><td>NA</td><td>-</td><td>0.0172</td><td>-</td><td>240 B</td>
+</tr><tr><td>NetworkUserDeserialize</td><td>SystemTextJson</td><td>2,389.65 ns</td><td>NA</td><td>-</td><td>0.0458</td><td>-</td><td>648 B</td>
+</tr><tr><td>NetworkUserSerialize</td><td>MessagePack_v1</td><td>533.76 ns</td><td>NA</td><td>91 B</td><td>0.0086</td><td>-</td><td>120 B</td>
+</tr><tr><td>NetworkUserSerialize</td><td>MessagePack_v2</td><td>542.37 ns</td><td>NA</td><td>91 B</td><td>0.0086</td><td>-</td><td>120 B</td>
+</tr><tr><td>NetworkUserSerialize</td><td>MsgPack_v2_opt</td><td>517.91 ns</td><td>NA</td><td>79 B</td><td>0.0076</td><td>-</td><td>104 B</td>
+</tr><tr><td>NetworkUserSerialize</td><td>SpanJson</td><td>624.08 ns</td><td>NA</td><td>367 B</td><td>0.0286</td><td>-</td><td>384 B</td>
+</tr><tr><td>NetworkUserSerialize</td><td>SystemTextJson</td><td>1,489.07 ns</td><td>NA</td><td>356 B</td><td>0.0668</td><td>-</td><td>880 B</td>
+</tr><tr><td>NoticeDeserialize</td><td>MessagePack_v1</td><td>186.43 ns</td><td>NA</td><td>-</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>NoticeDeserialize</td><td>MessagePack_v2</td><td>257.47 ns</td><td>NA</td><td>-</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>NoticeDeserialize</td><td>MsgPack_v2_opt</td><td>261.39 ns</td><td>NA</td><td>-</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>NoticeDeserialize</td><td>SpanJson</td><td>303.44 ns</td><td>NA</td><td>-</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>NoticeDeserialize</td><td>SystemTextJson</td><td>636.48 ns</td><td>NA</td><td>-</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>NoticeSerialize</td><td>MessagePack_v1</td><td>205.58 ns</td><td>NA</td><td>30 B</td><td>0.0041</td><td>-</td><td>56 B</td>
+</tr><tr><td>NoticeSerialize</td><td>MessagePack_v2</td><td>235.95 ns</td><td>NA</td><td>30 B</td><td>0.0038</td><td>-</td><td>56 B</td>
+</tr><tr><td>NoticeSerialize</td><td>MsgPack_v2_opt</td><td>223.51 ns</td><td>NA</td><td>24 B</td><td>0.0036</td><td>-</td><td>48 B</td>
+</tr><tr><td>NoticeSerialize</td><td>SpanJson</td><td>264.21 ns</td><td>NA</td><td>94 B</td><td>0.0091</td><td>-</td><td>120 B</td>
+</tr><tr><td>NoticeSerialize</td><td>SystemTextJson</td><td>428.35 ns</td><td>NA</td><td>94 B</td><td>0.0205</td><td>-</td><td>272 B</td>
+</tr><tr><td>NotificationDeserialize</td><td>MessagePack_v1</td><td>1,926.17 ns</td><td>NA</td><td>-</td><td>0.0973</td><td>-</td><td>1,296 B</td>
+</tr><tr><td>NotificationDeserialize</td><td>MessagePack_v2</td><td>2,069.18 ns</td><td>NA</td><td>-</td><td>0.0954</td><td>-</td><td>1,296 B</td>
+</tr><tr><td>NotificationDeserialize</td><td>MsgPack_v2_opt</td><td>2,017.36 ns</td><td>NA</td><td>-</td><td>0.0954</td><td>-</td><td>1,296 B</td>
+</tr><tr><td>NotificationDeserialize</td><td>SpanJson</td><td>2,818.13 ns</td><td>NA</td><td>-</td><td>0.1030</td><td>-</td><td>1,368 B</td>
+</tr><tr><td>NotificationDeserialize</td><td>SystemTextJson</td><td>6,066.02 ns</td><td>NA</td><td>-</td><td>0.1297</td><td>-</td><td>1,776 B</td>
+</tr><tr><td>NotificationSerialize</td><td>MessagePack_v1</td><td>1,477.91 ns</td><td>NA</td><td>249 B</td><td>0.0210</td><td>-</td><td>280 B</td>
+</tr><tr><td>NotificationSerialize</td><td>MessagePack_v2</td><td>1,476.37 ns</td><td>NA</td><td>249 B</td><td>0.0210</td><td>-</td><td>280 B</td>
+</tr><tr><td>NotificationSerialize</td><td>MsgPack_v2_opt</td><td>1,493.68 ns</td><td>NA</td><td>225 B</td><td>0.0191</td><td>-</td><td>256 B</td>
+</tr><tr><td>NotificationSerialize</td><td>SpanJson</td><td>1,742.77 ns</td><td>NA</td><td>846 B</td><td>0.0668</td><td>-</td><td>888 B</td>
+</tr><tr><td>NotificationSerialize</td><td>SystemTextJson</td><td>3,451.07 ns</td><td>NA</td><td>821 B</td><td>0.0992</td><td>-</td><td>1,344 B</td>
+</tr><tr><td>OriginalQuestionDeserialize</td><td>MessagePack_v1</td><td>180.33 ns</td><td>NA</td><td>-</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>OriginalQuestionDeserialize</td><td>MessagePack_v2</td><td>257.85 ns</td><td>NA</td><td>-</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>OriginalQuestionDeserialize</td><td>MsgPack_v2_opt</td><td>253.60 ns</td><td>NA</td><td>-</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>OriginalQuestionDeserialize</td><td>SpanJson</td><td>245.16 ns</td><td>NA</td><td>-</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>OriginalQuestionDeserialize</td><td>SystemTextJson</td><td>712.03 ns</td><td>NA</td><td>-</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>OriginalQuestionSerialize</td><td>MessagePack_v1</td><td>198.15 ns</td><td>NA</td><td>25 B</td><td>0.0038</td><td>-</td><td>56 B</td>
+</tr><tr><td>OriginalQuestionSerialize</td><td>MessagePack_v2</td><td>202.70 ns</td><td>NA</td><td>25 B</td><td>0.0041</td><td>-</td><td>56 B</td>
+</tr><tr><td>OriginalQuestionSerialize</td><td>MsgPack_v2_opt</td><td>210.80 ns</td><td>NA</td><td>25 B</td><td>0.0041</td><td>-</td><td>56 B</td>
+</tr><tr><td>OriginalQuestionSerialize</td><td>SpanJson</td><td>221.21 ns</td><td>NA</td><td>101 B</td><td>0.0098</td><td>-</td><td>128 B</td>
+</tr><tr><td>OriginalQuestionSerialize</td><td>SystemTextJson</td><td>430.66 ns</td><td>NA</td><td>101 B</td><td>0.0210</td><td>-</td><td>280 B</td>
+</tr><tr><td>PostDeserialize</td><td>MessagePack_v1</td><td>2,927.62 ns</td><td>NA</td><td>-</td><td>0.1221</td><td>-</td><td>1,608 B</td>
+</tr><tr><td>PostDeserialize</td><td>MessagePack_v2</td><td>3,652.79 ns</td><td>NA</td><td>-</td><td>0.1221</td><td>-</td><td>1,608 B</td>
+</tr><tr><td>PostDeserialize</td><td>MsgPack_v2_opt</td><td>3,485.03 ns</td><td>NA</td><td>-</td><td>0.1221</td><td>-</td><td>1,608 B</td>
+</tr><tr><td>PostDeserialize</td><td>SpanJson</td><td>4,280.21 ns</td><td>NA</td><td>-</td><td>0.1221</td><td>-</td><td>1,632 B</td>
+</tr><tr><td>PostDeserialize</td><td>SystemTextJson</td><td>14,680.34 ns</td><td>NA</td><td>-</td><td>0.1526</td><td>-</td><td>2,040 B</td>
+</tr><tr><td>PostSerialize</td><td>MessagePack_v1</td><td>2,407.74 ns</td><td>NA</td><td>415 B</td><td>0.0305</td><td>-</td><td>440 B</td>
+</tr><tr><td>PostSerialize</td><td>MessagePack_v2</td><td>2,405.81 ns</td><td>NA</td><td>415 B</td><td>0.0305</td><td>-</td><td>440 B</td>
+</tr><tr><td>PostSerialize</td><td>MsgPack_v2_opt</td><td>2,373.93 ns</td><td>NA</td><td>391 B</td><td>0.0305</td><td>-</td><td>416 B</td>
+</tr><tr><td>PostSerialize</td><td>SpanJson</td><td>2,830.05 ns</td><td>NA</td><td>1665 B</td><td>0.1297</td><td>-</td><td>1,696 B</td>
+</tr><tr><td>PostSerialize</td><td>SystemTextJson</td><td>6,983.83 ns</td><td>NA</td><td>1602 B</td><td>0.1602</td><td>-</td><td>2,128 B</td>
+</tr><tr><td>PrivilegeDeserialize</td><td>MessagePack_v1</td><td>222.14 ns</td><td>NA</td><td>-</td><td>0.0091</td><td>-</td><td>120 B</td>
+</tr><tr><td>PrivilegeDeserialize</td><td>MessagePack_v2</td><td>272.31 ns</td><td>NA</td><td>-</td><td>0.0091</td><td>-</td><td>120 B</td>
+</tr><tr><td>PrivilegeDeserialize</td><td>MsgPack_v2_opt</td><td>266.79 ns</td><td>NA</td><td>-</td><td>0.0091</td><td>-</td><td>120 B</td>
+</tr><tr><td>PrivilegeDeserialize</td><td>SpanJson</td><td>232.49 ns</td><td>NA</td><td>-</td><td>0.0091</td><td>-</td><td>120 B</td>
+</tr><tr><td>PrivilegeDeserialize</td><td>SystemTextJson</td><td>582.71 ns</td><td>NA</td><td>-</td><td>0.0086</td><td>-</td><td>120 B</td>
+</tr><tr><td>PrivilegeSerialize</td><td>MessagePack_v1</td><td>172.35 ns</td><td>NA</td><td>24 B</td><td>0.0036</td><td>-</td><td>48 B</td>
+</tr><tr><td>PrivilegeSerialize</td><td>MessagePack_v2</td><td>230.88 ns</td><td>NA</td><td>24 B</td><td>0.0036</td><td>-</td><td>48 B</td>
+</tr><tr><td>PrivilegeSerialize</td><td>MsgPack_v2_opt</td><td>210.68 ns</td><td>NA</td><td>24 B</td><td>0.0036</td><td>-</td><td>48 B</td>
+</tr><tr><td>PrivilegeSerialize</td><td>SpanJson</td><td>216.68 ns</td><td>NA</td><td>80 B</td><td>0.0079</td><td>-</td><td>104 B</td>
+</tr><tr><td>PrivilegeSerialize</td><td>SystemTextJson</td><td>395.19 ns</td><td>NA</td><td>80 B</td><td>0.0200</td><td>-</td><td>264 B</td>
+</tr><tr><td>QuestionDeserialize</td><td>MessagePack_v1</td><td>11,470.37 ns</td><td>NA</td><td>-</td><td>0.5341</td><td>0.0153</td><td>7,032 B</td>
+</tr><tr><td>QuestionDeserialize</td><td>MessagePack_v2</td><td>12,971.23 ns</td><td>NA</td><td>-</td><td>0.5341</td><td>0.0153</td><td>7,032 B</td>
+</tr><tr><td>QuestionDeserialize</td><td>MsgPack_v2_opt</td><td>15,151.03 ns</td><td>NA</td><td>-</td><td>0.5341</td><td>0.0153</td><td>7,032 B</td>
+</tr><tr><td>QuestionDeserialize</td><td>SpanJson</td><td>18,315.14 ns</td><td>NA</td><td>-</td><td>0.5493</td><td>-</td><td>7,344 B</td>
+</tr><tr><td>QuestionDeserialize</td><td>SystemTextJson</td><td>47,765.30 ns</td><td>NA</td><td>-</td><td>0.6104</td><td>-</td><td>8,544 B</td>
+</tr><tr><td>QuestionSerialize</td><td>MessagePack_v1</td><td>9,798.00 ns</td><td>NA</td><td>1646 B</td><td>0.1221</td><td>-</td><td>1,672 B</td>
+</tr><tr><td>QuestionSerialize</td><td>MessagePack_v2</td><td>9,715.97 ns</td><td>NA</td><td>1646 B</td><td>0.1221</td><td>-</td><td>1,672 B</td>
+</tr><tr><td>QuestionSerialize</td><td>MsgPack_v2_opt</td><td>9,433.17 ns</td><td>NA</td><td>1502 B</td><td>0.1068</td><td>-</td><td>1,528 B</td>
+</tr><tr><td>QuestionSerialize</td><td>SpanJson</td><td>12,030.79 ns</td><td>NA</td><td>6273 B</td><td>0.4730</td><td>-</td><td>6,288 B</td>
+</tr><tr><td>QuestionSerialize</td><td>SystemTextJson</td><td>27,433.77 ns</td><td>NA</td><td>6120 B</td><td>0.5493</td><td>-</td><td>7,296 B</td>
+</tr><tr><td>QuestionTimelineDeserialize</td><td>MessagePack_v1</td><td>1,131.04 ns</td><td>NA</td><td>-</td><td>0.0477</td><td>-</td><td>624 B</td>
+</tr><tr><td>QuestionTimelineDeserialize</td><td>MessagePack_v2</td><td>1,473.71 ns</td><td>NA</td><td>-</td><td>0.0477</td><td>-</td><td>624 B</td>
+</tr><tr><td>QuestionTimelineDeserialize</td><td>MsgPack_v2_opt</td><td>1,498.21 ns</td><td>NA</td><td>-</td><td>0.0477</td><td>-</td><td>624 B</td>
+</tr><tr><td>QuestionTimelineDeserialize</td><td>SpanJson</td><td>1,718.52 ns</td><td>NA</td><td>-</td><td>0.0477</td><td>-</td><td>624 B</td>
+</tr><tr><td>QuestionTimelineDeserialize</td><td>SystemTextJson</td><td>5,632.87 ns</td><td>NA</td><td>-</td><td>0.0763</td><td>-</td><td>1,032 B</td>
+</tr><tr><td>QuestionTimelineSerialize</td><td>MessagePack_v1</td><td>1,023.09 ns</td><td>NA</td><td>172 B</td><td>0.0153</td><td>-</td><td>200 B</td>
+</tr><tr><td>QuestionTimelineSerialize</td><td>MessagePack_v2</td><td>1,036.04 ns</td><td>NA</td><td>172 B</td><td>0.0153</td><td>-</td><td>200 B</td>
+</tr><tr><td>QuestionTimelineSerialize</td><td>MsgPack_v2_opt</td><td>1,021.60 ns</td><td>NA</td><td>166 B</td><td>0.0134</td><td>-</td><td>192 B</td>
+</tr><tr><td>QuestionTimelineSerialize</td><td>SpanJson</td><td>NA</td><td>NA</td><td>725 B</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>QuestionTimelineSerialize</td><td>SystemTextJson</td><td>2,926.21 ns</td><td>NA</td><td>695 B</td><td>0.0916</td><td>-</td><td>1,216 B</td>
+</tr><tr><td>RelatedSiteDeserialize</td><td>MessagePack_v1</td><td>258.76 ns</td><td>NA</td><td>-</td><td>0.0124</td><td>-</td><td>168 B</td>
+</tr><tr><td>RelatedSiteDeserialize</td><td>MessagePack_v2</td><td>344.07 ns</td><td>NA</td><td>-</td><td>0.0124</td><td>-</td><td>168 B</td>
+</tr><tr><td>RelatedSiteDeserialize</td><td>MsgPack_v2_opt</td><td>323.14 ns</td><td>NA</td><td>-</td><td>0.0124</td><td>-</td><td>168 B</td>
+</tr><tr><td>RelatedSiteDeserialize</td><td>SpanJson</td><td>336.46 ns</td><td>NA</td><td>-</td><td>0.0124</td><td>-</td><td>168 B</td>
+</tr><tr><td>RelatedSiteDeserialize</td><td>SystemTextJson</td><td>701.36 ns</td><td>NA</td><td>-</td><td>0.0124</td><td>-</td><td>168 B</td>
+</tr><tr><td>RelatedSiteSerialize</td><td>MessagePack_v1</td><td>216.59 ns</td><td>NA</td><td>29 B</td><td>0.0041</td><td>-</td><td>56 B</td>
+</tr><tr><td>RelatedSiteSerialize</td><td>MessagePack_v2</td><td>261.45 ns</td><td>NA</td><td>29 B</td><td>0.0038</td><td>-</td><td>56 B</td>
+</tr><tr><td>RelatedSiteSerialize</td><td>MsgPack_v2_opt</td><td>266.18 ns</td><td>NA</td><td>29 B</td><td>0.0038</td><td>-</td><td>56 B</td>
+</tr><tr><td>RelatedSiteSerialize</td><td>SpanJson</td><td>280.83 ns</td><td>NA</td><td>91 B</td><td>0.0091</td><td>-</td><td>120 B</td>
+</tr><tr><td>RelatedSiteSerialize</td><td>SystemTextJson</td><td>422.73 ns</td><td>NA</td><td>86 B</td><td>0.0200</td><td>-</td><td>264 B</td>
+</tr><tr><td>ReputationDeserialize</td><td>MessagePack_v1</td><td>340.79 ns</td><td>NA</td><td>-</td><td>0.0124</td><td>-</td><td>168 B</td>
+</tr><tr><td>ReputationDeserialize</td><td>MessagePack_v2</td><td>464.64 ns</td><td>NA</td><td>-</td><td>0.0124</td><td>-</td><td>168 B</td>
+</tr><tr><td>ReputationDeserialize</td><td>MsgPack_v2_opt</td><td>519.11 ns</td><td>NA</td><td>-</td><td>0.0124</td><td>-</td><td>168 B</td>
+</tr><tr><td>ReputationDeserialize</td><td>SpanJson</td><td>541.33 ns</td><td>NA</td><td>-</td><td>0.0124</td><td>-</td><td>168 B</td>
+</tr><tr><td>ReputationDeserialize</td><td>SystemTextJson</td><td>1,505.80 ns</td><td>NA</td><td>-</td><td>0.0114</td><td>-</td><td>168 B</td>
+</tr><tr><td>ReputationHistoryDeserialize</td><td>MessagePack_v1</td><td>177.88 ns</td><td>NA</td><td>-</td><td>0.0048</td><td>-</td><td>64 B</td>
+</tr><tr><td>ReputationHistoryDeserialize</td><td>MessagePack_v2</td><td>283.57 ns</td><td>NA</td><td>-</td><td>0.0048</td><td>-</td><td>64 B</td>
+</tr><tr><td>ReputationHistoryDeserialize</td><td>MsgPack_v2_opt</td><td>299.14 ns</td><td>NA</td><td>-</td><td>0.0048</td><td>-</td><td>64 B</td>
+</tr><tr><td>ReputationHistoryDeserialize</td><td>SpanJson</td><td>394.13 ns</td><td>NA</td><td>-</td><td>0.0048</td><td>-</td><td>64 B</td>
+</tr><tr><td>ReputationHistoryDeserialize</td><td>SystemTextJson</td><td>950.19 ns</td><td>NA</td><td>-</td><td>0.0038</td><td>-</td><td>64 B</td>
+</tr><tr><td>ReputationHistorySerialize</td><td>MessagePack_v1</td><td>221.24 ns</td><td>NA</td><td>32 B</td><td>0.0041</td><td>-</td><td>56 B</td>
+</tr><tr><td>ReputationHistorySerialize</td><td>MessagePack_v2</td><td>252.10 ns</td><td>NA</td><td>32 B</td><td>0.0038</td><td>-</td><td>56 B</td>
+</tr><tr><td>ReputationHistorySerialize</td><td>MsgPack_v2_opt</td><td>248.06 ns</td><td>NA</td><td>26 B</td><td>0.0038</td><td>-</td><td>56 B</td>
+</tr><tr><td>ReputationHistorySerialize</td><td>SpanJson</td><td>253.78 ns</td><td>NA</td><td>165 B</td><td>0.0143</td><td>-</td><td>192 B</td>
+</tr><tr><td>ReputationHistorySerialize</td><td>SystemTextJson</td><td>567.78 ns</td><td>NA</td><td>151 B</td><td>0.0248</td><td>-</td><td>328 B</td>
+</tr><tr><td>ReputationSerialize</td><td>MessagePack_v1</td><td>341.24 ns</td><td>NA</td><td>51 B</td><td>0.0057</td><td>-</td><td>80 B</td>
+</tr><tr><td>ReputationSerialize</td><td>MessagePack_v2</td><td>385.06 ns</td><td>NA</td><td>51 B</td><td>0.0057</td><td>-</td><td>80 B</td>
+</tr><tr><td>ReputationSerialize</td><td>MsgPack_v2_opt</td><td>379.65 ns</td><td>NA</td><td>45 B</td><td>0.0052</td><td>-</td><td>72 B</td>
+</tr><tr><td>ReputationSerialize</td><td>SpanJson</td><td>404.72 ns</td><td>NA</td><td>204 B</td><td>0.0176</td><td>-</td><td>232 B</td>
+</tr><tr><td>ReputationSerialize</td><td>SystemTextJson</td><td>762.05 ns</td><td>NA</td><td>180 B</td><td>0.0267</td><td>-</td><td>360 B</td>
+</tr><tr><td>RevisionDeserialize</td><td>MessagePack_v1</td><td>1,255.76 ns</td><td>NA</td><td>-</td><td>0.0629</td><td>-</td><td>840 B</td>
+</tr><tr><td>RevisionDeserialize</td><td>MessagePack_v2</td><td>1,538.38 ns</td><td>NA</td><td>-</td><td>0.0629</td><td>-</td><td>840 B</td>
+</tr><tr><td>RevisionDeserialize</td><td>MsgPack_v2_opt</td><td>1,518.91 ns</td><td>NA</td><td>-</td><td>0.0629</td><td>-</td><td>840 B</td>
+</tr><tr><td>RevisionDeserialize</td><td>SpanJson</td><td>1,731.08 ns</td><td>NA</td><td>-</td><td>0.0668</td><td>-</td><td>888 B</td>
+</tr><tr><td>RevisionDeserialize</td><td>SystemTextJson</td><td>5,191.14 ns</td><td>NA</td><td>-</td><td>0.0916</td><td>-</td><td>1,296 B</td>
+</tr><tr><td>RevisionSerialize</td><td>MessagePack_v1</td><td>1,129.53 ns</td><td>NA</td><td>166 B</td><td>0.0134</td><td>-</td><td>192 B</td>
+</tr><tr><td>RevisionSerialize</td><td>MessagePack_v2</td><td>1,374.11 ns</td><td>NA</td><td>166 B</td><td>0.0134</td><td>-</td><td>192 B</td>
+</tr><tr><td>RevisionSerialize</td><td>MsgPack_v2_opt</td><td>1,075.18 ns</td><td>NA</td><td>160 B</td><td>0.0134</td><td>-</td><td>184 B</td>
+</tr><tr><td>RevisionSerialize</td><td>SpanJson</td><td>1,145.08 ns</td><td>NA</td><td>623 B</td><td>0.0477</td><td>-</td><td>640 B</td>
+</tr><tr><td>RevisionSerialize</td><td>SystemTextJson</td><td>2,769.83 ns</td><td>NA</td><td>592 B</td><td>0.0839</td><td>-</td><td>1,112 B</td>
+</tr><tr><td>SearchExcerptDeserialize</td><td>MessagePack_v1</td><td>1,586.27 ns</td><td>NA</td><td>-</td><td>0.0687</td><td>-</td><td>904 B</td>
+</tr><tr><td>SearchExcerptDeserialize</td><td>MessagePack_v2</td><td>2,263.28 ns</td><td>NA</td><td>-</td><td>0.0687</td><td>-</td><td>904 B</td>
+</tr><tr><td>SearchExcerptDeserialize</td><td>MsgPack_v2_opt</td><td>1,988.06 ns</td><td>NA</td><td>-</td><td>0.0687</td><td>-</td><td>904 B</td>
+</tr><tr><td>SearchExcerptDeserialize</td><td>SpanJson</td><td>2,578.13 ns</td><td>NA</td><td>-</td><td>0.0687</td><td>-</td><td>928 B</td>
+</tr><tr><td>SearchExcerptDeserialize</td><td>SystemTextJson</td><td>7,315.91 ns</td><td>NA</td><td>-</td><td>0.0992</td><td>-</td><td>1,336 B</td>
+</tr><tr><td>SearchExcerptSerialize</td><td>MessagePack_v1</td><td>1,477.46 ns</td><td>NA</td><td>260 B</td><td>0.0210</td><td>-</td><td>288 B</td>
+</tr><tr><td>SearchExcerptSerialize</td><td>MessagePack_v2</td><td>1,456.36 ns</td><td>NA</td><td>260 B</td><td>0.0210</td><td>-</td><td>288 B</td>
+</tr><tr><td>SearchExcerptSerialize</td><td>MsgPack_v2_opt</td><td>1,451.21 ns</td><td>NA</td><td>230 B</td><td>0.0191</td><td>-</td><td>256 B</td>
+</tr><tr><td>SearchExcerptSerialize</td><td>SpanJson</td><td>1,764.22 ns</td><td>NA</td><td>1001 B</td><td>0.0763</td><td>-</td><td>1,016 B</td>
+</tr><tr><td>SearchExcerptSerialize</td><td>SystemTextJson</td><td>3,905.51 ns</td><td>NA</td><td>966 B</td><td>0.1068</td><td>-</td><td>1,488 B</td>
+</tr><tr><td>ShallowUserDeserialize</td><td>MessagePack_v1</td><td>433.08 ns</td><td>NA</td><td>-</td><td>0.0181</td><td>-</td><td>240 B</td>
+</tr><tr><td>ShallowUserDeserialize</td><td>MessagePack_v2</td><td>608.22 ns</td><td>NA</td><td>-</td><td>0.0181</td><td>-</td><td>240 B</td>
+</tr><tr><td>ShallowUserDeserialize</td><td>MsgPack_v2_opt</td><td>604.34 ns</td><td>NA</td><td>-</td><td>0.0181</td><td>-</td><td>240 B</td>
+</tr><tr><td>ShallowUserDeserialize</td><td>SpanJson</td><td>580.27 ns</td><td>NA</td><td>-</td><td>0.0181</td><td>-</td><td>240 B</td>
+</tr><tr><td>ShallowUserDeserialize</td><td>SystemTextJson</td><td>1,756.50 ns</td><td>NA</td><td>-</td><td>0.0477</td><td>-</td><td>648 B</td>
+</tr><tr><td>ShallowUserSerialize</td><td>MessagePack_v1</td><td>398.61 ns</td><td>NA</td><td>60 B</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>ShallowUserSerialize</td><td>MessagePack_v2</td><td>421.67 ns</td><td>NA</td><td>60 B</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>ShallowUserSerialize</td><td>MsgPack_v2_opt</td><td>419.58 ns</td><td>NA</td><td>60 B</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>ShallowUserSerialize</td><td>SpanJson</td><td>439.94 ns</td><td>NA</td><td>239 B</td><td>0.0200</td><td>-</td><td>264 B</td>
+</tr><tr><td>ShallowUserSerialize</td><td>SystemTextJson</td><td>1,036.73 ns</td><td>NA</td><td>228 B</td><td>0.0572</td><td>-</td><td>752 B</td>
+</tr><tr><td>SiteDeserialize</td><td>MessagePack_v1</td><td>1,585.51 ns</td><td>NA</td><td>-</td><td>0.0896</td><td>-</td><td>1,184 B</td>
+</tr><tr><td>SiteDeserialize</td><td>MessagePack_v2</td><td>1,787.32 ns</td><td>NA</td><td>-</td><td>0.0896</td><td>-</td><td>1,184 B</td>
+</tr><tr><td>SiteDeserialize</td><td>MsgPack_v2_opt</td><td>1,983.33 ns</td><td>NA</td><td>-</td><td>0.0877</td><td>-</td><td>1,184 B</td>
+</tr><tr><td>SiteDeserialize</td><td>SpanJson</td><td>2,209.63 ns</td><td>NA</td><td>-</td><td>0.0954</td><td>-</td><td>1,256 B</td>
+</tr><tr><td>SiteDeserialize</td><td>SystemTextJson</td><td>5,010.44 ns</td><td>NA</td><td>-</td><td>0.1221</td><td>-</td><td>1,664 B</td>
+</tr><tr><td>SiteSerialize</td><td>MessagePack_v1</td><td>1,249.33 ns</td><td>NA</td><td>217 B</td><td>0.0172</td><td>-</td><td>248 B</td>
+</tr><tr><td>SiteSerialize</td><td>MessagePack_v2</td><td>1,293.80 ns</td><td>NA</td><td>217 B</td><td>0.0172</td><td>-</td><td>248 B</td>
+</tr><tr><td>SiteSerialize</td><td>MsgPack_v2_opt</td><td>1,278.41 ns</td><td>NA</td><td>199 B</td><td>0.0153</td><td>-</td><td>224 B</td>
+</tr><tr><td>SiteSerialize</td><td>SpanJson</td><td>1,502.80 ns</td><td>NA</td><td>697 B</td><td>0.0553</td><td>-</td><td>728 B</td>
+</tr><tr><td>SiteSerialize</td><td>SystemTextJson</td><td>2,683.05 ns</td><td>NA</td><td>685 B</td><td>0.0916</td><td>-</td><td>1,208 B</td>
+</tr><tr><td>StylingDeserialize</td><td>MessagePack_v1</td><td>228.04 ns</td><td>NA</td><td>-</td><td>0.0122</td><td>-</td><td>160 B</td>
+</tr><tr><td>StylingDeserialize</td><td>MessagePack_v2</td><td>287.93 ns</td><td>NA</td><td>-</td><td>0.0119</td><td>-</td><td>160 B</td>
+</tr><tr><td>StylingDeserialize</td><td>MsgPack_v2_opt</td><td>270.41 ns</td><td>NA</td><td>-</td><td>0.0119</td><td>-</td><td>160 B</td>
+</tr><tr><td>StylingDeserialize</td><td>SpanJson</td><td>243.75 ns</td><td>NA</td><td>-</td><td>0.0119</td><td>-</td><td>160 B</td>
+</tr><tr><td>StylingDeserialize</td><td>SystemTextJson</td><td>700.25 ns</td><td>NA</td><td>-</td><td>0.0114</td><td>-</td><td>160 B</td>
+</tr><tr><td>StylingSerialize</td><td>MessagePack_v1</td><td>192.67 ns</td><td>NA</td><td>28 B</td><td>0.0041</td><td>-</td><td>56 B</td>
+</tr><tr><td>StylingSerialize</td><td>MessagePack_v2</td><td>230.92 ns</td><td>NA</td><td>28 B</td><td>0.0041</td><td>-</td><td>56 B</td>
+</tr><tr><td>StylingSerialize</td><td>MsgPack_v2_opt</td><td>237.02 ns</td><td>NA</td><td>28 B</td><td>0.0038</td><td>-</td><td>56 B</td>
+</tr><tr><td>StylingSerialize</td><td>SpanJson</td><td>288.96 ns</td><td>NA</td><td>93 B</td><td>0.0091</td><td>-</td><td>120 B</td>
+</tr><tr><td>StylingSerialize</td><td>SystemTextJson</td><td>372.00 ns</td><td>NA</td><td>93 B</td><td>0.0205</td><td>-</td><td>272 B</td>
+</tr><tr><td>SuggestedEditDeserialize</td><td>MessagePack_v1</td><td>1,010.93 ns</td><td>NA</td><td>-</td><td>0.0439</td><td>-</td><td>592 B</td>
+</tr><tr><td>SuggestedEditDeserialize</td><td>MessagePack_v2</td><td>1,191.39 ns</td><td>NA</td><td>-</td><td>0.0439</td><td>-</td><td>592 B</td>
+</tr><tr><td>SuggestedEditDeserialize</td><td>MsgPack_v2_opt</td><td>1,231.03 ns</td><td>NA</td><td>-</td><td>0.0439</td><td>-</td><td>592 B</td>
+</tr><tr><td>SuggestedEditDeserialize</td><td>SpanJson</td><td>1,643.46 ns</td><td>NA</td><td>-</td><td>0.0458</td><td>-</td><td>616 B</td>
+</tr><tr><td>SuggestedEditDeserialize</td><td>SystemTextJson</td><td>4,661.88 ns</td><td>NA</td><td>-</td><td>0.0763</td><td>-</td><td>1,024 B</td>
+</tr><tr><td>SuggestedEditSerialize</td><td>MessagePack_v1</td><td>911.88 ns</td><td>NA</td><td>154 B</td><td>0.0134</td><td>-</td><td>184 B</td>
+</tr><tr><td>SuggestedEditSerialize</td><td>MessagePack_v2</td><td>930.57 ns</td><td>NA</td><td>154 B</td><td>0.0134</td><td>-</td><td>184 B</td>
+</tr><tr><td>SuggestedEditSerialize</td><td>MsgPack_v2_opt</td><td>915.33 ns</td><td>NA</td><td>136 B</td><td>0.0114</td><td>-</td><td>160 B</td>
+</tr><tr><td>SuggestedEditSerialize</td><td>SpanJson</td><td>1,038.99 ns</td><td>NA</td><td>559 B</td><td>0.0439</td><td>-</td><td>584 B</td>
+</tr><tr><td>SuggestedEditSerialize</td><td>SystemTextJson</td><td>2,236.48 ns</td><td>NA</td><td>537 B</td><td>0.0801</td><td>-</td><td>1,064 B</td>
+</tr><tr><td>TagDeserialize</td><td>MessagePack_v1</td><td>400.53 ns</td><td>NA</td><td>-</td><td>0.0176</td><td>-</td><td>232 B</td>
+</tr><tr><td>TagDeserialize</td><td>MessagePack_v2</td><td>497.75 ns</td><td>NA</td><td>-</td><td>0.0172</td><td>-</td><td>232 B</td>
+</tr><tr><td>TagDeserialize</td><td>MsgPack_v2_opt</td><td>488.00 ns</td><td>NA</td><td>-</td><td>0.0172</td><td>-</td><td>232 B</td>
+</tr><tr><td>TagDeserialize</td><td>SpanJson</td><td>581.30 ns</td><td>NA</td><td>-</td><td>0.0191</td><td>-</td><td>256 B</td>
+</tr><tr><td>TagDeserialize</td><td>SystemTextJson</td><td>1,503.84 ns</td><td>NA</td><td>-</td><td>0.0496</td><td>-</td><td>664 B</td>
+</tr><tr><td>TagScoreDeserialize</td><td>MessagePack_v1</td><td>631.59 ns</td><td>NA</td><td>-</td><td>0.0210</td><td>-</td><td>280 B</td>
+</tr><tr><td>TagScoreDeserialize</td><td>MessagePack_v2</td><td>736.57 ns</td><td>NA</td><td>-</td><td>0.0210</td><td>-</td><td>280 B</td>
+</tr><tr><td>TagScoreDeserialize</td><td>MsgPack_v2_opt</td><td>666.28 ns</td><td>NA</td><td>-</td><td>0.0210</td><td>-</td><td>280 B</td>
+</tr><tr><td>TagScoreDeserialize</td><td>SpanJson</td><td>816.60 ns</td><td>NA</td><td>-</td><td>0.0210</td><td>-</td><td>280 B</td>
+</tr><tr><td>TagScoreDeserialize</td><td>SystemTextJson</td><td>2,506.05 ns</td><td>NA</td><td>-</td><td>0.0496</td><td>-</td><td>688 B</td>
+</tr><tr><td>TagScoreSerialize</td><td>MessagePack_v1</td><td>449.00 ns</td><td>NA</td><td>71 B</td><td>0.0067</td><td>-</td><td>96 B</td>
+</tr><tr><td>TagScoreSerialize</td><td>MessagePack_v2</td><td>496.70 ns</td><td>NA</td><td>71 B</td><td>0.0067</td><td>-</td><td>96 B</td>
+</tr><tr><td>TagScoreSerialize</td><td>MsgPack_v2_opt</td><td>497.18 ns</td><td>NA</td><td>71 B</td><td>0.0067</td><td>-</td><td>96 B</td>
+</tr><tr><td>TagScoreSerialize</td><td>SpanJson</td><td>521.63 ns</td><td>NA</td><td>292 B</td><td>0.0238</td><td>-</td><td>320 B</td>
+</tr><tr><td>TagScoreSerialize</td><td>SystemTextJson</td><td>1,395.42 ns</td><td>NA</td><td>281 B</td><td>0.0610</td><td>-</td><td>800 B</td>
+</tr><tr><td>TagSerialize</td><td>MessagePack_v1</td><td>357.81 ns</td><td>NA</td><td>48 B</td><td>0.0052</td><td>-</td><td>72 B</td>
+</tr><tr><td>TagSerialize</td><td>MessagePack_v2</td><td>419.12 ns</td><td>NA</td><td>48 B</td><td>0.0052</td><td>-</td><td>72 B</td>
+</tr><tr><td>TagSerialize</td><td>MsgPack_v2_opt</td><td>385.54 ns</td><td>NA</td><td>42 B</td><td>0.0052</td><td>-</td><td>72 B</td>
+</tr><tr><td>TagSerialize</td><td>SpanJson</td><td>375.31 ns</td><td>NA</td><td>201 B</td><td>0.0176</td><td>-</td><td>232 B</td>
+</tr><tr><td>TagSerialize</td><td>SystemTextJson</td><td>983.94 ns</td><td>NA</td><td>201 B</td><td>0.0534</td><td>-</td><td>720 B</td>
+</tr><tr><td>TagSynonymDeserialize</td><td>MessagePack_v1</td><td>317.76 ns</td><td>NA</td><td>-</td><td>0.0114</td><td>-</td><td>152 B</td>
+</tr><tr><td>TagSynonymDeserialize</td><td>MessagePack_v2</td><td>480.39 ns</td><td>NA</td><td>-</td><td>0.0114</td><td>-</td><td>152 B</td>
+</tr><tr><td>TagSynonymDeserialize</td><td>MsgPack_v2_opt</td><td>381.01 ns</td><td>NA</td><td>-</td><td>0.0114</td><td>-</td><td>152 B</td>
+</tr><tr><td>TagSynonymDeserialize</td><td>SpanJson</td><td>511.52 ns</td><td>NA</td><td>-</td><td>0.0114</td><td>-</td><td>152 B</td>
+</tr><tr><td>TagSynonymDeserialize</td><td>SystemTextJson</td><td>1,039.42 ns</td><td>NA</td><td>-</td><td>0.0114</td><td>-</td><td>152 B</td>
+</tr><tr><td>TagSynonymSerialize</td><td>MessagePack_v1</td><td>319.18 ns</td><td>NA</td><td>54 B</td><td>0.0057</td><td>-</td><td>80 B</td>
+</tr><tr><td>TagSynonymSerialize</td><td>MessagePack_v2</td><td>336.03 ns</td><td>NA</td><td>54 B</td><td>0.0057</td><td>-</td><td>80 B</td>
+</tr><tr><td>TagSynonymSerialize</td><td>MsgPack_v2_opt</td><td>321.36 ns</td><td>NA</td><td>42 B</td><td>0.0052</td><td>-</td><td>72 B</td>
+</tr><tr><td>TagSynonymSerialize</td><td>SpanJson</td><td>406.09 ns</td><td>NA</td><td>172 B</td><td>0.0153</td><td>-</td><td>200 B</td>
+</tr><tr><td>TagSynonymSerialize</td><td>SystemTextJson</td><td>671.23 ns</td><td>NA</td><td>172 B</td><td>0.0267</td><td>-</td><td>352 B</td>
+</tr><tr><td>TagWikiDeserialize</td><td>MessagePack_v1</td><td>1,166.28 ns</td><td>NA</td><td>-</td><td>0.0515</td><td>-</td><td>688 B</td>
+</tr><tr><td>TagWikiDeserialize</td><td>MessagePack_v2</td><td>1,616.12 ns</td><td>NA</td><td>-</td><td>0.0515</td><td>-</td><td>688 B</td>
+</tr><tr><td>TagWikiDeserialize</td><td>MsgPack_v2_opt</td><td>1,478.44 ns</td><td>NA</td><td>-</td><td>0.0515</td><td>-</td><td>688 B</td>
+</tr><tr><td>TagWikiDeserialize</td><td>SpanJson</td><td>1,757.04 ns</td><td>NA</td><td>-</td><td>0.0515</td><td>-</td><td>688 B</td>
+</tr><tr><td>TagWikiDeserialize</td><td>SystemTextJson</td><td>4,988.76 ns</td><td>NA</td><td>-</td><td>0.0763</td><td>-</td><td>1,096 B</td>
+</tr><tr><td>TagWikiSerialize</td><td>MessagePack_v1</td><td>1,006.73 ns</td><td>NA</td><td>178 B</td><td>0.0153</td><td>-</td><td>208 B</td>
+</tr><tr><td>TagWikiSerialize</td><td>MessagePack_v2</td><td>1,032.34 ns</td><td>NA</td><td>178 B</td><td>0.0153</td><td>-</td><td>208 B</td>
+</tr><tr><td>TagWikiSerialize</td><td>MsgPack_v2_opt</td><td>1,030.26 ns</td><td>NA</td><td>166 B</td><td>0.0134</td><td>-</td><td>192 B</td>
+</tr><tr><td>TagWikiSerialize</td><td>SpanJson</td><td>1,428.22 ns</td><td>NA</td><td>695 B</td><td>0.0553</td><td>-</td><td>728 B</td>
+</tr><tr><td>TagWikiSerialize</td><td>SystemTextJson</td><td>2,787.02 ns</td><td>NA</td><td>674 B</td><td>0.0877</td><td>-</td><td>1,192 B</td>
+</tr><tr><td>TopTagDeserialize</td><td>MessagePack_v1</td><td>249.07 ns</td><td>NA</td><td>-</td><td>0.0079</td><td>-</td><td>104 B</td>
+</tr><tr><td>TopTagDeserialize</td><td>MessagePack_v2</td><td>303.42 ns</td><td>NA</td><td>-</td><td>0.0076</td><td>-</td><td>104 B</td>
+</tr><tr><td>TopTagDeserialize</td><td>MsgPack_v2_opt</td><td>312.59 ns</td><td>NA</td><td>-</td><td>0.0076</td><td>-</td><td>104 B</td>
+</tr><tr><td>TopTagDeserialize</td><td>SpanJson</td><td>342.14 ns</td><td>NA</td><td>-</td><td>0.0076</td><td>-</td><td>104 B</td>
+</tr><tr><td>TopTagDeserialize</td><td>SystemTextJson</td><td>1,083.41 ns</td><td>NA</td><td>-</td><td>0.0076</td><td>-</td><td>104 B</td>
+</tr><tr><td>TopTagSerialize</td><td>MessagePack_v1</td><td>240.22 ns</td><td>NA</td><td>35 B</td><td>0.0048</td><td>-</td><td>64 B</td>
+</tr><tr><td>TopTagSerialize</td><td>MessagePack_v2</td><td>259.14 ns</td><td>NA</td><td>35 B</td><td>0.0048</td><td>-</td><td>64 B</td>
+</tr><tr><td>TopTagSerialize</td><td>MsgPack_v2_opt</td><td>251.28 ns</td><td>NA</td><td>35 B</td><td>0.0048</td><td>-</td><td>64 B</td>
+</tr><tr><td>TopTagSerialize</td><td>SpanJson</td><td>252.12 ns</td><td>NA</td><td>151 B</td><td>0.0134</td><td>-</td><td>176 B</td>
+</tr><tr><td>TopTagSerialize</td><td>SystemTextJson</td><td>585.27 ns</td><td>NA</td><td>151 B</td><td>0.0248</td><td>-</td><td>328 B</td>
+</tr><tr><td>UserDeserialize</td><td>MessagePack_v1</td><td>1,097.46 ns</td><td>NA</td><td>-</td><td>0.0420</td><td>-</td><td>552 B</td>
+</tr><tr><td>UserDeserialize</td><td>MessagePack_v2</td><td>1,374.25 ns</td><td>NA</td><td>-</td><td>0.0420</td><td>-</td><td>552 B</td>
+</tr><tr><td>UserDeserialize</td><td>MsgPack_v2_opt</td><td>1,407.90 ns</td><td>NA</td><td>-</td><td>0.0420</td><td>-</td><td>552 B</td>
+</tr><tr><td>UserDeserialize</td><td>SpanJson</td><td>2,062.15 ns</td><td>NA</td><td>-</td><td>0.0420</td><td>-</td><td>552 B</td>
+</tr><tr><td>UserDeserialize</td><td>SystemTextJson</td><td>5,219.30 ns</td><td>NA</td><td>-</td><td>0.0687</td><td>-</td><td>960 B</td>
+</tr><tr><td>UserSerialize</td><td>MessagePack_v1</td><td>1,097.21 ns</td><td>NA</td><td>210 B</td><td>0.0172</td><td>-</td><td>240 B</td>
+</tr><tr><td>UserSerialize</td><td>MessagePack_v2</td><td>1,078.78 ns</td><td>NA</td><td>210 B</td><td>0.0172</td><td>-</td><td>240 B</td>
+</tr><tr><td>UserSerialize</td><td>MsgPack_v2_opt</td><td>1,038.71 ns</td><td>NA</td><td>186 B</td><td>0.0153</td><td>-</td><td>216 B</td>
+</tr><tr><td>UserSerialize</td><td>SpanJson</td><td>1,543.71 ns</td><td>NA</td><td>882 B</td><td>0.0687</td><td>-</td><td>912 B</td>
+</tr><tr><td>UserSerialize</td><td>SystemTextJson</td><td>2,770.40 ns</td><td>NA</td><td>872 B</td><td>0.1068</td><td>-</td><td>1,400 B</td>
+</tr><tr><td>UserTimelineDeserialize</td><td>MessagePack_v1</td><td>439.15 ns</td><td>NA</td><td>-</td><td>0.0176</td><td>-</td><td>232 B</td>
+</tr><tr><td>UserTimelineDeserialize</td><td>MessagePack_v2</td><td>620.11 ns</td><td>NA</td><td>-</td><td>0.0172</td><td>-</td><td>232 B</td>
+</tr><tr><td>UserTimelineDeserialize</td><td>MsgPack_v2_opt</td><td>625.17 ns</td><td>NA</td><td>-</td><td>0.0172</td><td>-</td><td>232 B</td>
+</tr><tr><td>UserTimelineDeserialize</td><td>SpanJson</td><td>694.56 ns</td><td>NA</td><td>-</td><td>0.0172</td><td>-</td><td>232 B</td>
+</tr><tr><td>UserTimelineDeserialize</td><td>SystemTextJson</td><td>1,730.19 ns</td><td>NA</td><td>-</td><td>0.0172</td><td>-</td><td>232 B</td>
+</tr><tr><td>UserTimelineSerialize</td><td>MessagePack_v1</td><td>515.69 ns</td><td>NA</td><td>70 B</td><td>0.0072</td><td>-</td><td>96 B</td>
+</tr><tr><td>UserTimelineSerialize</td><td>MessagePack_v2</td><td>502.96 ns</td><td>NA</td><td>70 B</td><td>0.0067</td><td>-</td><td>96 B</td>
+</tr><tr><td>UserTimelineSerialize</td><td>MsgPack_v2_opt</td><td>473.59 ns</td><td>NA</td><td>64 B</td><td>0.0067</td><td>-</td><td>88 B</td>
+</tr><tr><td>UserTimelineSerialize</td><td>SpanJson</td><td>NA</td><td>NA</td><td>274 B</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>UserTimelineSerialize</td><td>SystemTextJson</td><td>1,006.56 ns</td><td>NA</td><td>257 B</td><td>0.0324</td><td>-</td><td>432 B</td>
+</tr><tr><td>WritePermissionDeserialize</td><td>MessagePack_v1</td><td>312.31 ns</td><td>NA</td><td>-</td><td>0.0081</td><td>-</td><td>112 B</td>
+</tr><tr><td>WritePermissionDeserialize</td><td>MessagePack_v2</td><td>321.16 ns</td><td>NA</td><td>-</td><td>0.0081</td><td>-</td><td>112 B</td>
+</tr><tr><td>WritePermissionDeserialize</td><td>MsgPack_v2_opt</td><td>341.00 ns</td><td>NA</td><td>-</td><td>0.0081</td><td>-</td><td>112 B</td>
+</tr><tr><td>WritePermissionDeserialize</td><td>SpanJson</td><td>334.11 ns</td><td>NA</td><td>-</td><td>0.0081</td><td>-</td><td>112 B</td>
+</tr><tr><td>WritePermissionDeserialize</td><td>SystemTextJson</td><td>1,089.76 ns</td><td>NA</td><td>-</td><td>0.0076</td><td>-</td><td>112 B</td>
+</tr><tr><td>WritePermissionSerialize</td><td>MessagePack_v1</td><td>240.76 ns</td><td>NA</td><td>28 B</td><td>0.0038</td><td>-</td><td>56 B</td>
+</tr><tr><td>WritePermissionSerialize</td><td>MessagePack_v2</td><td>253.15 ns</td><td>NA</td><td>28 B</td><td>0.0038</td><td>-</td><td>56 B</td>
+</tr><tr><td>WritePermissionSerialize</td><td>MsgPack_v2_opt</td><td>275.03 ns</td><td>NA</td><td>28 B</td><td>0.0038</td><td>-</td><td>56 B</td>
+</tr><tr><td>WritePermissionSerialize</td><td>SpanJson</td><td>230.85 ns</td><td>NA</td><td>168 B</td><td>0.0153</td><td>-</td><td>200 B</td>
+</tr><tr><td>WritePermissionSerialize</td><td>SystemTextJson</td><td>598.04 ns</td><td>NA</td><td>168 B</td><td>0.0257</td><td>-</td><td>344 B</td>
+</tr></tbody></table>
+</body>
+</html>
