@@ -149,8 +149,7 @@
 
         static readonly Dictionary<Type, ICustomJsonFormatter> formatterMap = new Dictionary<Type, ICustomJsonFormatter>()
         {
-            // TODO AnnualDateFormatter
-            //{ typeof(AnnualDate), AnnualDateFormatter.Default },
+            { typeof(AnnualDate), AnnualDateFormatter.Default },
 
             { typeof(DateInterval), DateIntervalFormatter.Default },
             { typeof(Interval), IntervalFormatter.Default },
@@ -206,8 +205,7 @@
 
         static readonly Dictionary<Type, ICustomJsonFormatter> formatterMap = new Dictionary<Type, ICustomJsonFormatter>()
         {
-            // TODO AnnualDateFormatter
-            //{ typeof(AnnualDate), AnnualDateFormatter.Default },
+            { typeof(AnnualDate), AnnualDateFormatter.Default },
 
             { typeof(DateInterval), IsoDateIntervalFormatter.Default },
             { typeof(Interval), IsoIntervalFormatter.Default },
@@ -263,8 +261,7 @@
 
         static readonly Dictionary<Type, ICustomJsonFormatter> formatterMap = new Dictionary<Type, ICustomJsonFormatter>()
         {
-            // TODO AnnualDateFormatter
-            //{ typeof(AnnualDate), AnnualDateFormatter.Default },
+            { typeof(AnnualDate), AnnualDateFormatter.Default },
 
             { typeof(DateInterval), IsoDateIntervalFormatter.Default },
             { typeof(Interval), IsoIntervalFormatter.Default },
@@ -320,8 +317,7 @@
 
         static readonly Dictionary<Type, ICustomJsonFormatter> formatterMap = new Dictionary<Type, ICustomJsonFormatter>()
         {
-            // TODO AnnualDateFormatter
-            //{ typeof(AnnualDate), AnnualDateFormatter.Default },
+            { typeof(AnnualDate), AnnualDateFormatter.Default },
 
             { typeof(DateInterval), IsoDateIntervalFormatter.Default },
             { typeof(Interval), IsoIntervalFormatter.Default },
