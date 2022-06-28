@@ -23,17 +23,26 @@ namespace SpanJson.Formatters
         where TResolver : IJsonFormatterResolver<TSymbol, TResolver>, new()
         where TSymbol : struct
     {
-        private static readonly Func<T> CreateFunctor = StandardResolvers.GetCreateFunctor<TSymbol, TResolver, T>();
+        private static readonly Func<T> CreateFunctor;
 
-        public static readonly DynamicMetaObjectProviderFormatter<T, TSymbol, TResolver> Default =
-            new DynamicMetaObjectProviderFormatter<T, TSymbol, TResolver>();
+        public static readonly DynamicMetaObjectProviderFormatter<T, TSymbol, TResolver> Default;
 
-        private static readonly IJsonFormatterResolver<TSymbol, TResolver> Resolver = StandardResolvers.GetResolver<TSymbol, TResolver>();
-        private static readonly Dictionary<string, DeserializeDelegate> KnownMembersDictionary = BuildKnownMembers();
-        private static readonly ConcurrentDictionary<string, Func<T, object>> GetMemberCache = new ConcurrentDictionary<string, Func<T, object>>(StringComparer.Ordinal);
+        private static readonly IJsonFormatterResolver<TSymbol, TResolver> Resolver;
+        private static readonly Dictionary<string, DeserializeDelegate> KnownMembersDictionary;
+        private static readonly ConcurrentDictionary<string, Func<T, object>> GetMemberCache;
+        private static readonly ConcurrentDictionary<string, Action<T, object>> SetMemberCache;
 
+        static DynamicMetaObjectProviderFormatter()
+        {
+            Resolver = StandardResolvers.GetResolver<TSymbol, TResolver>();
+            GetMemberCache = new ConcurrentDictionary<string, Func<T, object>>(StringComparer.Ordinal);
+            SetMemberCache = new ConcurrentDictionary<string, Action<T, object>>(StringComparer.Ordinal);
+            KnownMembersDictionary = BuildKnownMembers(Resolver);
 
-        private static readonly ConcurrentDictionary<string, Action<T, object>> SetMemberCache = new ConcurrentDictionary<string, Action<T, object>>(StringComparer.Ordinal);
+            CreateFunctor = StandardResolvers.GetCreateFunctor<TSymbol, TResolver, T>();
+            Default = new DynamicMetaObjectProviderFormatter<T, TSymbol, TResolver>();
+        }
+
 
         public T Deserialize(ref JsonReader<TSymbol> reader, IJsonFormatterResolver<TSymbol> resolver)
         {
@@ -174,14 +183,13 @@ namespace SpanJson.Formatters
             }
         }
 
-        private static Dictionary<string, DeserializeDelegate> BuildKnownMembers()
+        private static Dictionary<string, DeserializeDelegate> BuildKnownMembers(IJsonFormatterResolver<TSymbol, TResolver> resolver)
         {
-            var resolver = StandardResolvers.GetResolver<TSymbol, TResolver>();
             var memberInfos = resolver.GetObjectDescription<T>().ToList();
             var inputParameter = Expression.Parameter(typeof(T), "input");
             var readerParameter = Expression.Parameter(typeof(JsonReader<TSymbol>).MakeByRefType(), "reader");
             var resolverParameter = Expression.Parameter(typeof(IJsonFormatterResolver<TSymbol>), "resolver");
-            var result = new Dictionary<string, DeserializeDelegate>(StringComparer.Ordinal);
+            var result = new Dictionary<string, DeserializeDelegate>(resolver.JsonOptions.PropertyNameCaseInsensitive ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
             // can't deserialize abstract or interface
             foreach (var memberInfo in memberInfos)
             {

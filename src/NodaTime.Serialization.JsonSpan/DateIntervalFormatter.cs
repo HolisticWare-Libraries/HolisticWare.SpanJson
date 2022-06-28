@@ -68,7 +68,7 @@
             var count = 0;
             while (!reader.TryReadUtf16IsEndObjectOrValueSeparator(ref count))
             {
-                var propertyName = reader.ReadUtf16VerbatimNameSpan();
+                var propertyName = reader.ReadUtf16VerbatimNameSpan(out _);
 
                 if (propertyName.Equals(startEncodedText.ToString().AsSpan(), StringComparison.OrdinalIgnoreCase))
                 {

@@ -1,6 +1,5 @@
 ﻿namespace SpanJson
 {
-    using System.Runtime.Serialization;
     using System.Text.Encodings.Web;
 
     public class SpanJsonOptions
@@ -15,7 +14,14 @@
 
         /// <summary>Not yet supported</summary>
         public JsonNamingPolicy DictionaryKeyPolicy { get; set; }
+
         public JsonNamingPolicy ExtensionDataNamingPolicy { get; set; }
         public JsonNamingPolicy PropertyNamingPolicy { get; set; }
+
+        /// <summary>Not yet supported
+        /// Determines whether a property's name uses a case-insensitive comparison during deserialization.
+        /// The default value is false.</summary>
+        /// <remarks>There is a performance cost associated when the value is true.</remarks>
+        internal bool PropertyNameCaseInsensitive { get; set; }
     }
 }

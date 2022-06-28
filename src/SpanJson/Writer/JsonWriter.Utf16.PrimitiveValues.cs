@@ -132,10 +132,10 @@
 
         private static bool TryFormatUtf16Single(float value, Span<char> destination, out int written)
         {
-            const string FormatString = "G9";
-#if !NETSTANDARD2_0
-            return value.TryFormat(destination, out written, format: FormatString, provider: CultureInfo.InvariantCulture);
+#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+            return value.TryFormat(destination, out written, provider: CultureInfo.InvariantCulture);
 #else
+            const string FormatString = "G9";
 
             string utf16Text = value.ToString(FormatString, System.Globalization.CultureInfo.InvariantCulture);
 
@@ -171,10 +171,10 @@
 
         private static bool TryFormatUtf16Double(double value, Span<char> destination, out int written)
         {
-            const string FormatString = "G17";
-#if !NETSTANDARD2_0
-            return value.TryFormat(destination, out written, format: FormatString, provider: CultureInfo.InvariantCulture);
+#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+            return value.TryFormat(destination, out written, provider: CultureInfo.InvariantCulture);
 #else
+            const string FormatString = "G17";
 
             string utf16Text = value.ToString(FormatString, CultureInfo.InvariantCulture);
 
