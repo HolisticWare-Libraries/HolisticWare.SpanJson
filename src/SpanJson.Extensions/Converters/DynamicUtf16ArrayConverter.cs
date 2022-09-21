@@ -1,30 +1,28 @@
-﻿using System;
-using SpanJson.Dynamic;
+﻿using SpanJson.Dynamic;
 
-namespace SpanJson.Converters
+namespace SpanJson.Converters;
+
+public class DynamicUtf16ArrayConverter : DynamicObjectConverter
 {
-    public class DynamicUtf16ArrayConverter : DynamicObjectConverter
+    public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object? value, Newtonsoft.Json.JsonSerializer serializer)
     {
-        public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+        switch (value)
         {
-            switch (value)
-            {
-                case null:
-                    writer.WriteNull();
-                    break;
+            case null:
+                writer.WriteNull();
+                break;
 
-                case SpanJsonDynamicArray<char> _:
-                    WriteDynamicObject(writer, value);
-                    break;
+            case SpanJsonDynamicArray<char> _:
+                WriteDynamicObject(writer, value);
+                break;
 
-                default:
-                    throw ThrowHelper2.GetJsonSerializationException<SpanJsonDynamicArray<char>>();
-            }
+            default:
+                throw ThrowHelper2.GetJsonSerializationException<SpanJsonDynamicArray<char>>();
         }
+    }
 
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(SpanJsonDynamicArray<char>);
-        }
+    public override bool CanConvert(Type objectType)
+    {
+        return objectType == typeof(SpanJsonDynamicArray<char>);
     }
 }

@@ -23,12 +23,9 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Numerics;
-using System.Threading;
 using CuteAnt;
 using SpanJson.Utilities;
 
@@ -80,7 +77,7 @@ namespace SpanJson.Linq
             return result;
         }
 
-        internal static int Compare(JTokenType valueType, object objA, object objB)
+        internal static int Compare(JTokenType valueType, object? objA, object? objB)
         {
             if (objA == objB) { return 0; }
             if (objB is null) { return 1; }
@@ -200,7 +197,7 @@ namespace SpanJson.Linq
                         throw ThrowHelper2.GetArgumentException_MustBe<byte[]>();
                     }
 
-                    byte[] bytesA = objA as byte[];
+                    byte[]? bytesA = objA as byte[];
                     Debug.Assert(bytesA is not null);
 
                     return bytesA.AsSpan().SequenceCompareTo(bytesB);
@@ -226,7 +223,7 @@ namespace SpanJson.Linq
                     return comb1.CompareTo(comb2);
 
                 case JTokenType.Uri:
-                    Uri uri2 = objB as Uri;
+                    Uri? uri2 = objB as Uri;
                     if (uri2 is null)
                     {
                         throw ThrowHelper2.GetArgumentException_MustBe<Uri>();
@@ -273,12 +270,12 @@ namespace SpanJson.Linq
             return d1.CompareTo(d2);
         }
 
-        int IComparable.CompareTo(object obj)
+        int IComparable.CompareTo(object? obj)
         {
             if (obj is null) { return 1; }
 
             JTokenType comparisonType;
-            object otherValue;
+            object? otherValue;
             if (obj is JValue other)
             {
                 otherValue = other.Value;
@@ -313,7 +310,7 @@ namespace SpanJson.Linq
         /// <exception cref="ArgumentException">
         /// 	<paramref name="obj"/> is not of the same type as this instance.
         /// </exception>
-        public int CompareTo(JValue obj)
+        public int CompareTo(JValue? obj)
         {
             if (obj is null)
             {

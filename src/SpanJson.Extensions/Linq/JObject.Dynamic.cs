@@ -23,9 +23,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq;
 using System.Linq.Expressions;
 using SpanJson.Utilities;
 
@@ -43,7 +41,7 @@ namespace SpanJson.Linq
 
         private class JObjectDynamicProxy : DynamicProxy<JObject>
         {
-            public override bool TryGetMember(JObject instance, GetMemberBinder binder, out object result)
+            public override bool TryGetMember(JObject instance, GetMemberBinder binder, out object? result)
             {
                 // result can be null
                 result = instance[binder.Name];

@@ -23,7 +23,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System.Collections.Generic;
 
 namespace SpanJson.Linq
 {
@@ -40,7 +39,7 @@ namespace SpanJson.Linq
         /// <returns>
         /// <c>true</c> if the specified objects are equal; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(JToken x, JToken y)
+        public bool Equals(JToken? x, JToken? y)
         {
             return JToken.DeepEquals(x, y);
         }

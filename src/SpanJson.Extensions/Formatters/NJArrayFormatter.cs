@@ -7,20 +7,20 @@ namespace SpanJson.Formatters
     {
         public new static readonly NJArrayFormatter Default = new NJArrayFormatter();
 
-        public override NJArray Deserialize(ref JsonReader<byte> reader, IJsonFormatterResolver<byte> resolver)
+        public override NJArray? Deserialize(ref JsonReader<byte> reader, IJsonFormatterResolver<byte> resolver)
         {
             if (reader.ReadUtf8IsNull()) { return null; }
 
             var jary = JArray.Load(ref reader);
-            return jary.ToPolymorphicObject<NJArray>();
+            return jary!.ToPolymorphicObject<NJArray>();
         }
 
-        public override NJArray Deserialize(ref JsonReader<char> reader, IJsonFormatterResolver<char> resolver)
+        public override NJArray? Deserialize(ref JsonReader<char> reader, IJsonFormatterResolver<char> resolver)
         {
             if (reader.ReadUtf16IsNull()) { return null; }
 
             var jary = JArray.Load(ref reader);
-            return jary.ToPolymorphicObject<NJArray>();
+            return jary!.ToPolymorphicObject<NJArray>();
         }
     }
 
@@ -29,7 +29,7 @@ namespace SpanJson.Formatters
     {
         public static readonly NJArrayFormatter<TArray> Default = new NJArrayFormatter<TArray>();
 
-        public override void Serialize(ref JsonWriter<byte> writer, TArray value, IJsonFormatterResolver<byte> resolver)
+        public override void Serialize(ref JsonWriter<byte> writer, TArray? value, IJsonFormatterResolver<byte> resolver)
         {
             if (value is null) { writer.WriteUtf8Null(); return; }
 
@@ -52,7 +52,7 @@ namespace SpanJson.Formatters
             writer.WriteUtf8EndArray();
         }
 
-        public override void Serialize(ref JsonWriter<char> writer, TArray value, IJsonFormatterResolver<char> resolver)
+        public override void Serialize(ref JsonWriter<char> writer, TArray? value, IJsonFormatterResolver<char> resolver)
         {
             if (value is null) { writer.WriteUtf16Null(); return; }
 

@@ -23,8 +23,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
-using System.Linq;
 using System.Reflection;
 
 namespace SpanJson.Utilities
@@ -38,12 +36,12 @@ namespace SpanJson.Utilities
             EmptyTypes = Type.EmptyTypes;
         }
 
-        public static ConstructorInfo GetDefaultConstructor(Type t)
+        public static ConstructorInfo? GetDefaultConstructor(Type t)
         {
             return GetDefaultConstructor(t, false);
         }
 
-        public static ConstructorInfo GetDefaultConstructor(Type t, bool nonPublic)
+        public static ConstructorInfo? GetDefaultConstructor(Type t, bool nonPublic)
         {
             BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public;
             if (nonPublic)

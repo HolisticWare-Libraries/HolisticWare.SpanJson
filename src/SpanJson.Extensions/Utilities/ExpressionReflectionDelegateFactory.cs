@@ -23,10 +23,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using CuteAnt;
@@ -56,7 +52,7 @@ namespace SpanJson.Utilities
             return compiled;
         }
 
-        public override MethodCaller<T, object> CreateMethodCall<T>(MethodBase method)
+        public override MethodCaller<T, object?> CreateMethodCall<T>(MethodBase method)
         {
             if (method is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.method); }
 
@@ -69,7 +65,7 @@ namespace SpanJson.Utilities
 
             LambdaExpression lambdaExpression = Expression.Lambda(typeof(MethodCaller<T, object>), callExpression, targetParameterExpression, argsParameterExpression);
 
-            MethodCaller<T, object> compiled = (MethodCaller<T, object>)lambdaExpression.Compile();
+            MethodCaller<T, object?> compiled = (MethodCaller<T, object?>)lambdaExpression.Compile();
             return compiled;
         }
 
@@ -78,9 +74,16 @@ namespace SpanJson.Utilities
             public Expression Value;
             public ParameterExpression Variable;
             public bool IsOut;
+
+            public ByRefParameter(Expression value, ParameterExpression variable, bool isOut)
+            {
+                Value = value;
+                Variable = variable;
+                IsOut = isOut;
+            }
         }
 
-        private Expression BuildMethodCall(MethodBase method, Type type, ParameterExpression targetParameterExpression, ParameterExpression argsParameterExpression)
+        private Expression BuildMethodCall(MethodBase method, Type type, ParameterExpression? targetParameterExpression, ParameterExpression argsParameterExpression)
         {
             ParameterInfo[] parametersInfo = method.GetParameters();
 
@@ -103,7 +106,7 @@ namespace SpanJson.Utilities
                     bool isByRef = false;
                     if (parameterType.IsByRef)
                     {
-                        parameterType = parameterType.GetElementType();
+                        parameterType = parameterType.GetElementType()!;
                         isByRef = true;
                     }
 
@@ -116,7 +119,7 @@ namespace SpanJson.Utilities
                     if (isByRef)
                     {
                         ParameterExpression variable = Expression.Variable(parameterType);
-                        refParameterMap.Add(new ByRefParameter { Value = argExpression, Variable = variable, IsOut = parameter.IsOut });
+                        refParameterMap.Add(new ByRefParameter(argExpression, variable, parameter.IsOut));
 
                         argExpression = variable;
                     }
@@ -136,7 +139,7 @@ namespace SpanJson.Utilities
             }
             else
             {
-                Expression readParameter = EnsureCastExpression(targetParameterExpression, method.DeclaringType);
+                Expression readParameter = EnsureCastExpression(targetParameterExpression!, method.DeclaringType!);
 
                 callExpression = Expression.Call(readParameter, (MethodInfo)method, argsExpression);
             }
@@ -186,7 +189,7 @@ namespace SpanJson.Utilities
             // avoid error from expressions compiler because of abstract class
             if (type.IsAbstract)
             {
-                return () => (T)Activator.CreateInstance(type);
+                return () => (T)Activator.CreateInstance(type)!;
             }
 
             try
@@ -206,7 +209,7 @@ namespace SpanJson.Utilities
             {
                 // an error can be thrown if constructor is not valid on Win8
                 // will have INVOCATION_FLAGS_NON_W8P_FX_API invocation flag
-                return () => (T)Activator.CreateInstance(type);
+                return () => (T)Activator.CreateInstance(type)!;
             }
         }
 
@@ -220,8 +223,8 @@ namespace SpanJson.Utilities
             ParameterExpression parameterExpression = Expression.Parameter(instanceType, "instance");
             Expression resultExpression;
 
-            MethodInfo getMethod = propertyInfo.GetGetMethod(true);
-            if (getMethod is null) { ThrowHelper2.GetArgumentException_Property_does_not_have_a_getter(); }
+            MethodInfo? getMethod = propertyInfo.GetGetMethod(true);
+            if (getMethod is null) { throw ThrowHelper2.GetArgumentException_Property_does_not_have_a_getter(); }
 
             if (getMethod.IsStatic)
             {
@@ -229,7 +232,7 @@ namespace SpanJson.Utilities
             }
             else
             {
-                Expression readParameter = EnsureCastExpression(parameterExpression, propertyInfo.DeclaringType);
+                Expression readParameter = EnsureCastExpression(parameterExpression, propertyInfo.DeclaringType!);
 
                 resultExpression = Expression.MakeMemberAccess(readParameter, propertyInfo);
             }
@@ -255,7 +258,7 @@ namespace SpanJson.Utilities
             }
             else
             {
-                Expression sourceExpression = EnsureCastExpression(sourceParameter, fieldInfo.DeclaringType);
+                Expression sourceExpression = EnsureCastExpression(sourceParameter, fieldInfo.DeclaringType!);
 
                 fieldExpression = Expression.Field(sourceExpression, fieldInfo);
             }
@@ -266,13 +269,13 @@ namespace SpanJson.Utilities
             return compiled;
         }
 
-        public override Action<T, object> CreateSet<T>(FieldInfo fieldInfo)
+        public override Action<T, object?> CreateSet<T>(FieldInfo fieldInfo)
         {
             if (fieldInfo is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.fieldInfo); }
 
             // use reflection for structs
             // expression doesn't correctly set value
-            if (fieldInfo.DeclaringType.IsValueType || fieldInfo.IsInitOnly)
+            if (fieldInfo.DeclaringType!.IsValueType || fieldInfo.IsInitOnly)
             {
                 return LateBoundReflectionDelegateFactory.Instance.CreateSet<T>(fieldInfo);
             }
@@ -298,17 +301,17 @@ namespace SpanJson.Utilities
 
             LambdaExpression lambdaExpression = Expression.Lambda(typeof(Action<T, object>), assignExpression, sourceParameterExpression, valueParameterExpression);
 
-            Action<T, object> compiled = (Action<T, object>)lambdaExpression.Compile();
+            Action<T, object?> compiled = (Action<T, object?>)lambdaExpression.Compile();
             return compiled;
         }
 
-        public override Action<T, object> CreateSet<T>(PropertyInfo propertyInfo)
+        public override Action<T, object?> CreateSet<T>(PropertyInfo propertyInfo)
         {
             if (propertyInfo is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.propertyInfo); }
 
             // use reflection for structs
             // expression doesn't correctly set value
-            if (propertyInfo.DeclaringType.IsValueType)
+            if (propertyInfo.DeclaringType!.IsValueType)
             {
                 return LateBoundReflectionDelegateFactory.Instance.CreateSet<T>(propertyInfo);
             }
@@ -321,8 +324,8 @@ namespace SpanJson.Utilities
             ParameterExpression valueParameter = Expression.Parameter(valueType, "value");
             Expression readValueParameter = EnsureCastExpression(valueParameter, propertyInfo.PropertyType);
 
-            MethodInfo setMethod = propertyInfo.GetSetMethod(true);
-            if (setMethod is null) { ThrowHelper2.GetArgumentException_Property_does_not_have_a_setter(); }
+            MethodInfo? setMethod = propertyInfo.GetSetMethod(true);
+            if (setMethod is null) { throw ThrowHelper2.GetArgumentException_Property_does_not_have_a_setter(); }
 
             Expression setExpression;
             if (setMethod.IsStatic)
@@ -338,7 +341,7 @@ namespace SpanJson.Utilities
 
             LambdaExpression lambdaExpression = Expression.Lambda(typeof(Action<T, object>), setExpression, instanceParameter, valueParameter);
 
-            Action<T, object> compiled = (Action<T, object>)lambdaExpression.Compile();
+            Action<T, object?> compiled = (Action<T, object?>)lambdaExpression.Compile();
             return compiled;
         }
 
@@ -358,7 +361,7 @@ namespace SpanJson.Utilities
 
                 if (allowWidening && targetType.IsPrimitive)
                 {
-                    MethodInfo toTargetTypeMethod = typeof(Convert)
+                    MethodInfo? toTargetTypeMethod = typeof(Convert)
                         .GetMethod("To" + targetType.Name, new[] { typeof(object) });
 
                     if (toTargetTypeMethod is not null)

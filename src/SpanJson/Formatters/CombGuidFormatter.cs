@@ -52,7 +52,7 @@ namespace SpanJson.Formatters
     {
         public static readonly NullableCombGuidUtf16ArrayFormatter Default = new NullableCombGuidUtf16ArrayFormatter();
         private static readonly NullableCombGuidUtf16Formatter ElementFormatter = NullableCombGuidUtf16Formatter.Default;
-        public void Serialize(ref JsonWriter<Char> writer, CombGuid?[] value, IJsonFormatterResolver<Char> resolver)
+        public void Serialize(ref JsonWriter<Char> writer, CombGuid?[]? value, IJsonFormatterResolver<Char> resolver)
         {
             if (value is null)
             {
@@ -74,10 +74,10 @@ namespace SpanJson.Formatters
             writer.WriteUtf16EndArray();
         }
 
-        public CombGuid?[] Deserialize(ref JsonReader<Char> reader, IJsonFormatterResolver<Char> resolver)
+        public CombGuid?[]? Deserialize(ref JsonReader<Char> reader, IJsonFormatterResolver<Char> resolver)
         {
-            CombGuid?[] temp = null;
-            CombGuid?[] result;
+            CombGuid?[]? temp = null;
+            CombGuid?[]? result;
             try
             {
                 if (reader.ReadUtf16IsNull())
@@ -123,7 +123,7 @@ namespace SpanJson.Formatters
         public static readonly NullableCombGuidUtf16ListFormatter Default = new NullableCombGuidUtf16ListFormatter();
         private static readonly NullableCombGuidUtf16Formatter ElementFormatter = NullableCombGuidUtf16Formatter.Default;
 
-        public void Serialize(ref JsonWriter<Char> writer, List<CombGuid?> value, IJsonFormatterResolver<Char> resolver)
+        public void Serialize(ref JsonWriter<Char> writer, List<CombGuid?>? value, IJsonFormatterResolver<Char> resolver)
         {
             if (value is null)
             {
@@ -145,7 +145,7 @@ namespace SpanJson.Formatters
             writer.WriteUtf16EndArray();
         }
 
-        public List<CombGuid?> Deserialize(ref JsonReader<Char> reader, IJsonFormatterResolver<Char> resolver)
+        public List<CombGuid?>? Deserialize(ref JsonReader<Char> reader, IJsonFormatterResolver<Char> resolver)
         {
             if (reader.ReadUtf16IsNull())
             {
@@ -167,7 +167,7 @@ namespace SpanJson.Formatters
     {
         public static readonly CombGuidUtf16ArrayFormatter Default = new CombGuidUtf16ArrayFormatter();
         private static readonly CombGuidUtf16Formatter ElementFormatter = CombGuidUtf16Formatter.Default;
-        public void Serialize(ref JsonWriter<Char> writer, CombGuid[] value, IJsonFormatterResolver<Char> resolver)
+        public void Serialize(ref JsonWriter<Char> writer, CombGuid[]? value, IJsonFormatterResolver<Char> resolver)
         {
             if (value is null)
             {
@@ -189,9 +189,9 @@ namespace SpanJson.Formatters
             writer.WriteUtf16EndArray();
         }
 
-        public CombGuid[] Deserialize(ref JsonReader<Char> reader, IJsonFormatterResolver<Char> resolver)
+        public CombGuid[]? Deserialize(ref JsonReader<Char> reader, IJsonFormatterResolver<Char> resolver)
         {
-            CombGuid[] temp = null;
+            CombGuid[]? temp = null;
             CombGuid[] result;
             try
             {
@@ -238,7 +238,7 @@ namespace SpanJson.Formatters
         public static readonly CombGuidUtf16ListFormatter Default = new CombGuidUtf16ListFormatter();
         private static readonly CombGuidUtf16Formatter ElementFormatter = CombGuidUtf16Formatter.Default;
 
-        public void Serialize(ref JsonWriter<Char> writer, List<CombGuid> value, IJsonFormatterResolver<Char> resolver)
+        public void Serialize(ref JsonWriter<Char> writer, List<CombGuid>? value, IJsonFormatterResolver<Char> resolver)
         {
             if (value is null)
             {
@@ -260,7 +260,7 @@ namespace SpanJson.Formatters
             writer.WriteUtf16EndArray();
         }
 
-        public List<CombGuid> Deserialize(ref JsonReader<Char> reader, IJsonFormatterResolver<Char> resolver)
+        public List<CombGuid>? Deserialize(ref JsonReader<Char> reader, IJsonFormatterResolver<Char> resolver)
         {
             if (reader.ReadUtf16IsNull())
             {
@@ -323,7 +323,7 @@ namespace SpanJson.Formatters
     {
         public static readonly NullableCombGuidUtf8ArrayFormatter Default = new NullableCombGuidUtf8ArrayFormatter();
         private static readonly NullableCombGuidUtf8Formatter ElementFormatter = NullableCombGuidUtf8Formatter.Default;
-        public void Serialize(ref JsonWriter<Byte> writer, CombGuid?[] value, IJsonFormatterResolver<Byte> resolver)
+        public void Serialize(ref JsonWriter<Byte> writer, CombGuid?[]? value, IJsonFormatterResolver<Byte> resolver)
         {
             if (value is null)
             {
@@ -345,9 +345,9 @@ namespace SpanJson.Formatters
             writer.WriteUtf8EndArray();
         }
 
-        public CombGuid?[] Deserialize(ref JsonReader<Byte> reader, IJsonFormatterResolver<Byte> resolver)
+        public CombGuid?[]? Deserialize(ref JsonReader<Byte> reader, IJsonFormatterResolver<Byte> resolver)
         {
-            CombGuid?[] temp = null;
+            CombGuid?[]? temp = null;
             CombGuid?[] result;
             try
             {
@@ -394,7 +394,7 @@ namespace SpanJson.Formatters
         public static readonly NullableCombGuidUtf8ListFormatter Default = new NullableCombGuidUtf8ListFormatter();
         private static readonly NullableCombGuidUtf8Formatter ElementFormatter = NullableCombGuidUtf8Formatter.Default;
 
-        public void Serialize(ref JsonWriter<Byte> writer, List<CombGuid?> value, IJsonFormatterResolver<Byte> resolver)
+        public void Serialize(ref JsonWriter<Byte> writer, List<CombGuid?>? value, IJsonFormatterResolver<Byte> resolver)
         {
             if (value is null)
             {
@@ -416,7 +416,7 @@ namespace SpanJson.Formatters
             writer.WriteUtf8EndArray();
         }
 
-        public List<CombGuid?> Deserialize(ref JsonReader<Byte> reader, IJsonFormatterResolver<Byte> resolver)
+        public List<CombGuid?>? Deserialize(ref JsonReader<Byte> reader, IJsonFormatterResolver<Byte> resolver)
         {
             if (reader.ReadUtf8IsNull())
             {
@@ -438,7 +438,7 @@ namespace SpanJson.Formatters
     {
         public static readonly CombGuidUtf8ArrayFormatter Default = new CombGuidUtf8ArrayFormatter();
         private static readonly CombGuidUtf8Formatter ElementFormatter = CombGuidUtf8Formatter.Default;
-        public void Serialize(ref JsonWriter<Byte> writer, CombGuid[] value, IJsonFormatterResolver<Byte> resolver)
+        public void Serialize(ref JsonWriter<Byte> writer, CombGuid[]? value, IJsonFormatterResolver<Byte> resolver)
         {
             if (value is null)
             {
@@ -460,9 +460,9 @@ namespace SpanJson.Formatters
             writer.WriteUtf8EndArray();
         }
 
-        public CombGuid[] Deserialize(ref JsonReader<Byte> reader, IJsonFormatterResolver<Byte> resolver)
+        public CombGuid[]? Deserialize(ref JsonReader<Byte> reader, IJsonFormatterResolver<Byte> resolver)
         {
-            CombGuid[] temp = null;
+            CombGuid[]? temp = null;
             CombGuid[] result;
             try
             {
@@ -509,7 +509,7 @@ namespace SpanJson.Formatters
         public static readonly CombGuidUtf8ListFormatter Default = new CombGuidUtf8ListFormatter();
         private static readonly CombGuidUtf8Formatter ElementFormatter = CombGuidUtf8Formatter.Default;
 
-        public void Serialize(ref JsonWriter<Byte> writer, List<CombGuid> value, IJsonFormatterResolver<Byte> resolver)
+        public void Serialize(ref JsonWriter<Byte> writer, List<CombGuid>? value, IJsonFormatterResolver<Byte> resolver)
         {
             if (value is null)
             {
@@ -531,7 +531,7 @@ namespace SpanJson.Formatters
             writer.WriteUtf8EndArray();
         }
 
-        public List<CombGuid> Deserialize(ref JsonReader<Byte> reader, IJsonFormatterResolver<Byte> resolver)
+        public List<CombGuid>? Deserialize(ref JsonReader<Byte> reader, IJsonFormatterResolver<Byte> resolver)
         {
             if (reader.ReadUtf8IsNull())
             {

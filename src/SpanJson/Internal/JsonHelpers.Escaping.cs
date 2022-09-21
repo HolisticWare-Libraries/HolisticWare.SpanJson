@@ -14,7 +14,7 @@ namespace SpanJson.Internal
         #region -- GetEncodedText --
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static JsonEncodedText GetEncodedText(string text, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
+        public static JsonEncodedText GetEncodedText(string text, JsonEscapeHandling escapeHandling, JavaScriptEncoder? encoder = null)
         {
             switch (escapeHandling)
             {
@@ -30,7 +30,7 @@ namespace SpanJson.Internal
 
         #endregion
 
-        public static byte[] EscapeValue(in ReadOnlySpan<byte> utf8Value, JsonEscapeHandling escapeHandling = JsonEscapeHandling.Default, JavaScriptEncoder encoder = null)
+        public static byte[] EscapeValue(in ReadOnlySpan<byte> utf8Value, JsonEscapeHandling escapeHandling = JsonEscapeHandling.Default, JavaScriptEncoder? encoder = null)
         {
             int idx = EscapingHelper.NeedsEscaping(utf8Value, escapeHandling, encoder);
 
@@ -42,12 +42,12 @@ namespace SpanJson.Internal
             return EscapeValue(utf8Value, escapeHandling, idx, encoder);
         }
 
-        public static byte[] EscapeValue(in ReadOnlySpan<byte> utf8Value, JsonEscapeHandling escapeHandling, int firstEscapeIndexVal, JavaScriptEncoder encoder)
+        public static byte[] EscapeValue(in ReadOnlySpan<byte> utf8Value, JsonEscapeHandling escapeHandling, int firstEscapeIndexVal, JavaScriptEncoder? encoder)
         {
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= utf8Value.Length);
             Debug.Assert(firstEscapeIndexVal >= 0 && firstEscapeIndexVal < utf8Value.Length);
 
-            byte[] valueArray = null;
+            byte[]? valueArray = null;
 
             int length = EscapingHelper.GetMaxEscapedLength(utf8Value.Length, firstEscapeIndexVal);
 
@@ -64,7 +64,7 @@ namespace SpanJson.Internal
             return escapedString;
         }
 
-        public static string EscapeValue(string input, JsonEscapeHandling escapeHandling = JsonEscapeHandling.Default, JavaScriptEncoder encoder = null)
+        public static string EscapeValue(string input, JsonEscapeHandling escapeHandling = JsonEscapeHandling.Default, JavaScriptEncoder? encoder = null)
         {
             if (string.IsNullOrEmpty(input)) { return input; }
 
@@ -82,7 +82,7 @@ namespace SpanJson.Internal
             return EscapeValue(utf16Value, escapeHandling, firstEscapeIndex, encoder);
         }
 
-        public static string EscapeValue(in ReadOnlySpan<char> utf16Value, JsonEscapeHandling escapeHandling = JsonEscapeHandling.Default, JavaScriptEncoder encoder = null)
+        public static string EscapeValue(in ReadOnlySpan<char> utf16Value, JsonEscapeHandling escapeHandling = JsonEscapeHandling.Default, JavaScriptEncoder? encoder = null)
         {
             if (utf16Value.IsEmpty) { return string.Empty; }
 
@@ -95,12 +95,12 @@ namespace SpanJson.Internal
             return EscapeValue(utf16Value, escapeHandling, firstEscapeIndex, encoder);
         }
 
-        public static string EscapeValue(in ReadOnlySpan<char> utf16Value, JsonEscapeHandling escapeHandling, int firstEscapeIndexVal, JavaScriptEncoder encoder)
+        public static string EscapeValue(in ReadOnlySpan<char> utf16Value, JsonEscapeHandling escapeHandling, int firstEscapeIndexVal, JavaScriptEncoder? encoder)
         {
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= utf16Value.Length);
             Debug.Assert(firstEscapeIndexVal >= 0 && firstEscapeIndexVal < utf16Value.Length);
 
-            char[] tempArray = null;
+            char[]? tempArray = null;
 
             var length = EscapingHelper.GetMaxEscapedLength(utf16Value.Length, firstEscapeIndexVal);
 
@@ -121,7 +121,7 @@ namespace SpanJson.Internal
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static byte[] GetEscapedPropertyNameSection(in ReadOnlySpan<byte> utf8Value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder)
+        public static byte[] GetEscapedPropertyNameSection(in ReadOnlySpan<byte> utf8Value, JsonEscapeHandling escapeHandling, JavaScriptEncoder? encoder)
         {
             int idx = EscapingHelper.NeedsEscaping(utf8Value, escapeHandling, encoder);
 
@@ -133,12 +133,12 @@ namespace SpanJson.Internal
             return GetEscapedPropertyNameSection(utf8Value, escapeHandling, idx, encoder);
         }
 
-        private static byte[] GetEscapedPropertyNameSection(in ReadOnlySpan<byte> utf8Value, JsonEscapeHandling escapeHandling, int firstEscapeIndexVal, JavaScriptEncoder encoder)
+        private static byte[] GetEscapedPropertyNameSection(in ReadOnlySpan<byte> utf8Value, JsonEscapeHandling escapeHandling, int firstEscapeIndexVal, JavaScriptEncoder? encoder)
         {
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= utf8Value.Length);
             Debug.Assert(firstEscapeIndexVal >= 0 && firstEscapeIndexVal < utf8Value.Length);
 
-            byte[] valueArray = null;
+            byte[]? valueArray = null;
 
             int length = EscapingHelper.GetMaxEscapedLength(utf8Value.Length, firstEscapeIndexVal);
 

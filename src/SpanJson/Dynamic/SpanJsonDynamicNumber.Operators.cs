@@ -9,7 +9,7 @@ namespace SpanJson.Dynamic
         {
             if (DynamicConverter.TryConvertTo(typeof(SByte), input.Symbols, out var value))
             {
-                return (SByte) value;
+                return (SByte) value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -18,7 +18,7 @@ namespace SpanJson.Dynamic
         {
             if (DynamicConverter.TryConvertTo(typeof(Int16), input.Symbols, out var value))
             {
-                return (Int16) value;
+                return (Int16) value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -27,7 +27,7 @@ namespace SpanJson.Dynamic
         {
             if (DynamicConverter.TryConvertTo(typeof(Int32), input.Symbols, out var value))
             {
-                return (Int32) value;
+                return (Int32) value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -36,7 +36,7 @@ namespace SpanJson.Dynamic
         {
             if (DynamicConverter.TryConvertTo(typeof(Int64), input.Symbols, out var value))
             {
-                return (Int64) value;
+                return (Int64) value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -45,7 +45,7 @@ namespace SpanJson.Dynamic
         {
             if (DynamicConverter.TryConvertTo(typeof(Byte), input.Symbols, out var value))
             {
-                return (Byte) value;
+                return (Byte) value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -54,7 +54,7 @@ namespace SpanJson.Dynamic
         {
             if (DynamicConverter.TryConvertTo(typeof(UInt16), input.Symbols, out var value))
             {
-                return (UInt16) value;
+                return (UInt16) value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -63,7 +63,7 @@ namespace SpanJson.Dynamic
         {
             if (DynamicConverter.TryConvertTo(typeof(UInt32), input.Symbols, out var value))
             {
-                return (UInt32) value;
+                return (UInt32) value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -72,7 +72,7 @@ namespace SpanJson.Dynamic
         {
             if (DynamicConverter.TryConvertTo(typeof(UInt64), input.Symbols, out var value))
             {
-                return (UInt64) value;
+                return (UInt64) value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -81,7 +81,7 @@ namespace SpanJson.Dynamic
         {
             if (DynamicConverter.TryConvertTo(typeof(Single), input.Symbols, out var value))
             {
-                return (Single) value;
+                return (Single) value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -90,7 +90,7 @@ namespace SpanJson.Dynamic
         {
             if (DynamicConverter.TryConvertTo(typeof(Double), input.Symbols, out var value))
             {
-                return (Double) value;
+                return (Double) value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -99,7 +99,7 @@ namespace SpanJson.Dynamic
         {
             if (DynamicConverter.TryConvertTo(typeof(Decimal), input.Symbols, out var value))
             {
-                return (Decimal) value;
+                return (Decimal) value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }

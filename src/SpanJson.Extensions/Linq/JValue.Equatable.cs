@@ -23,7 +23,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
 
 namespace SpanJson.Linq
 {
@@ -32,7 +31,7 @@ namespace SpanJson.Linq
         /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
         /// <returns><c>true</c> if the current object is equal to the <paramref name="other"/> parameter; otherwise, <c>false</c>.</returns>
         /// <param name="other">An object to compare with this object.</param>
-        public bool Equals(JValue other)
+        public bool Equals(JValue? other)
         {
             if (other is null) { return false; }
 
@@ -48,7 +47,7 @@ namespace SpanJson.Linq
         /// <param name="obj">The <see cref="Object"/> to compare with the current <see cref="Object"/>.</param>
         /// <returns><c>true</c> if the specified <see cref="Object"/> is equal to the current <see cref="Object"/>;
         /// otherwise, <c>false</c>.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is JValue v)
             {

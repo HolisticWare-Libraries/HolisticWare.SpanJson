@@ -8,20 +8,20 @@ namespace SpanJson.Formatters
     {
         public new static readonly NJObjectFormatter Default = new NJObjectFormatter();
 
-        public override NJObject Deserialize(ref JsonReader<byte> reader, IJsonFormatterResolver<byte> resolver)
+        public override NJObject? Deserialize(ref JsonReader<byte> reader, IJsonFormatterResolver<byte> resolver)
         {
             if (reader.ReadUtf8IsNull()) { return null; }
 
             var jobj = JObject.Load(ref reader);
-            return jobj.ToPolymorphicObject<NJObject>();
+            return jobj!.ToPolymorphicObject<NJObject>();
         }
 
-        public override NJObject Deserialize(ref JsonReader<char> reader, IJsonFormatterResolver<char> resolver)
+        public override NJObject? Deserialize(ref JsonReader<char> reader, IJsonFormatterResolver<char> resolver)
         {
             if (reader.ReadUtf16IsNull()) { return null; }
 
             var jobj = JObject.Load(ref reader);
-            return jobj.ToPolymorphicObject<NJObject>();
+            return jobj!.ToPolymorphicObject<NJObject>();
         }
     }
 
@@ -30,7 +30,7 @@ namespace SpanJson.Formatters
     {
         public static readonly NJObjectFormatter<TObject> Default = new NJObjectFormatter<TObject>();
 
-        public override void Serialize(ref JsonWriter<byte> writer, TObject value, IJsonFormatterResolver<byte> resolver)
+        public override void Serialize(ref JsonWriter<byte> writer, TObject? value, IJsonFormatterResolver<byte> resolver)
         {
             if (value is null) { writer.WriteUtf8Null(); return; }
 
@@ -68,7 +68,7 @@ namespace SpanJson.Formatters
             writer.WriteUtf8EndObject();
         }
 
-        public override void Serialize(ref JsonWriter<char> writer, TObject value, IJsonFormatterResolver<char> resolver)
+        public override void Serialize(ref JsonWriter<char> writer, TObject? value, IJsonFormatterResolver<char> resolver)
         {
             if (value is null) { writer.WriteUtf16Null(); return; }
 

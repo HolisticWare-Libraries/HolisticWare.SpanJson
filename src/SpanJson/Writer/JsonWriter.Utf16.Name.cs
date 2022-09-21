@@ -33,12 +33,12 @@ using System.Text.Encodings.Web;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void WriteUtf16Name(string value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
+        public void WriteUtf16Name(string value, JsonEscapeHandling escapeHandling, JavaScriptEncoder? encoder = null)
         {
             WriteUtf16Name(value.AsSpan(), escapeHandling, encoder);
         }
 
-        public void WriteUtf16Name(in ReadOnlySpan<char> value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
+        public void WriteUtf16Name(in ReadOnlySpan<char> value, JsonEscapeHandling escapeHandling, JavaScriptEncoder? encoder = null)
         {
             switch (escapeHandling)
             {

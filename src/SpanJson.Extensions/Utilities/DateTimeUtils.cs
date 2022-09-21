@@ -23,8 +23,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
-using System.IO;
 using System.Xml;
 using System.Globalization;
 using DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling;
@@ -192,7 +190,7 @@ namespace SpanJson.Utilities
         }
 
         #region Write
-        internal static void WriteDateTimeString(TextWriter writer, DateTime value, DateFormatHandling format, string formatString, CultureInfo culture)
+        internal static void WriteDateTimeString(TextWriter writer, DateTime value, DateFormatHandling format, string? formatString, CultureInfo culture)
         {
             if (string.IsNullOrEmpty(formatString))
             {
@@ -324,7 +322,7 @@ namespace SpanJson.Utilities
             return start;
         }
 
-        internal static void WriteDateTimeOffsetString(TextWriter writer, DateTimeOffset value, DateFormatHandling format, string formatString, CultureInfo culture)
+        internal static void WriteDateTimeOffsetString(TextWriter writer, DateTimeOffset value, DateFormatHandling format, string? formatString, CultureInfo culture)
         {
             if (string.IsNullOrEmpty(formatString))
             {

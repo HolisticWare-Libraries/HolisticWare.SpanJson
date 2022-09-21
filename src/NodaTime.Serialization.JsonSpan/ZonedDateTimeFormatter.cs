@@ -29,7 +29,7 @@
     {
         public static readonly ZonedDateTimeFormatter Default = new ZonedDateTimeFormatter();
 
-        private ZonedDateTimeFormatter() 
+        private ZonedDateTimeFormatter()
             : base(ZonedDateTimePattern.CreateWithInvariantCulture("uuuu'-'MM'-'dd'T'HH':'mm':'ss;FFFFFFFFFo<G> z",
                 NodaTime.Xml.XmlSerializationSettings.DateTimeZoneProvider), CreateIsoValidator(x => x.Calendar))
         { }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using SpanJson.Helpers;
 
 namespace SpanJson
@@ -12,9 +11,9 @@ namespace SpanJson
     {
         public Type Type { get; }
 
-        public object Arguments { get; }
+        public object? Arguments { get; }
 
-        public JsonCustomSerializerAttribute(Type type, object arguments) : this(type)
+        public JsonCustomSerializerAttribute(Type type, object? arguments) : this(type)
         {
             Arguments = arguments;
         }

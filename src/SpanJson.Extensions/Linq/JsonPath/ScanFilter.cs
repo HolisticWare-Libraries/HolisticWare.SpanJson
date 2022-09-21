@@ -1,50 +1,47 @@
-﻿using System.Collections.Generic;
+﻿namespace SpanJson.Linq.JsonPath;
 
-namespace SpanJson.Linq.JsonPath
+internal class ScanFilter : PathFilter
 {
-    internal class ScanFilter : PathFilter
+    internal string? Name;
+
+    public ScanFilter(string? name)
     {
-        internal string Name;
+        Name = name;
+    }
 
-        public ScanFilter(string name)
+    public override IEnumerable<JToken> ExecuteFilter(JToken root, IEnumerable<JToken> current, JsonSelectSettings? settings)
+    {
+        foreach (JToken c in current)
         {
-            Name = name;
-        }
-
-        public override IEnumerable<JToken> ExecuteFilter(JToken root, IEnumerable<JToken> current, JsonSelectSettings settings)
-        {
-            foreach (JToken c in current)
+            if (Name is null)
             {
-                if (Name is null)
+                yield return c;
+            }
+
+            JToken? value = c;
+
+            while (true)
+            {
+                var container = value as JContainer;
+
+                value = GetNextScanValue(c, container, value);
+                if (value is null)
                 {
-                    yield return c;
+                    break;
                 }
 
-                JToken value = c;
-
-                while (true)
+                if (value is JProperty property)
                 {
-                    JContainer container = value as JContainer;
-
-                    value = GetNextScanValue(c, container, value);
-                    if (value is null)
+                    if (property.Name == Name)
                     {
-                        break;
+                        yield return property.Value;
                     }
-
-                    if (value is JProperty property)
+                }
+                else
+                {
+                    if (Name is null)
                     {
-                        if (property.Name == Name)
-                        {
-                            yield return property.Value;
-                        }
-                    }
-                    else
-                    {
-                        if (Name is null)
-                        {
-                            yield return value;
-                        }
+                        yield return value;
                     }
                 }
             }

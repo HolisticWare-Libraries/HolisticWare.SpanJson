@@ -23,7 +23,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
 
 namespace SpanJson.Utilities
 {
@@ -43,9 +42,9 @@ namespace SpanJson.Utilities
             return (Value1?.GetHashCode() ?? 0) ^ (Value2?.GetHashCode() ?? 0);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is StructMultiKey<T1, T2> key))
+            if (obj is not StructMultiKey<T1, T2> key)
             {
                 return false;
             }

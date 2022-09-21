@@ -23,9 +23,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
-using System.Collections.Generic;
-
 namespace SpanJson.Utilities
 {
     internal static class CollectionUtils
@@ -33,7 +30,7 @@ namespace SpanJson.Utilities
         /// <summary>Adds the elements of the specified collection to the specified generic <see cref="IList{T}"/>.</summary>
         /// <param name="initial">The list to add to.</param>
         /// <param name="collection">The collection of elements to add.</param>
-        public static void AddRange<T>(this IList<T> initial, IEnumerable<T> collection)
+        public static void AddRange<T>(this IList<T> initial, IEnumerable<T>? collection)
         {
             if (initial is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.initial); }
 

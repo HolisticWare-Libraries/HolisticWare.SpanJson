@@ -56,7 +56,7 @@ namespace SpanJson.Internal
         {
             this = default(GuidBits);
 
-            var array = utf8string.Array;
+            var array = utf8string.Array!;
             var offset = utf8string.Offset;
 
             // 32

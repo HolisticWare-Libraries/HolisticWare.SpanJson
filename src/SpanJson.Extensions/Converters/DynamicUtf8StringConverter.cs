@@ -1,35 +1,33 @@
-﻿using System;
-using SpanJson.Dynamic;
+﻿using SpanJson.Dynamic;
 
-namespace SpanJson.Converters
+namespace SpanJson.Converters;
+
+public class DynamicUtf8StringConverter : Newtonsoft.Json.JsonConverter
 {
-    public class DynamicUtf8StringConverter : Newtonsoft.Json.JsonConverter
+    public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object? value, Newtonsoft.Json.JsonSerializer serializer)
     {
-        public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+        switch (value)
         {
-            switch (value)
-            {
-                case null:
-                    writer.WriteNull();
-                    break;
+            case null:
+                writer.WriteNull();
+                break;
 
-                case SpanJsonDynamicUtf8String utf8String:
-                    writer.WriteValue(utf8String);
-                    break;
+            case SpanJsonDynamicUtf8String utf8String:
+                writer.WriteValue(utf8String);
+                break;
 
-                default:
-                    throw ThrowHelper2.GetJsonSerializationException<SpanJsonDynamicUtf8String>();
-            }
+            default:
+                throw ThrowHelper2.GetJsonSerializationException<SpanJsonDynamicUtf8String>();
         }
+    }
 
-        public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
-        {
-            throw ThrowHelper.GetNotSupportedException();
-        }
+    public override object? ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object? existingValue, Newtonsoft.Json.JsonSerializer serializer)
+    {
+        throw ThrowHelper.GetNotSupportedException();
+    }
 
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(SpanJsonDynamicUtf8String);
-        }
+    public override bool CanConvert(Type objectType)
+    {
+        return objectType == typeof(SpanJsonDynamicUtf8String);
     }
 }

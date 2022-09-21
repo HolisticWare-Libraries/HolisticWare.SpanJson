@@ -1,12 +1,9 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Buffers;
 using System.Diagnostics;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 using SpanJson.Internal;
 
 namespace SpanJson.Document
@@ -14,9 +11,9 @@ namespace SpanJson.Document
     partial class JsonDocument
     {
         // Cached unrented documents for literal values.
-        private static JsonDocument s_nullLiteral;
-        private static JsonDocument s_trueLiteral;
-        private static JsonDocument s_falseLiteral;
+        private static JsonDocument? s_nullLiteral;
+        private static JsonDocument? s_trueLiteral;
+        private static JsonDocument? s_falseLiteral;
 
         private const int UnseekableStreamInitialRentSize = 4096;
         public static JsonDocument Parse(byte[] utf8Json, JsonDocumentOptions options = default)
@@ -157,7 +154,9 @@ namespace SpanJson.Document
 
         internal static JsonDocument ParseValue(Stream utf8Json, JsonDocumentOptions options)
         {
+#if !(NETSTANDARD2_0 || NETCOREAPP2_1)
             Debug.Assert(utf8Json != null);
+#endif
 
             ArraySegment<byte> drained = ReadToEnd(utf8Json);
             Debug.Assert(drained.Array != null);
@@ -362,7 +361,7 @@ namespace SpanJson.Document
         /// <exception cref="JsonException">
         ///   A value could not be read from the reader.
         /// </exception>
-        public static bool TryParseValue(ref Utf8JsonReader reader, /*[NotNullWhen(true)] */out JsonDocument document)
+        public static bool TryParseValue(ref Utf8JsonReader reader, [NotNullWhen(true)] out JsonDocument? document)
         {
             return TryParseValue(ref reader, out document, shouldThrow: false, useArrayPools: true);
         }
@@ -404,16 +403,16 @@ namespace SpanJson.Document
         /// </exception>
         public static JsonDocument ParseValue(ref Utf8JsonReader reader)
         {
-            bool ret = TryParseValue(ref reader, out JsonDocument document, shouldThrow: true, useArrayPools: true);
+            bool ret = TryParseValue(ref reader, out JsonDocument? document, shouldThrow: true, useArrayPools: true);
 
             Debug.Assert(ret, "TryParseValue returned false with shouldThrow: true.");
             Debug.Assert(document != null, "null document returned with shouldThrow: true.");
-            return document;
+            return document!;
         }
 
         internal static bool TryParseValue(
             ref Utf8JsonReader reader,
-            /*[NotNullWhen(true)] */out JsonDocument document,
+            [NotNullWhen(true)] out JsonDocument? document,
             bool shouldThrow,
             bool useArrayPools)
         {
@@ -683,8 +682,8 @@ namespace SpanJson.Document
         private static JsonDocument Parse(
             ReadOnlyMemory<byte> utf8Json,
             JsonReaderOptions readerOptions,
-            byte[] extraRentedArrayPoolBytes = null,
-            PooledByteBufferWriter extraPooledByteBufferWriter = null)
+            byte[]? extraRentedArrayPoolBytes = null,
+            PooledByteBufferWriter? extraPooledByteBufferWriter = null)
         {
             ReadOnlySpan<byte> utf8JsonSpan = utf8Json.Span;
             var database = MetadataDb.CreateRented(utf8Json.Length, convertToAlloc: false);
@@ -748,7 +747,7 @@ namespace SpanJson.Document
         private static ArraySegment<byte> ReadToEnd(Stream stream)
         {
             int written = 0;
-            byte[] rented = null;
+            byte[]? rented = null;
 
             ReadOnlySpan<byte> utf8Bom = JsonUtf8Constant.Utf8Bom;
 
@@ -830,7 +829,7 @@ namespace SpanJson.Document
             CancellationToken cancellationToken)
         {
             int written = 0;
-            byte[] rented = null;
+            byte[]? rented = null;
 
             try
             {

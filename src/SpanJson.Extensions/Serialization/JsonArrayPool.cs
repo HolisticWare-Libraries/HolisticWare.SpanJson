@@ -1,7 +1,6 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
 using System.Buffers;
 
 namespace SpanJson.Serialization
@@ -18,9 +17,9 @@ namespace SpanJson.Serialization
 
         public T[] Rent(int minimumLength) => _inner.Rent(minimumLength);
 
-        public void Return(T[] array)
+        public void Return(T[]? array)
         {
-            if (array is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.array); }
+            if (array is null) { return; }
 
             _inner.Return(array);
         }

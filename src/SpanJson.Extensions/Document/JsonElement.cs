@@ -2,9 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using CuteAnt;
 using SpanJson.Internal;
@@ -391,7 +390,7 @@ namespace SpanJson.Document
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="ToString"/>
-        public string GetString()
+        public string? GetString()
         {
             CheckValidInstance();
 
@@ -415,7 +414,7 @@ namespace SpanJson.Document
         /// <exception cref="ObjectDisposedException">
         ///   The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
-        public bool TryGetBytesFromBase64(out byte[] value)
+        public bool TryGetBytesFromBase64([MaybeNullWhen(false)] out byte[] value)
         {
             CheckValidInstance();
 
@@ -441,7 +440,7 @@ namespace SpanJson.Document
         /// <seealso cref="ToString"/>
         public byte[] GetBytesFromBase64()
         {
-            if (TryGetBytesFromBase64(out byte[] value))
+            if (TryGetBytesFromBase64(out byte[]? value))
             {
                 return value;
             }
@@ -1494,11 +1493,13 @@ namespace SpanJson.Document
                 case JsonTokenType.BeginObject:
                     {
                         // null parent should have hit the None case
+#if !(NETSTANDARD2_0 || NETCOREAPP2_1)
                         Debug.Assert(_parent is not null);
+#endif
                         return _parent.GetRawValueAsString(_idx);
                     }
                 case JsonTokenType.String:
-                    return GetString();
+                    return GetString()!;
                 case JsonTokenType.Comment:
                 case JsonTokenType.EndArray:
                 case JsonTokenType.EndObject:

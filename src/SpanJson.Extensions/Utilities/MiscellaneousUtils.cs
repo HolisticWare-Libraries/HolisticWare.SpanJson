@@ -23,7 +23,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -40,14 +39,14 @@ namespace SpanJson.Utilities
             return new ArgumentOutOfRangeException(paramName, newMessage);
         }
 
-        public static string ToString(object value)
+        public static string ToString(object? value)
         {
             if (value is null)
             {
                 return "{null}";
             }
 
-            return (value is string s) ? @"""" + s + @"""" : value.ToString();
+            return (value is string s) ? @"""" + s + @"""" : value.ToString()!;
         }
 
         internal static RegexOptions GetRegexOptions(string optionsText)

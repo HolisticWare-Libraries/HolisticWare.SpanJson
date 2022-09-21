@@ -18,7 +18,7 @@ namespace SpanJson.Formatters
         {
             var writerParameter = Expression.Parameter(typeof(JsonWriter<TSymbol>).MakeByRefType(), "writer");
             var valueParameter = Expression.Parameter(typeof(T), "value");
-            MethodInfo writerMethodInfo = null;
+            MethodInfo? writerMethodInfo = null;
             if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 writerMethodInfo = FindPublicInstanceMethod(writerParameter.Type, nameof(JsonWriter<TSymbol>.WriteUtf8Verbatim), typeof(byte[]));
@@ -35,7 +35,7 @@ namespace SpanJson.Formatters
             var cases = new List<SwitchCase>();
             foreach (var name in Enum.GetNames(typeof(T)))
             {
-                Expression valueConstant = null;
+                Expression? valueConstant = null;
                 // TODO Enum (NamingPolicy、StringEscapeHandling)
                 var formattedValue = escapeFunctor(GetFormattedValue(name));
                 if (SymbolHelper<TSymbol>.IsUtf8)

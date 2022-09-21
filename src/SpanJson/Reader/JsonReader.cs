@@ -161,7 +161,7 @@ namespace SpanJson
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public object ReadDynamic()
+        public object? ReadDynamic()
         {
             if (SymbolHelper<TSymbol>.IsUtf8)
             {
@@ -463,7 +463,7 @@ namespace SpanJson
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public byte[] ReadBytesFromBase64()
+        public byte[]? ReadBytesFromBase64()
         {
             if (SymbolHelper<TSymbol>.IsUtf8)
             {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
+﻿using System.Runtime.CompilerServices;
 using CuteAnt;
 using SpanJson.Internal;
 
@@ -36,7 +33,7 @@ namespace SpanJson.Dynamic
 
         protected override BaseDynamicTypeConverter<TSymbol> Converter => DynamicConverter;
 
-        public override bool TryConvert(Type outputType, out object result)
+        public override bool TryConvert(Type outputType, out object? result)
         {
             var jsonRaw = Symbols;
             if (NumberTypes.Contains(outputType))
@@ -50,7 +47,7 @@ namespace SpanJson.Dynamic
         {
             private static readonly Dictionary<Type, ConvertDelegate> Converters = BuildDelegates();
 
-            public override bool TryConvertTo(Type destinationType, ReadOnlySpan<TSymbol> span, out object value)
+            public override bool TryConvertTo(Type destinationType, ReadOnlySpan<TSymbol> span, out object? value)
             {
                 try
                 {
@@ -67,9 +64,11 @@ namespace SpanJson.Dynamic
                         return true;
                     }
 
-                    if (destinationType.IsEnum || (destinationType = Nullable.GetUnderlyingType(destinationType)) is not null)
+                    Type? enumType = destinationType;
+
+                    if (enumType.IsEnum || (enumType = Nullable.GetUnderlyingType(destinationType)) is not null)
                     {
-                        string data;
+                        string? data;
                         if (SymbolHelper<TSymbol>.IsUtf8)
                         {
                             data = TextEncodings.Utf8.GetStringWithCache(reader.ReadUtf8StringSpan()); // Eunm 基本不需要Json转义
@@ -79,10 +78,10 @@ namespace SpanJson.Dynamic
                             data = reader.ReadString();
                         }
 #if NETSTANDARD2_0
-                        value = Enum.Parse(destinationType, data, false);
+                        value = Enum.Parse(enumType, data, false);
                         return true;
 #else
-                        if (Enum.TryParse(destinationType, data, out var enumValue))
+                        if (Enum.TryParse(enumType, data, out var enumValue))
                         {
                             value = enumValue;
                             return true;
@@ -96,8 +95,9 @@ namespace SpanJson.Dynamic
                 return false;
             }
 
-            public override bool IsSupported(Type type)
+            public override bool IsSupported(Type? type)
             {
+                if (type is null) { return false; }
                 var fix = Converters.ContainsKey(type) || type == typeof(string) || type.IsEnum;
                 if (!fix)
                 {
@@ -146,7 +146,7 @@ namespace SpanJson.Dynamic
             var jsonRaw = input.Symbols;
             if (DynamicConverter.TryConvertTo(typeof(SByte), jsonRaw.Slice(1, jsonRaw.Count - 2), out var value))
             {
-                return (SByte)value;
+                return (SByte)value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -156,7 +156,7 @@ namespace SpanJson.Dynamic
             var jsonRaw = input.Symbols;
             if (DynamicConverter.TryConvertTo(typeof(Int16), jsonRaw.Slice(1, jsonRaw.Count - 2), out var value))
             {
-                return (Int16)value;
+                return (Int16)value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -166,7 +166,7 @@ namespace SpanJson.Dynamic
             var jsonRaw = input.Symbols;
             if (DynamicConverter.TryConvertTo(typeof(Int32), jsonRaw.Slice(1, jsonRaw.Count - 2), out var value))
             {
-                return (Int32)value;
+                return (Int32)value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -176,7 +176,7 @@ namespace SpanJson.Dynamic
             var jsonRaw = input.Symbols;
             if (DynamicConverter.TryConvertTo(typeof(Int64), jsonRaw.Slice(1, jsonRaw.Count - 2), out var value))
             {
-                return (Int64)value;
+                return (Int64)value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -186,7 +186,7 @@ namespace SpanJson.Dynamic
             var jsonRaw = input.Symbols;
             if (DynamicConverter.TryConvertTo(typeof(Byte), jsonRaw.Slice(1, jsonRaw.Count - 2), out var value))
             {
-                return (Byte)value;
+                return (Byte)value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -196,7 +196,7 @@ namespace SpanJson.Dynamic
             var jsonRaw = input.Symbols;
             if (DynamicConverter.TryConvertTo(typeof(UInt16), jsonRaw.Slice(1, jsonRaw.Count - 2), out var value))
             {
-                return (UInt16)value;
+                return (UInt16)value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -206,7 +206,7 @@ namespace SpanJson.Dynamic
             var jsonRaw = input.Symbols;
             if (DynamicConverter.TryConvertTo(typeof(UInt32), jsonRaw.Slice(1, jsonRaw.Count - 2), out var value))
             {
-                return (UInt32)value;
+                return (UInt32)value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -216,7 +216,7 @@ namespace SpanJson.Dynamic
             var jsonRaw = input.Symbols;
             if (DynamicConverter.TryConvertTo(typeof(UInt64), jsonRaw.Slice(1, jsonRaw.Count - 2), out var value))
             {
-                return (UInt64)value;
+                return (UInt64)value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -226,7 +226,7 @@ namespace SpanJson.Dynamic
             var jsonRaw = input.Symbols;
             if (DynamicConverter.TryConvertTo(typeof(Single), jsonRaw.Slice(1, jsonRaw.Count - 2), out var value))
             {
-                return (Single)value;
+                return (Single)value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -236,7 +236,7 @@ namespace SpanJson.Dynamic
             var jsonRaw = input.Symbols;
             if (DynamicConverter.TryConvertTo(typeof(Double), jsonRaw.Slice(1, jsonRaw.Count - 2), out var value))
             {
-                return (Double)value;
+                return (Double)value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -246,7 +246,7 @@ namespace SpanJson.Dynamic
             var jsonRaw = input.Symbols;
             if (DynamicConverter.TryConvertTo(typeof(Decimal), jsonRaw.Slice(1, jsonRaw.Count - 2), out var value))
             {
-                return (Decimal)value;
+                return (Decimal)value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -256,7 +256,7 @@ namespace SpanJson.Dynamic
         {
             if (DynamicConverter.TryConvertTo(typeof(CombGuid), input.Symbols, out var value))
             {
-                return (CombGuid)value;
+                return (CombGuid)value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -275,33 +275,33 @@ namespace SpanJson.Dynamic
             return input.ToString();
         }
 
-        public static explicit operator Version(SpanJsonDynamicString<TSymbol> input)
+        public static explicit operator Version?(SpanJsonDynamicString<TSymbol> input)
         {
             var strValue = input.ToString();
             if (strValue is null) { return null; }
             return Version.Parse(strValue);
         }
 
-        public static explicit operator Uri(SpanJsonDynamicString<TSymbol> input)
+        public static explicit operator Uri?(SpanJsonDynamicString<TSymbol> input)
         {
             var strValue = input.ToString();
             if (strValue is null) { return null; }
-            if (Uri.TryCreate(strValue, UriKind.RelativeOrAbsolute, out Uri value))
+            if (Uri.TryCreate(strValue, UriKind.RelativeOrAbsolute, out Uri? value))
             {
                 return value;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
 
-        private string _value;
+        private string? _value;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override string ToString()
         {
             if (_value is not null) { return _value; }
             if (DynamicConverter.TryConvertTo(typeof(string), Symbols, out var value))
             {
-                _value = (string)value;
-                return _value;
+                _value = value as string;
+                return _value!;
             }
 
             //if (SymbolHelper<TSymbol>.IsUtf8)

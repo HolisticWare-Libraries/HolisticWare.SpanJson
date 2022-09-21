@@ -40,8 +40,11 @@ namespace SpanJson
 <# foreach(var t in types) { #>
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+<# if(t == typeof(string) || t == typeof(Version) || t == typeof(Uri)) { #>
+        public <#= t.Name #>? Read<#= t.Name #>()
+<# } else { #>
         public <#= t.Name #> Read<#= t.Name #>()
-        {
+<# } #>        {
             if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 return ReadUtf8<#= t.Name #>();

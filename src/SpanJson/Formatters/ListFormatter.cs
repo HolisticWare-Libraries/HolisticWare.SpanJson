@@ -10,7 +10,6 @@ namespace SpanJson.Formatters
     /// </summary>
     public sealed class ListFormatter<TList, T, TSymbol, TResolver> : BaseFormatter, IJsonFormatter<TList, TSymbol>
         where TResolver : IJsonFormatterResolver<TSymbol, TResolver>, new() where TSymbol : struct where TList : class, IList<T>
-
     {
         private static readonly Func<TList> CreateFunctor = StandardResolvers.GetCreateFunctor<TSymbol, TResolver, TList>();
         public static readonly ListFormatter<TList, T, TSymbol, TResolver> Default = new ListFormatter<TList, T, TSymbol, TResolver>();
@@ -19,7 +18,7 @@ namespace SpanJson.Formatters
 
         private static readonly bool IsRecursionCandidate = RecursionCandidate<T>.IsRecursionCandidate;
 
-        public TList Deserialize(ref JsonReader<TSymbol> reader, IJsonFormatterResolver<TSymbol> resolver)
+        public TList? Deserialize(ref JsonReader<TSymbol> reader, IJsonFormatterResolver<TSymbol> resolver)
         {
             if (reader.ReadIsNull())
             {
@@ -31,13 +30,13 @@ namespace SpanJson.Formatters
             var count = 0;
             while (!reader.TryReadIsEndArrayOrValueSeparator(ref count))
             {
-                list.Add(ElementFormatter.Deserialize(ref reader, resolver));
+                list.Add(ElementFormatter.Deserialize(ref reader, resolver)!);
             }
 
             return list;
         }
 
-        public void Serialize(ref JsonWriter<TSymbol> writer, TList value, IJsonFormatterResolver<TSymbol> resolver)
+        public void Serialize(ref JsonWriter<TSymbol> writer, TList? value, IJsonFormatterResolver<TSymbol> resolver)
         {
             if (value is null)
             {

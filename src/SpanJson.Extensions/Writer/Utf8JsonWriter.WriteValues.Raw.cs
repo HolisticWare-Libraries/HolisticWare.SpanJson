@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -41,10 +40,7 @@ namespace SpanJson
                 ValidateWritingValue();
             }
 
-            if (json == null)
-            {
-                throw new ArgumentNullException(nameof(json));
-            }
+            if (json is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.json); }
 
             TranscodeAndWriteRawValue(json.AsSpan(), skipInputValidation);
         }
@@ -123,7 +119,7 @@ namespace SpanJson
                 SysJsonThrowHelper.ThrowArgumentException_ValueTooLarge(json.Length);
             }
 
-            byte[] tempArray = null;
+            byte[]? tempArray = null;
 
             // For performance, avoid obtaining actual byte count unless memory usage is higher than the threshold.
             Span<byte> utf8Json = json.Length <= (JsonSharedConstant.ArrayPoolMaxSizeBeforeUsingNormalAlloc / JsonSharedConstant.MaxExpansionFactorWhileTranscoding) ?

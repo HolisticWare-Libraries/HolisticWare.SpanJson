@@ -21,9 +21,9 @@ namespace SpanJson
 
                 #region -- Utf16 Serialize --
 
-                public static string InnerSerializeToString(object input)
+                public static string InnerSerializeToString(object? input)
                 {
-                    if (input is null) { return Generic.Utf16.Serialize<object>(null); }
+                    if (input is null) { return Generic.Utf16.Serialize<object?>(null); }
 
                     // ReSharper disable ConvertClosureToMethodGroup
                     var invoker = Invokers.GetOrAdd(input.GetType(), InvokerFactory);
@@ -31,9 +31,9 @@ namespace SpanJson
                     return invoker.ToStringSerializer(input);
                 }
 
-                public static char[] InnerSerializeToCharArray(object input)
+                public static char[] InnerSerializeToCharArray(object? input)
                 {
-                    if (input is null) { return Generic.Utf16.SerializeToCharArray<object>(null); }
+                    if (input is null) { return Generic.Utf16.SerializeToCharArray<object?>(null); }
 
                     // ReSharper disable ConvertClosureToMethodGroup
                     var invoker = Invokers.GetOrAdd(input.GetType(), InvokerFactory);
@@ -41,9 +41,9 @@ namespace SpanJson
                     return invoker.ToCharArraySerializer(input);
                 }
 
-                public static ArraySegment<char> InnerSerializeToCharArrayPool(object input)
+                public static ArraySegment<char> InnerSerializeToCharArrayPool(object? input)
                 {
-                    if (input is null) { return Generic.Utf16.SerializeToArrayPool<object>(null); }
+                    if (input is null) { return Generic.Utf16.SerializeToArrayPool<object?>(null); }
 
                     // ReSharper disable ConvertClosureToMethodGroup
                     var invoker = Invokers.GetOrAdd(input.GetType(), InvokerFactory);
@@ -51,9 +51,9 @@ namespace SpanJson
                     return invoker.ToCharArrayPoolSerializer(input);
                 }
 
-                public static ValueTask InnerSerializeAsync(object input, TextWriter writer, CancellationToken cancellationToken = default)
+                public static ValueTask InnerSerializeAsync(object? input, TextWriter writer, CancellationToken cancellationToken = default)
                 {
-                    if (input is null) { return Generic.Utf16.SerializeAsync<object>(null, writer, cancellationToken); }
+                    if (input is null) { return Generic.Utf16.SerializeAsync<object?>(null, writer, cancellationToken); }
 
                     // ReSharper disable ConvertClosureToMethodGroup
                     var invoker = Invokers.GetOrAdd(input.GetType(), InvokerFactory);
@@ -66,9 +66,9 @@ namespace SpanJson
                 #region -- Utf8 Serialize --
 
 
-                public static byte[] InnerSerializeToByteArray(object input)
+                public static byte[] InnerSerializeToByteArray(object? input)
                 {
-                    if (input is null) { return Generic.Utf8.Serialize<object>(null); }
+                    if (input is null) { return Generic.Utf8.Serialize<object?>(null); }
 
                     // ReSharper disable ConvertClosureToMethodGroup
                     var invoker = Invokers.GetOrAdd(input.GetType(), InvokerFactory);
@@ -76,9 +76,9 @@ namespace SpanJson
                     return invoker.ToByteArraySerializer(input);
                 }
 
-                public static ArraySegment<byte> InnerSerializeToByteArrayPool(object input)
+                public static ArraySegment<byte> InnerSerializeToByteArrayPool(object? input)
                 {
-                    if (input is null) { return Generic.Utf8.SerializeToArrayPool<object>(null); }
+                    if (input is null) { return Generic.Utf8.SerializeToArrayPool<object?>(null); }
 
                     // ReSharper disable ConvertClosureToMethodGroup
                     var invoker = Invokers.GetOrAdd(input.GetType(), InvokerFactory);
@@ -86,9 +86,9 @@ namespace SpanJson
                     return invoker.ToByteArrayPoolSerializer(input);
                 }
 
-                public static ValueTask InnerSerializeAsync(object input, Stream stream, CancellationToken cancellationToken = default)
+                public static ValueTask InnerSerializeAsync(object? input, Stream stream, CancellationToken cancellationToken = default)
                 {
-                    if (input is null) { return Generic.Utf8.SerializeAsync<object>(null, stream, cancellationToken); }
+                    if (input is null) { return Generic.Utf8.SerializeAsync<object?>(null, stream, cancellationToken); }
 
                     // ReSharper disable ConvertClosureToMethodGroup
                     var invoker = Invokers.GetOrAdd(input.GetType(), InvokerFactory);
@@ -100,7 +100,7 @@ namespace SpanJson
 
                 #region -- Common Deserialize --
 
-                public static object InnerDeserialize(TSymbol[] input, Type type)
+                public static object? InnerDeserialize(TSymbol[] input, Type type)
                 {
                     if (type is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.type); }
 
@@ -111,9 +111,9 @@ namespace SpanJson
                 }
 
 #if !NETSTANDARD2_0
-                public static object InnerDeserialize(in ArraySegment<TSymbol> input, Type type)
+                public static object? InnerDeserialize(in ArraySegment<TSymbol> input, Type type)
 #else
-                public static object InnerDeserialize(ArraySegment<TSymbol> input, Type type)
+                public static object? InnerDeserialize(ArraySegment<TSymbol> input, Type type)
 #endif
                 {
                     if (type is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.type); }
@@ -124,7 +124,7 @@ namespace SpanJson
                     return invoker.FromBufferDeserializer(input);
                 }
 
-                public static object InnerDeserialize(in ReadOnlyMemory<TSymbol> input, Type type)
+                public static object? InnerDeserialize(in ReadOnlyMemory<TSymbol> input, Type type)
                 {
                     if (type is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.type); }
 
@@ -134,7 +134,7 @@ namespace SpanJson
                     return invoker.FromMemoryDeserializer(input);
                 }
 
-                public static object InnerDeserialize(in ReadOnlySpan<TSymbol> input, Type type)
+                public static object? InnerDeserialize(in ReadOnlySpan<TSymbol> input, Type type)
                 {
                     if (type is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.type); }
 
@@ -148,7 +148,7 @@ namespace SpanJson
 
                 #region -- Utf16 Deserialize --
 
-                public static ValueTask<object> InnerDeserializeAsync(TextReader reader, Type type, CancellationToken cancellationToken = default)
+                public static ValueTask<object?> InnerDeserializeAsync(TextReader reader, Type type, CancellationToken cancellationToken = default)
                 {
                     if (type is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.type); }
 
@@ -162,7 +162,7 @@ namespace SpanJson
 
                 #region -- Utf8 Deserialize --
 
-                public static ValueTask<object> InnerDeserializeAsync(Stream stream, Type type, CancellationToken cancellationToken = default)
+                public static ValueTask<object?> InnerDeserializeAsync(Stream stream, Type type, CancellationToken cancellationToken = default)
                 {
                     if (type is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.type); }
 
@@ -393,6 +393,7 @@ namespace SpanJson
 
                 #region -- class Invoker --
 
+#nullable disable
                 internal sealed class Invoker
                 {
                     public Invoker(
@@ -459,42 +460,43 @@ namespace SpanJson
 
                     internal readonly DeserializeFromTextReaderDelegateAsync FromTextReaderDeserializerAsync;
                 }
+#nullable restore
 
                 #endregion
 
                 #region -- Delegates --
 
-                internal delegate object DeserializeFromByteArrayDelegate(TSymbol[] input);
+                internal delegate object? DeserializeFromByteArrayDelegate(TSymbol[] input);
 
-                internal delegate object DeserializeFromBufferDelegate(in ArraySegment<TSymbol> input);
+                internal delegate object? DeserializeFromBufferDelegate(in ArraySegment<TSymbol> input);
 
-                internal delegate object DeserializeFromMemoryDelegate(in ReadOnlyMemory<TSymbol> input);
+                internal delegate object? DeserializeFromMemoryDelegate(in ReadOnlyMemory<TSymbol> input);
 
-                internal delegate object DeserializeDelegate(in ReadOnlySpan<TSymbol> input);
-
-
-
-
-                internal delegate byte[] SerializeToByteArrayDelegate(object input);
-
-                internal delegate ArraySegment<byte> SerializeToByteArrayPoolDelegate(object input);
-
-                internal delegate ValueTask SerializeToStreamDelegateAsync(object input, Stream stream, CancellationToken cancellationToken = default);
-
-                internal delegate ValueTask<object> DeserializeFromStreamDelegateAsync(Stream stream, CancellationToken cancellationToken = default);
+                internal delegate object? DeserializeDelegate(in ReadOnlySpan<TSymbol> input);
 
 
 
 
-                internal delegate string SerializeToStringDelegate(object input);
+                internal delegate byte[] SerializeToByteArrayDelegate(object? input);
 
-                internal delegate char[] SerializeToCharArrayDelegate(object input);
+                internal delegate ArraySegment<byte> SerializeToByteArrayPoolDelegate(object? input);
 
-                internal delegate ArraySegment<char> SerializeToCharArrayPoolDelegate(object input);
+                internal delegate ValueTask SerializeToStreamDelegateAsync(object? input, Stream stream, CancellationToken cancellationToken = default);
 
-                internal delegate ValueTask SerializeToTextWriterDelegateAsync(object input, TextWriter writer, CancellationToken cancellationToken = default);
+                internal delegate ValueTask<object?> DeserializeFromStreamDelegateAsync(Stream stream, CancellationToken cancellationToken = default);
 
-                internal delegate ValueTask<object> DeserializeFromTextReaderDelegateAsync(TextReader textReader, CancellationToken cancellationToken = default);
+
+
+
+                internal delegate string SerializeToStringDelegate(object? input);
+
+                internal delegate char[] SerializeToCharArrayDelegate(object? input);
+
+                internal delegate ArraySegment<char> SerializeToCharArrayPoolDelegate(object? input);
+
+                internal delegate ValueTask SerializeToTextWriterDelegateAsync(object? input, TextWriter writer, CancellationToken cancellationToken = default);
+
+                internal delegate ValueTask<object?> DeserializeFromTextReaderDelegateAsync(TextReader textReader, CancellationToken cancellationToken = default);
 
                 #endregion
             }

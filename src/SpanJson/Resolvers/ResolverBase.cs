@@ -1,20 +1,16 @@
-﻿using System;
-using System.Buffers;
+﻿using System.Buffers;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Text.Encodings.Web;
-using System.Threading;
 using CuteAnt.Reflection;
 using SpanJson.Formatters;
 using SpanJson.Helpers;
 using SpanJson.Internal;
-// ReSharper disable VirtualMemberNeverOverridden.Global
 
 namespace SpanJson.Resolvers
 {
@@ -24,7 +20,7 @@ namespace SpanJson.Resolvers
 
         protected static readonly ParameterExpression DynamicMetaObjectParameterExpression = Expression.Parameter(typeof(object));
 
-        protected static bool TryGetBaseClassJsonConstructorAttribute(Type type, out JsonConstructorAttribute attribute)
+        protected static bool TryGetBaseClassJsonConstructorAttribute(Type type, [MaybeNullWhen(false)] out JsonConstructorAttribute attribute)
         {
             if (BaseClassJsonConstructorMap.TryGetValue(type, out attribute))
             {
@@ -73,12 +69,12 @@ namespace SpanJson.Resolvers
         where TResolver : IJsonFormatterResolver<TSymbol, TResolver>, new() where TSymbol : struct
     {
         private readonly SpanJsonOptions _spanJsonOptions;
-        private readonly JsonNamingPolicy _dictionayKeyPolicy;
-        private readonly JsonNamingPolicy _extensionDataPolicy;
-        private readonly JsonNamingPolicy _jsonPropertyNamingPolicy;
+        private readonly JsonNamingPolicy? _dictionayKeyPolicy;
+        private readonly JsonNamingPolicy? _extensionDataPolicy;
+        private readonly JsonNamingPolicy? _jsonPropertyNamingPolicy;
 
         private readonly JsonEscapeHandling _escapeHandling;
-        private readonly JavaScriptEncoder _encoder;
+        private readonly JavaScriptEncoder? _encoder;
 
         private DeserializeDynamicDelegate<TSymbol> _dynamicDeserializer = ReadDynamic;
 
@@ -100,7 +96,7 @@ namespace SpanJson.Resolvers
         public SpanJsonOptions JsonOptions => _spanJsonOptions;
 
         public JsonEscapeHandling EscapeHandling => _escapeHandling;
-        public JavaScriptEncoder Encoder => _encoder;
+        public JavaScriptEncoder? Encoder => _encoder;
 
         public virtual DeserializeDynamicDelegate<TSymbol> DynamicDeserializer
         {
@@ -134,7 +130,7 @@ namespace SpanJson.Resolvers
             Formatters.AddOrUpdate(type, GetDefaultOrCreate(formatterType), (t, formatter) => GetDefaultOrCreate(formatterType));
         }
 
-        public virtual IJsonFormatter GetFormatter(JsonMemberInfo memberInfo, Type overrideMemberType = null)
+        public virtual IJsonFormatter GetFormatter(JsonMemberInfo memberInfo, Type? overrideMemberType = null)
         {
             // ReSharper disable ConvertClosureToMethodGroup
             if (memberInfo.CustomSerializer is not null)
@@ -198,7 +194,7 @@ namespace SpanJson.Resolvers
         {
             var publicMembers = type.SerializableMembers();
             var result = new List<JsonMemberInfo>();
-            JsonExtensionMemberInfo extensionMemberInfo = null;
+            JsonExtensionMemberInfo? extensionMemberInfo = null;
             var excludeNulls = _spanJsonOptions.NullOption == NullOptions.ExcludeNulls;
             foreach (var memberInfo in publicMembers)
             {
@@ -217,13 +213,13 @@ namespace SpanJson.Resolvers
 
                 if (memberInfo.FirstAttribute<JsonExtensionDataAttribute>() is not null && typeof(IDictionary<string, object>).IsAssignableFrom(memberType) && canRead && canWrite)
                 {
-                    extensionMemberInfo = new JsonExtensionMemberInfo(memberInfo.Name, memberType, excludeNulls);
+                    extensionMemberInfo = new JsonExtensionMemberInfo(memberInfo.Name, memberType!, excludeNulls);
                 }
                 else if (!IsIgnored(memberInfo))
                 {
                     var customSerializerAttr = memberInfo.FirstAttribute<JsonCustomSerializerAttribute>();
                     var shouldSerialize = type.GetMethod($"ShouldSerialize{memberInfo.Name}");
-                    result.Add(new JsonMemberInfo(memberInfo.Name, memberType, shouldSerialize, name, escapedName, excludeNulls, canRead, canWrite, customSerializerAttr?.Type, customSerializerAttr?.Arguments));
+                    result.Add(new JsonMemberInfo(memberInfo.Name, memberType!, shouldSerialize, name, escapedName, excludeNulls, canRead, canWrite, customSerializerAttr?.Type, customSerializerAttr?.Arguments));
                 }
             }
 
@@ -231,7 +227,7 @@ namespace SpanJson.Resolvers
             return new JsonObjectDescription(constructor, attribute, result.ToArray(), extensionMemberInfo);
         }
 
-        protected virtual void TryGetAnnotatedAttributeConstructor(Type type, out ConstructorInfo constructor, out JsonConstructorAttribute attribute)
+        protected virtual void TryGetAnnotatedAttributeConstructor(Type type, out ConstructorInfo? constructor, out JsonConstructorAttribute? attribute)
         {
             var declaredConstructors = type.GetTypeInfo().DeclaredConstructors.Where(c => !c.IsStatic && c.IsPublic).ToArray();
 
@@ -260,12 +256,12 @@ namespace SpanJson.Resolvers
                 var hasParameterTypes = parameterTypes is not null && (uint)parameterTypes.Length > 0u;
                 if (hasParameterTypes)
                 {
-                    constructor = declaredConstructors.FirstOrDefault(a => MatchConstructor(a, parameterTypes));
+                    constructor = declaredConstructors.FirstOrDefault(a => MatchConstructor(a, parameterTypes!));
                     if (constructor is not null) { return; }
                 }
                 else if (hasParameterNames)
                 {
-                    constructor = declaredConstructors.OrderByDescending(a => a.GetParameters().Length).FirstOrDefault(a => a.GetParameters().Length == parameterNames.Length);
+                    constructor = declaredConstructors.OrderByDescending(a => a.GetParameters().Length).FirstOrDefault(a => a.GetParameters().Length == parameterNames!.Length);
                     if (constructor is not null) { return; }
                 }
 
@@ -296,7 +292,7 @@ namespace SpanJson.Resolvers
             return memberInfo.HasAttribute<IgnoreDataMemberAttribute>() || memberInfo.HasAttributeNamed("JsonIgnore") ? true : false;
         }
 
-        private static string GetAttributeName(MemberInfo memberInfo)
+        private static string? GetAttributeName(MemberInfo memberInfo)
         {
             return memberInfo.FirstAttribute<DataMemberAttribute>()?.Name;
         }
@@ -435,7 +431,7 @@ namespace SpanJson.Resolvers
             return type.GetConstructor(Type.EmptyTypes) is not null;
         }
 
-        private static IJsonFormatter GetIntegrated(Type type)
+        private static IJsonFormatter? GetIntegrated(Type type)
         {
             var allTypes = typeof(ResolverBase).Assembly.GetTypes();
             foreach (var candidate in allTypes.Where(a => a.IsPublic))
@@ -466,7 +462,7 @@ namespace SpanJson.Resolvers
 
         private static bool HasCustomFormatterForRelatedType(Type type)
         {
-            Type relatedType = Nullable.GetUnderlyingType(type);
+            Type? relatedType = Nullable.GetUnderlyingType(type);
             if (relatedType is null && type.IsArray)
             {
                 relatedType = type.GetElementType();
@@ -509,7 +505,7 @@ namespace SpanJson.Resolvers
             return Expression.Lambda<Func<T>>(Expression.New(type)).Compile();
         }
 
-        protected virtual Type GetFunctorFallBackType(Type type)
+        protected virtual Type? GetFunctorFallBackType(Type type)
         {
             if (type.TryGetTypeOfGenericInterface(typeof(IDictionary<,>), out var dictArgumentTypes))
             {
@@ -704,7 +700,7 @@ namespace SpanJson.Resolvers
             return true;
         }
 
-        private static object ReadDynamic(ref JsonReader<TSymbol> reader)
+        private static object? ReadDynamic(ref JsonReader<TSymbol> reader)
         {
             return reader.ReadDynamic();
         }

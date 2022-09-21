@@ -29,14 +29,14 @@ namespace SpanJson.Formatters
 
         private static readonly IJsonFormatterResolver<TSymbol, TResolver> Resolver;
         private static readonly Dictionary<string, DeserializeDelegate> KnownMembersDictionary;
-        private static readonly ConcurrentDictionary<string, Func<T, object>> GetMemberCache;
-        private static readonly ConcurrentDictionary<string, Action<T, object>> SetMemberCache;
+        private static readonly ConcurrentDictionary<string, Func<T, object?>> GetMemberCache;
+        private static readonly ConcurrentDictionary<string, Action<T, object?>> SetMemberCache;
 
         static DynamicMetaObjectProviderFormatter()
         {
             Resolver = StandardResolvers.GetResolver<TSymbol, TResolver>();
-            GetMemberCache = new ConcurrentDictionary<string, Func<T, object>>(StringComparer.Ordinal);
-            SetMemberCache = new ConcurrentDictionary<string, Action<T, object>>(StringComparer.Ordinal);
+            GetMemberCache = new ConcurrentDictionary<string, Func<T, object?>>(StringComparer.Ordinal);
+            SetMemberCache = new ConcurrentDictionary<string, Action<T, object?>>(StringComparer.Ordinal);
             KnownMembersDictionary = BuildKnownMembers(Resolver);
 
             CreateFunctor = StandardResolvers.GetCreateFunctor<TSymbol, TResolver, T>();
@@ -44,7 +44,7 @@ namespace SpanJson.Formatters
         }
 
 
-        public T Deserialize(ref JsonReader<TSymbol> reader, IJsonFormatterResolver<TSymbol> resolver)
+        public T? Deserialize(ref JsonReader<TSymbol> reader, IJsonFormatterResolver<TSymbol> resolver)
         {
             if (reader.ReadIsNull())
             {
@@ -88,7 +88,7 @@ namespace SpanJson.Formatters
 
                 case ISpanJsonDynamicValue<byte> bValue:
                     var cMaxLength = Encoding.UTF8.GetMaxCharCount(bValue.Symbols.Count);
-                    char[] cBuffer = null;
+                    char[]? cBuffer = null;
                     try
                     {
                         Span<char> utf16Span = (uint)cMaxLength <= JsonSharedConstant.StackallocCharThresholdU ?
@@ -114,7 +114,7 @@ namespace SpanJson.Formatters
 
                 case ISpanJsonDynamicValue<char> cValue:
                     var bMaxLength = TextEncodings.Utf8.GetMaxByteCount(cValue.Symbols.Count);
-                    byte[] bBuffer = null;
+                    byte[]? bBuffer = null;
                     try
                     {
                         Span<byte> utf8Span = (uint)bMaxLength <= JsonSharedConstant.StackallocByteThresholdU ?
@@ -214,7 +214,7 @@ namespace SpanJson.Formatters
                 }
 
                 var formatterType = resolver.GetFormatter(memberInfo).GetType();
-                var fieldInfo = formatterType.GetField("Default", BindingFlags.Static | BindingFlags.Public);
+                var fieldInfo = formatterType.GetField("Default", BindingFlags.Static | BindingFlags.Public)!;
                 var assignExpression = Expression.Assign(Expression.PropertyOrField(inputParameter, memberInfo.MemberName),
                     Expression.Call(Expression.Field(null, fieldInfo),
                         FindPublicInstanceMethod(formatterType, "Deserialize", readerParameter.Type.MakeByRefType(), resolverParameter.Type), readerParameter, resolverParameter));
@@ -225,7 +225,7 @@ namespace SpanJson.Formatters
             return result;
         }
 
-        private static Func<T, object> GetOrAddGetDefinedMember(string memberName)
+        private static Func<T, object?> GetOrAddGetDefinedMember(string memberName)
         {
             return GetMemberCache.GetOrAdd(memberName, s =>
             {
@@ -235,7 +235,7 @@ namespace SpanJson.Formatters
             });
         }
 
-        private static Func<T, object> GetOrAddGetMember(string memberName)
+        private static Func<T, object?> GetOrAddGetMember(string memberName)
         {
             return GetMemberCache.GetOrAdd(memberName, s =>
             {
@@ -246,7 +246,7 @@ namespace SpanJson.Formatters
             });
         }
 
-        private static Action<T, object> GetOrAddSetMember(string memberName)
+        private static Action<T, object?> GetOrAddSetMember(string memberName)
         {
             return SetMemberCache.GetOrAdd(memberName, s =>
             {
@@ -256,7 +256,7 @@ namespace SpanJson.Formatters
                         CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null),
                         CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null)
                     });
-                var callsite = CallSite<Func<CallSite, object, object, object>>.Create(binder);
+                var callsite = CallSite<Func<CallSite, object, object?, object>>.Create(binder);
                 return (target, value) => callsite.Target(callsite, target, value);
             });
         }

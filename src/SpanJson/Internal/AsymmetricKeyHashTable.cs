@@ -1,8 +1,11 @@
 ﻿// Largely based on https://github.com/neuecc/MessagePack-CSharp/blob/master/src/MessagePack/Internal/AsymmetricKeyHashTable.cs
 
+#nullable disable
+
 namespace SpanJson.Internal
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
     // Safe for multiple-read, single-write.
 
@@ -107,7 +110,7 @@ namespace SpanJson.Internal
                         while (e is not null)
                         {
                             var newEntry = new Entry { Key = e.Key, Value = e.Value, Hash = e.Hash };
-                            AddToBuckets(nextBucket, key, newEntry, null, out resultingValue);
+                            AddToBuckets(nextBucket, key, newEntry, null!, out resultingValue);
                             e = e.Next;
                         }
                     }
@@ -179,7 +182,7 @@ namespace SpanJson.Internal
             return true;
         }
 
-        public bool TryGetValue(in ReadOnlySpan<byte> key, out TValue value)
+        public bool TryGetValue(in ReadOnlySpan<byte> key, /*[MaybeNullWhen(false)] */out TValue value)
         {
             var table = buckets;
             var hash = comparer.GetHashCode(key);
@@ -237,10 +240,10 @@ namespace SpanJson.Internal
 
         class Entry
         {
-            public byte[] Key;
+            public byte[] Key = null!;
             public TValue Value;
             public int Hash;
-            public Entry Next;
+            public Entry Next = null!;
 
             // from debugger only
             public override string ToString()

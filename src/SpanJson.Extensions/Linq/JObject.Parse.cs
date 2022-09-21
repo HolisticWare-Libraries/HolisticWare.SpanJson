@@ -1,5 +1,4 @@
-﻿using System;
-using System.Buffers;
+﻿using System.Buffers;
 using System.Runtime.CompilerServices;
 using SpanJson.Document;
 using SpanJson.Internal;
@@ -11,7 +10,7 @@ namespace SpanJson.Linq
         #region -- Utf8 --
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public new static JObject Parse(byte[] utf8Json)
+        public new static JObject? Parse(byte[] utf8Json)
         {
             var jsonReader = new JsonReader<byte>(utf8Json);
             return Load(ref jsonReader);
@@ -19,9 +18,9 @@ namespace SpanJson.Linq
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if !NETSTANDARD2_0
-        public new static JObject Parse(in ArraySegment<byte> utf8Json)
+        public new static JObject? Parse(in ArraySegment<byte> utf8Json)
 #else
-        public new static JObject Parse(ArraySegment<byte> utf8Json)
+        public new static JObject? Parse(ArraySegment<byte> utf8Json)
 #endif
         {
             if (utf8Json.IsEmpty()) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.utf8Json); }
@@ -31,7 +30,7 @@ namespace SpanJson.Linq
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public new static JObject Parse(in ReadOnlySpan<byte> utf8Json)
+        public new static JObject? Parse(in ReadOnlySpan<byte> utf8Json)
         {
             if (utf8Json.IsEmpty) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.utf8Json); }
 
@@ -40,7 +39,7 @@ namespace SpanJson.Linq
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public new static JObject Parse(in ReadOnlyMemory<byte> utf8Json)
+        public new static JObject? Parse(in ReadOnlyMemory<byte> utf8Json)
         {
             if (utf8Json.IsEmpty) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.utf8Json); }
 
@@ -58,7 +57,7 @@ namespace SpanJson.Linq
             }
         }
 
-        public new static JObject Load(ref JsonReader<byte> reader)
+        public new static JObject? Load(ref JsonReader<byte> reader)
         {
             reader.EnsureUtf8InnerBufferCreated();
 
@@ -83,7 +82,7 @@ namespace SpanJson.Linq
         #region -- Utf16 --
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public new static JObject Parse(string utf16Json)
+        public new static JObject? Parse(string utf16Json)
         {
             if (utf16Json is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.utf16Json); }
 
@@ -91,14 +90,14 @@ namespace SpanJson.Linq
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public new static JObject Parse(char[] utf16Json)
+        public new static JObject? Parse(char[] utf16Json)
         {
             var jsonReader = new JsonReader<char>(utf16Json);
             return Load(ref jsonReader);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public new static JObject Parse(ArraySegment<char> utf16Json)
+        public new static JObject? Parse(ArraySegment<char> utf16Json)
         {
             if (utf16Json.IsEmpty()) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.utf16Json); }
 
@@ -107,7 +106,7 @@ namespace SpanJson.Linq
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public new static JObject Parse(in ReadOnlyMemory<char> utf16Json)
+        public new static JObject? Parse(in ReadOnlyMemory<char> utf16Json)
         {
             if (utf16Json.IsEmpty) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.utf16Json); }
 
@@ -116,7 +115,7 @@ namespace SpanJson.Linq
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public new static JObject Parse(in ReadOnlySpan<char> utf16Json)
+        public new static JObject? Parse(in ReadOnlySpan<char> utf16Json)
         {
             if (utf16Json.IsEmpty) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.utf16Json); }
 
@@ -124,7 +123,7 @@ namespace SpanJson.Linq
             return Load(ref jsonReader);
         }
 
-        public new static JObject Load(ref JsonReader<char> reader)
+        public new static JObject? Load(ref JsonReader<char> reader)
         {
             reader.EnsureUtf16InnerBufferCreated();
 

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SpanJson.Linq
+﻿namespace SpanJson.Linq
 {
     /// <summary>
     /// Specifies how null value properties are merged.

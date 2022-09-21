@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using SpanJson.Document;
 using SpanJson.Dynamic;
 using SpanJson.Serialization;
@@ -10,7 +9,7 @@ namespace SpanJson.Linq
 {
     partial class JArray
     {
-        protected override T ToObjectInternal<T, TUtf8Resolver, TUtf16Resolver>()
+        protected override T? ToObjectInternal<T, TUtf8Resolver, TUtf16Resolver>() where T : default
         {
             var value = _dynamicJson;
             switch (value)
@@ -52,7 +51,7 @@ namespace SpanJson.Linq
             }
         }
 
-        protected override object ToObjectInternal<TUtf8Resolver, TUtf16Resolver>(Type objectType)
+        protected override object? ToObjectInternal<TUtf8Resolver, TUtf16Resolver>(Type objectType)
         {
             var value = _dynamicJson;
             switch (value)
@@ -94,27 +93,27 @@ namespace SpanJson.Linq
             }
         }
 
-        protected override T ToObjectInternal<T, TUtf8Resolver, TUtf16Resolver>(NJsonSerializer jsonSerializer)
+        protected override T? ToObjectInternal<T, TUtf8Resolver, TUtf16Resolver>(NJsonSerializer jsonSerializer) where T : default
         {
             var value = _dynamicJson;
             switch (value)
             {
                 case ArraySegment<byte> utf8Data:
-                    return (T)jsonSerializer.DeserializeFromByteArray(utf8Data.Array, utf8Data.Offset, utf8Data.Count, typeof(T));
+                    return (T?)jsonSerializer.DeserializeFromByteArray(utf8Data.Array!, utf8Data.Offset, utf8Data.Count, typeof(T));
 
                 case ArraySegment<char> utf16Data:
-                    return (T)jsonSerializer.DeserializeObject(utf16Data.AsSpan().ToString(), typeof(T));
+                    return (T?)jsonSerializer.DeserializeObject(utf16Data.AsSpan().ToString(), typeof(T));
 
                 case JsonDocument doc:
                     {
                         var rawMemory = doc.RawMemory;
                         if (MemoryMarshal.TryGetArray(rawMemory, out ArraySegment<byte> utf8Json))
                         {
-                            return (T)jsonSerializer.DeserializeFromByteArray(utf8Json.Array, utf8Json.Offset, utf8Json.Count, typeof(T));
+                            return (T?)jsonSerializer.DeserializeFromByteArray(utf8Json.Array!, utf8Json.Offset, utf8Json.Count, typeof(T));
                         }
                         else
                         {
-                            return (T)jsonSerializer.DeserializeFromByteArray(rawMemory.ToArray(), typeof(T));
+                            return (T?)jsonSerializer.DeserializeFromByteArray(rawMemory.ToArray(), typeof(T));
                         }
                     }
 
@@ -123,11 +122,11 @@ namespace SpanJson.Linq
                         var rawMemory = element.RawMemory;
                         if (MemoryMarshal.TryGetArray(rawMemory, out ArraySegment<byte> utf8Json))
                         {
-                            return (T)jsonSerializer.DeserializeFromByteArray(utf8Json.Array, utf8Json.Offset, utf8Json.Count, typeof(T));
+                            return (T?)jsonSerializer.DeserializeFromByteArray(utf8Json.Array!, utf8Json.Offset, utf8Json.Count, typeof(T));
                         }
                         else
                         {
-                            return (T)jsonSerializer.DeserializeFromByteArray(rawMemory.ToArray(), typeof(T));
+                            return (T?)jsonSerializer.DeserializeFromByteArray(rawMemory.ToArray(), typeof(T));
                         }
                     }
 
@@ -135,7 +134,7 @@ namespace SpanJson.Linq
                     {
                         if (utf8Array.TryGetRaw(out ArraySegment<byte> utf8Json))
                         {
-                            return (T)jsonSerializer.DeserializeFromByteArray(utf8Json.Array, utf8Json.Offset, utf8Json.Count, typeof(T));
+                            return (T?)jsonSerializer.DeserializeFromByteArray(utf8Json.Array!, utf8Json.Offset, utf8Json.Count, typeof(T));
                         }
                         else
                         {
@@ -147,7 +146,7 @@ namespace SpanJson.Linq
                     {
                         if (utf16Array.TryGetRaw(out ArraySegment<char> utf16Json))
                         {
-                            return (T)jsonSerializer.DeserializeObject(utf16Json.AsSpan().ToString(), typeof(T));
+                            return (T?)jsonSerializer.DeserializeObject(utf16Json.AsSpan().ToString(), typeof(T));
                         }
                         else
                         {
@@ -160,13 +159,13 @@ namespace SpanJson.Linq
             }
         }
 
-        protected override object ToObjectInternal<TUtf8Resolver, TUtf16Resolver>(Type objectType, NJsonSerializer jsonSerializer)
+        protected override object? ToObjectInternal<TUtf8Resolver, TUtf16Resolver>(Type objectType, NJsonSerializer jsonSerializer)
         {
             var value = _dynamicJson;
             switch (value)
             {
                 case ArraySegment<byte> utf8Data:
-                    return jsonSerializer.DeserializeFromByteArray(utf8Data.Array, utf8Data.Offset, utf8Data.Count, objectType);
+                    return jsonSerializer.DeserializeFromByteArray(utf8Data.Array!, utf8Data.Offset, utf8Data.Count, objectType);
 
                 case ArraySegment<char> utf16Data:
                     return jsonSerializer.DeserializeObject(utf16Data.AsSpan().ToString(), objectType);
@@ -176,7 +175,7 @@ namespace SpanJson.Linq
                         var rawMemory = doc.RawMemory;
                         if (MemoryMarshal.TryGetArray(rawMemory, out ArraySegment<byte> utf8Json))
                         {
-                            return jsonSerializer.DeserializeFromByteArray(utf8Json.Array, utf8Json.Offset, utf8Json.Count, objectType);
+                            return jsonSerializer.DeserializeFromByteArray(utf8Json.Array!, utf8Json.Offset, utf8Json.Count, objectType);
                         }
                         else
                         {
@@ -189,7 +188,7 @@ namespace SpanJson.Linq
                         var rawMemory = element.RawMemory;
                         if (MemoryMarshal.TryGetArray(rawMemory, out ArraySegment<byte> utf8Json))
                         {
-                            return jsonSerializer.DeserializeFromByteArray(utf8Json.Array, utf8Json.Offset, utf8Json.Count, objectType);
+                            return jsonSerializer.DeserializeFromByteArray(utf8Json.Array!, utf8Json.Offset, utf8Json.Count, objectType);
                         }
                         else
                         {
@@ -201,7 +200,7 @@ namespace SpanJson.Linq
                     {
                         if (utf8Array.TryGetRaw(out ArraySegment<byte> utf8Json))
                         {
-                            return jsonSerializer.DeserializeFromByteArray(utf8Json.Array, utf8Json.Offset, utf8Json.Count, objectType);
+                            return jsonSerializer.DeserializeFromByteArray(utf8Json.Array!, utf8Json.Offset, utf8Json.Count, objectType);
                         }
                         else
                         {

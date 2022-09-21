@@ -12,7 +12,7 @@ namespace SpanJson.Formatters
     {
         public static readonly NJTokenFormatter Default = new NJTokenFormatter();
 
-        public override NJToken Deserialize(ref JsonReader<byte> reader, IJsonFormatterResolver<byte> resolver)
+        public override NJToken? Deserialize(ref JsonReader<byte> reader, IJsonFormatterResolver<byte> resolver)
         {
             if (reader.ReadUtf8IsNull()) { return null; }
 
@@ -20,7 +20,7 @@ namespace SpanJson.Formatters
             return token.ToPolymorphicObject<NJToken>();
         }
 
-        public override NJToken Deserialize(ref JsonReader<char> reader, IJsonFormatterResolver<char> resolver)
+        public override NJToken? Deserialize(ref JsonReader<char> reader, IJsonFormatterResolver<char> resolver)
         {
             if (reader.ReadUtf16IsNull()) { return null; }
 
@@ -28,7 +28,7 @@ namespace SpanJson.Formatters
             return token.ToPolymorphicObject<NJToken>();
         }
 
-        public override void Serialize(ref JsonWriter<byte> writer, NJToken value, IJsonFormatterResolver<byte> resolver)
+        public override void Serialize(ref JsonWriter<byte> writer, NJToken? value, IJsonFormatterResolver<byte> resolver)
         {
             if (value is null) { return; }
 
@@ -49,7 +49,7 @@ namespace SpanJson.Formatters
             }
         }
 
-        public override void Serialize(ref JsonWriter<char> writer, NJToken value, IJsonFormatterResolver<char> resolver)
+        public override void Serialize(ref JsonWriter<char> writer, NJToken? value, IJsonFormatterResolver<char> resolver)
         {
             if (value is null) { return; }
 

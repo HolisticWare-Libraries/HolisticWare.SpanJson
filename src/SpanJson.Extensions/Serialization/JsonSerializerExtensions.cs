@@ -1,6 +1,4 @@
-﻿using System;
-using System.Buffers;
-using System.IO;
+﻿using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Text;
 using CuteAnt.Buffers;
@@ -32,7 +30,7 @@ namespace SpanJson.Serialization
         /// This parameter is used when <see cref="NJsonSerializer.TypeNameHandling"/> is <see cref="NTypeNameHandling.Auto"/> to write out the type name if the type of the value does not match.
         /// Specifying the type is optional.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static string SerializeObject(this NJsonSerializer jsonSerializer, object value, Type type = null)
+        public static string SerializeObject(this NJsonSerializer jsonSerializer, object? value, Type? type = null)
         {
             using (var pooledStringWriter = StringWriterManager.Create())
             {
@@ -52,7 +50,7 @@ namespace SpanJson.Serialization
         /// This parameter is used when <see cref="NJsonSerializer.TypeNameHandling"/> is <see cref="NTypeNameHandling.Auto"/> to write out the type name if the type of the value does not match.
         /// Specifying the type is optional.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static string SerializeObject(this NJsonSerializer jsonSerializer, object value, bool writeIndented, Type type = null)
+        public static string SerializeObject(this NJsonSerializer jsonSerializer, object? value, bool writeIndented, Type? type = null)
         {
             var sw = StringWriterManager.Allocate();
 
@@ -77,7 +75,7 @@ namespace SpanJson.Serialization
         /// This parameter is used when <see cref="NJsonSerializer.TypeNameHandling"/> is <see cref="NTypeNameHandling.Auto"/> to write out the type name if the type of the value does not match.
         /// Specifying the type is optional.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static string SerializeObject(this ObjectPool<NJsonSerializer> jsonSerializerPool, object value, Type type = null)
+        public static string SerializeObject(this ObjectPool<NJsonSerializer> jsonSerializerPool, object? value, Type? type = null)
         {
             var sw = StringWriterManager.Allocate();
             var jsonSerializer = jsonSerializerPool.Take();
@@ -103,7 +101,7 @@ namespace SpanJson.Serialization
         /// This parameter is used when <see cref="NJsonSerializer.TypeNameHandling"/> is <see cref="NTypeNameHandling.Auto"/> to write out the type name if the type of the value does not match.
         /// Specifying the type is optional.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static string SerializeObject(this ObjectPool<NJsonSerializer> jsonSerializerPool, object value, bool writeIndented, Type type = null)
+        public static string SerializeObject(this ObjectPool<NJsonSerializer> jsonSerializerPool, object? value, bool writeIndented, Type? type = null)
         {
             var sw = StringWriterManager.Allocate();
             var jsonSerializer = jsonSerializerPool.Take();
@@ -124,7 +122,7 @@ namespace SpanJson.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static string SerializeInternal(NJsonSerializer jsonSerializer, StringWriterX sw, object value, Type type)
+        private static string SerializeInternal(NJsonSerializer jsonSerializer, StringWriterX sw, object? value, Type? type)
         {
             using (NJsonTextWriter jsonWriter = new NJsonTextWriter(sw))
             {
@@ -147,7 +145,7 @@ namespace SpanJson.Serialization
         /// <param name="value">The JSON to deserialize.</param>
         /// <param name="type">The type of the object to deserialize to.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static object DeserializeObject(this NJsonSerializer jsonSerializer, string value, Type type = null)
+        public static object? DeserializeObject(this NJsonSerializer jsonSerializer, string value, Type? type = null)
         {
             if (value is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.value); }
 
@@ -179,7 +177,7 @@ namespace SpanJson.Serialization
         /// <param name="value">The JSON to deserialize.</param>
         /// <param name="type">The type of the object to deserialize to.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static object DeserializeObject(this ObjectPool<NJsonSerializer> jsonSerializerPool, string value, Type type = null)
+        public static object? DeserializeObject(this ObjectPool<NJsonSerializer> jsonSerializerPool, string value, Type? type = null)
         {
             if (value is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.value); }
 
@@ -220,7 +218,7 @@ namespace SpanJson.Serialization
         /// Specifying the type is optional.</param>
         /// <param name="initialBufferSize"></param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static byte[] SerializeToByteArray(this NJsonSerializer jsonSerializer, object value, Type type = null, int initialBufferSize = c_initialBufferSize)
+        public static byte[] SerializeToByteArray(this NJsonSerializer jsonSerializer, object? value, Type? type = null, int initialBufferSize = c_initialBufferSize)
         {
             using (var pooledOutputStream = BufferManagerOutputStreamManager.Create())
             {
@@ -242,7 +240,7 @@ namespace SpanJson.Serialization
         /// Specifying the type is optional.</param>
         /// <param name="initialBufferSize"></param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static byte[] SerializeToByteArray(this NJsonSerializer jsonSerializer, object value, bool writeIndented, Type type = null, int initialBufferSize = c_initialBufferSize)
+        public static byte[] SerializeToByteArray(this NJsonSerializer jsonSerializer, object? value, bool writeIndented, Type? type = null, int initialBufferSize = c_initialBufferSize)
         {
             var outputStream = BufferManagerOutputStreamManager.Take();
             outputStream.Reinitialize(initialBufferSize, s_sharedBufferPool);
@@ -269,7 +267,7 @@ namespace SpanJson.Serialization
         /// Specifying the type is optional.</param>
         /// <param name="initialBufferSize"></param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static byte[] SerializeToByteArray(this ObjectPool<NJsonSerializer> jsonSerializerPool, object value, Type type = null, int initialBufferSize = c_initialBufferSize)
+        public static byte[] SerializeToByteArray(this ObjectPool<NJsonSerializer> jsonSerializerPool, object? value, Type? type = null, int initialBufferSize = c_initialBufferSize)
         {
             var jsonSerializer = jsonSerializerPool.Take();
             var outputStream = BufferManagerOutputStreamManager.Take();
@@ -297,7 +295,7 @@ namespace SpanJson.Serialization
         /// Specifying the type is optional.</param>
         /// <param name="initialBufferSize"></param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static byte[] SerializeToByteArray(this ObjectPool<NJsonSerializer> jsonSerializerPool, object value, bool writeIndented, Type type = null, int initialBufferSize = c_initialBufferSize)
+        public static byte[] SerializeToByteArray(this ObjectPool<NJsonSerializer> jsonSerializerPool, object? value, bool writeIndented, Type? type = null, int initialBufferSize = c_initialBufferSize)
         {
             var jsonSerializer = jsonSerializerPool.Take();
 
@@ -320,7 +318,7 @@ namespace SpanJson.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static byte[] SerializeToByteArrayInternal(NJsonSerializer jsonSerializer, BufferManagerOutputStream outputStream, object value, Type type)
+        private static byte[] SerializeToByteArrayInternal(NJsonSerializer jsonSerializer, BufferManagerOutputStream outputStream, object? value, Type? type)
         {
             using (NJsonTextWriter jsonWriter = new NJsonTextWriter(new StreamWriter(outputStream, UTF8NoBOM, 4096, leaveOpen: true)))
             {
@@ -347,7 +345,7 @@ namespace SpanJson.Serialization
         /// Specifying the type is optional.</param>
         /// <param name="initialBufferSize"></param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static ArraySegment<byte> SerializeToMemoryPool(this NJsonSerializer jsonSerializer, object value, Type type = null, int initialBufferSize = c_initialBufferSize)
+        public static ArraySegment<byte> SerializeToMemoryPool(this NJsonSerializer jsonSerializer, object? value, Type? type = null, int initialBufferSize = c_initialBufferSize)
         {
             using (var pooledOutputStream = BufferManagerOutputStreamManager.Create())
             {
@@ -369,7 +367,7 @@ namespace SpanJson.Serialization
         /// Specifying the type is optional.</param>
         /// <param name="initialBufferSize"></param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static ArraySegment<byte> SerializeToMemoryPool(this NJsonSerializer jsonSerializer, object value, bool writeIndented, Type type = null, int initialBufferSize = c_initialBufferSize)
+        public static ArraySegment<byte> SerializeToMemoryPool(this NJsonSerializer jsonSerializer, object? value, bool writeIndented, Type? type = null, int initialBufferSize = c_initialBufferSize)
         {
             var previousFormatting = jsonSerializer.GetFormatting();
             jsonSerializer.Formatting = writeIndented ? NFormatting.Indented : NFormatting.None;
@@ -396,7 +394,7 @@ namespace SpanJson.Serialization
         /// Specifying the type is optional.</param>
         /// <param name="initialBufferSize"></param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static ArraySegment<byte> SerializeToMemoryPool(this ObjectPool<NJsonSerializer> jsonSerializerPool, object value, Type type = null, int initialBufferSize = c_initialBufferSize)
+        public static ArraySegment<byte> SerializeToMemoryPool(this ObjectPool<NJsonSerializer> jsonSerializerPool, object? value, Type? type = null, int initialBufferSize = c_initialBufferSize)
         {
             var jsonSerializer = jsonSerializerPool.Take();
 
@@ -425,7 +423,7 @@ namespace SpanJson.Serialization
         /// Specifying the type is optional.</param>
         /// <param name="initialBufferSize"></param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static ArraySegment<byte> SerializeToMemoryPool(this ObjectPool<NJsonSerializer> jsonSerializerPool, object value, bool writeIndented, Type type = null, int initialBufferSize = c_initialBufferSize)
+        public static ArraySegment<byte> SerializeToMemoryPool(this ObjectPool<NJsonSerializer> jsonSerializerPool, object? value, bool writeIndented, Type? type = null, int initialBufferSize = c_initialBufferSize)
         {
             var jsonSerializer = jsonSerializerPool.Take();
 
@@ -447,7 +445,7 @@ namespace SpanJson.Serialization
             }
         }
 
-        private static ArraySegment<byte> SerializeToMemoryPoolInternal(NJsonSerializer jsonSerializer, BufferManagerOutputStream outputStream, object value, Type type)
+        private static ArraySegment<byte> SerializeToMemoryPoolInternal(NJsonSerializer jsonSerializer, BufferManagerOutputStream outputStream, object? value, Type? type)
         {
             using (NJsonTextWriter jsonWriter = new NJsonTextWriter(new StreamWriter(outputStream, UTF8NoBOM, 4096, leaveOpen: true)))
             {
@@ -471,7 +469,7 @@ namespace SpanJson.Serialization
         /// <param name="value">The JSON to deserialize.</param>
         /// <param name="type">The type of the object to deserialize to.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static object DeserializeFromByteArray(this NJsonSerializer jsonSerializer, byte[] value, Type type = null)
+        public static object? DeserializeFromByteArray(this NJsonSerializer jsonSerializer, byte[] value, Type? type = null)
         {
             if (value is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.value); }
 
@@ -485,7 +483,7 @@ namespace SpanJson.Serialization
         /// <param name="count"></param>
         /// <param name="type">The type of the object to deserialize to.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static object DeserializeFromByteArray(this NJsonSerializer jsonSerializer, byte[] value, int offset, int count, Type type = null)
+        public static object? DeserializeFromByteArray(this NJsonSerializer jsonSerializer, byte[] value, int offset, int count, Type? type = null)
         {
             var isCheckAdditionalContentNoSet = !jsonSerializer.IsCheckAdditionalContentSetX();
             try
@@ -515,7 +513,7 @@ namespace SpanJson.Serialization
         /// <param name="value">The JSON to deserialize.</param>
         /// <param name="type">The type of the object to deserialize to.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static object DeserializeFromByteArray(this ObjectPool<NJsonSerializer> jsonSerializerPool, byte[] value, Type type = null)
+        public static object? DeserializeFromByteArray(this ObjectPool<NJsonSerializer> jsonSerializerPool, byte[] value, Type? type = null)
         {
             if (value is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.value); }
 
@@ -529,7 +527,7 @@ namespace SpanJson.Serialization
         /// <param name="count"></param>
         /// <param name="type">The type of the object to deserialize to.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static object DeserializeFromByteArray(this ObjectPool<NJsonSerializer> jsonSerializerPool, byte[] value, int offset, int count, Type type = null)
+        public static object? DeserializeFromByteArray(this ObjectPool<NJsonSerializer> jsonSerializerPool, byte[] value, int offset, int count, Type? type = null)
         {
             if (value is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.value); }
 
@@ -570,7 +568,7 @@ namespace SpanJson.Serialization
         /// This parameter is used when <see cref="NJsonSerializer.TypeNameHandling"/> is <see cref="NTypeNameHandling.Auto"/> to write out the type name if the type of the value does not match.
         /// Specifying the type is optional.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static void SerializeToStream(this NJsonSerializer jsonSerializer, Stream outputStream, object value, Type type = null)
+        public static void SerializeToStream(this NJsonSerializer jsonSerializer, Stream outputStream, object? value, Type? type = null)
         {
             using (NJsonTextWriter jsonWriter = new NJsonTextWriter(new StreamWriter(outputStream, UTF8NoBOM, 4096, leaveOpen: true)))
             {
@@ -594,7 +592,7 @@ namespace SpanJson.Serialization
         /// This parameter is used when <see cref="NJsonSerializer.TypeNameHandling"/> is <see cref="NTypeNameHandling.Auto"/> to write out the type name if the type of the value does not match.
         /// Specifying the type is optional.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static void SerializeToStream(this NJsonSerializer jsonSerializer, Stream outputStream, object value, bool writeIndented, Type type = null)
+        public static void SerializeToStream(this NJsonSerializer jsonSerializer, Stream outputStream, object? value, bool writeIndented, Type? type = null)
         {
             var previousFormatting = jsonSerializer.GetFormatting();
             jsonSerializer.Formatting = writeIndented ? NFormatting.Indented : NFormatting.None;
@@ -617,7 +615,7 @@ namespace SpanJson.Serialization
         /// This parameter is used when <see cref="NJsonSerializer.TypeNameHandling"/> is <see cref="NTypeNameHandling.Auto"/> to write out the type name if the type of the value does not match.
         /// Specifying the type is optional.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static void SerializeToStream(this ObjectPool<NJsonSerializer> jsonSerializerPool, Stream outputStream, object value, Type type = null)
+        public static void SerializeToStream(this ObjectPool<NJsonSerializer> jsonSerializerPool, Stream outputStream, object? value, Type? type = null)
         {
             var jsonSerializer = jsonSerializerPool.Take();
             try
@@ -641,7 +639,7 @@ namespace SpanJson.Serialization
         /// This parameter is used when <see cref="NJsonSerializer.TypeNameHandling"/> is <see cref="NTypeNameHandling.Auto"/> to write out the type name if the type of the value does not match.
         /// Specifying the type is optional.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static void SerializeToStream(this ObjectPool<NJsonSerializer> jsonSerializerPool, Stream outputStream, object value, bool writeIndented, Type type = null)
+        public static void SerializeToStream(this ObjectPool<NJsonSerializer> jsonSerializerPool, Stream outputStream, object? value, bool writeIndented, Type? type = null)
         {
             var jsonSerializer = jsonSerializerPool.Take();
 
@@ -668,7 +666,7 @@ namespace SpanJson.Serialization
         /// <param name="inputStream">The JSON to deserialize.</param>
         /// <param name="type">The type of the object to deserialize to.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static object DeserializeFromStream(this NJsonSerializer jsonSerializer, Stream inputStream, Type type = null)
+        public static object? DeserializeFromStream(this NJsonSerializer jsonSerializer, Stream inputStream, Type? type = null)
         {
             var isCheckAdditionalContentNoSet = !jsonSerializer.IsCheckAdditionalContentSetX();
             try
@@ -698,7 +696,7 @@ namespace SpanJson.Serialization
         /// <param name="inputStream">The JSON to deserialize.</param>
         /// <param name="type">The type of the object to deserialize to.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static object DeserializeFromStream(this ObjectPool<NJsonSerializer> jsonSerializerPool, Stream inputStream, Type type = null)
+        public static object? DeserializeFromStream(this ObjectPool<NJsonSerializer> jsonSerializerPool, Stream inputStream, Type? type = null)
         {
             var jsonSerializer = jsonSerializerPool.Take();
             try
@@ -723,7 +721,7 @@ namespace SpanJson.Serialization
         /// This parameter is used when <see cref="NJsonSerializer.TypeNameHandling"/> is <see cref="NTypeNameHandling.Auto"/> to write out the type name if the type of the value does not match.
         /// Specifying the type is optional.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static void SerializeToWriter(this NJsonSerializer jsonSerializer, TextWriter textWriter, object value, Type type = null)
+        public static void SerializeToWriter(this NJsonSerializer jsonSerializer, TextWriter textWriter, object? value, Type? type = null)
         {
             using (NJsonTextWriter jsonWriter = new NJsonTextWriter(textWriter))
             {
@@ -747,7 +745,7 @@ namespace SpanJson.Serialization
         /// This parameter is used when <see cref="NJsonSerializer.TypeNameHandling"/> is <see cref="NTypeNameHandling.Auto"/> to write out the type name if the type of the value does not match.
         /// Specifying the type is optional.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static void SerializeToWriter(this NJsonSerializer jsonSerializer, TextWriter textWriter, object value, bool writeIndented, Type type = null)
+        public static void SerializeToWriter(this NJsonSerializer jsonSerializer, TextWriter textWriter, object? value, bool writeIndented, Type? type = null)
         {
             var previousFormatting = jsonSerializer.GetFormatting();
             jsonSerializer.Formatting = writeIndented ? NFormatting.Indented : NFormatting.None;
@@ -770,7 +768,7 @@ namespace SpanJson.Serialization
         /// This parameter is used when <see cref="NJsonSerializer.TypeNameHandling"/> is <see cref="NTypeNameHandling.Auto"/> to write out the type name if the type of the value does not match.
         /// Specifying the type is optional.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static void SerializeToWriter(this ObjectPool<NJsonSerializer> jsonSerializerPool, TextWriter textWriter, object value, Type type = null)
+        public static void SerializeToWriter(this ObjectPool<NJsonSerializer> jsonSerializerPool, TextWriter textWriter, object? value, Type? type = null)
         {
             var jsonSerializer = jsonSerializerPool.Take();
             try
@@ -794,7 +792,7 @@ namespace SpanJson.Serialization
         /// This parameter is used when <see cref="NJsonSerializer.TypeNameHandling"/> is <see cref="NTypeNameHandling.Auto"/> to write out the type name if the type of the value does not match.
         /// Specifying the type is optional.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static void SerializeToWriter(this ObjectPool<NJsonSerializer> jsonSerializerPool, TextWriter textWriter, object value, bool writeIndented, Type type = null)
+        public static void SerializeToWriter(this ObjectPool<NJsonSerializer> jsonSerializerPool, TextWriter textWriter, object? value, bool writeIndented, Type? type = null)
         {
             var jsonSerializer = jsonSerializerPool.Take();
 
@@ -821,7 +819,7 @@ namespace SpanJson.Serialization
         /// <param name="textReader">The JSON to deserialize.</param>
         /// <param name="type">The type of the object to deserialize to.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static object DeserializeFromReader(this NJsonSerializer jsonSerializer, TextReader textReader, Type type = null)
+        public static object? DeserializeFromReader(this NJsonSerializer jsonSerializer, TextReader textReader, Type? type = null)
         {
             var isCheckAdditionalContentNoSet = !jsonSerializer.IsCheckAdditionalContentSetX();
             try
@@ -851,7 +849,7 @@ namespace SpanJson.Serialization
         /// <param name="textReader">The JSON to deserialize.</param>
         /// <param name="type">The type of the object to deserialize to.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static object DeserializeFromReader(this ObjectPool<NJsonSerializer> jsonSerializerPool, TextReader textReader, Type type = null)
+        public static object? DeserializeFromReader(this ObjectPool<NJsonSerializer> jsonSerializerPool, TextReader textReader, Type? type = null)
         {
             var jsonSerializer = jsonSerializerPool.Take();
             try
@@ -870,8 +868,8 @@ namespace SpanJson.Serialization
 
         /// <summary>Populates the object with values from the JSON string using <see cref="NJsonSerializer"/>.</summary>
         /// <param name="jsonSerializer">The <see cref="NJsonSerializer"/> used to deserialize the object.</param>
-        /// <param name="value">The JSON to populate values from.</param>
         /// <param name="target">The target object to populate values onto.</param>
+        /// <param name="value">The JSON to populate values from.</param>
         public static void PopulateObject(this NJsonSerializer jsonSerializer, object target, string value)
         {
             using (var jsonReader = new NJsonTextReader(new StringReader(value)))
@@ -896,8 +894,8 @@ namespace SpanJson.Serialization
 
         /// <summary>Populates the object with values from the JSON string using <see cref="NJsonSerializer"/>.</summary>
         /// <param name="jsonSerializerPool">The <see cref="NJsonSerializer"/> pool used to deserialize the object.</param>
-        /// <param name="value">The JSON to populate values from.</param>
         /// <param name="target">The target object to populate values onto.</param>
+        /// <param name="value">The JSON to populate values from.</param>
         public static void PopulateObject(this ObjectPool<NJsonSerializer> jsonSerializerPool, object target, string value)
         {
             var jsonSerializer = jsonSerializerPool.Take();
@@ -913,8 +911,8 @@ namespace SpanJson.Serialization
 
         /// <summary>Populates the object with values from the JSON string using <see cref="NJsonSerializer"/>.</summary>
         /// <param name="jsonSerializer">The <see cref="NJsonSerializer"/> used to deserialize the object.</param>
-        /// <param name="value">The JSON to populate values from.</param>
         /// <param name="target">The target object to populate values onto.</param>
+        /// <param name="value">The JSON to populate values from.</param>
         public static void PopulateObject(this NJsonSerializer jsonSerializer, object target, byte[] value)
         {
             if (value is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.value); }
@@ -924,10 +922,10 @@ namespace SpanJson.Serialization
 
         /// <summary>Populates the object with values from the JSON string using <see cref="NJsonSerializer"/>.</summary>
         /// <param name="jsonSerializer">The <see cref="NJsonSerializer"/> used to deserialize the object.</param>
+        /// <param name="target">The target object to populate values onto.</param>
         /// <param name="value">The JSON to populate values from.</param>
         /// <param name="offset"></param>
         /// <param name="count"></param>
-        /// <param name="target">The target object to populate values onto.</param>
         public static void PopulateObject(this NJsonSerializer jsonSerializer, object target, byte[] value, int offset, int count)
         {
             using (var jsonReader = new NJsonTextReader(new StreamReader(new MemoryStream(value, offset, count), Encoding.UTF8)))
@@ -952,8 +950,8 @@ namespace SpanJson.Serialization
 
         /// <summary>Populates the object with values from the JSON string using <see cref="NJsonSerializer"/>.</summary>
         /// <param name="jsonSerializerPool">The <see cref="NJsonSerializer"/> pool used to deserialize the object.</param>
-        /// <param name="value">The JSON to populate values from.</param>
         /// <param name="target">The target object to populate values onto.</param>
+        /// <param name="value">The JSON to populate values from.</param>
         public static void PopulateObject(this ObjectPool<NJsonSerializer> jsonSerializerPool, object target, byte[] value)
         {
             if (value is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.value); }
@@ -963,10 +961,10 @@ namespace SpanJson.Serialization
 
         /// <summary>Populates the object with values from the JSON string using <see cref="NJsonSerializer"/>.</summary>
         /// <param name="jsonSerializerPool">The <see cref="NJsonSerializer"/> pool used to deserialize the object.</param>
+        /// <param name="target">The target object to populate values onto.</param>
         /// <param name="value">The JSON to populate values from.</param>
         /// <param name="offset"></param>
         /// <param name="count"></param>
-        /// <param name="target">The target object to populate values onto.</param>
         public static void PopulateObject(this ObjectPool<NJsonSerializer> jsonSerializerPool, object target, byte[] value, int offset, int count)
         {
             var jsonSerializer = jsonSerializerPool.Take();

@@ -23,11 +23,8 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Threading;
 
 namespace SpanJson.Linq
 {
@@ -42,8 +39,8 @@ namespace SpanJson.Linq
 
         PropertyDescriptorCollection ITypedList.GetItemProperties(PropertyDescriptor[] listAccessors)
         {
-            ICustomTypeDescriptor d = First as ICustomTypeDescriptor;
-            return d?.GetProperties();
+            ICustomTypeDescriptor? d = First as ICustomTypeDescriptor;
+            return d?.GetProperties() ?? new PropertyDescriptorCollection(Array.Empty<PropertyDescriptor>());
         }
 
         #endregion
@@ -106,9 +103,9 @@ namespace SpanJson.Linq
 
         #region -- IList Members --
 
-        int IList.Add(object value)
+        int IList.Add(object? value)
         {
-            Add(EnsureValue(value));
+            Add(JContainer.EnsureValue(value));
             return Count - 1;
         }
 
@@ -117,28 +114,28 @@ namespace SpanJson.Linq
             ClearItems();
         }
 
-        bool IList.Contains(object value)
+        bool IList.Contains(object? value)
         {
-            return ContainsItem(EnsureValue(value));
+            return ContainsItem(JContainer.EnsureValue(value));
         }
 
-        int IList.IndexOf(object value)
+        int IList.IndexOf(object? value)
         {
-            return IndexOfItem(EnsureValue(value));
+            return IndexOfItem(JContainer.EnsureValue(value));
         }
 
-        void IList.Insert(int index, object value)
+        void IList.Insert(int index, object? value)
         {
-            InsertItem(index, EnsureValue(value), false);
+            InsertItem(index, JContainer.EnsureValue(value), false);
         }
 
         bool IList.IsFixedSize => false;
 
         bool IList.IsReadOnly => false;
 
-        void IList.Remove(object value)
+        void IList.Remove(object? value)
         {
-            RemoveItem(EnsureValue(value));
+            RemoveItem(JContainer.EnsureValue(value));
         }
 
         void IList.RemoveAt(int index)
@@ -146,10 +143,10 @@ namespace SpanJson.Linq
             RemoveItemAt(index);
         }
 
-        object IList.this[int index]
+        object? IList.this[int index]
         {
             get => GetItem(index);
-            set => SetItem(index, EnsureValue(value));
+            set => SetItem(index, JContainer.EnsureValue(value));
         }
 
         #endregion
@@ -169,7 +166,7 @@ namespace SpanJson.Linq
 
         bool ICollection.IsSynchronized => false;
 
-        private object _syncRoot;
+        private object? _syncRoot;
         object ICollection.SyncRoot
         {
             get
@@ -239,7 +236,7 @@ namespace SpanJson.Linq
 
         ListSortDirection IBindingList.SortDirection => ListSortDirection.Ascending;
 
-        PropertyDescriptor IBindingList.SortProperty => null;
+        PropertyDescriptor? IBindingList.SortProperty => null;
 
         bool IBindingList.SupportsChangeNotification => true;
 

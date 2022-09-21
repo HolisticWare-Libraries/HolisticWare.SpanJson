@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SpanJson
+﻿namespace SpanJson
 {
     /// <summary>Annotate constructors with this attribute to use the constructor instead of members directly for deserialization.</summary>
     [AttributeUsage(AttributeTargets.Constructor)]
@@ -28,7 +26,7 @@ namespace SpanJson
             ParameterTypes = parameterTypes;
         }
 
-        public string[] ParameterNames { get; }
-        public Type[] ParameterTypes { get; }
+        public string[]? ParameterNames { get; }
+        public Type[]? ParameterTypes { get; }
     }
 }

@@ -23,7 +23,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
 using System.Reflection;
 using CuteAnt.Reflection;
 
@@ -46,10 +45,10 @@ namespace SpanJson.Utilities
                 return a => c.Invoke(a);
             }
 
-            return a => method.Invoke(null, a);
+            return a => method.Invoke(null, a)!;
         }
 
-        public override MethodCaller<T, object> CreateMethodCall<T>(MethodBase method)
+        public override MethodCaller<T, object?> CreateMethodCall<T>(MethodBase method)
         {
             if (method is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.method); }
 
@@ -67,36 +66,40 @@ namespace SpanJson.Utilities
 
             if (type.IsValueType)
             {
-                return () => (T)Activator.CreateInstance(type);
+                return () => (T)Activator.CreateInstance(type)!;
             }
 
-            ConstructorInfo constructorInfo = ReflectionUtils.GetDefaultConstructor(type, true);
+            ConstructorInfo? constructorInfo = ReflectionUtils.GetDefaultConstructor(type, true);
+            if (constructorInfo is null)
+            {
+                ThrowHelper2.ThrowInvalidOperationException_Unable_to_find_default_constructor_for(type);
+            }
 
             return () => (T)constructorInfo.Invoke(null);
         }
 
-        public override Func<T, object> CreateGet<T>(PropertyInfo propertyInfo)
+        public override Func<T, object?> CreateGet<T>(PropertyInfo propertyInfo)
         {
             if (propertyInfo is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.propertyInfo); }
 
             return o => propertyInfo.GetValue(o, null);
         }
 
-        public override Func<T, object> CreateGet<T>(FieldInfo fieldInfo)
+        public override Func<T, object?> CreateGet<T>(FieldInfo fieldInfo)
         {
             if (fieldInfo is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.fieldInfo); }
 
             return o => fieldInfo.GetValue(o);
         }
 
-        public override Action<T, object> CreateSet<T>(FieldInfo fieldInfo)
+        public override Action<T, object?> CreateSet<T>(FieldInfo fieldInfo)
         {
             if (fieldInfo is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.fieldInfo); }
 
             return (o, v) => fieldInfo.SetValue(o, v);
         }
 
-        public override Action<T, object> CreateSet<T>(PropertyInfo propertyInfo)
+        public override Action<T, object?> CreateSet<T>(PropertyInfo propertyInfo)
         {
             if (propertyInfo is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.propertyInfo); }
 

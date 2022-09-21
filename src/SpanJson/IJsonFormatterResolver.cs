@@ -1,17 +1,16 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Dynamic;
 using System.Text.Encodings.Web;
 using SpanJson.Resolvers;
 
 namespace SpanJson
 {
-    public delegate object DeserializeDynamicDelegate<TSymbol>(ref JsonReader<TSymbol> reader) where TSymbol : struct;
+    public delegate object? DeserializeDynamicDelegate<TSymbol>(ref JsonReader<TSymbol> reader) where TSymbol : struct;
 
     public interface IJsonFormatterResolver
     {
         IJsonFormatter GetFormatter(Type type);
-        IJsonFormatter GetFormatter(JsonMemberInfo info, Type overrideMemberType = null);
+        IJsonFormatter GetFormatter(JsonMemberInfo info, Type? overrideMemberType = null);
         JsonObjectDescription GetDynamicObjectDescription(IDynamicMetaObjectProvider provider);
     }
 
@@ -22,7 +21,7 @@ namespace SpanJson
 
         JsonEscapeHandling EscapeHandling { get; }
         /// <summary>The encoder to use when escaping strings, or <see langword="null" /> to use the default encoder.</summary>
-        JavaScriptEncoder Encoder { get; }
+        JavaScriptEncoder? Encoder { get; }
 
         DeserializeDynamicDelegate<TSymbol> DynamicDeserializer { get; set; }
 
@@ -77,7 +76,7 @@ namespace SpanJson
     {
         bool IsSupportedType(Type type);
 
-        ICustomJsonFormatter GetFormatter(Type type);
+        ICustomJsonFormatter? GetFormatter(Type type);
         //ICustomJsonFormatter<T> GetFormatter<T>();
     }
 }

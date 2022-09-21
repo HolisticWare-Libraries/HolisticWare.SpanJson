@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Diagnostics;
 
 namespace SpanJson.Document
@@ -13,9 +12,9 @@ namespace SpanJson.Document
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public readonly struct JsonProperty
     {
-        private readonly string _name;
+        private readonly string? _name;
 
-        internal JsonProperty(JsonElement value, string name = null)
+        internal JsonProperty(JsonElement value, string? name = null)
         {
             Value = value;
             _name = name;

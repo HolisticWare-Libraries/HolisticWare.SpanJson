@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -185,7 +184,7 @@ namespace SpanJson
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= value.Length);
             Debug.Assert(firstEscapeIndexVal >= 0 && firstEscapeIndexVal < value.Length);
 
-            char[] valueArray = null;
+            char[]? valueArray = null;
 
             int length = EscapingHelper.GetMaxEscapedLength(value.Length, firstEscapeIndexVal);
 
@@ -336,7 +335,7 @@ namespace SpanJson
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= utf8Value.Length);
             Debug.Assert(firstEscapeIndexVal >= 0 && firstEscapeIndexVal < utf8Value.Length);
 
-            byte[] valueArray = null;
+            byte[]? valueArray = null;
 
             int length = EscapingHelper.GetMaxEscapedLength(utf8Value.Length, firstEscapeIndexVal);
 

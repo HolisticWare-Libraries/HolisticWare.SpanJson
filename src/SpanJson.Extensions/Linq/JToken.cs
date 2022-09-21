@@ -23,12 +23,9 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Dynamic;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using SpanJson.Linq.JsonPath;
 using SpanJson.Serialization;
@@ -39,12 +36,12 @@ namespace SpanJson.Linq
     /// <summary>Represents an abstract JSON token.</summary>
     public abstract partial class JToken : IDynamicMetaObjectProvider
     {
-        private static JTokenEqualityComparer _equalityComparer;
+        private static JTokenEqualityComparer? _equalityComparer;
 
-        private JContainer _parent;
-        private JToken _previous;
-        private JToken _next;
-        private object _annotations;
+        private JContainer? _parent;
+        private JToken? _previous;
+        private JToken? _next;
+        private object? _annotations;
 
         /// <summary>Gets a comparer that can compare two tokens for value equality.</summary>
         /// <value>A <see cref="JTokenEqualityComparer"/> that can compare two nodes for value equality.</value>
@@ -63,7 +60,7 @@ namespace SpanJson.Linq
 
         /// <summary>Gets or sets the parent.</summary>
         /// <value>The parent.</value>
-        public JContainer Parent
+        public JContainer? Parent
         {
             [DebuggerStepThrough]
             get { return _parent; }
@@ -76,7 +73,7 @@ namespace SpanJson.Linq
         {
             get
             {
-                JContainer parent = Parent;
+                var parent = Parent;
                 if (parent is null)
                 {
                     return this;
@@ -101,7 +98,7 @@ namespace SpanJson.Linq
 
         /// <summary>Gets the next sibling token of this node.</summary>
         /// <value>The <see cref="JToken"/> that contains the next sibling token.</value>
-        public JToken Next
+        public JToken? Next
         {
             get => _next;
             internal set => _next = value;
@@ -109,7 +106,7 @@ namespace SpanJson.Linq
 
         /// <summary>Gets the previous sibling token of this node.</summary>
         /// <value>The <see cref="JToken"/> that contains the previous sibling token.</value>
-        public JToken Previous
+        public JToken? Previous
         {
             get => _previous;
             internal set => _previous = value;
@@ -123,8 +120,8 @@ namespace SpanJson.Linq
                 if (Parent is null) { return string.Empty; }
 
                 List<JsonPosition> positions = new List<JsonPosition>();
-                JToken previous = null;
-                for (JToken current = this; current is not null; current = current.Parent)
+                JToken? previous = null;
+                for (JToken? current = this; current is not null; current = current.Parent)
                 {
                     switch (current.Type)
                     {
@@ -185,7 +182,7 @@ namespace SpanJson.Linq
 
         /// <summary>Gets the <see cref="JToken"/> with the specified key.</summary>
         /// <value>The <see cref="JToken"/> with the specified key.</value>
-        public virtual JToken this[object key]
+        public virtual JToken? this[object key]
         {
             get => throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot access child value on {0}.", GetType()));
             set => throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot set child value on {0}.", GetType()));
@@ -195,9 +192,9 @@ namespace SpanJson.Linq
         /// <typeparam name="T">The type to convert the token to.</typeparam>
         /// <param name="key">The token key.</param>
         /// <returns>The converted token value.</returns>
-        public virtual T Value<T>(object key)
+        public virtual T? Value<T>(object key)
         {
-            JToken token = this[key];
+            var token = this[key];
 
             // null check to fix MonoTouch issue - https://github.com/dolbz/Newtonsoft.Json/commit/a24e3062846b30ee505f3271ac08862bb471b822
             return token is null ? default : Extensions.Convert<JToken, T>(token);
@@ -205,11 +202,11 @@ namespace SpanJson.Linq
 
         /// <summary>Get the first child token of this token.</summary>
         /// <value>A <see cref="JToken"/> containing the first child token of the <see cref="JToken"/>.</value>
-        public virtual JToken First => throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot access child value on {0}.", GetType()));
+        public virtual JToken? First => throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot access child value on {0}.", GetType()));
 
         /// <summary>Get the last child token of this token.</summary>
         /// <value>A <see cref="JToken"/> containing the last child token of the <see cref="JToken"/>.</value>
-        public virtual JToken Last => throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot access child value on {0}.", GetType()));
+        public virtual JToken? Last => throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot access child value on {0}.", GetType()));
 
         /// <summary>Returns a collection of the child tokens of this token, in document order.</summary>
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="JToken"/> containing the child tokens of this <see cref="JToken"/>, in document order.</returns>
@@ -229,7 +226,7 @@ namespace SpanJson.Linq
         /// <summary>Returns a collection of the child values of this token, in document order.</summary>
         /// <typeparam name="T">The type to convert the values to.</typeparam>
         /// <returns>A <see cref="IEnumerable{T}"/> containing the child values of this <see cref="JToken"/>, in document order.</returns>
-        public virtual IEnumerable<T> Values<T>()
+        public virtual IEnumerable<T?> Values<T>()
         {
             throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot access child value on {0}.", GetType()));
         }
@@ -252,7 +249,7 @@ namespace SpanJson.Linq
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static JValue EnsureValue(JToken value)
+        private static JValue? EnsureValue(JToken value)
         {
             if (value is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.value); }
 
@@ -261,7 +258,7 @@ namespace SpanJson.Linq
                 value = property.Value;
             }
 
-            JValue v = value as JValue;
+            JValue? v = value as JValue;
 
             return v;
         }
@@ -289,7 +286,7 @@ namespace SpanJson.Linq
         /// <summary>Selects a <see cref="JToken"/> using a JSONPath expression. Selects the token that matches the object path.</summary>
         /// <param name="path">A <see cref="String"/> that contains a JSONPath expression.</param>
         /// <returns>A <see cref="JToken"/>, or <c>null</c>.</returns>
-        public JToken SelectToken(string path)
+        public JToken? SelectToken(string path)
         {
             return SelectToken(path, settings: null);
         }
@@ -298,9 +295,9 @@ namespace SpanJson.Linq
         /// <param name="path">A <see cref="String"/> that contains a JSONPath expression.</param>
         /// <param name="errorWhenNoMatch">A flag to indicate whether an error should be thrown if no tokens are found when evaluating part of the expression.</param>
         /// <returns>A <see cref="JToken"/>.</returns>
-        public JToken SelectToken(string path, bool errorWhenNoMatch)
+        public JToken? SelectToken(string path, bool errorWhenNoMatch)
         {
-            JsonSelectSettings settings = errorWhenNoMatch
+            JsonSelectSettings? settings = errorWhenNoMatch
                 ? new JsonSelectSettings { ErrorWhenNoMatch = true }
                 : null;
 
@@ -315,11 +312,11 @@ namespace SpanJson.Linq
         /// </param>
         /// <param name="settings">The <see cref="JsonSelectSettings"/> used to select tokens.</param>
         /// <returns>A <see cref="JToken"/>.</returns>
-        public JToken SelectToken(string path, JsonSelectSettings settings)
+        public JToken? SelectToken(string path, JsonSelectSettings? settings)
         {
             JPath p = new JPath(path);
 
-            JToken token = null;
+            JToken? token = null;
             foreach (JToken t in p.Evaluate(this, this, settings))
             {
                 if (token is not null)
@@ -347,7 +344,7 @@ namespace SpanJson.Linq
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="JToken"/> that contains the selected elements.</returns>
         public IEnumerable<JToken> SelectTokens(string path, bool errorWhenNoMatch)
         {
-            JsonSelectSettings settings = errorWhenNoMatch
+            JsonSelectSettings? settings = errorWhenNoMatch
                 ? new JsonSelectSettings { ErrorWhenNoMatch = true }
                 : null;
 
@@ -362,7 +359,7 @@ namespace SpanJson.Linq
         /// </param>
         /// <param name="settings">The <see cref="JsonSelectSettings"/> used to select tokens.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="JToken"/> that contains the selected elements.</returns>
-        public IEnumerable<JToken> SelectTokens(string path, JsonSelectSettings settings)
+        public IEnumerable<JToken> SelectTokens(string path, JsonSelectSettings? settings)
         {
             var p = new JPath(path);
             return p.Evaluate(this, this, settings);
@@ -403,7 +400,7 @@ namespace SpanJson.Linq
         /// <summary>Get the first annotation object of the specified type from this <see cref="JToken"/>.</summary>
         /// <typeparam name="T">The type of the annotation to retrieve.</typeparam>
         /// <returns>The first annotation object that matches the specified type, or <c>null</c> if no annotation is of the specified type.</returns>
-        public T Annotation<T>() where T : class
+        public T? Annotation<T>() where T : class
         {
             switch (_annotations)
             {
@@ -428,7 +425,7 @@ namespace SpanJson.Linq
         /// <summary>Gets the first annotation object of the specified type from this <see cref="JToken"/>.</summary>
         /// <param name="type">The <see cref="Type"/> of the annotation to retrieve.</param>
         /// <returns>The first annotation object that matches the specified type, or <c>null</c> if no annotation is of the specified type.</returns>
-        public object Annotation(Type type)
+        public object? Annotation(Type type)
         {
             if (type is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.type); }
 
@@ -531,12 +528,12 @@ namespace SpanJson.Linq
                 case null:
                     break;
 
-                case object[] annotations:
+                case object?[] annotations:
                     int index = 0;
                     int keepCount = 0;
                     while ((uint)index < (uint)annotations.Length)
                     {
-                        object obj2 = annotations[index];
+                        object? obj2 = annotations[index];
                         if (obj2 is null)
                         {
                             break;
@@ -580,12 +577,12 @@ namespace SpanJson.Linq
                 case null:
                     break;
 
-                case object[] annotations:
+                case object?[] annotations:
                     int index = 0;
                     int keepCount = 0;
                     while ((uint)index < (uint)annotations.Length)
                     {
-                        object o = annotations[index];
+                        object? o = annotations[index];
                         if (o is null) { break; }
 
                         if (!type.IsInstanceOfType(o))

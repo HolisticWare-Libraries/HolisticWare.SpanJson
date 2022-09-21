@@ -65,7 +65,7 @@ namespace SpanJson.Formatters
             var keyParameterExpression = Expression.Parameter(typeof(TKey), "key");
             var valueParameterExpression = Expression.Parameter(typeof(TValue), "value");
 
-            var indexerProperty = dictionaryParameterExpression.Type.GetProperty("Item", valueParameterExpression.Type, new[] {keyParameterExpression.Type});
+            var indexerProperty = dictionaryParameterExpression.Type.GetProperty("Item", valueParameterExpression.Type, new[] {keyParameterExpression.Type})!;
 
             var lambda = Expression.Lambda<AssignKvpDelegate>(
                 Expression.Assign(Expression.Property(dictionaryParameterExpression, indexerProperty, keyParameterExpression), valueParameterExpression),
@@ -84,7 +84,7 @@ namespace SpanJson.Formatters
                         var separator = JsonUtf16Constant.NameSeparator;
                         var doubleQuote = JsonUtf16Constant.DoubleQuote;
                         reader.ReadSymbolOrThrow(Unsafe.As<char, TSymbol>(ref doubleQuote));
-                        var key = KeyFormatter.Deserialize(ref reader, resolver);
+                        var key = KeyFormatter.Deserialize(ref reader, resolver)!;
                         reader.ReadSymbolOrThrow(Unsafe.As<char, TSymbol>(ref doubleQuote));
                         reader.ReadSymbolOrThrow(Unsafe.As<char, TSymbol>(ref separator));
                         return key;
@@ -95,7 +95,7 @@ namespace SpanJson.Formatters
                 static TKey ReadStringKey(ref JsonReader<TSymbol> reader, IJsonFormatterResolver<TSymbol> resolver)
                 {
                     var separator = JsonUtf16Constant.NameSeparator;
-                    var key = KeyFormatter.Deserialize(ref reader, resolver);
+                    var key = KeyFormatter.Deserialize(ref reader, resolver)!;
                     reader.ReadSymbolOrThrow(Unsafe.As<char, TSymbol>(ref separator));
                     return key;
                 }
@@ -112,7 +112,7 @@ namespace SpanJson.Formatters
                         var separator = JsonUtf8Constant.NameSeparator;
                         var doubleQuote = JsonUtf8Constant.DoubleQuote;
                         reader.ReadSymbolOrThrow(Unsafe.As<byte, TSymbol>(ref doubleQuote));
-                        var key = KeyFormatter.Deserialize(ref reader, resolver);
+                        var key = KeyFormatter.Deserialize(ref reader, resolver)!;
                         reader.ReadSymbolOrThrow(Unsafe.As<byte, TSymbol>(ref doubleQuote));
                         reader.ReadSymbolOrThrow(Unsafe.As<byte, TSymbol>(ref separator));
                         return key;
@@ -123,7 +123,7 @@ namespace SpanJson.Formatters
                 static TKey ReadStringKey(ref JsonReader<TSymbol> reader, IJsonFormatterResolver<TSymbol> resolver)
                 {
                     var separator = JsonUtf8Constant.NameSeparator;
-                    var key = KeyFormatter.Deserialize(ref reader, resolver);
+                    var key = KeyFormatter.Deserialize(ref reader, resolver)!;
                     reader.ReadSymbolOrThrow(Unsafe.As<byte, TSymbol>(ref separator));
                     return key;
                 }
@@ -157,7 +157,7 @@ namespace SpanJson.Formatters
             return WriteStringKey;
         }
 
-        public TDictionary Deserialize(ref JsonReader<TSymbol> reader, IJsonFormatterResolver<TSymbol> resolver)
+        public TDictionary? Deserialize(ref JsonReader<TSymbol> reader, IJsonFormatterResolver<TSymbol> resolver)
         {
             if (reader.ReadIsNull())
             {
@@ -171,13 +171,13 @@ namespace SpanJson.Formatters
             {
                 var key = ReadKeyFunctor(ref reader, resolver);
                 var value = ValueFormatter.Deserialize(ref reader, resolver);
-                AssignKvpFunctor(result, key, value); // No shared interface for IReadOnlyDictionary and IDictionary to set the value via indexer (to make sure that for duplicated keys, we use the last one)
+                AssignKvpFunctor(result, key, value!); // No shared interface for IReadOnlyDictionary and IDictionary to set the value via indexer (to make sure that for duplicated keys, we use the last one)
             }
 
             return Converter(result);
         }
 
-        public void Serialize(ref JsonWriter<TSymbol> writer, TDictionary value, IJsonFormatterResolver<TSymbol> resolver)
+        public void Serialize(ref JsonWriter<TSymbol> writer, TDictionary? value, IJsonFormatterResolver<TSymbol> resolver)
         {
             if (value is null)
             {

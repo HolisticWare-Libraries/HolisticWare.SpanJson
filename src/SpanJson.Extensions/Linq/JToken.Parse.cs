@@ -1,5 +1,4 @@
-﻿using System;
-using System.Buffers;
+﻿using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using SpanJson.Document;
@@ -117,7 +116,7 @@ namespace SpanJson.Linq
                         var startOffset = pos;
                         pos++;
                         var count = 0;
-                        JToken[] temp = null;
+                        JToken[]? temp = null;
                         try
                         {
                             temp = ArrayPool<JToken>.Shared.Rent(4);
@@ -262,7 +261,7 @@ namespace SpanJson.Linq
                         var startOffset = pos;
                         pos++;
                         var count = 0;
-                        JToken[] temp = null;
+                        JToken[]? temp = null;
                         try
                         {
                             temp = ArrayPool<JToken>.Shared.Rent(4);

@@ -23,7 +23,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
 using System.Xml;
 using System.Xml.Linq;
 using NFormatting = Newtonsoft.Json.Formatting;
@@ -43,31 +42,31 @@ namespace SpanJson.Serialization
         /// <summary>Serializes the specified object to a JSON string.</summary>
         /// <param name="value">The object to serialize.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static string SerializeObject(object value)
+        public static string SerializeObject(object? value)
         {
-            return SerializeObject(value, null, (NJsonSerializerSettings)null);
+            return SerializeObject(value, type: null, settings: null);
         }
 
         /// <summary>Serializes the specified object to a JSON string using formatting.</summary>
         /// <param name="value">The object to serialize.</param>
         /// <param name="formatting">Indicates how the output should be formatted.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static string SerializeObject(object value, NFormatting formatting)
+        public static string SerializeObject(object? value, NFormatting formatting)
         {
-            return SerializeObject(value, formatting, (NJsonSerializerSettings)null);
+            return SerializeObject(value, formatting, settings: null);
         }
 
         /// <summary>Serializes the specified object to a JSON string using a collection of <see cref="NJsonConverter"/>.</summary>
         /// <param name="value">The object to serialize.</param>
         /// <param name="converters">A collection of converters used while serializing.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static string SerializeObject(object value, params NJsonConverter[] converters)
+        public static string SerializeObject(object? value, params NJsonConverter[] converters)
         {
             var settings = (converters is not null && converters.Length > 0)
                 ? new NJsonSerializerSettings { Converters = converters }
                 : null;
 
-            return SerializeObject(value, null, settings);
+            return SerializeObject(value, type: null, settings: settings);
         }
 
         /// <summary>Serializes the specified object to a JSON string using formatting and a collection of <see cref="NJsonConverter"/>.</summary>
@@ -75,7 +74,7 @@ namespace SpanJson.Serialization
         /// <param name="formatting">Indicates how the output should be formatted.</param>
         /// <param name="converters">A collection of converters used while serializing.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static string SerializeObject(object value, NFormatting formatting, params NJsonConverter[] converters)
+        public static string SerializeObject(object? value, NFormatting formatting, params NJsonConverter[] converters)
         {
             var settings = (converters is not null && converters.Length > 0)
                 ? new NJsonSerializerSettings { Converters = converters }
@@ -89,20 +88,20 @@ namespace SpanJson.Serialization
         /// <param name="settings">The <see cref="NJsonSerializerSettings"/> used to serialize the object.
         /// If this is <c>null</c>, default serialization settings will be used.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static string SerializeObject(object value, NJsonSerializerSettings settings)
+        public static string SerializeObject(object? value, NJsonSerializerSettings? settings)
         {
-            return SerializeObject(value, null, settings);
+            return SerializeObject(value, type: null, settings: settings);
         }
 
         /// <summary>Serializes the specified object to a JSON string using a type, formatting and <see cref="NJsonSerializerSettings"/>.</summary>
         /// <param name="value">The object to serialize.</param>
-        /// <param name="settings">The <see cref="NJsonSerializerSettings"/> used to serialize the object.
-        /// If this is <c>null</c>, default serialization settings will be used.</param>
         /// <param name="type">The type of the value being serialized.
         /// This parameter is used when <see cref="NJsonSerializer.TypeNameHandling"/> is <see cref="NTypeNameHandling.Auto"/> to write out the type name if the type of the value does not match.
         /// Specifying the type is optional.</param>
+        /// <param name="settings">The <see cref="NJsonSerializerSettings"/> used to serialize the object.
+        /// If this is <c>null</c>, default serialization settings will be used.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static string SerializeObject(object value, Type type, NJsonSerializerSettings settings)
+        public static string SerializeObject(object? value, Type? type, NJsonSerializerSettings? settings)
         {
             var jsonSerializer = NJsonSerializer.CreateDefault(settings);
 
@@ -115,21 +114,21 @@ namespace SpanJson.Serialization
         /// <param name="settings">The <see cref="NJsonSerializerSettings"/> used to serialize the object.
         /// If this is <c>null</c>, default serialization settings will be used.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static string SerializeObject(object value, NFormatting formatting, NJsonSerializerSettings settings)
+        public static string SerializeObject(object? value, NFormatting formatting, NJsonSerializerSettings? settings)
         {
             return SerializeObject(value, null, formatting, settings);
         }
 
         /// <summary>Serializes the specified object to a JSON string using a type, formatting and <see cref="NJsonSerializerSettings"/>.</summary>
         /// <param name="value">The object to serialize.</param>
-        /// <param name="formatting">Indicates how the output should be formatted.</param>
-        /// <param name="settings">The <see cref="NJsonSerializerSettings"/> used to serialize the object.
-        /// If this is <c>null</c>, default serialization settings will be used.</param>
         /// <param name="type">The type of the value being serialized.
         /// This parameter is used when <see cref="NJsonSerializer.TypeNameHandling"/> is <see cref="NTypeNameHandling.Auto"/> to write out the type name if the type of the value does not match.
         /// Specifying the type is optional.</param>
+        /// <param name="formatting">Indicates how the output should be formatted.</param>
+        /// <param name="settings">The <see cref="NJsonSerializerSettings"/> used to serialize the object.
+        /// If this is <c>null</c>, default serialization settings will be used.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static string SerializeObject(object value, Type type, NFormatting formatting, NJsonSerializerSettings settings)
+        public static string SerializeObject(object? value, Type? type, NFormatting formatting, NJsonSerializerSettings? settings)
         {
             var jsonSerializer = NJsonSerializer.CreateDefault(settings);
             jsonSerializer.Formatting = formatting;
@@ -144,9 +143,9 @@ namespace SpanJson.Serialization
         /// <summary>Deserializes the JSON to a .NET object.</summary>
         /// <param name="value">The JSON to deserialize.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static object DeserializeObject(string value)
+        public static object? DeserializeObject(string value)
         {
-            return DeserializeObject(value, null, (NJsonSerializerSettings)null);
+            return DeserializeObject(value, null, settings: null);
         }
 
         /// <summary>Deserializes the JSON to a .NET object using <see cref="NJsonSerializerSettings"/>.</summary>
@@ -154,7 +153,7 @@ namespace SpanJson.Serialization
         /// <param name="settings">The <see cref="NJsonSerializerSettings"/> used to deserialize the object.
         /// If this is <c>null</c>, default serialization settings will be used.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static object DeserializeObject(string value, NJsonSerializerSettings settings)
+        public static object? DeserializeObject(string value, NJsonSerializerSettings? settings)
         {
             return DeserializeObject(value, null, settings);
         }
@@ -163,18 +162,18 @@ namespace SpanJson.Serialization
         /// <param name="value">The JSON to deserialize.</param>
         /// <param name="type">The <see cref="Type"/> of object being deserialized.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static object DeserializeObject(string value, Type type)
+        public static object? DeserializeObject(string value, Type type)
         {
-            return DeserializeObject(value, type, (NJsonSerializerSettings)null);
+            return DeserializeObject(value, type, settings: null);
         }
 
         /// <summary>Deserializes the JSON to the specified .NET type.</summary>
         /// <typeparam name="T">The type of the object to deserialize to.</typeparam>
         /// <param name="value">The JSON to deserialize.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static T DeserializeObject<T>(string value)
+        public static T? DeserializeObject<T>(string value)
         {
-            return DeserializeObject<T>(value, (NJsonSerializerSettings)null);
+            return DeserializeObject<T>(value, settings: null);
         }
 
         /// <summary>Deserializes the JSON to the given anonymous type.</summary>
@@ -183,7 +182,7 @@ namespace SpanJson.Serialization
         /// <param name="value">The JSON to deserialize.</param>
         /// <param name="anonymousTypeObject">The anonymous type object.</param>
         /// <returns>The deserialized anonymous type from the JSON string.</returns>
-        public static T DeserializeAnonymousType<T>(string value, T anonymousTypeObject)
+        public static T? DeserializeAnonymousType<T>(string value, T anonymousTypeObject)
         {
             return DeserializeObject<T>(value);
         }
@@ -196,7 +195,7 @@ namespace SpanJson.Serialization
         /// <param name="settings">The <see cref="NJsonSerializerSettings"/> used to deserialize the object.
         /// If this is <c>null</c>, default serialization settings will be used.</param>
         /// <returns>The deserialized anonymous type from the JSON string.</returns>
-        public static T DeserializeAnonymousType<T>(string value, T anonymousTypeObject, NJsonSerializerSettings settings)
+        public static T? DeserializeAnonymousType<T>(string value, T anonymousTypeObject, NJsonSerializerSettings? settings)
         {
             return DeserializeObject<T>(value, settings);
         }
@@ -206,9 +205,9 @@ namespace SpanJson.Serialization
         /// <param name="value">The JSON to deserialize.</param>
         /// <param name="converters">Converters to use while deserializing.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static T DeserializeObject<T>(string value, params NJsonConverter[] converters)
+        public static T? DeserializeObject<T>(string value, params NJsonConverter[] converters)
         {
-            return (T)DeserializeObject(value, typeof(T), converters);
+            return (T?)DeserializeObject(value, typeof(T), converters);
         }
 
         /// <summary>Deserializes the JSON to the specified .NET type using <see cref="NJsonSerializerSettings"/>.</summary>
@@ -217,9 +216,9 @@ namespace SpanJson.Serialization
         /// <param name="settings">The <see cref="NJsonSerializerSettings"/> used to deserialize the object.
         /// If this is <c>null</c>, default serialization settings will be used.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static T DeserializeObject<T>(string value, NJsonSerializerSettings settings)
+        public static T? DeserializeObject<T>(string value, NJsonSerializerSettings? settings)
         {
-            return (T)DeserializeObject(value, typeof(T), settings);
+            return (T?)DeserializeObject(value, typeof(T), settings);
         }
 
         /// <summary>Deserializes the JSON to the specified .NET type using a collection of <see cref="NJsonConverter"/>.</summary>
@@ -227,7 +226,7 @@ namespace SpanJson.Serialization
         /// <param name="type">The type of the object to deserialize.</param>
         /// <param name="converters">Converters to use while deserializing.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static object DeserializeObject(string value, Type type, params NJsonConverter[] converters)
+        public static object? DeserializeObject(string value, Type? type, params NJsonConverter[] converters)
         {
             var settings = (converters is not null && converters.Length > 0)
                 ? new NJsonSerializerSettings { Converters = converters }
@@ -243,7 +242,7 @@ namespace SpanJson.Serialization
         /// If this is <c>null</c>, default serialization settings will be used.
         /// </param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static object DeserializeObject(string value, Type type, NJsonSerializerSettings settings)
+        public static object? DeserializeObject(string value, Type? type, NJsonSerializerSettings? settings)
         {
             var jsonSerializer = NJsonSerializer.CreateDefault(settings);
             return jsonSerializer.DeserializeObject(value, type);
@@ -266,7 +265,7 @@ namespace SpanJson.Serialization
         /// <param name="target">The target object to populate values onto.</param>
         /// <param name="settings">The <see cref="NJsonSerializerSettings"/> used to deserialize the object.
         /// If this is <c>null</c>, default serialization settings will be used.</param>
-        public static void PopulateObject(string value, object target, NJsonSerializerSettings settings)
+        public static void PopulateObject(string value, object target, NJsonSerializerSettings? settings)
         {
             var jsonSerializer = NJsonSerializer.CreateDefault(settings);
 
@@ -280,7 +279,7 @@ namespace SpanJson.Serialization
         /// <summary>Serializes the <see cref="XmlNode"/> to a JSON string.</summary>
         /// <param name="node">The node to serialize.</param>
         /// <returns>A JSON string of the <see cref="XmlNode"/>.</returns>
-        public static string SerializeXmlNode(XmlNode node)
+        public static string SerializeXmlNode(XmlNode? node)
         {
             return SerializeXmlNode(node, NFormatting.None);
         }
@@ -289,7 +288,7 @@ namespace SpanJson.Serialization
         /// <param name="node">The node to serialize.</param>
         /// <param name="formatting">Indicates how the output should be formatted.</param>
         /// <returns>A JSON string of the <see cref="XmlNode"/>.</returns>
-        public static string SerializeXmlNode(XmlNode node, NFormatting formatting)
+        public static string SerializeXmlNode(XmlNode? node, NFormatting formatting)
         {
             var converter = new NXmlNodeConverter();
 
@@ -301,7 +300,7 @@ namespace SpanJson.Serialization
         /// <param name="formatting">Indicates how the output should be formatted.</param>
         /// <param name="omitRootObject">Omits writing the root object.</param>
         /// <returns>A JSON string of the <see cref="XmlNode"/>.</returns>
-        public static string SerializeXmlNode(XmlNode node, NFormatting formatting, bool omitRootObject)
+        public static string SerializeXmlNode(XmlNode? node, NFormatting formatting, bool omitRootObject)
         {
             var converter = new NXmlNodeConverter { OmitRootObject = omitRootObject };
 
@@ -311,16 +310,16 @@ namespace SpanJson.Serialization
         /// <summary>Deserializes the <see cref="XmlNode"/> from a JSON string.</summary>
         /// <param name="value">The JSON string.</param>
         /// <returns>The deserialized <see cref="XmlNode"/>.</returns>
-        public static XmlDocument DeserializeXmlNode(string value)
+        public static XmlDocument? DeserializeXmlNode(string value)
         {
-            return DeserializeXmlNode(value, null);
+            return DeserializeXmlNode(value, deserializeRootElementName: null);
         }
 
         /// <summary>Deserializes the <see cref="XmlNode"/> from a JSON string nested in a root element specified by <paramref name="deserializeRootElementName"/>.</summary>
         /// <param name="value">The JSON string.</param>
         /// <param name="deserializeRootElementName">The name of the root element to append when deserializing.</param>
         /// <returns>The deserialized <see cref="XmlNode"/>.</returns>
-        public static XmlDocument DeserializeXmlNode(string value, string deserializeRootElementName)
+        public static XmlDocument? DeserializeXmlNode(string value, string? deserializeRootElementName)
         {
             return DeserializeXmlNode(value, deserializeRootElementName, false);
         }
@@ -332,20 +331,44 @@ namespace SpanJson.Serialization
         /// <param name="writeArrayAttribute">A flag to indicate whether to write the Json.NET array attribute.
         /// This attribute helps preserve arrays when converting the written XML back to JSON.</param>
         /// <returns>The deserialized <see cref="XmlNode"/>.</returns>
-        public static XmlDocument DeserializeXmlNode(string value, string deserializeRootElementName, bool writeArrayAttribute)
+        public static XmlDocument? DeserializeXmlNode(string value, string? deserializeRootElementName, bool writeArrayAttribute)
         {
-            var converter = new NXmlNodeConverter()
+            return DeserializeXmlNode(value, deserializeRootElementName, writeArrayAttribute, false);
+        }
+
+        /// <summary>
+        /// Deserializes the <see cref="XmlNode"/> from a JSON string nested in a root element specified by <paramref name="deserializeRootElementName"/>,
+        /// writes a Json.NET array attribute for collections, and encodes special characters.
+        /// </summary>
+        /// <param name="value">The JSON string.</param>
+        /// <param name="deserializeRootElementName">The name of the root element to append when deserializing.</param>
+        /// <param name="writeArrayAttribute">
+        /// A value to indicate whether to write the Json.NET array attribute.
+        /// This attribute helps preserve arrays when converting the written XML back to JSON.
+        /// </param>
+        /// <param name="encodeSpecialCharacters">
+        /// A value to indicate whether to encode special characters when converting JSON to XML.
+        /// If <c>true</c>, special characters like ':', '@', '?', '#' and '$' in JSON property names aren't used to specify
+        /// XML namespaces, attributes or processing directives. Instead special characters are encoded and written
+        /// as part of the XML element name.
+        /// </param>
+        /// <returns>The deserialized <see cref="XmlNode"/>.</returns>
+        public static XmlDocument? DeserializeXmlNode(string value, string? deserializeRootElementName, bool writeArrayAttribute, bool encodeSpecialCharacters)
+        {
+            var converter = new NXmlNodeConverter
             {
                 DeserializeRootElementName = deserializeRootElementName,
-                WriteArrayAttribute = writeArrayAttribute
+                WriteArrayAttribute = writeArrayAttribute,
+                EncodeSpecialCharacters = encodeSpecialCharacters
             };
-            return (XmlDocument)DeserializeObject(value, typeof(XmlDocument), converter);
+
+            return (XmlDocument?)DeserializeObject(value, typeof(XmlDocument), converter);
         }
 
         /// <summary>Serializes the <see cref="XNode"/> to a JSON string.</summary>
         /// <param name="node">The node to convert to JSON.</param>
         /// <returns>A JSON string of the <see cref="XNode"/>.</returns>
-        public static string SerializeXNode(XObject node)
+        public static string SerializeXNode(XObject? node)
         {
             return SerializeXNode(node, NFormatting.None);
         }
@@ -354,7 +377,7 @@ namespace SpanJson.Serialization
         /// <param name="node">The node to convert to JSON.</param>
         /// <param name="formatting">Indicates how the output should be formatted.</param>
         /// <returns>A JSON string of the <see cref="XNode"/>.</returns>
-        public static string SerializeXNode(XObject node, NFormatting formatting)
+        public static string SerializeXNode(XObject? node, NFormatting formatting)
         {
             return SerializeXNode(node, formatting, false);
         }
@@ -364,7 +387,7 @@ namespace SpanJson.Serialization
         /// <param name="formatting">Indicates how the output should be formatted.</param>
         /// <param name="omitRootObject">Omits writing the root object.</param>
         /// <returns>A JSON string of the <see cref="XNode"/>.</returns>
-        public static string SerializeXNode(XObject node, NFormatting formatting, bool omitRootObject)
+        public static string SerializeXNode(XObject? node, NFormatting formatting, bool omitRootObject)
         {
             var converter = new NXmlNodeConverter { OmitRootObject = omitRootObject };
 
@@ -374,16 +397,16 @@ namespace SpanJson.Serialization
         /// <summary>Deserializes the <see cref="XNode"/> from a JSON string.</summary>
         /// <param name="value">The JSON string.</param>
         /// <returns>The deserialized <see cref="XNode"/>.</returns>
-        public static XDocument DeserializeXNode(string value)
+        public static XDocument? DeserializeXNode(string value)
         {
-            return DeserializeXNode(value, null);
+            return DeserializeXNode(value, deserializeRootElementName: null);
         }
 
         /// <summary>Deserializes the <see cref="XNode"/> from a JSON string nested in a root element specified by <paramref name="deserializeRootElementName"/>.</summary>
         /// <param name="value">The JSON string.</param>
         /// <param name="deserializeRootElementName">The name of the root element to append when deserializing.</param>
         /// <returns>The deserialized <see cref="XNode"/>.</returns>
-        public static XDocument DeserializeXNode(string value, string deserializeRootElementName)
+        public static XDocument? DeserializeXNode(string value, string? deserializeRootElementName)
         {
             return DeserializeXNode(value, deserializeRootElementName, false);
         }
@@ -395,14 +418,38 @@ namespace SpanJson.Serialization
         /// <param name="writeArrayAttribute">A flag to indicate whether to write the Json.NET array attribute.
         /// This attribute helps preserve arrays when converting the written XML back to JSON.</param>
         /// <returns>The deserialized <see cref="XNode"/>.</returns>
-        public static XDocument DeserializeXNode(string value, string deserializeRootElementName, bool writeArrayAttribute)
+        public static XDocument? DeserializeXNode(string value, string? deserializeRootElementName, bool writeArrayAttribute)
         {
-            var converter = new NXmlNodeConverter()
+            return DeserializeXNode(value, deserializeRootElementName, writeArrayAttribute, false);
+        }
+
+        /// <summary>
+        /// Deserializes the <see cref="XNode"/> from a JSON string nested in a root element specified by <paramref name="deserializeRootElementName"/>,
+        /// writes a Json.NET array attribute for collections, and encodes special characters.
+        /// </summary>
+        /// <param name="value">The JSON string.</param>
+        /// <param name="deserializeRootElementName">The name of the root element to append when deserializing.</param>
+        /// <param name="writeArrayAttribute">
+        /// A value to indicate whether to write the Json.NET array attribute.
+        /// This attribute helps preserve arrays when converting the written XML back to JSON.
+        /// </param>
+        /// <param name="encodeSpecialCharacters">
+        /// A value to indicate whether to encode special characters when converting JSON to XML.
+        /// If <c>true</c>, special characters like ':', '@', '?', '#' and '$' in JSON property names aren't used to specify
+        /// XML namespaces, attributes or processing directives. Instead special characters are encoded and written
+        /// as part of the XML element name.
+        /// </param>
+        /// <returns>The deserialized <see cref="XNode"/>.</returns>
+        public static XDocument? DeserializeXNode(string value, string? deserializeRootElementName, bool writeArrayAttribute, bool encodeSpecialCharacters)
+        {
+            var converter = new NXmlNodeConverter
             {
                 DeserializeRootElementName = deserializeRootElementName,
-                WriteArrayAttribute = writeArrayAttribute
+                WriteArrayAttribute = writeArrayAttribute,
+                EncodeSpecialCharacters = encodeSpecialCharacters
             };
-            return (XDocument)DeserializeObject(value, typeof(XDocument), converter);
+
+            return (XDocument?)DeserializeObject(value, typeof(XDocument), converter);
         }
 
         #endregion

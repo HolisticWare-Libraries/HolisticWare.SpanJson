@@ -58,7 +58,7 @@ namespace SpanJson.Internal
             public static bool NeedsEscaping(char value) => ((uint)value > byte.MaxValue || 0u >= AllowList[value]) ? true : false;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static JsonEncodedText GetEncodedText(string text, JavaScriptEncoder encoder)
+            public static JsonEncodedText GetEncodedText(string text, JavaScriptEncoder? encoder)
             {
                 if (encoder is null)
                 {
@@ -70,12 +70,12 @@ namespace SpanJson.Internal
                 }
             }
 
-            public static int NeedsEscaping(in ReadOnlySpan<byte> value, JavaScriptEncoder encoder)
+            public static int NeedsEscaping(in ReadOnlySpan<byte> value, JavaScriptEncoder? encoder)
             {
                 return (encoder ?? JavaScriptEncoder.Default).FindFirstCharacterToEncodeUtf8(value);
             }
 
-            public static unsafe int NeedsEscaping(in ReadOnlySpan<char> value, JavaScriptEncoder encoder)
+            public static unsafe int NeedsEscaping(in ReadOnlySpan<char> value, JavaScriptEncoder? encoder)
             {
                 // Some implementations of JavaScriptEncoder.FindFirstCharacterToEncode may not accept
                 // null pointers and guard against that. Hence, check up-front to return -1.
@@ -87,7 +87,7 @@ namespace SpanJson.Internal
                 }
             }
 
-            public static void EscapeString(in ReadOnlySpan<byte> utf8Source, Span<byte> destination, int indexOfFirstByteToEscape, JavaScriptEncoder encoder, out int written)
+            public static void EscapeString(in ReadOnlySpan<byte> utf8Source, Span<byte> destination, int indexOfFirstByteToEscape, JavaScriptEncoder? encoder, out int written)
             {
                 Debug.Assert(indexOfFirstByteToEscape >= 0 && indexOfFirstByteToEscape < utf8Source.Length);
 
@@ -138,7 +138,9 @@ namespace SpanJson.Internal
 
             private static void EscapeStringInternal(in ReadOnlySpan<byte> value, Span<byte> destination, JavaScriptEncoder encoder, ref int written)
             {
+#if !(NETSTANDARD2_0 || NETCOREAPP2_1)
                 Debug.Assert(encoder is not null);
+#endif
 
                 OperationStatus result = encoder.EncodeUtf8(value, destination, out int encoderBytesConsumed, out int encoderBytesWritten);
 
@@ -155,7 +157,7 @@ namespace SpanJson.Internal
                 written += encoderBytesWritten;
             }
 
-            public static void EscapeString(in ReadOnlySpan<char> utf16Source, Span<char> destination, int indexOfFirstByteToEscape, JavaScriptEncoder encoder, out int written)
+            public static void EscapeString(in ReadOnlySpan<char> utf16Source, Span<char> destination, int indexOfFirstByteToEscape, JavaScriptEncoder? encoder, out int written)
             {
                 Debug.Assert(indexOfFirstByteToEscape >= 0 && indexOfFirstByteToEscape < utf16Source.Length);
 
@@ -206,7 +208,9 @@ namespace SpanJson.Internal
 
             private static void EscapeStringInternal(in ReadOnlySpan<char> value, Span<char> destination, JavaScriptEncoder encoder, ref int written)
             {
+#if !(NETSTANDARD2_0 || NETCOREAPP2_1)
                 Debug.Assert(encoder is not null);
+#endif
 
                 OperationStatus result = encoder.Encode(value, destination, out int encoderBytesConsumed, out int encoderCharsWritten);
 

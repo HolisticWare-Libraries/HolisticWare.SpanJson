@@ -6,7 +6,7 @@ namespace SpanJson.Formatters
     {
         public static readonly JContainerFormatter Default = new JContainerFormatter();
 
-        public override JContainer Deserialize(ref JsonReader<byte> reader, IJsonFormatterResolver<byte> resolver)
+        public override JContainer? Deserialize(ref JsonReader<byte> reader, IJsonFormatterResolver<byte> resolver)
         {
             if (reader.ReadUtf8IsNull()) { return null; }
 
@@ -22,7 +22,7 @@ namespace SpanJson.Formatters
             }
         }
 
-        public override JContainer Deserialize(ref JsonReader<char> reader, IJsonFormatterResolver<char> resolver)
+        public override JContainer? Deserialize(ref JsonReader<char> reader, IJsonFormatterResolver<char> resolver)
         {
             if (reader.ReadUtf16IsNull()) { return null; }
 
@@ -38,7 +38,7 @@ namespace SpanJson.Formatters
             }
         }
 
-        public override void Serialize(ref JsonWriter<byte> writer, JContainer value, IJsonFormatterResolver<byte> resolver)
+        public override void Serialize(ref JsonWriter<byte> writer, JContainer? value, IJsonFormatterResolver<byte> resolver)
         {
             if (value is null) { writer.WriteUtf8Null(); return; }
 
@@ -58,7 +58,7 @@ namespace SpanJson.Formatters
             }
         }
 
-        public override void Serialize(ref JsonWriter<char> writer, JContainer value, IJsonFormatterResolver<char> resolver)
+        public override void Serialize(ref JsonWriter<char> writer, JContainer? value, IJsonFormatterResolver<char> resolver)
         {
             if (value is null) { writer.WriteUtf16Null(); return; }
 

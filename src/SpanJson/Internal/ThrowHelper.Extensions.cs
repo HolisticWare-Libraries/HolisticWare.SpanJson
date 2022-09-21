@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Reflection;
 using System.Text;
 using SpanJson.Internal;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SpanJson
 {
@@ -121,6 +121,7 @@ namespace SpanJson
     {
         #region -- Exception --
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowException_UnreachedCode()
         {
@@ -131,6 +132,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowException_UnreachableCode()
         {
@@ -141,6 +143,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowException_InvalidMode()
         {
@@ -161,12 +164,14 @@ namespace SpanJson
             return new ArgumentException("Invalid Guid Pattern.");
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException_Guid_Pattern()
         {
             throw GetArgumentException_Guid_Pattern();
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException_Length()
         {
@@ -177,6 +182,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException_InvalidDoubleValueForJson()
         {
@@ -187,6 +193,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException_InvalidFloatValueForJson()
         {
@@ -197,6 +204,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException_EnumIllegalVal(Base64FormattingOptions options)
         {
@@ -207,6 +215,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException_IsNotAnInterface(Type interfaceType)
         {
@@ -217,6 +226,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowArgumentException_InvalidUTF16(int charAsInt)
         {
@@ -227,6 +237,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowArgumentException_InvalidUTF8(ReadOnlySpan<byte> value, int bytesWritten)
         {
@@ -264,6 +275,7 @@ namespace SpanJson
             return new ArgumentException("Cannot transcode invalid UTF-16 string to UTF-8 JSON text.", innerException);
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowArgumentException_ValueTooLarge(int tokenLength)
         {
@@ -295,6 +307,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException_Index(ExceptionArgument argument)
         {
@@ -306,6 +319,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException_GenericPositive(ExceptionArgument argument)
         {
@@ -317,6 +331,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException_OffsetLength(ExceptionArgument argument)
         {
@@ -328,6 +343,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException_OffsetOut(ExceptionArgument argument)
         {
@@ -339,6 +355,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException_Nonnegative(ExceptionArgument argument)
         {
@@ -350,6 +367,8 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowArgumentOutOfRangeException_CommentEnumMustBeInRange(ExceptionArgument argument)
         {
             throw GetException();
@@ -360,6 +379,8 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowArgumentOutOfRangeException_MaxDepthMustBePositive(ExceptionArgument argument)
         {
             throw GetException();
@@ -374,6 +395,7 @@ namespace SpanJson
 
         #region -- InvalidOperationException --
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowInvalidOperationException()
         {
@@ -384,6 +406,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowInvalidOperationException_NullArray()
         {
@@ -395,6 +418,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowInvalidOperationException_Register_Resolver_Err()
         {
@@ -405,6 +429,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowInvalidOperationException_NotSupport_Value(float value)
         {
@@ -415,6 +440,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowInvalidOperationException_NotSupport_Value(double value)
         {
@@ -425,6 +451,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowInvalidOperationException_Reached_MaximumSize()
         {
@@ -435,6 +462,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowInvalidOperationException_NestingLimitOfExceeded()
         {
@@ -445,6 +473,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowInvalidOperationException_CanotMapConstructorParameterToAnyMember(ParameterInfo constructorParameter)
         {
@@ -455,6 +484,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowInvalidOperationException_ReadInvalidUTF16(int charAsInt)
         {
@@ -465,6 +495,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowInvalidOperationException_ReadInvalidUTF16()
         {
@@ -476,6 +507,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowInvalidOperationException_AdvancedTooFar(int capacity)
         {
@@ -496,6 +528,7 @@ namespace SpanJson
             return new NotSupportedException();
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowNotSupportedException()
         {
@@ -512,6 +545,7 @@ namespace SpanJson
             return new NotImplementedException();
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowNotImplementedException()
         {
@@ -528,6 +562,7 @@ namespace SpanJson
             return new InvalidCastException();
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowInvalidCastException()
         {
@@ -544,6 +579,7 @@ namespace SpanJson
 
         #region -- JsonParserException --
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowJsonParserException(JsonParserException.ParserError error, JsonParserException.ValueType type, int position)
         {
@@ -556,6 +592,7 @@ namespace SpanJson
             return new JsonParserException(error, type, position);
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowJsonParserException(JsonParserException.ParserError error, int position)
         {
@@ -572,6 +609,7 @@ namespace SpanJson
 
         #region -- FormatException --
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowFormatException_BadBase64Char()
         {
@@ -586,6 +624,7 @@ namespace SpanJson
 
         #region -- OutOfMemoryException --
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowOutOfMemoryException()
         {
@@ -596,13 +635,14 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowOutOfMemoryException(uint capacity)
         {
             throw GetException();
             OutOfMemoryException GetException()
             {
-                throw new OutOfMemoryException(SR.Format(SR.BufferMaximumSizeExceeded, capacity));
+                return new OutOfMemoryException(SR.Format(SR.BufferMaximumSizeExceeded, capacity));
             }
         }
 

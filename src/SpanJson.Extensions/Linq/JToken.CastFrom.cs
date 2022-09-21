@@ -23,9 +23,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
 using System.Buffers.Text;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Numerics;
 using CuteAnt;
@@ -54,7 +52,7 @@ namespace SpanJson.Linq
         /// <returns>The result of the conversion.</returns>
         public static explicit operator bool(JToken value)
         {
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, BooleanTypes, false))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<bool>(value);
@@ -75,7 +73,7 @@ namespace SpanJson.Linq
         {
             if (value is null) { return null; }
 
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, BooleanTypes, true))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<bool>(value);
@@ -94,7 +92,7 @@ namespace SpanJson.Linq
         /// <returns>The result of the conversion.</returns>
         public static explicit operator char(JToken value)
         {
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, CharTypes, false))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<char>(value);
@@ -115,7 +113,7 @@ namespace SpanJson.Linq
         {
             if (value is null) { return null; }
 
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, CharTypes, true))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<char>(value);
@@ -137,7 +135,7 @@ namespace SpanJson.Linq
         /// <returns>The result of the conversion.</returns>
         public static explicit operator sbyte(JToken value)
         {
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, false))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<sbyte>(value);
@@ -187,7 +185,7 @@ namespace SpanJson.Linq
         {
             if (value is null) { return null; }
 
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, true))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<sbyte>(value);
@@ -241,7 +239,7 @@ namespace SpanJson.Linq
         /// <returns>The result of the conversion.</returns>
         public static explicit operator byte(JToken value)
         {
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, false))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<byte>(value);
@@ -291,7 +289,7 @@ namespace SpanJson.Linq
         {
             if (value is null) { return null; }
 
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, true))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<byte>(value);
@@ -345,7 +343,7 @@ namespace SpanJson.Linq
         /// <returns>The result of the conversion.</returns>
         public static explicit operator short(JToken value)
         {
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, false))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<short>(value);
@@ -395,7 +393,7 @@ namespace SpanJson.Linq
         {
             if (value is null) { return null; }
 
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, true))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<short>(value);
@@ -449,7 +447,7 @@ namespace SpanJson.Linq
         /// <returns>The result of the conversion.</returns>
         public static explicit operator ushort(JToken value)
         {
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, false))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<ushort>(value);
@@ -499,7 +497,7 @@ namespace SpanJson.Linq
         {
             if (value is null) { return null; }
 
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, true))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<ushort>(value);
@@ -553,7 +551,7 @@ namespace SpanJson.Linq
         /// <returns>The result of the conversion.</returns>
         public static explicit operator int(JToken value)
         {
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, false))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<int>(value);
@@ -603,7 +601,7 @@ namespace SpanJson.Linq
         {
             if (value is null) { return null; }
 
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, true))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<int>(value);
@@ -657,7 +655,7 @@ namespace SpanJson.Linq
         /// <returns>The result of the conversion.</returns>
         public static explicit operator uint(JToken value)
         {
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, false))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<uint>(value);
@@ -707,7 +705,7 @@ namespace SpanJson.Linq
         {
             if (value is null) { return null; }
 
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, true))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<uint>(value);
@@ -761,7 +759,7 @@ namespace SpanJson.Linq
         /// <returns>The result of the conversion.</returns>
         public static explicit operator long(JToken value)
         {
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, false))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<long>(value);
@@ -811,7 +809,7 @@ namespace SpanJson.Linq
         {
             if (value is null) { return null; }
 
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, true))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<long>(value);
@@ -865,7 +863,7 @@ namespace SpanJson.Linq
         /// <returns>The result of the conversion.</returns>
         public static explicit operator ulong(JToken value)
         {
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, false))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<ulong>(value);
@@ -915,7 +913,7 @@ namespace SpanJson.Linq
         {
             if (value is null) { return null; }
 
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, true))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<ulong>(value);
@@ -972,7 +970,7 @@ namespace SpanJson.Linq
         /// <returns>The result of the conversion.</returns>
         public static explicit operator decimal(JToken value)
         {
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, false))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<decimal>(value);
@@ -1022,7 +1020,7 @@ namespace SpanJson.Linq
         {
             if (value is null) { return null; }
 
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, true))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<decimal>(value);
@@ -1076,7 +1074,7 @@ namespace SpanJson.Linq
         /// <returns>The result of the conversion.</returns>
         public static explicit operator double(JToken value)
         {
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, false))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<double>(value);
@@ -1126,7 +1124,7 @@ namespace SpanJson.Linq
         {
             if (value is null) { return null; }
 
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, true))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<double>(value);
@@ -1180,7 +1178,7 @@ namespace SpanJson.Linq
         /// <returns>The result of the conversion.</returns>
         public static explicit operator float(JToken value)
         {
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, false))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<float>(value);
@@ -1230,7 +1228,7 @@ namespace SpanJson.Linq
         {
             if (value is null) { return null; }
 
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, NumberTypes, true))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<float>(value);
@@ -1282,97 +1280,59 @@ namespace SpanJson.Linq
         /// <summary>Performs an explicit conversion from <see cref="JToken"/> to <see cref="String"/>.</summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator string(JToken value)
+        public static explicit operator string?(JToken value)
         {
             if (value is null) { return null; }
 
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, StringTypes, true))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<string>(value);
             }
 
             var tokenVal = v.Value;
-            switch (tokenVal)
+            return tokenVal switch
             {
-                case null:
-                    return null;
-
-                case byte[] bytes:
-                    return Convert.ToBase64String(bytes);
-
-                case BigInteger integer:
-                    return integer.ToString(CultureInfo.InvariantCulture);
-
-                case SpanJsonDynamicUtf16Number utf16Number:
-                    return utf16Number.ToString();
-
-                case SpanJsonDynamicUtf8Number utf8Number:
-                    return utf8Number.ToString();
-
-                case SpanJsonDynamicUtf16String utf16String:
-                    return utf16String.ToString();
-
-                case SpanJsonDynamicUtf8String utf8String:
-                    return utf8String.ToString();
-
-                case JsonElement jsonNum:
-                    return jsonNum.ToString();
-
-                case Guid guid:
-                    return guid.ToString("D");
-
-                case CombGuid comb:
-                    return comb.ToString(CombGuidFormatStringType.Comb);
-
-                default:
-                    return Convert.ToString(tokenVal, CultureInfo.InvariantCulture);
-            }
+                null => null,
+                byte[] bytes => Convert.ToBase64String(bytes),
+                BigInteger integer => integer.ToString(CultureInfo.InvariantCulture),
+                SpanJsonDynamicUtf16Number utf16Number => utf16Number.ToString(),
+                SpanJsonDynamicUtf8Number utf8Number => utf8Number.ToString(),
+                SpanJsonDynamicUtf16String utf16String => utf16String.ToString(),
+                SpanJsonDynamicUtf8String utf8String => utf8String.ToString(),
+                JsonElement jsonNum => jsonNum.ToString(),
+                Guid guid => guid.ToString("D"),
+                CombGuid comb => comb.ToString(CombGuidFormatStringType.Comb),
+                _ => Convert.ToString(tokenVal, CultureInfo.InvariantCulture),
+            };
         }
 
         /// <summary>Performs an explicit conversion from <see cref="JToken"/> to <see cref="Byte"/>[].</summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator byte[](JToken value)
+        public static explicit operator byte[]?(JToken value)
         {
             if (value is null) { return null; }
 
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, BytesTypes, false))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<byte[]>(value);
             }
 
             var tokenVal = v.Value;
-            switch (tokenVal)
+            return tokenVal switch
             {
-                case string str:
-                    return Convert.FromBase64String(str);
-
-                case BigInteger integer:
-                    return integer.ToByteArray();
-
-                case byte[] bytes:
-                    return bytes;
-
-                case Guid guid:
-                    return guid.ToByteArray();
-
-                case CombGuid comb:
-                    return comb.GetByteArray(CombGuidSequentialSegmentType.Guid);
-
-                case SpanJsonDynamicUtf16String utf16String:
-                    return JsonSerializer.Generic.Utf16.Deserialize<byte[]>(utf16String.Symbols);
-
-                case SpanJsonDynamicUtf8String utf8String:
-                    return JsonSerializer.Generic.Utf8.Deserialize<byte[]>(utf8String.Symbols);
-
-                case JsonElement jsonElement:
-                    return jsonElement.GetBytesFromBase64();
-
-                default:
-                    throw ThrowHelper2.GetArgumentException_Cast<byte[]>(value);
-            }
+                string str => Convert.FromBase64String(str),
+                BigInteger integer => integer.ToByteArray(),
+                byte[] bytes => bytes,
+                Guid guid => guid.ToByteArray(),
+                CombGuid comb => comb.GetByteArray(CombGuidSequentialSegmentType.Guid),
+                SpanJsonDynamicUtf16String utf16String => JsonSerializer.Generic.Utf16.Deserialize<byte[]>(utf16String.Symbols),
+                SpanJsonDynamicUtf8String utf8String => JsonSerializer.Generic.Utf8.Deserialize<byte[]>(utf8String.Symbols),
+                JsonElement jsonElement => jsonElement.GetBytesFromBase64(),
+                _ => throw ThrowHelper2.GetArgumentException_Cast<byte[]>(value),
+            };
         }
 
         /// <summary>Performs an explicit conversion from <see cref="JToken"/> to <see cref="Guid"/>.</summary>
@@ -1380,39 +1340,24 @@ namespace SpanJson.Linq
         /// <returns>The result of the conversion.</returns>
         public static explicit operator Guid(JToken value)
         {
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, GuidTypes, false))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<Guid>(value);
             }
 
             var tokenVal = v.Value;
-            switch (tokenVal)
+            return tokenVal switch
             {
-                case string str:
-                    return new Guid(str);
-
-                case byte[] bytes:
-                    return new Guid(bytes);
-
-                case Guid guid:
-                    return guid;
-
-                case CombGuid comb:
-                    return comb.Value;
-
-                case SpanJsonDynamicUtf16String utf16String:
-                    return (Guid)utf16String;
-
-                case SpanJsonDynamicUtf8String utf8String:
-                    return (Guid)utf8String;
-
-                case JsonElement jsonElement:
-                    return jsonElement.GetGuid();
-
-                default:
-                    throw ThrowHelper2.GetArgumentException_Cast<Guid>(value);
-            }
+                string str => new Guid(str),
+                byte[] bytes => new Guid(bytes),
+                Guid guid => guid,
+                CombGuid comb => comb.Value,
+                SpanJsonDynamicUtf16String utf16String => (Guid)utf16String,
+                SpanJsonDynamicUtf8String utf8String => (Guid)utf8String,
+                JsonElement jsonElement => jsonElement.GetGuid(),
+                _ => throw ThrowHelper2.GetArgumentException_Cast<Guid>(value),
+            };
         }
 
         /// <summary>Performs an explicit conversion from <see cref="JToken"/> to <see cref="Nullable{T}"/> of <see cref="Guid"/>.</summary>
@@ -1422,42 +1367,25 @@ namespace SpanJson.Linq
         {
             if (value is null) { return null; }
 
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, GuidTypes, true))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<Guid>(value);
             }
 
             var tokenVal = v.Value;
-            switch (tokenVal)
+            return tokenVal switch
             {
-                case null:
-                    return null;
-
-                case string str:
-                    return new Guid(str);
-
-                case byte[] bytes:
-                    return new Guid(bytes);
-
-                case Guid guid:
-                    return guid;
-
-                case CombGuid comb:
-                    return comb.Value;
-
-                case SpanJsonDynamicUtf16String utf16String:
-                    return (Guid)utf16String;
-
-                case SpanJsonDynamicUtf8String utf8String:
-                    return (Guid)utf8String;
-
-                case JsonElement jsonElement:
-                    return jsonElement.GetGuid();
-
-                default:
-                    throw ThrowHelper2.GetArgumentException_Cast<Guid>(value);
-            }
+                null => null,
+                string str => (Guid?)new Guid(str),
+                byte[] bytes => (Guid?)new Guid(bytes),
+                Guid guid => (Guid?)guid,
+                CombGuid comb => (Guid?)comb.Value,
+                SpanJsonDynamicUtf16String utf16String => (Guid?)(Guid)utf16String,
+                SpanJsonDynamicUtf8String utf8String => (Guid?)(Guid)utf8String,
+                JsonElement jsonElement => (Guid?)jsonElement.GetGuid(),
+                _ => throw ThrowHelper2.GetArgumentException_Cast<Guid>(value),
+            };
         }
 
         /// <summary>Performs an explicit conversion from <see cref="JToken"/> to <see cref="Guid"/>.</summary>
@@ -1465,39 +1393,24 @@ namespace SpanJson.Linq
         /// <returns>The result of the conversion.</returns>
         public static explicit operator CombGuid(JToken value)
         {
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, CombGuidTypes, false))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<CombGuid>(value);
             }
 
             var tokenVal = v.Value;
-            switch (tokenVal)
+            return tokenVal switch
             {
-                case string str:
-                    return new CombGuid(str, CombGuidSequentialSegmentType.Comb);
-
-                case byte[] bytes:
-                    return new CombGuid(bytes, CombGuidSequentialSegmentType.Guid);
-
-                case Guid guid:
-                    return guid;
-
-                case CombGuid comb:
-                    return comb;
-
-                case SpanJsonDynamicUtf16String utf16String:
-                    return (CombGuid)utf16String;
-
-                case SpanJsonDynamicUtf8String utf8String:
-                    return (CombGuid)utf8String;
-
-                case JsonElement jsonElement:
-                    return jsonElement.GetCombGuid();
-
-                default:
-                    throw ThrowHelper2.GetArgumentException_Cast<CombGuid>(value);
-            }
+                string str => new CombGuid(str, CombGuidSequentialSegmentType.Comb),
+                byte[] bytes => new CombGuid(bytes, CombGuidSequentialSegmentType.Guid),
+                Guid guid => (CombGuid)guid,
+                CombGuid comb => comb,
+                SpanJsonDynamicUtf16String utf16String => (CombGuid)utf16String,
+                SpanJsonDynamicUtf8String utf8String => (CombGuid)utf8String,
+                JsonElement jsonElement => jsonElement.GetCombGuid(),
+                _ => throw ThrowHelper2.GetArgumentException_Cast<CombGuid>(value),
+            };
         }
 
         /// <summary>Performs an explicit conversion from <see cref="JToken"/> to <see cref="Nullable{T}"/> of <see cref="Guid"/>.</summary>
@@ -1507,42 +1420,25 @@ namespace SpanJson.Linq
         {
             if (value is null) { return null; }
 
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, CombGuidTypes, true))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<CombGuid>(value);
             }
 
             var tokenVal = v.Value;
-            switch (tokenVal)
+            return tokenVal switch
             {
-                case null:
-                    return null;
-
-                case string str:
-                    return new CombGuid(str, CombGuidSequentialSegmentType.Comb);
-
-                case byte[] bytes:
-                    return new CombGuid(bytes, CombGuidSequentialSegmentType.Guid);
-
-                case Guid guid:
-                    return guid;
-
-                case CombGuid comb:
-                    return comb;
-
-                case SpanJsonDynamicUtf16String utf16String:
-                    return (CombGuid)utf16String;
-
-                case SpanJsonDynamicUtf8String utf8String:
-                    return (CombGuid)utf8String;
-
-                case JsonElement jsonElement:
-                    return jsonElement.GetCombGuid();
-
-                default:
-                    throw ThrowHelper2.GetArgumentException_Cast<CombGuid>(value);
-            }
+                null => null,
+                string str => (CombGuid?)new CombGuid(str, CombGuidSequentialSegmentType.Comb),
+                byte[] bytes => (CombGuid?)new CombGuid(bytes, CombGuidSequentialSegmentType.Guid),
+                Guid guid => (CombGuid?)guid,
+                CombGuid comb => (CombGuid?)comb,
+                SpanJsonDynamicUtf16String utf16String => (CombGuid?)(CombGuid)utf16String,
+                SpanJsonDynamicUtf8String utf8String => (CombGuid?)(CombGuid)utf8String,
+                JsonElement jsonElement => (CombGuid?)jsonElement.GetCombGuid(),
+                _ => throw ThrowHelper2.GetArgumentException_Cast<CombGuid>(value),
+            };
         }
 
         /// <summary>Performs an explicit conversion from <see cref="JToken"/> to <see cref="Nullable{T}"/> of <see cref="DateTime"/>.</summary>
@@ -1550,33 +1446,22 @@ namespace SpanJson.Linq
         /// <returns>The result of the conversion.</returns>
         public static explicit operator DateTime(JToken value)
         {
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, DateTimeTypes, false))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<DateTime>(value);
             }
 
             var tokenVal = v.Value;
-            switch (tokenVal)
+            return tokenVal switch
             {
-                case DateTime dt:
-                    return dt;
-
-                case DateTimeOffset offset:
-                    return offset.DateTime;
-
-                case SpanJsonDynamicUtf16String utf16String:
-                    return (DateTime)utf16String;
-
-                case SpanJsonDynamicUtf8String utf8String:
-                    return (DateTime)utf8String;
-
-                case JsonElement jsonElement:
-                    return jsonElement.GetDateTime();
-
-                default:
-                    return Convert.ToDateTime(tokenVal, CultureInfo.InvariantCulture);
-            }
+                DateTime dt => dt,
+                DateTimeOffset offset => offset.DateTime,
+                SpanJsonDynamicUtf16String utf16String => (DateTime)utf16String,
+                SpanJsonDynamicUtf8String utf8String => (DateTime)utf8String,
+                JsonElement jsonElement => jsonElement.GetDateTime(),
+                _ => Convert.ToDateTime(tokenVal, CultureInfo.InvariantCulture),
+            };
         }
 
         /// <summary>Performs an explicit conversion from <see cref="JToken"/> to <see cref="Nullable{T}"/> of <see cref="DateTime"/>.</summary>
@@ -1586,36 +1471,23 @@ namespace SpanJson.Linq
         {
             if (value is null) { return null; }
 
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, DateTimeTypes, true))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<DateTime>(value);
             }
 
             var tokenVal = v.Value;
-            switch (tokenVal)
+            return tokenVal switch
             {
-                case null:
-                    return null;
-
-                case DateTime dt:
-                    return dt;
-
-                case DateTimeOffset offset:
-                    return offset.DateTime;
-
-                case SpanJsonDynamicUtf16String utf16String:
-                    return (DateTime)utf16String;
-
-                case SpanJsonDynamicUtf8String utf8String:
-                    return (DateTime)utf8String;
-
-                case JsonElement jsonElement:
-                    return jsonElement.GetDateTime();
-
-                default:
-                    return Convert.ToDateTime(tokenVal, CultureInfo.InvariantCulture);
-            }
+                null => null,
+                DateTime dt => (DateTime?)dt,
+                DateTimeOffset offset => (DateTime?)offset.DateTime,
+                SpanJsonDynamicUtf16String utf16String => (DateTime?)(DateTime)utf16String,
+                SpanJsonDynamicUtf8String utf8String => (DateTime?)(DateTime)utf8String,
+                JsonElement jsonElement => (DateTime?)jsonElement.GetDateTime(),
+                _ => (DateTime?)Convert.ToDateTime(tokenVal, CultureInfo.InvariantCulture),
+            };
         }
 
         /// <summary>Performs an explicit conversion from <see cref="JToken"/> to <see cref="System.DateTimeOffset"/>.</summary>
@@ -1623,33 +1495,22 @@ namespace SpanJson.Linq
         /// <returns>The result of the conversion.</returns>
         public static explicit operator DateTimeOffset(JToken value)
         {
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, DateTimeTypes, false))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<DateTimeOffset>(value);
             }
 
             var tokenVal = v.Value;
-            switch (tokenVal)
+            return tokenVal switch
             {
-                case DateTimeOffset offset:
-                    return offset;
-
-                case string s:
-                    return DateTimeOffset.Parse(s, CultureInfo.InvariantCulture);
-
-                case SpanJsonDynamicUtf16String utf16String:
-                    return (DateTimeOffset)utf16String;
-
-                case SpanJsonDynamicUtf8String utf8String:
-                    return (DateTimeOffset)utf8String;
-
-                case JsonElement jsonElement:
-                    return jsonElement.GetDateTimeOffset();
-
-                default:
-                    return new DateTimeOffset(Convert.ToDateTime(tokenVal, CultureInfo.InvariantCulture));
-            }
+                DateTimeOffset offset => offset,
+                string s => DateTimeOffset.Parse(s, CultureInfo.InvariantCulture),
+                SpanJsonDynamicUtf16String utf16String => (DateTimeOffset)utf16String,
+                SpanJsonDynamicUtf8String utf8String => (DateTimeOffset)utf8String,
+                JsonElement jsonElement => jsonElement.GetDateTimeOffset(),
+                _ => new DateTimeOffset(Convert.ToDateTime(tokenVal, CultureInfo.InvariantCulture)),
+            };
         }
 
         /// <summary>Performs an explicit conversion from <see cref="JToken"/> to <see cref="Nullable{T}"/> of <see cref="DateTimeOffset"/>.</summary>
@@ -1659,36 +1520,23 @@ namespace SpanJson.Linq
         {
             if (value is null) { return null; }
 
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, DateTimeTypes, true))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<DateTimeOffset>(value);
             }
 
             var tokenVal = v.Value;
-            switch (tokenVal)
+            return tokenVal switch
             {
-                case null:
-                    return null;
-
-                case DateTimeOffset offset:
-                    return offset;
-
-                case string s:
-                    return DateTimeOffset.Parse(s, CultureInfo.InvariantCulture);
-
-                case SpanJsonDynamicUtf16String utf16String:
-                    return (DateTimeOffset)utf16String;
-
-                case SpanJsonDynamicUtf8String utf8String:
-                    return (DateTimeOffset)utf8String;
-
-                case JsonElement jsonElement:
-                    return jsonElement.GetDateTimeOffset();
-
-                default:
-                    return new DateTimeOffset(Convert.ToDateTime(tokenVal, CultureInfo.InvariantCulture));
-            }
+                null => null,
+                DateTimeOffset offset => (DateTimeOffset?)offset,
+                string s => (DateTimeOffset?)DateTimeOffset.Parse(s, CultureInfo.InvariantCulture),
+                SpanJsonDynamicUtf16String utf16String => (DateTimeOffset?)(DateTimeOffset)utf16String,
+                SpanJsonDynamicUtf8String utf8String => (DateTimeOffset?)(DateTimeOffset)utf8String,
+                JsonElement jsonElement => (DateTimeOffset?)jsonElement.GetDateTimeOffset(),
+                _ => (DateTimeOffset?)new DateTimeOffset(Convert.ToDateTime(tokenVal, CultureInfo.InvariantCulture)),
+            };
         }
 
         /// <summary>Performs an explicit conversion from <see cref="JToken"/> to <see cref="TimeSpan"/>.</summary>
@@ -1696,30 +1544,21 @@ namespace SpanJson.Linq
         /// <returns>The result of the conversion.</returns>
         public static explicit operator TimeSpan(JToken value)
         {
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, TimeSpanTypes, false))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<TimeSpan>(value);
             }
 
             var tokenVal = v.Value;
-            switch (tokenVal)
+            return tokenVal switch
             {
-                case TimeSpan span:
-                    return span;
-
-                case SpanJsonDynamicUtf16String utf16String:
-                    return (TimeSpan)utf16String;
-
-                case SpanJsonDynamicUtf8String utf8String:
-                    return (TimeSpan)utf8String;
-
-                case JsonElement element when element.ValueKind == JsonValueKind.String:
-                    return ConvertUtils.ParseTimeSpan(element.GetString());
-
-                default:
-                    return ConvertUtils.ParseTimeSpan(Convert.ToString(tokenVal, CultureInfo.InvariantCulture));
-            }
+                TimeSpan span => span,
+                SpanJsonDynamicUtf16String utf16String => (TimeSpan)utf16String,
+                SpanJsonDynamicUtf8String utf8String => (TimeSpan)utf8String,
+                JsonElement element when element.ValueKind == JsonValueKind.String => ConvertUtils.ParseTimeSpan(element.GetString()!),
+                _ => ConvertUtils.ParseTimeSpan(Convert.ToString(tokenVal, CultureInfo.InvariantCulture)!),
+            };
         }
 
         /// <summary>Performs an explicit conversion from <see cref="JToken"/> to <see cref="Nullable{T}"/> of <see cref="TimeSpan"/>.</summary>
@@ -1729,85 +1568,63 @@ namespace SpanJson.Linq
         {
             if (value is null) { return null; }
 
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, TimeSpanTypes, true))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<TimeSpan>(value);
             }
 
             var tokenVal = v.Value;
-            switch (tokenVal)
+            return tokenVal switch
             {
-                case null:
-                    return null;
-
-                case TimeSpan span:
-                    return span;
-
-                case SpanJsonDynamicUtf16String utf16String:
-                    return (TimeSpan)utf16String;
-
-                case SpanJsonDynamicUtf8String utf8String:
-                    return (TimeSpan)utf8String;
-
-                case JsonElement element when element.ValueKind == JsonValueKind.String:
-                    return ConvertUtils.ParseTimeSpan(element.GetString());
-
-                default:
-                    return ConvertUtils.ParseTimeSpan(Convert.ToString(tokenVal, CultureInfo.InvariantCulture));
-            }
+                null => null,
+                TimeSpan span => (TimeSpan?)span,
+                SpanJsonDynamicUtf16String utf16String => (TimeSpan?)(TimeSpan)utf16String,
+                SpanJsonDynamicUtf8String utf8String => (TimeSpan?)(TimeSpan)utf8String,
+                JsonElement element when element.ValueKind == JsonValueKind.String => (TimeSpan?)ConvertUtils.ParseTimeSpan(element.GetString()!),
+                _ => (TimeSpan?)ConvertUtils.ParseTimeSpan(Convert.ToString(tokenVal, CultureInfo.InvariantCulture)!),
+            };
         }
 
         /// <summary>Performs an explicit conversion from <see cref="JToken"/> to <see cref="Uri"/>.</summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator Uri(JToken value)
+        public static explicit operator Uri?(JToken value)
         {
             if (value is null) { return null; }
 
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, UriTypes, true))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<Uri>(value);
             }
 
             var tokenVal = v.Value;
-            switch (tokenVal)
+            return tokenVal switch
             {
-                case null:
-                    return null;
-
-                case Uri uri:
-                    return uri;
-
-                case SpanJsonDynamicUtf16String utf16String:
-                    return (Uri)utf16String;
-
-                case SpanJsonDynamicUtf8String utf8String:
-                    return (Uri)utf8String;
-
-                case JsonElement element when element.ValueKind == JsonValueKind.String:
-                    return new Uri(element.GetString(), UriKind.RelativeOrAbsolute);
-
-                default:
-                    return new Uri(Convert.ToString(tokenVal, CultureInfo.InvariantCulture), UriKind.RelativeOrAbsolute);
-            }
+                null => null,
+                Uri uri => uri,
+                SpanJsonDynamicUtf16String utf16String => (Uri)utf16String!,
+                SpanJsonDynamicUtf8String utf8String => (Uri)utf8String!,
+                JsonElement element when element.ValueKind == JsonValueKind.String => new Uri(element.GetString()!, UriKind.RelativeOrAbsolute),
+                _ => new Uri(Convert.ToString(tokenVal, CultureInfo.InvariantCulture)!, UriKind.RelativeOrAbsolute),
+            };
         }
 
         private static BigInteger ToBigInteger(JToken value)
         {
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, BigIntegerTypes, false))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<BigInteger>(value);
             }
 
-            return ConvertUtils.ToBigInteger(v.Value);
+            return ConvertUtils.ToBigInteger(v.Value!);
         }
 
         private static BigInteger? ToBigIntegerNullable(JToken value)
         {
-            JValue v = EnsureValue(value);
+            JValue? v = EnsureValue(value);
             if (v is null || !ValidateToken(v, BigIntegerTypes, true))
             {
                 ThrowHelper2.ThrowArgumentException_Cast<BigInteger>(value);

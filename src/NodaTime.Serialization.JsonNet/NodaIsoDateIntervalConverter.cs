@@ -10,7 +10,7 @@ namespace NodaTime.Serialization.JsonNet
 {
     /// <summary>
     /// Json.NET converter for <see cref="DateInterval"/>.
-    /// </summary>   
+    /// </summary>
     internal sealed class NodaIsoDateIntervalConverter : NodaConverterBase<DateInterval>
     {
         protected override DateInterval ReadJsonImpl(JsonReader reader, JsonSerializer serializer)
@@ -38,7 +38,7 @@ namespace NodaTime.Serialization.JsonNet
             {
                 throw new InvalidNodaDataException("Expected ISO-8601-formatted date interval; end date was missing.");
             }
-            
+
             var pattern = LocalDatePattern.Iso;
             var start = pattern.Parse(startText).Value;
             var end = pattern.Parse(endText).Value;

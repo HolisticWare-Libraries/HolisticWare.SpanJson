@@ -62,7 +62,7 @@ namespace SpanJson.Helpers
                     var length = index + group.Key.offset;
                     var matchExpression = matchExpressionFunctor(memberInfo);
                     matchExpression = Expression.Block(matchExpression, Expression.Goto(endOfBlockLabel));
-                    Expression comparisonExpression = null;
+                    Expression? comparisonExpression = null;
                     if (group.Key.Key != 0 || group.Key.offset != 0)
                     {
                         comparisonExpression = Expression.Equal(GetReadMethod(nameSpanExpression, group.Key.intType, Expression.Constant(index * symbolSize)),
@@ -139,7 +139,7 @@ namespace SpanJson.Helpers
 
         private static Expression GetReadMethod(ParameterExpression nameSpanExpression, Type intType, Expression offsetParameter)
         {
-            string methodName = null;
+            string? methodName = null;
             if (intType == typeof(byte))
             {
                 methodName = nameof(SpanHelper.ReadByte);
@@ -165,7 +165,7 @@ namespace SpanJson.Helpers
             }
 
             var methodInfo = typeof(SpanHelper).GetMethod(methodName, BindingFlags.Static | BindingFlags.Public);
-            return Expression.Call(methodInfo, nameSpanExpression, offsetParameter);
+            return Expression.Call(methodInfo!, nameSpanExpression, offsetParameter);
         }
 
         private static (ulong Key, Type intType, int offset) CalculateKey<TSymbol>(string memberName, int index)

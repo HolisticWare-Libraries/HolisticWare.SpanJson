@@ -2,9 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 
@@ -160,7 +158,9 @@ namespace SpanJson.Serialization
 
         public static Type GetImplementedCollectionType(Type queryType)
         {
+#if !(NETSTANDARD2_0 || NETCOREAPP2_1)
             Debug.Assert(queryType is not null);
+#endif
 
             if (!(typeof(IEnumerable).IsAssignableFrom(queryType)) ||
                 queryType == typeof(string) ||
@@ -171,7 +171,7 @@ namespace SpanJson.Serialization
                 return queryType;
             }
 
-            Type baseType = queryType.GetTypeInfo().BaseType;
+            Type baseType = queryType.GetTypeInfo().BaseType!;
 
             // Check if the base type is a supported concrete collection.
             if (IsNativelySupportedCollection(baseType))
@@ -182,7 +182,7 @@ namespace SpanJson.Serialization
             // Try generic interfaces with add methods.
             foreach (Type candidate in s_genericInterfacesWithAddMethods)
             {
-                Type derivedGeneric = ExtractGenericInterface(queryType, candidate);
+                Type? derivedGeneric = ExtractGenericInterface(queryType, candidate);
                 if (derivedGeneric is not null)
                 {
                     return derivedGeneric;
@@ -201,7 +201,7 @@ namespace SpanJson.Serialization
             // Try generic interfaces without add methods
             foreach (Type candidate in s_genericInterfacesWithoutAddMethods)
             {
-                Type derivedGeneric = ExtractGenericInterface(queryType, candidate);
+                Type? derivedGeneric = ExtractGenericInterface(queryType, candidate);
                 if (derivedGeneric is not null)
                 {
                     return derivedGeneric;
@@ -279,14 +279,16 @@ namespace SpanJson.Serialization
 
         public static bool IsNativelySupportedCollection(Type queryType)
         {
+#if !(NETSTANDARD2_0 || NETCOREAPP2_1)
             Debug.Assert(queryType is not null);
+#endif
 
             if (queryType.IsGenericType)
             {
-                return s_nativelySupportedGenericCollections.Contains(queryType.GetGenericTypeDefinition().FullName);
+                return s_nativelySupportedGenericCollections.Contains(queryType.GetGenericTypeDefinition().FullName!);
             }
 
-            return s_nativelySupportedNonGenericCollections.Contains(queryType.FullName);
+            return s_nativelySupportedNonGenericCollections.Contains(queryType.FullName!);
         }
 
         // The following methods were copied verbatim from AspNetCore:
@@ -308,7 +310,7 @@ namespace SpanJson.Serialization
         /// <c>typeof(KeyValuePair{,})</c>, and <paramref name="queryType"/> is
         /// <c>typeof(KeyValuePair{string, object})</c>.
         /// </remarks>
-        public static Type ExtractGenericInterface(Type queryType, Type interfaceType)
+        public static Type? ExtractGenericInterface(Type queryType, Type interfaceType)
         {
             if (queryType is null)
             {
@@ -342,9 +344,9 @@ namespace SpanJson.Serialization
                 candidate.GetGenericTypeDefinition() == interfaceType;
         }
 
-        private static Type GetGenericInstantiation(Type queryType, Type interfaceType)
+        private static Type? GetGenericInstantiation(Type queryType, Type interfaceType)
         {
-            Type bestMatch = null;
+            Type? bestMatch = null;
             Type[] interfaces = queryType.GetInterfaces();
             foreach (Type @interface in interfaces)
             {
@@ -372,7 +374,7 @@ namespace SpanJson.Serialization
             }
 
             // BaseType will be null for object and interfaces, which means we've reached 'bottom'.
-            Type baseType = queryType?.GetTypeInfo().BaseType;
+            Type? baseType = queryType?.GetTypeInfo().BaseType;
             if (baseType is null)
             {
                 return null;

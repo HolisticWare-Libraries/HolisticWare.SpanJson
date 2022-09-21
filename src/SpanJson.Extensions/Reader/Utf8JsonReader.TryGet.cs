@@ -1,10 +1,10 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using SpanJson.Internal;
 
@@ -25,7 +25,7 @@ namespace SpanJson
         /// <seealso cref="TokenType" />
         /// It will also throw when the JSON string contains invalid UTF-8 bytes, or invalid UTF-16 surrogates.
         /// </exception>
-        public string GetString()
+        public string? GetString()
         {
             if (TokenType == JsonTokenType.Null)
             {
@@ -108,7 +108,7 @@ namespace SpanJson
         /// </exception>
         public byte[] GetBytesFromBase64()
         {
-            if (!TryGetBytesFromBase64(out byte[] value))
+            if (!TryGetBytesFromBase64(out byte[]? value))
             {
                 throw SysJsonThrowHelper.GetFormatException(DataType.Base64String);
             }
@@ -647,7 +647,7 @@ namespace SpanJson
         /// Thrown if trying to get the value of a JSON token that is not a <see cref="JsonTokenType.String"/>.
         /// <seealso cref="TokenType" />
         /// </exception>
-        public bool TryGetBytesFromBase64(out byte[] value)
+        public bool TryGetBytesFromBase64([MaybeNullWhen(false)] out byte[] value)
         {
             if (TokenType != JsonTokenType.String)
             {

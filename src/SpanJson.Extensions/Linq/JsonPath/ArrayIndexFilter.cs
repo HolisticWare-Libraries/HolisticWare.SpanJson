@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-namespace SpanJson.Linq.JsonPath
+﻿namespace SpanJson.Linq.JsonPath
 {
     internal class ArrayIndexFilter : PathFilter
     {
         public int? Index { get; set; }
 
-        public override IEnumerable<JToken> ExecuteFilter(JToken root, IEnumerable<JToken> current, JsonSelectSettings settings)
+        public override IEnumerable<JToken> ExecuteFilter(JToken root, IEnumerable<JToken> current, JsonSelectSettings? settings)
         {
             var errorWhenNoMatch = settings?.ErrorWhenNoMatch ?? false;
 
@@ -14,7 +12,7 @@ namespace SpanJson.Linq.JsonPath
             {
                 if (Index is not null)
                 {
-                    JToken v = GetTokenIndex(t, settings, Index.GetValueOrDefault());
+                    var v = GetTokenIndex(t, settings, Index.GetValueOrDefault());
 
                     if (v is not null)
                     {

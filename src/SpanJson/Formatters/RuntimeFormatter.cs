@@ -16,12 +16,12 @@ namespace SpanJson.Formatters
         private static readonly ConcurrentDictionary<Type, SerializeDelegate> RuntimeSerializerDictionary =
             new ConcurrentDictionary<Type, SerializeDelegate>();
 
-        public object Deserialize(ref JsonReader<TSymbol> reader, IJsonFormatterResolver<TSymbol> resolver)
+        public object? Deserialize(ref JsonReader<TSymbol> reader, IJsonFormatterResolver<TSymbol> resolver)
         {
             return resolver.DynamicDeserializer(ref reader);
         }
 
-        public void Serialize(ref JsonWriter<TSymbol> writer, object value, IJsonFormatterResolver<TSymbol> resolver)
+        public void Serialize(ref JsonWriter<TSymbol> writer, object? value, IJsonFormatterResolver<TSymbol> resolver)
         {
             if (value is null)
             {
@@ -51,7 +51,7 @@ namespace SpanJson.Formatters
             }
 
             var formatterType = StandardResolvers.GetResolver<TSymbol, TResolver>().GetFormatter(type).GetType();
-            var fieldInfo = formatterType.GetField("Default", BindingFlags.Static | BindingFlags.Public);
+            var fieldInfo = formatterType.GetField("Default", BindingFlags.Static | BindingFlags.Public)!;
             var serializeMethodInfo = formatterType.GetMethods()
                 .Where(_ => MatchSerializeMethod(_)).Single();
             var lambda = Expression.Lambda<SerializeDelegate>(

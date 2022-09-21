@@ -24,7 +24,6 @@
 #endregion
 
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Runtime.Serialization;
 using SpanJson.Utilities;
@@ -36,7 +35,7 @@ namespace SpanJson.Linq
     {
         private readonly List<JToken> _values = new List<JToken>();
         [IgnoreDataMember]
-        internal object _dynamicJson;
+        internal object? _dynamicJson;
 
         /// <summary>Gets the container's children tokens.</summary>
         /// <value>The container's children tokens.</value>
@@ -64,7 +63,7 @@ namespace SpanJson.Linq
         /// <param name="content">The contents of the array.</param>
         public JArray(object content)
         {
-            if (TryReadJsonDynamic(content, out JToken token))
+            if (TryReadJsonDynamic(content, out JToken? token))
             {
                 if (token.Type == JTokenType.Array)
                 {
@@ -93,7 +92,7 @@ namespace SpanJson.Linq
 
         /// <summary>Gets the <see cref="JToken"/> with the specified key.</summary>
         /// <value>The <see cref="JToken"/> with the specified key.</value>
-        public override JToken this[object key]
+        public override JToken? this[object key]
         {
             get
             {
@@ -129,17 +128,17 @@ namespace SpanJson.Linq
             set => SetItem(index, value);
         }
 
-        internal override int IndexOfItem(JToken item)
+        internal override int IndexOfItem(JToken? item)
         {
             if (item is null) { return -1; }
 
             return _values.IndexOfReference(item);
         }
 
-        internal override void MergeItem(object content, JsonMergeSettings settings)
+        internal override void MergeItem(object content, JsonMergeSettings? settings)
         {
-            IEnumerable a = null;
-            if (IsMultiContent(content))
+            IEnumerable? a = null;
+            if (JContainer.IsMultiContent(content))
             {
                 a = CastMultiContent((IEnumerable)content);
             }

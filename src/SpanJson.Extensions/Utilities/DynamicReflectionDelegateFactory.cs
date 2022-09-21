@@ -23,8 +23,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Globalization;
@@ -36,7 +34,7 @@ namespace SpanJson.Utilities
     {
         internal static DynamicReflectionDelegateFactory Instance { get; } = new DynamicReflectionDelegateFactory();
 
-        private static DynamicMethod CreateDynamicMethod(string name, Type returnType, Type[] parameterTypes, Type owner)
+        private static DynamicMethod CreateDynamicMethod(string name, Type? returnType, Type[] parameterTypes, Type owner)
         {
             DynamicMethod dynamicMethod = !owner.IsInterface
                 ? new DynamicMethod(name, returnType, parameterTypes, owner, true)
@@ -47,7 +45,7 @@ namespace SpanJson.Utilities
 
         public override CtorInvoker<object> CreateParameterizedConstructor(MethodBase method)
         {
-            DynamicMethod dynamicMethod = CreateDynamicMethod(method.ToString(), typeof(object), new[] { typeof(object[]) }, method.DeclaringType);
+            DynamicMethod dynamicMethod = CreateDynamicMethod(method.ToString()!, typeof(object), new[] { typeof(object[]) }, method.DeclaringType!);
             ILGenerator generator = dynamicMethod.GetILGenerator();
 
             GenerateCreateMethodCallIL(method, generator, 0);
@@ -55,14 +53,14 @@ namespace SpanJson.Utilities
             return (CtorInvoker<object>)dynamicMethod.CreateDelegate(typeof(CtorInvoker<object>));
         }
 
-        public override MethodCaller<T, object> CreateMethodCall<T>(MethodBase method)
+        public override MethodCaller<T, object?> CreateMethodCall<T>(MethodBase method)
         {
-            DynamicMethod dynamicMethod = CreateDynamicMethod(method.ToString(), typeof(object), new[] { typeof(object), typeof(object[]) }, method.DeclaringType);
+            DynamicMethod dynamicMethod = CreateDynamicMethod(method.ToString()!, typeof(object), new[] { typeof(object), typeof(object[]) }, method.DeclaringType!);
             ILGenerator generator = dynamicMethod.GetILGenerator();
 
             GenerateCreateMethodCallIL(method, generator, 1);
 
-            return (MethodCaller<T, object>)dynamicMethod.CreateDelegate(typeof(MethodCaller<T, object>));
+            return (MethodCaller<T, object?>)dynamicMethod.CreateDelegate(typeof(MethodCaller<T, object?>));
         }
 
         private void GenerateCreateMethodCallIL(MethodBase method, ILGenerator generator, int argsIndex)
@@ -76,14 +74,14 @@ namespace SpanJson.Utilities
             generator.Emit(OpCodes.Ldlen);
             generator.Emit(OpCodes.Ldc_I4, args.Length);
             generator.Emit(OpCodes.Beq, argsOk);
-            generator.Emit(OpCodes.Newobj, typeof(TargetParameterCountException).GetConstructor(ReflectionUtils.EmptyTypes));
+            generator.Emit(OpCodes.Newobj, typeof(TargetParameterCountException).GetConstructor(ReflectionUtils.EmptyTypes)!);
             generator.Emit(OpCodes.Throw);
 
             generator.MarkLabel(argsOk);
 
             if (!method.IsConstructor && !method.IsStatic)
             {
-                generator.PushInstance(method.DeclaringType);
+                generator.PushInstance(method.DeclaringType!);
             }
 
             LocalBuilder localConvertible = generator.DeclareLocal(typeof(IConvertible));
@@ -99,7 +97,7 @@ namespace SpanJson.Utilities
 
                 if (parameterType.IsByRef)
                 {
-                    parameterType = parameterType.GetElementType();
+                    parameterType = parameterType.GetElementType()!;
 
                     LocalBuilder localVariable = generator.DeclareLocal(parameterType);
 
@@ -166,7 +164,7 @@ namespace SpanJson.Utilities
                     if (parameterType.IsPrimitive)
                     {
                         // for primitive types we need to handle type widening (e.g. short -> int)
-                        MethodInfo toParameterTypeMethod = typeof(IConvertible)
+                        MethodInfo? toParameterTypeMethod = typeof(IConvertible)
                             .GetMethod("To" + parameterType.Name, new[] { typeof(IFormatProvider) });
                         
                         if (toParameterTypeMethod is not null)
@@ -223,7 +221,7 @@ namespace SpanJson.Utilities
             }
 
             Type returnType = method.IsConstructor
-                ? method.DeclaringType
+                ? method.DeclaringType!
                 : ((MethodInfo)method).ReturnType;
 
             if (returnType != typeof(void))
@@ -264,7 +262,7 @@ namespace SpanJson.Utilities
             }
             else
             {
-                ConstructorInfo constructorInfo =
+                ConstructorInfo? constructorInfo =
                     type.GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, ReflectionUtils.EmptyTypes, null);
 
                 if (constructorInfo is null)
@@ -278,19 +276,19 @@ namespace SpanJson.Utilities
             generator.Return();
         }
 
-        public override Func<T, object> CreateGet<T>(PropertyInfo propertyInfo)
+        public override Func<T, object?> CreateGet<T>(PropertyInfo propertyInfo)
         {
-            DynamicMethod dynamicMethod = CreateDynamicMethod("Get" + propertyInfo.Name, typeof(object), new[] { typeof(T) }, propertyInfo.DeclaringType);
+            DynamicMethod dynamicMethod = CreateDynamicMethod("Get" + propertyInfo.Name, typeof(object), new[] { typeof(T) }, propertyInfo.DeclaringType!);
             ILGenerator generator = dynamicMethod.GetILGenerator();
 
             GenerateCreateGetPropertyIL(propertyInfo, generator);
 
-            return (Func<T, object>)dynamicMethod.CreateDelegate(typeof(Func<T, object>));
+            return (Func<T, object?>)dynamicMethod.CreateDelegate(typeof(Func<T, object?>));
         }
 
         private void GenerateCreateGetPropertyIL(PropertyInfo propertyInfo, ILGenerator generator)
         {
-            MethodInfo getMethod = propertyInfo.GetGetMethod(true);
+            MethodInfo? getMethod = propertyInfo.GetGetMethod(true);
             if (getMethod is null)
             {
                 throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Property '{0}' does not have a getter.", propertyInfo.Name));
@@ -298,7 +296,7 @@ namespace SpanJson.Utilities
 
             if (!getMethod.IsStatic)
             {
-                generator.PushInstance(propertyInfo.DeclaringType);
+                generator.PushInstance(propertyInfo.DeclaringType!);
             }
 
             generator.CallMethod(getMethod);
@@ -306,28 +304,28 @@ namespace SpanJson.Utilities
             generator.Return();
         }
 
-        public override Func<T, object> CreateGet<T>(FieldInfo fieldInfo)
+        public override Func<T, object?> CreateGet<T>(FieldInfo fieldInfo)
         {
             if (fieldInfo.IsLiteral)
             {
-                object constantValue = fieldInfo.GetValue(null);
-                Func<T, object> getter = o => constantValue;
+                object constantValue = fieldInfo.GetValue(null)!;
+                Func<T, object?> getter = o => constantValue;
                 return getter;
             }
 
-            DynamicMethod dynamicMethod = CreateDynamicMethod("Get" + fieldInfo.Name, typeof(T), new[] { typeof(object) }, fieldInfo.DeclaringType);
+            DynamicMethod dynamicMethod = CreateDynamicMethod("Get" + fieldInfo.Name, typeof(T), new[] { typeof(object) }, fieldInfo.DeclaringType!);
             ILGenerator generator = dynamicMethod.GetILGenerator();
 
             GenerateCreateGetFieldIL(fieldInfo, generator);
 
-            return (Func<T, object>)dynamicMethod.CreateDelegate(typeof(Func<T, object>));
+            return (Func<T, object?>)dynamicMethod.CreateDelegate(typeof(Func<T, object?>));
         }
 
         private void GenerateCreateGetFieldIL(FieldInfo fieldInfo, ILGenerator generator)
         {
             if (!fieldInfo.IsStatic)
             {
-                generator.PushInstance(fieldInfo.DeclaringType);
+                generator.PushInstance(fieldInfo.DeclaringType!);
                 generator.Emit(OpCodes.Ldfld, fieldInfo);
             }
             else
@@ -339,21 +337,21 @@ namespace SpanJson.Utilities
             generator.Return();
         }
 
-        public override Action<T, object> CreateSet<T>(FieldInfo fieldInfo)
+        public override Action<T, object?> CreateSet<T>(FieldInfo fieldInfo)
         {
-            DynamicMethod dynamicMethod = CreateDynamicMethod("Set" + fieldInfo.Name, null, new[] { typeof(T), typeof(object) }, fieldInfo.DeclaringType);
+            DynamicMethod dynamicMethod = CreateDynamicMethod("Set" + fieldInfo.Name, null, new[] { typeof(T), typeof(object) }, fieldInfo.DeclaringType!);
             ILGenerator generator = dynamicMethod.GetILGenerator();
 
             GenerateCreateSetFieldIL(fieldInfo, generator);
 
-            return (Action<T, object>)dynamicMethod.CreateDelegate(typeof(Action<T, object>));
+            return (Action<T, object?>)dynamicMethod.CreateDelegate(typeof(Action<T, object?>));
         }
 
         internal static void GenerateCreateSetFieldIL(FieldInfo fieldInfo, ILGenerator generator)
         {
             if (!fieldInfo.IsStatic)
             {
-                generator.PushInstance(fieldInfo.DeclaringType);
+                generator.PushInstance(fieldInfo.DeclaringType!);
             }
 
             generator.Emit(OpCodes.Ldarg_1);
@@ -371,22 +369,22 @@ namespace SpanJson.Utilities
             generator.Return();
         }
 
-        public override Action<T, object> CreateSet<T>(PropertyInfo propertyInfo)
+        public override Action<T, object?> CreateSet<T>(PropertyInfo propertyInfo)
         {
-            DynamicMethod dynamicMethod = CreateDynamicMethod("Set" + propertyInfo.Name, null, new[] { typeof(T), typeof(object) }, propertyInfo.DeclaringType);
+            DynamicMethod dynamicMethod = CreateDynamicMethod("Set" + propertyInfo.Name, null, new[] { typeof(T), typeof(object) }, propertyInfo.DeclaringType!);
             ILGenerator generator = dynamicMethod.GetILGenerator();
 
             GenerateCreateSetPropertyIL(propertyInfo, generator);
 
-            return (Action<T, object>)dynamicMethod.CreateDelegate(typeof(Action<T, object>));
+            return (Action<T, object?>)dynamicMethod.CreateDelegate(typeof(Action<T, object?>));
         }
 
         internal static void GenerateCreateSetPropertyIL(PropertyInfo propertyInfo, ILGenerator generator)
         {
-            MethodInfo setMethod = propertyInfo.GetSetMethod(true);
+            MethodInfo setMethod = propertyInfo.GetSetMethod(true)!;
             if (!setMethod.IsStatic)
             {
-                generator.PushInstance(propertyInfo.DeclaringType);
+                generator.PushInstance(propertyInfo.DeclaringType!);
             }
 
             generator.Emit(OpCodes.Ldarg_1);

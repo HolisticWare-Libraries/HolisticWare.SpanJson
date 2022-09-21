@@ -8,7 +8,7 @@ namespace SpanJson.Formatters
     {
         public static readonly JRawFormatter<TValue> Default = new JRawFormatter<TValue>();
 
-        public override void Serialize(ref JsonWriter<byte> writer, TValue value, IJsonFormatterResolver<byte> resolver)
+        public override void Serialize(ref JsonWriter<byte> writer, TValue? value, IJsonFormatterResolver<byte> resolver)
         {
             if (value is null || value.Value is null)
             {
@@ -23,12 +23,12 @@ namespace SpanJson.Formatters
                     break;
 
                 default:
-                    writer.WriteUtf8Verbatim(TextEncodings.UTF8NoBOM.GetBytes(value.Value.ToString()));
+                    writer.WriteUtf8Verbatim(TextEncodings.UTF8NoBOM.GetBytes(value.Value.ToString()!));
                     break;
             }
         }
 
-        public override void Serialize(ref JsonWriter<char> writer, TValue value, IJsonFormatterResolver<char> resolver)
+        public override void Serialize(ref JsonWriter<char> writer, TValue? value, IJsonFormatterResolver<char> resolver)
         {
             if (value is null || value.Value is null)
             {
@@ -43,7 +43,7 @@ namespace SpanJson.Formatters
                     break;
 
                 default:
-                    writer.WriteUtf16Verbatim(value.Value.ToString());
+                    writer.WriteUtf16Verbatim(value.Value.ToString()!);
                     break;
             }
         }

@@ -24,7 +24,6 @@
 #endregion
 
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace SpanJson.Linq
@@ -36,7 +35,7 @@ namespace SpanJson.Linq
 
         private sealed class JPropertyList : IList<JToken>
         {
-            internal JToken _token;
+            internal JToken? _token;
 
             public IEnumerator<JToken> GetEnumerator()
             {
@@ -105,7 +104,19 @@ namespace SpanJson.Linq
 
             public JToken this[int index]
             {
-                get => (0u >= (uint)index) ? _token : null;
+                get
+                {
+                    if ((uint)index > 0u)
+                    {
+                        ThrowHelper.ThrowArgumentOutOfRangeException();
+                    }
+                    Debug.Assert(_token != null);
+#if !(NETSTANDARD2_0 || NETCOREAPP2_1)
+                    return _token;
+#else
+                    return _token!;
+#endif
+                }
                 set
                 {
                     if (0u >= (uint)index) { _token = value; }
@@ -135,7 +146,7 @@ namespace SpanJson.Linq
         public JToken Value
         {
             [DebuggerStepThrough]
-            get { return _content._token; }
+            get { return _content._token!; }
             set
             {
                 CheckReentrancy();
@@ -168,20 +179,20 @@ namespace SpanJson.Linq
             return Value;
         }
 
-        internal override void SetItem(int index, JToken item)
+        internal override void SetItem(int index, JToken? item)
         {
             if (index != 0) { ThrowHelper.ThrowArgumentOutOfRangeException(); }
 
             if (IsTokenUnchanged(Value, item)) { return; }
 
-            ((JObject)Parent)?.InternalPropertyChanging(this);
+            ((JObject?)Parent)?.InternalPropertyChanging(this);
 
             base.SetItem(0, item);
 
-            ((JObject)Parent)?.InternalPropertyChanged(this);
+            ((JObject?)Parent)?.InternalPropertyChanged(this);
         }
 
-        internal override bool RemoveItem(JToken item)
+        internal override bool RemoveItem(JToken? item)
         {
             throw ThrowHelper2.GetJsonException_Cannot_add_or_remove_items_from_JProperty();
         }
@@ -191,14 +202,14 @@ namespace SpanJson.Linq
             throw ThrowHelper2.GetJsonException_Cannot_add_or_remove_items_from_JProperty();
         }
 
-        internal override int IndexOfItem(JToken item)
+        internal override int IndexOfItem(JToken? item)
         {
             if (item is null) { return -1; }
 
             return _content.IndexOf(item);
         }
 
-        internal override bool InsertItem(int index, JToken item, bool skipParentCheck)
+        internal override bool InsertItem(int index, JToken? item, bool skipParentCheck)
         {
             // don't add comments to JProperty
             if (item is not null && item.Type == JTokenType.Comment) { return false; }
@@ -208,14 +219,14 @@ namespace SpanJson.Linq
             return base.InsertItem(0, item, false);
         }
 
-        internal override bool ContainsItem(JToken item)
+        internal override bool ContainsItem(JToken? item)
         {
             return (Value == item);
         }
 
-        internal override void MergeItem(object content, JsonMergeSettings settings)
+        internal override void MergeItem(object content, JsonMergeSettings? settings)
         {
-            JToken value = (content as JProperty)?.Value;
+            JToken? value = (content as JProperty)?.Value;
 
             if (value is not null && value.Type != JTokenType.Null)
             {
@@ -265,13 +276,13 @@ namespace SpanJson.Linq
         /// <summary>Initializes a new instance of the <see cref="JProperty"/> class.</summary>
         /// <param name="name">The property name.</param>
         /// <param name="content">The property content.</param>
-        public JProperty(string name, object content)
+        public JProperty(string name, object? content)
         {
             if (name is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.name); }
 
             _name = name;
 
-            Value = IsMultiContent(content)
+            Value = JContainer.IsMultiContent(content)
                 ? new JArray(content)
                 : CreateFromContent(content);
         }

@@ -1,7 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using SpanJson.Document;
 using SpanJson.Resolvers;
-using SpanJson.Serialization;
 using NJsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace SpanJson.Linq
@@ -120,7 +119,7 @@ namespace SpanJson.Linq
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static JObject AsObject(JToken token)
         {
-            if (token is null || token.Type != JTokenType.Object)
+            if (token.Type != JTokenType.Object)
             {
                 ThrowHelper2.ThrowArgumentException_Object_serialized_to_JObject_instance_expected(token.Type);
             }

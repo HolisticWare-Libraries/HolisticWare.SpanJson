@@ -22,7 +22,7 @@ namespace SpanJson.Dynamic
             private static readonly Dictionary<Type, ConvertDelegate> Converters = BuildDelegates();
 
 
-            public override bool TryConvertTo(Type destinationType, ReadOnlySpan<TSymbol> span, out object value)
+            public override bool TryConvertTo(Type destinationType, ReadOnlySpan<TSymbol> span, out object? value)
             {
                 try
                 {
@@ -44,8 +44,10 @@ namespace SpanJson.Dynamic
                 return false;
             }
 
-            public override bool IsSupported(Type type)
+            public override bool IsSupported(Type? type)
             {
+                if (type is null) { return false; }
+
                 var fix = Converters.ContainsKey(type);
                 if (!fix)
                 {

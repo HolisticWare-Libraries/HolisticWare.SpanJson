@@ -23,15 +23,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
-using System.Reflection;
-using System.Security;
-using System.Security.Permissions;
-using System.Linq;
-using System.Runtime.Serialization;
 
 namespace SpanJson.Utilities
 {

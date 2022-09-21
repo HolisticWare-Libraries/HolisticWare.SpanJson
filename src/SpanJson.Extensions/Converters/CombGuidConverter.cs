@@ -1,7 +1,5 @@
-﻿using System;
-using CuteAnt;
+﻿using CuteAnt;
 
-namespace SpanJson.Converters
-{
-    public sealed class CombGuidJTokenConverter : CustomPrimitiveValueConverter<CombGuid> { }
-}
+namespace SpanJson.Converters;
+
+public sealed class CombGuidJTokenConverter : CustomPrimitiveValueConverter<CombGuid> { }

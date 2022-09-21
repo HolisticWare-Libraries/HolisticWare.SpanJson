@@ -1,17 +1,15 @@
-﻿using System;
-
-namespace SpanJson.Formatters
+﻿namespace SpanJson.Formatters
 {
     public abstract class JsonElementFormatterBase<T> : ICustomJsonFormatter<T>
     {
-        public object Arguments { get; set; }
+        public object? Arguments { get; set; }
 
-        public virtual T Deserialize(ref JsonReader<byte> reader, IJsonFormatterResolver<byte> resolver)
+        public virtual T? Deserialize(ref JsonReader<byte> reader, IJsonFormatterResolver<byte> resolver)
         {
             throw ThrowHelper.GetNotSupportedException();
         }
 
-        public virtual T Deserialize(ref JsonReader<char> reader, IJsonFormatterResolver<char> resolver)
+        public virtual T? Deserialize(ref JsonReader<char> reader, IJsonFormatterResolver<char> resolver)
         {
             throw ThrowHelper.GetNotSupportedException();
         }

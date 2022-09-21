@@ -55,10 +55,10 @@
             private static readonly TResolver s_innerResolver;
 
             private readonly JsonEscapeHandling _escapeHandling;
-            private readonly JavaScriptEncoder _encoder;
-            private readonly JsonNamingPolicy _dictionayKeyPolicy;
-            private readonly JsonNamingPolicy _extensionDataPolicy;
-            private readonly JsonNamingPolicy _jsonPropertyNamingPolicy;
+            private readonly JavaScriptEncoder? _encoder;
+            private readonly JsonNamingPolicy? _dictionayKeyPolicy;
+            private readonly JsonNamingPolicy? _extensionDataPolicy;
+            private readonly JsonNamingPolicy? _jsonPropertyNamingPolicy;
             private DeserializeDynamicDelegate<TSymbol> _dynamicDeserializer;
 
             static StandardResolver()
@@ -80,7 +80,7 @@
             public SpanJsonOptions JsonOptions => s_innerResolver.JsonOptions;
 
             public JsonEscapeHandling EscapeHandling => _escapeHandling;
-            public JavaScriptEncoder Encoder => _encoder;
+            public JavaScriptEncoder? Encoder => _encoder;
             public DeserializeDynamicDelegate<TSymbol> DynamicDeserializer
             {
                 get => _dynamicDeserializer;
@@ -142,7 +142,7 @@
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public IJsonFormatter GetFormatter(JsonMemberInfo info, Type overrideMemberType = null)
+            public IJsonFormatter GetFormatter(JsonMemberInfo info, Type? overrideMemberType = null)
             {
                 return s_innerResolver.GetFormatter(info, overrideMemberType);
             }
@@ -212,7 +212,7 @@
 
             internal static class FormatterCache<T>
             {
-                private static IJsonFormatter<T, TSymbol> s_formatter;
+                private static IJsonFormatter<T, TSymbol>? s_formatter;
 
                 public static IJsonFormatter<T, TSymbol> Instance
                 {
@@ -224,13 +224,13 @@
                 private static IJsonFormatter<T, TSymbol> EnsureFormatterCreated()
                 {
                     Interlocked.Exchange(ref s_formatter, s_innerResolver.GetFormatter<T>());
-                    return s_formatter;
+                    return s_formatter!;
                 }
             }
 
             internal static class EnumStringFormatterCache<T> where T : struct, Enum
             {
-                private static IJsonFormatter<T, TSymbol> s_formatter;
+                private static IJsonFormatter<T, TSymbol>? s_formatter;
 
                 public static IJsonFormatter<T, TSymbol> Instance
                 {
@@ -242,13 +242,13 @@
                 private static IJsonFormatter<T, TSymbol> EnsureFormatterCreated()
                 {
                     Interlocked.Exchange(ref s_formatter, s_innerResolver.GetEnumStringFormatter<T>());
-                    return s_formatter;
+                    return s_formatter!;
                 }
             }
 
             internal static class ObjectDescriptionCache<T>
             {
-                private static JsonObjectDescription s_objectDescription;
+                private static JsonObjectDescription? s_objectDescription;
 
                 public static JsonObjectDescription Instance
                 {
@@ -260,13 +260,13 @@
                 private static JsonObjectDescription EnsureObjectDescriptionCreated()
                 {
                     Interlocked.Exchange(ref s_objectDescription, s_innerResolver.GetObjectDescription<T>());
-                    return s_objectDescription;
+                    return s_objectDescription!;
                 }
             }
 
             internal static class CreateFunctorCache<T>
             {
-                private static Func<T> s_createFunctor;
+                private static Func<T>? s_createFunctor;
 
                 public static Func<T> Instance
                 {
@@ -278,13 +278,13 @@
                 private static Func<T> EnsureCreateFunctorCreated()
                 {
                     Interlocked.Exchange(ref s_createFunctor, s_innerResolver.GetCreateFunctor<T>());
-                    return s_createFunctor;
+                    return s_createFunctor!;
                 }
             }
 
             internal static class EnumerableConvertFunctorCache<T, TConverted>
             {
-                private static Func<T, TConverted> s_convertFunctor;
+                private static Func<T, TConverted>? s_convertFunctor;
 
                 public static Func<T, TConverted> Instance
                 {
@@ -296,7 +296,7 @@
                 private static Func<T, TConverted> EnsureEnumerableConvertFunctorCreated()
                 {
                     Interlocked.Exchange(ref s_convertFunctor, s_innerResolver.GetEnumerableConvertFunctor<T, TConverted>());
-                    return s_convertFunctor;
+                    return s_convertFunctor!;
                 }
             }
         }

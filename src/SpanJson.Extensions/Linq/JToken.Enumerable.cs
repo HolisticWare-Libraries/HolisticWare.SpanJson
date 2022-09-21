@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 
 namespace SpanJson.Linq
 {
@@ -15,7 +14,7 @@ namespace SpanJson.Linq
             return Children().GetEnumerator();
         }
 
-        IJEnumerable<JToken> IJEnumerable<JToken>.this[object key] => this[key];
+        IJEnumerable<JToken> IJEnumerable<JToken>.this[object key] => this[key]!;
 
         /// <summary>Returns a collection of the ancestor tokens of this token.</summary>
         /// <returns>A collection of the ancestor tokens of this token.</returns>
@@ -33,7 +32,7 @@ namespace SpanJson.Linq
 
         internal IEnumerable<JToken> GetAncestors(bool self)
         {
-            for (JToken current = self ? this : Parent; current is not null; current = current.Parent)
+            for (JToken? current = self ? this : Parent; current is not null; current = current.Parent)
             {
                 yield return current;
             }
@@ -48,7 +47,7 @@ namespace SpanJson.Linq
                 yield break;
             }
 
-            for (JToken o = Next; o is not null; o = o.Next)
+            for (JToken? o = Next; o is not null; o = o.Next)
             {
                 yield return o;
             }
@@ -63,7 +62,7 @@ namespace SpanJson.Linq
                 yield break;
             }
 
-            for (JToken o = Parent.First; o != this && o is not null; o = o.Next)
+            for (JToken? o = Parent.First; o != this && o is not null; o = o.Next)
             {
                 yield return o;
             }

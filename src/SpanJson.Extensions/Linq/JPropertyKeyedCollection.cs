@@ -23,9 +23,8 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using SpanJson.Utilities;
 
 namespace SpanJson.Linq
@@ -34,7 +33,7 @@ namespace SpanJson.Linq
     {
         private static readonly IEqualityComparer<string> Comparer = StringComparer.Ordinal;
 
-        private Dictionary<string, JToken> _dictionary;
+        private Dictionary<string, JToken>? _dictionary;
 
         public JPropertyKeyedCollection() : base(new List<JToken>())
         {
@@ -43,7 +42,7 @@ namespace SpanJson.Linq
         private void AddKey(string key, JToken item)
         {
             EnsureDictionary();
-            _dictionary[key] = item;
+            _dictionary![key] = item;
         }
 
         protected void ChangeItemKey(JToken item, string newKey)
@@ -123,7 +122,7 @@ namespace SpanJson.Linq
 
             if (_dictionary is not null)
             {
-                return _dictionary.TryGetValue(key, out JToken value) && Remove(value);
+                return _dictionary.TryGetValue(key, out JToken? value) && Remove(value);
             }
 
             return false;
@@ -180,7 +179,7 @@ namespace SpanJson.Linq
             }
         }
 
-        public bool TryGetValue(string key, out JToken value)
+        public bool TryGetValue(string key, [MaybeNullWhen(false)] out JToken value)
         {
             if (_dictionary is null)
             {
@@ -196,7 +195,7 @@ namespace SpanJson.Linq
             get
             {
                 EnsureDictionary();
-                return _dictionary.Keys;
+                return _dictionary!.Keys;
             }
         }
 
@@ -205,7 +204,7 @@ namespace SpanJson.Linq
             get
             {
                 EnsureDictionary();
-                return _dictionary.Values;
+                return _dictionary!.Values;
             }
         }
 
@@ -220,12 +219,12 @@ namespace SpanJson.Linq
 
             // dictionaries in JavaScript aren't ordered
             // ignore order when comparing properties
-            Dictionary<string, JToken> d1 = _dictionary;
-            Dictionary<string, JToken> d2 = other._dictionary;
+            Dictionary<string, JToken>? d1 = _dictionary;
+            Dictionary<string, JToken>? d2 = other._dictionary;
 
             if (d1 is null && d2 is null) { return true; }
 
-            if (d1 is null) { return (0u >= (uint)d2.Count); }
+            if (d1 is null) { return (0u >= (uint)d2!.Count); }
 
             if (d2 is null) { return (0u >= (uint)d1.Count); }
 
@@ -233,7 +232,7 @@ namespace SpanJson.Linq
 
             foreach (KeyValuePair<string, JToken> keyAndProperty in d1)
             {
-                if (!d2.TryGetValue(keyAndProperty.Key, out JToken secondValue))
+                if (!d2.TryGetValue(keyAndProperty.Key, out JToken? secondValue))
                 {
                     return false;
                 }

@@ -61,7 +61,7 @@ namespace SpanJson.Helpers
 
                     if (memberType.IsArray)
                     {
-                        memberType = memberType.GetElementType();
+                        memberType = memberType.GetElementType()!;
                     }
 
                     if (memberType.TryGetTypeOfGenericInterface(typeof(IEnumerable<>), out var argumentTypes))

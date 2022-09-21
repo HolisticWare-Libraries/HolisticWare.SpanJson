@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Threading;
+﻿using System.Runtime.CompilerServices;
 using CuteAnt.Pool;
 using SpanJson.Serialization;
 using NJsonSerializer = Newtonsoft.Json.JsonSerializer;
@@ -13,13 +9,13 @@ namespace SpanJson.Linq
     partial class JToken
     {
         private static readonly NJsonSerializerSettings _defaultSerializerSettings;
-        private static ObjectPool<NJsonSerializer> _defaultSerializerPool;
+        private static ObjectPool<NJsonSerializer>? _defaultSerializerPool;
 
         private static readonly NJsonSerializerSettings _polymorphicSerializerSettings;
-        private static ObjectPool<NJsonSerializer> _polymorphicSerializerPool;
+        private static ObjectPool<NJsonSerializer>? _polymorphicSerializerPool;
 
         private static readonly NJsonSerializerSettings _polymorphicDeserializerSettings;
-        private static ObjectPool<NJsonSerializer> _polymorphicDeserializerPool;
+        private static ObjectPool<NJsonSerializer>? _polymorphicDeserializerPool;
 
         public static NJsonSerializerSettings DefaultSerializerSettings => _defaultSerializerSettings;
         public static ObjectPool<NJsonSerializer> DefaultSerializerPool

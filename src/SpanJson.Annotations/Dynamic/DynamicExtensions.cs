@@ -2,7 +2,7 @@
 {
     public static class DynamicExtensions
     {
-        internal static string ToJsonValue(this object input)
+        internal static string? ToJsonValue(this object? input)
         {
             if (input is ISpanJsonDynamic dyn)
             {

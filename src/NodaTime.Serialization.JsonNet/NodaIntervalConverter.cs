@@ -11,7 +11,7 @@ namespace NodaTime.Serialization.JsonNet
     /// Json.NET converter for <see cref="Interval"/> using a compound representation. The start and
     /// end aspects of the interval are represented with separate properties, each parsed and formatted
     /// by the <see cref="Instant"/> converter for the serializer provided.
-    /// </summary>   
+    /// </summary>
     internal sealed class NodaIntervalConverter : NodaConverterBase<Interval>
     {
         /// <summary>

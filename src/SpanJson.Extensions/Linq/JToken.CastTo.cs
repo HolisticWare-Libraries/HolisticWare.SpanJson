@@ -23,7 +23,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
 using CuteAnt;
 using SpanJson.Document;
 using SpanJson.Dynamic;

@@ -23,11 +23,10 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SpanJson.Linq
 {
@@ -60,7 +59,7 @@ namespace SpanJson.Linq
             CopyAnnotations(this, other);
         }
 
-        internal static IEnumerable CastMultiContent(IEnumerable content)
+        internal static IEnumerable? CastMultiContent(IEnumerable? content)
         {
             if (content is null) { return null; }
 
@@ -69,13 +68,13 @@ namespace SpanJson.Linq
             var list = new List<object>();
             foreach (var item in content)
             {
-                if (TryReadJsonDynamic(item, out JToken token))
+                if (TryReadJsonDynamic(item, out JToken? token))
                 {
                     list.Add(token);
                 }
                 else
                 {
-                    list.Add(item);
+                    list.Add(item!);
                 }
             }
             return list;
@@ -118,7 +117,7 @@ namespace SpanJson.Linq
 
         /// <summary>Get the first child token of this token.</summary>
         /// <value>A <see cref="JToken"/> containing the first child token of the <see cref="JToken"/>.</value>
-        public override JToken First
+        public override JToken? First
         {
             get
             {
@@ -129,7 +128,7 @@ namespace SpanJson.Linq
 
         /// <summary>Get the last child token of this token.</summary>
         /// <value>A <see cref="JToken"/> containing the last child token of the <see cref="JToken"/>.</value>
-        public override JToken Last
+        public override JToken? Last
         {
             get
             {
@@ -149,7 +148,7 @@ namespace SpanJson.Linq
         /// <summary>Returns a collection of the child values of this token, in document order.</summary>
         /// <typeparam name="T">The type to convert the values to.</typeparam>
         /// <returns>A <see cref="IEnumerable{T}"/> containing the child values of this <see cref="JToken"/>, in document order.</returns>
-        public override IEnumerable<T> Values<T>()
+        public override IEnumerable<T?> Values<T>() where T : default
         {
             return ChildrenTokens.Convert<JToken, T>();
         }
@@ -190,24 +189,16 @@ namespace SpanJson.Linq
             }
         }
 
-        internal bool IsMultiContent(object content)
+        internal static bool IsMultiContent([NotNullWhen(true)] object? content) => content switch
         {
-            switch (content)
-            {
-                case string _:
-                    return false;
-                case JToken _:
-                    return false;
-                case byte[] _:
-                    return false;
-                case IEnumerable _:
-                    return true;
-                default:
-                    return false;
-            }
-        }
+            string _ => false,
+            JToken _ => false,
+            byte[] _ => false,
+            IEnumerable _ => true,
+            _ => false,
+        };
 
-        internal JToken EnsureParentToken(JToken item, bool skipParentCheck)
+        internal JToken EnsureParentToken(JToken? item, bool skipParentCheck)
         {
             if (item is null)
             {
@@ -231,9 +222,9 @@ namespace SpanJson.Linq
             return item;
         }
 
-        internal abstract int IndexOfItem(JToken item);
+        internal abstract int IndexOfItem(JToken? item);
 
-        internal virtual bool InsertItem(int index, JToken item, bool skipParentCheck)
+        internal virtual bool InsertItem(int index, JToken? item, bool skipParentCheck)
         {
             IList<JToken> children = ChildrenTokens;
 
@@ -246,9 +237,9 @@ namespace SpanJson.Linq
 
             item = EnsureParentToken(item, skipParentCheck);
 
-            JToken previous = (0u >= (uint)index) ? null : children[index - 1];
+            JToken? previous = (0u >= (uint)index) ? null : children[index - 1];
             // haven't inserted new token yet so next token is still at the inserting index
-            JToken next = (index == children.Count) ? null : children[index];
+            JToken? next = (index == children.Count) ? null : children[index];
 
             ValidateToken(item, null);
 
@@ -294,8 +285,8 @@ namespace SpanJson.Linq
             CheckReentrancy();
 
             JToken item = children[index];
-            JToken previous = (0u >= (uint)index) ? null : children[index - 1];
-            JToken next = (index == children.Count - 1) ? null : children[index + 1];
+            JToken? previous = (0u >= (uint)index) ? null : children[index - 1];
+            JToken? next = (index == children.Count - 1) ? null : children[index + 1];
 
             if (previous is not null)
             {
@@ -322,7 +313,7 @@ namespace SpanJson.Linq
             }
         }
 
-        internal virtual bool RemoveItem(JToken item)
+        internal virtual bool RemoveItem(JToken? item)
         {
             if (item is not null)
             {
@@ -342,7 +333,7 @@ namespace SpanJson.Linq
             return ChildrenTokens[index];
         }
 
-        internal virtual void SetItem(int index, JToken item)
+        internal virtual void SetItem(int index, JToken? item)
         {
             IList<JToken> children = ChildrenTokens;
 
@@ -365,8 +356,8 @@ namespace SpanJson.Linq
 
             ValidateToken(item, existing);
 
-            JToken previous = (0u >= (uint)index) ? null : children[index - 1];
-            JToken next = (index == children.Count - 1) ? null : children[index + 1];
+            JToken? previous = (0u >= (uint)index) ? null : children[index - 1];
+            JToken? next = (index == children.Count - 1) ? null : children[index + 1];
 
             item.Parent = this;
 
@@ -434,7 +425,7 @@ namespace SpanJson.Linq
             SetItem(index, replacement);
         }
 
-        internal virtual bool ContainsItem(JToken item)
+        internal virtual bool ContainsItem(JToken? item)
         {
             return (IndexOfItem(item) != -1);
         }
@@ -454,7 +445,7 @@ namespace SpanJson.Linq
             }
         }
 
-        internal static bool IsTokenUnchanged(JToken currentValue, JToken newValue)
+        internal static bool IsTokenUnchanged(JToken currentValue, JToken? newValue)
         {
             if (currentValue is JValue v1)
             {
@@ -470,7 +461,7 @@ namespace SpanJson.Linq
             return false;
         }
 
-        internal virtual void ValidateToken(JToken o, JToken existing)
+        internal virtual void ValidateToken(JToken o, JToken? existing)
         {
             if (o is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.o); }
 
@@ -482,12 +473,12 @@ namespace SpanJson.Linq
 
         /// <summary>Adds the specified content as children of this <see cref="JToken"/>.</summary>
         /// <param name="content">The content to be added.</param>
-        public virtual void Add(object content)
+        public virtual void Add(object? content)
         {
             _ = TryAddInternal(ChildrenTokens.Count, content, false);
         }
 
-        internal bool TryAdd(object content)
+        internal bool TryAdd(object? content)
         {
             return TryAddInternal(ChildrenTokens.Count, content, false);
         }
@@ -504,14 +495,14 @@ namespace SpanJson.Linq
             _ = TryAddInternal(0, content, false);
         }
 
-        internal bool TryAddInternal(int index, object content, bool skipParentCheck)
+        internal bool TryAddInternal(int index, object? content, bool skipParentCheck)
         {
-            if (IsMultiContent(content))
+            if (JContainer.IsMultiContent(content))
             {
                 IEnumerable enumerable = (IEnumerable)content;
 
                 int multiIndex = index;
-                foreach (object c in enumerable)
+                foreach (var c in enumerable)
                 {
                     TryAddInternal(multiIndex, c, skipParentCheck);
                     multiIndex++;
@@ -526,7 +517,7 @@ namespace SpanJson.Linq
             }
         }
 
-        internal static JToken CreateFromContent(object content)
+        internal static JToken CreateFromContent(object? content)
         {
             if (content is JToken token)
             {
@@ -550,7 +541,7 @@ namespace SpanJson.Linq
             ClearItems();
         }
 
-        internal abstract void MergeItem(object content, JsonMergeSettings settings);
+        internal abstract void MergeItem(object content, JsonMergeSettings? settings);
 
         /// <summary>Merge the specified content into this <see cref="JToken"/>.</summary>
         /// <param name="content">The content to be merged.</param>
@@ -562,7 +553,7 @@ namespace SpanJson.Linq
         /// <summary>Merge the specified content into this <see cref="JToken"/> using <see cref="JsonMergeSettings"/>.</summary>
         /// <param name="content">The content to be merged.</param>
         /// <param name="settings">The <see cref="JsonMergeSettings"/> used to merge the content.</param>
-        public void Merge(object content, JsonMergeSettings settings)
+        public void Merge(object content, JsonMergeSettings? settings)
         {
             MergeItem(content, settings);
         }
@@ -577,7 +568,7 @@ namespace SpanJson.Linq
             return hashCode;
         }
 
-        private JToken EnsureValue(object value)
+        private static JToken? EnsureValue(object? value)
         {
             if (value is null) { return null; }
 
@@ -586,12 +577,12 @@ namespace SpanJson.Linq
             throw ThrowHelper2.GetArgumentException_Argument_is_not_a_JToken();
         }
 
-        internal static void MergeEnumerableContent(JContainer target, IEnumerable content, JsonMergeSettings settings)
+        internal static void MergeEnumerableContent(JContainer target, IEnumerable content, JsonMergeSettings? settings)
         {
             switch (settings?.MergeArrayHandling ?? MergeArrayHandling.Concat)
             {
                 case MergeArrayHandling.Concat:
-                    foreach (JToken item in content)
+                    foreach (var item in content)
                     {
                         target.Add(item);
                     }
@@ -599,9 +590,9 @@ namespace SpanJson.Linq
                 case MergeArrayHandling.Union:
                     HashSet<JToken> items = new HashSet<JToken>(target, EqualityComparer);
 
-                    foreach (JToken item in content)
+                    foreach (var item in content)
                     {
-                        if (items.Add(item))
+                        if (items.Add((JToken)item!))
                         {
                             target.Add(item);
                         }
@@ -610,22 +601,22 @@ namespace SpanJson.Linq
                 case MergeArrayHandling.Replace:
                     if (target == content) { break; }
                     target.ClearItems();
-                    foreach (JToken item in content)
+                    foreach (var item in content)
                     {
                         target.Add(item);
                     }
                     break;
                 case MergeArrayHandling.Merge:
                     int i = 0;
-                    foreach (object targetItem in content)
+                    foreach (var targetItem in content)
                     {
                         if (i < target.Count)
                         {
-                            JToken sourceItem = target[i];
+                            JToken? sourceItem = target[i];
 
                             if (sourceItem is JContainer existingContainer)
                             {
-                                existingContainer.Merge(targetItem, settings);
+                                existingContainer.Merge(targetItem!, settings);
                             }
                             else
                             {

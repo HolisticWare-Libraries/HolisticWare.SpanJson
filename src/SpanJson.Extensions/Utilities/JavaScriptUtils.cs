@@ -23,19 +23,15 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
 using System.Buffers;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using StringEscapeHandling = Newtonsoft.Json.StringEscapeHandling;
 
 namespace SpanJson.Utilities
 {
     internal static class BufferUtils
     {
-        public static char[] EnsureBufferSize(int size, char[] buffer)
+        public static char[] EnsureBufferSize(int size, char[]? buffer)
         {
             if (buffer is not null)
             {
@@ -91,7 +87,7 @@ namespace SpanJson.Utilities
         }
 
         public static void WriteEscapedJavaScriptString(TextWriter writer, string s, char delimiter, bool appendDelimiters,
-            bool[] charEscapeFlags, StringEscapeHandling stringEscapeHandling, ref char[] writeBuffer)
+            bool[] charEscapeFlags, StringEscapeHandling stringEscapeHandling, ref char[]? writeBuffer)
         {
             // leading delimiter
             if (appendDelimiters)
@@ -130,7 +126,7 @@ namespace SpanJson.Utilities
                             continue;
                         }
 
-                        string escapedValue;
+                        string? escapedValue;
 
                         switch (c)
                         {
@@ -217,7 +213,7 @@ namespace SpanJson.Utilities
                                     Array.Copy(writeBuffer, newBuffer, UnicodeTextLength);
                                 }
 
-                                ArrayPool<char>.Shared.Return(writeBuffer);
+                                if (writeBuffer is not null) { ArrayPool<char>.Shared.Return(writeBuffer); }
 
                                 writeBuffer = newBuffer;
                             }
@@ -235,6 +231,7 @@ namespace SpanJson.Utilities
                         }
                         else
                         {
+                            Debug.Assert(writeBuffer != null);
                             writer.Write(writeBuffer, 0, UnicodeTextLength);
                         }
                     }

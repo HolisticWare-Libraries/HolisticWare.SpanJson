@@ -2,9 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using SpanJson.Utilities;
@@ -15,7 +13,7 @@ namespace SpanJson.Serialization
     internal sealed partial class JsonClassInfo
     {
         // Return the element type of the IEnumerable or return null if not an IEnumerable.
-        public static Type GetElementType(Type propertyType, Type parentType, MemberInfo memberInfo/*, JsonSerializerOptions options*/)
+        public static Type? GetElementType(Type propertyType, Type? parentType, MemberInfo? memberInfo/*, JsonSerializerOptions options*/)
         {
             // We want to handle as the implemented collection type, if applicable.
             Type implementedType = GetImplementedCollectionType(propertyType);
@@ -26,7 +24,7 @@ namespace SpanJson.Serialization
             }
 
             // Check for Array.
-            Type elementType = implementedType.GetElementType();
+            Type? elementType = implementedType.GetElementType();
             if (elementType is not null)
             {
                 return elementType;
@@ -64,14 +62,16 @@ namespace SpanJson.Serialization
 
         public static ClassType GetClassType(Type type/*, JsonSerializerOptions options*/)
         {
+#if !(NETSTANDARD2_0 || NETCOREAPP2_1)
             Debug.Assert(type is not null);
+#endif
 
             // We want to handle as the implemented collection type, if applicable.
             Type implementedType = GetImplementedCollectionType(type);
 
             if (implementedType.IsGenericType && implementedType.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
-                implementedType = Nullable.GetUnderlyingType(implementedType);
+                implementedType = Nullable.GetUnderlyingType(implementedType)!;
             }
 
             if (implementedType == typeof(object))

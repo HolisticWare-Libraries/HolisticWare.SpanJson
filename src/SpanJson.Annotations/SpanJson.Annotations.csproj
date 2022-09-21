@@ -6,6 +6,7 @@
     <RootNamespace>SpanJson</RootNamespace>
     <AssemblyName>SpanJson.Annotations</AssemblyName>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <Nullable>enable</Nullable>
     <NoWarn>$(NoWarn);1701;1702;</NoWarn>
   </PropertyGroup>
 

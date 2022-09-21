@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Globalization;
 using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
 using CuteAnt.Reflection;
 using SpanJson.Helpers;
 
@@ -11,28 +8,28 @@ namespace SpanJson.Dynamic
 {
     public abstract class BaseDynamicTypeConverter<TSymbol> : TypeConverter where TSymbol : struct
     {
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
         {
             return false;
         }
 
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        public override object ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
         {
             return false;
         }
 
-        public override bool IsValid(ITypeDescriptorContext context, object value)
+        public override bool IsValid(ITypeDescriptorContext? context, object? value)
         {
             return true;
         }
 
 
-        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
         {
             return IsSupported(destinationType);
         }
 
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
+        public override object? ConvertTo(ITypeDescriptorContext? context, CultureInfo? culture, object? value,
             Type destinationType)
         {
             if (value is null)
@@ -55,14 +52,14 @@ namespace SpanJson.Dynamic
             throw ThrowHelper.GetInvalidCastException();
         }
 
-        public abstract bool TryConvertTo(Type destinationType, ReadOnlySpan<TSymbol> span, out object value);
+        public abstract bool TryConvertTo(Type destinationType, ReadOnlySpan<TSymbol> span, out object? value);
 
-        public abstract bool IsSupported(Type destinationType);
+        public abstract bool IsSupported(Type? destinationType);
 
         protected static Dictionary<Type, ConvertDelegate> BuildDelegates(Type[] allowedTypes)
         {
             var result = new Dictionary<Type, ConvertDelegate>();
-            string utfType = null;
+            string? utfType = null;
             if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 utfType = "Utf8";
@@ -88,7 +85,7 @@ namespace SpanJson.Dynamic
 
                     if (allowedType.IsValueType)
                     {
-                        var methodIsNull = typeof(JsonReader<TSymbol>).GetMethod($"Read{utfType}IsNull");
+                        var methodIsNull = typeof(JsonReader<TSymbol>).GetMethod($"Read{utfType}IsNull")!;
                         var conditionExpression = Expression.Condition(Expression.IsTrue(Expression.Call(parameter, methodIsNull)),
                             Expression.Constant(null),
                             Expression.Convert(Expression.Call(parameter, method), typeof(object)));

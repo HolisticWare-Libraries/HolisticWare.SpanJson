@@ -6,7 +6,7 @@
 
     /// <summary>SpanJson formatter for <see cref="Interval"/> using a compound representation. The start and
     /// end aspects of the interval are represented with separate properties, each parsed and formatted
-    /// by the <see cref="Instant"/> converter for the serializer provided.</summary>   
+    /// by the <see cref="Instant"/> converter for the serializer provided.</summary>
     public sealed class IsoIntervalFormatter : ICustomJsonFormatter<Interval>
     {
         public static readonly IsoIntervalFormatter Default = new IsoIntervalFormatter();

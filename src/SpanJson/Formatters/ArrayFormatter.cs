@@ -18,9 +18,9 @@ namespace SpanJson.Formatters
 
         private static readonly bool IsRecursionCandidate = RecursionCandidate<T>.IsRecursionCandidate;
 
-        public T[] Deserialize(ref JsonReader<TSymbol> reader, IJsonFormatterResolver<TSymbol> resolver)
+        public T[]? Deserialize(ref JsonReader<TSymbol> reader, IJsonFormatterResolver<TSymbol> resolver)
         {
-            T[] temp = null;
+            T[]? temp = null;
             T[] result;
             try
             {
@@ -38,7 +38,7 @@ namespace SpanJson.Formatters
                         FormatterUtils.GrowArray(ref temp);
                     }
 
-                    temp[count - 1] = ElementFormatter.Deserialize(ref reader, resolver);
+                    temp[count - 1] = ElementFormatter.Deserialize(ref reader, resolver)!;
                 }
 
                 result = 0u >= (uint)count ? JsonHelpers.Empty<T>() : FormatterUtils.CopyArray(temp, count);
@@ -54,7 +54,7 @@ namespace SpanJson.Formatters
             return result;
         }
 
-        public void Serialize(ref JsonWriter<TSymbol> writer, T[] value, IJsonFormatterResolver<TSymbol> resolver)
+        public void Serialize(ref JsonWriter<TSymbol> writer, T[]? value, IJsonFormatterResolver<TSymbol> resolver)
         {
             if (value is null)
             {

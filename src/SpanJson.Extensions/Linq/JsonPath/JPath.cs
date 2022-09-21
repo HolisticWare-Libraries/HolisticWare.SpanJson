@@ -23,8 +23,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -205,7 +203,7 @@ namespace SpanJson.Linq.JsonPath
             return atPathEnd;
         }
 
-        private static PathFilter CreatePathFilter(string member, bool scan)
+        private static PathFilter CreatePathFilter(string? member, bool scan)
         {
             PathFilter filter = (scan) ? (PathFilter)new ScanFilter(member) : new FieldFilter(member);
             return filter;
@@ -246,7 +244,7 @@ namespace SpanJson.Linq.JsonPath
         {
             int start = _currentIndex;
             int? end = null;
-            List<int> indexes = null;
+            List<int>? indexes = null;
             int colonCount = 0;
             int? startIndex = null;
             int? endIndex = null;
@@ -465,7 +463,7 @@ namespace SpanJson.Linq.JsonPath
             }
         }
 
-        private bool TryParseExpression(out List<PathFilter> expressionPath)
+        private bool TryParseExpression(out List<PathFilter>? expressionPath)
         {
             if (_expression[_currentIndex] == '$')
             {
@@ -506,7 +504,7 @@ namespace SpanJson.Linq.JsonPath
                 EatWhitespace();
                 if ((uint)_currentIndex >= _expressionLength) { ThrowHelper2.ThrowJsonException_Path_ended_with_open_query(); }
 
-                return expressionPath;
+                return expressionPath!;
             }
 
             if (TryParseValue(out var value))
@@ -522,13 +520,13 @@ namespace SpanJson.Linq.JsonPath
 
         private QueryExpression ParseExpression()
         {
-            QueryExpression rootExpression = null;
-            CompositeExpression parentExpression = null;
+            QueryExpression? rootExpression = null;
+            CompositeExpression? parentExpression = null;
 
             while ((uint)_currentIndex < _expressionLength)
             {
                 object left = ParseSide();
-                object right = null;
+                object? right = null;
 
                 QueryOperator op;
                 if (_expression[_currentIndex] == ')'
@@ -551,7 +549,7 @@ namespace SpanJson.Linq.JsonPath
                     if (parentExpression is not null)
                     {
                         parentExpression.Expressions.Add(booleanExpression);
-                        return rootExpression;
+                        return rootExpression!;
                     }
 
                     return booleanExpression;
@@ -607,7 +605,7 @@ namespace SpanJson.Linq.JsonPath
             throw ThrowHelper2.GetJsonException_Path_ended_with_open_query();
         }
 
-        private bool TryParseValue(out object value)
+        private bool TryParseValue(out object? value)
         {
             char currentChar = _expression[_currentIndex];
             if (currentChar == '\'')
@@ -857,7 +855,7 @@ namespace SpanJson.Linq.JsonPath
 
         private PathFilter ParseQuotedField(char indexerCloseChar, bool scan)
         {
-            List<string> fields = null;
+            List<string>? fields = null;
 
             while ((uint)_currentIndex < _expressionLength)
             {
@@ -909,12 +907,12 @@ namespace SpanJson.Linq.JsonPath
         //    }
         //}
 
-        internal IEnumerable<JToken> Evaluate(JToken root, JToken t, JsonSelectSettings settings)
+        internal IEnumerable<JToken> Evaluate(JToken root, JToken t, JsonSelectSettings? settings)
         {
             return Evaluate(Filters, root, t, settings);
         }
 
-        internal static IEnumerable<JToken> Evaluate(List<PathFilter> filters, JToken root, JToken t, JsonSelectSettings settings)
+        internal static IEnumerable<JToken> Evaluate(List<PathFilter> filters, JToken root, JToken t, JsonSelectSettings? settings)
         {
             IEnumerable<JToken> current = new[] { t };
             foreach (PathFilter filter in filters)

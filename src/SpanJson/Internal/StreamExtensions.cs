@@ -14,7 +14,7 @@ namespace SpanJson.Internal
         public static ArraySegment<byte> ReadToEnd(this Stream stream)
         {
             int written = 0;
-            byte[] rented = null;
+            byte[]? rented = null;
 
             ReadOnlySpan<byte> utf8Bom = JsonUtf8Constant.Utf8Bom;
 
@@ -88,7 +88,7 @@ namespace SpanJson.Internal
         public static async ValueTask<ArraySegment<byte>> ReadToEndAsync(this Stream stream, CancellationToken cancellationToken = default)
         {
             int written = 0;
-            byte[] rented = null;
+            byte[]? rented = null;
 
             try
             {

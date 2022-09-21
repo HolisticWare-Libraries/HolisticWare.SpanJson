@@ -11,7 +11,7 @@ namespace SpanJson
         {
             /// <summary>This method is used for the nongeneric deserialize calls.</summary>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            internal static T DeserializeFromByteArrayInternal<T, TSymbol, TResolver>(TSymbol[] input)
+            internal static T? DeserializeFromByteArrayInternal<T, TSymbol, TResolver>(TSymbol[] input)
                 where TResolver : IJsonFormatterResolver<TSymbol, TResolver>, new() where TSymbol : struct
             {
                 return Inner<T, TSymbol, TResolver>.InnerDeserialize(input);
@@ -20,9 +20,9 @@ namespace SpanJson
             /// <summary>This method is used for the nongeneric deserialize calls.</summary>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if !NETSTANDARD2_0
-            internal static T DeserializeFromBufferInternal<T, TSymbol, TResolver>(in ArraySegment<TSymbol> input)
+            internal static T? DeserializeFromBufferInternal<T, TSymbol, TResolver>(in ArraySegment<TSymbol> input)
 #else
-            internal static T DeserializeFromBufferInternal<T, TSymbol, TResolver>(ArraySegment<TSymbol> input)
+            internal static T? DeserializeFromBufferInternal<T, TSymbol, TResolver>(ArraySegment<TSymbol> input)
 #endif
                 where TResolver : IJsonFormatterResolver<TSymbol, TResolver>, new() where TSymbol : struct
             {
@@ -31,7 +31,7 @@ namespace SpanJson
 
             /// <summary>This method is used for the nongeneric deserialize calls.</summary>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            internal static T DeserializeFromMemoryInternal<T, TSymbol, TResolver>(in ReadOnlyMemory<TSymbol> input)
+            internal static T? DeserializeFromMemoryInternal<T, TSymbol, TResolver>(in ReadOnlyMemory<TSymbol> input)
                 where TResolver : IJsonFormatterResolver<TSymbol, TResolver>, new() where TSymbol : struct
             {
                 return Inner<T, TSymbol, TResolver>.InnerDeserialize(input);
@@ -39,7 +39,7 @@ namespace SpanJson
 
             /// <summary>This method is used for the nongeneric deserialize calls.</summary>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            internal static T DeserializeInternal<T, TSymbol, TResolver>(in ReadOnlySpan<TSymbol> input)
+            internal static T? DeserializeInternal<T, TSymbol, TResolver>(in ReadOnlySpan<TSymbol> input)
                 where TResolver : IJsonFormatterResolver<TSymbol, TResolver>, new() where TSymbol : struct
             {
                 return Inner<T, TSymbol, TResolver>.InnerDeserialize(input);

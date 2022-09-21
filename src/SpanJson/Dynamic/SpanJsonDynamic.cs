@@ -32,7 +32,7 @@ namespace SpanJson.Dynamic
 
         protected abstract BaseDynamicTypeConverter<TSymbol> Converter { get; }
 
-        public virtual bool TryConvert(Type outputType, out object result)
+        public virtual bool TryConvert(Type outputType, out object? result)
         {
             return Converter.TryConvertTo(outputType, Symbols, out result);
         }
@@ -45,7 +45,7 @@ namespace SpanJson.Dynamic
                 var jsonRaw = Symbols;
                 var temp = jsonRaw.Array;
                 var bytes = Unsafe.As<byte[]>(temp);
-                return Encoding.UTF8.GetString(bytes, jsonRaw.Offset, jsonRaw.Count);
+                return Encoding.UTF8.GetString(bytes!, jsonRaw.Offset, jsonRaw.Count);
             }
 
             if (SymbolHelper<TSymbol>.IsUtf16)
@@ -53,7 +53,7 @@ namespace SpanJson.Dynamic
                 var jsonRaw = Symbols;
                 var temp = jsonRaw.Array;
                 var chars = Unsafe.As<char[]>(temp);
-                return new string(chars, jsonRaw.Offset, jsonRaw.Count);
+                return new string(chars!, jsonRaw.Offset, jsonRaw.Count);
             }
 
             throw ThrowHelper.GetNotSupportedException();
@@ -61,7 +61,7 @@ namespace SpanJson.Dynamic
 
         public virtual string ToJsonValue() => ToString();
 
-        public override bool TryConvert(ConvertBinder binder, out object result)
+        public override bool TryConvert(ConvertBinder binder, out object? result)
         {
             return TryConvert(binder.ReturnType, out result);
         }

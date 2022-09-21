@@ -280,7 +280,7 @@ namespace SpanJson
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public String ReadString()
+        public String? ReadString()
         {
             if (SymbolHelper<TSymbol>.IsUtf8)
             {
@@ -296,7 +296,7 @@ namespace SpanJson
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Version ReadVersion()
+        public Version? ReadVersion()
         {
             if (SymbolHelper<TSymbol>.IsUtf8)
             {
@@ -312,7 +312,7 @@ namespace SpanJson
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Uri ReadUri()
+        public Uri? ReadUri()
         {
             if (SymbolHelper<TSymbol>.IsUtf8)
             {

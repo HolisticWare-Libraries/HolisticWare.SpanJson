@@ -29,8 +29,10 @@ namespace SpanJson.Internal
         {
             get
             {
+#if !(NETSTANDARD2_0 || NETCOREAPP2_1)
                 Debug.Assert(_rentedBuffer != null);
                 Debug.Assert(_index <= _rentedBuffer.Length);
+#endif
                 return _rentedBuffer.AsMemory(0, _index);
             }
         }
@@ -48,7 +50,9 @@ namespace SpanJson.Internal
         {
             get
             {
+#if !(NETSTANDARD2_0 || NETCOREAPP2_1)
                 Debug.Assert(_rentedBuffer != null);
+#endif
                 return _rentedBuffer.Length;
             }
         }
@@ -57,7 +61,9 @@ namespace SpanJson.Internal
         {
             get
             {
+#if !(NETSTANDARD2_0 || NETCOREAPP2_1)
                 Debug.Assert(_rentedBuffer != null);
+#endif
                 return _rentedBuffer.Length - _index;
             }
         }
@@ -69,8 +75,10 @@ namespace SpanJson.Internal
 
         private void ClearHelper()
         {
+#if !(NETSTANDARD2_0 || NETCOREAPP2_1)
             Debug.Assert(_rentedBuffer != null);
             Debug.Assert(_index <= _rentedBuffer.Length);
+#endif
 
             _rentedBuffer.AsSpan(0, _index).Clear();
             _index = 0;
@@ -89,9 +97,11 @@ namespace SpanJson.Internal
 
         public void Advance(int count)
         {
+#if !(NETSTANDARD2_0 || NETCOREAPP2_1)
             Debug.Assert(_rentedBuffer != null);
             Debug.Assert(count >= 0);
             Debug.Assert(_index <= _rentedBuffer.Length - count);
+#endif
 
             _index += count;
         }
@@ -132,8 +142,10 @@ namespace SpanJson.Internal
 
         private void CheckAndResizeBuffer(int sizeHint)
         {
+#if !(NETSTANDARD2_0 || NETCOREAPP2_1)
             Debug.Assert(_rentedBuffer != null);
             Debug.Assert(sizeHint >= 0);
+#endif
 
             if (0u >= (uint)sizeHint)
             {

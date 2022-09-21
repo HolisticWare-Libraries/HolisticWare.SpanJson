@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SpanJson.Linq.JsonPath
+﻿namespace SpanJson.Linq.JsonPath
 {
     internal class FieldMultipleFilter : PathFilter
     {
@@ -11,7 +9,7 @@ namespace SpanJson.Linq.JsonPath
             Names = names;
         }
 
-        public override IEnumerable<JToken> ExecuteFilter(JToken root, IEnumerable<JToken> current, JsonSelectSettings settings)
+        public override IEnumerable<JToken> ExecuteFilter(JToken root, IEnumerable<JToken> current, JsonSelectSettings? settings)
         {
             var errorWhenNoMatch = settings?.ErrorWhenNoMatch ?? false;
 
@@ -21,7 +19,7 @@ namespace SpanJson.Linq.JsonPath
                 {
                     foreach (string name in Names)
                     {
-                        JToken v = o[name];
+                        var v = o[name];
 
                         if (v is not null)
                         {

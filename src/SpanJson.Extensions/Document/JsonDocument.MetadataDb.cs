@@ -1,11 +1,9 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Threading;
 
 namespace SpanJson.Document
 {
@@ -172,7 +170,9 @@ namespace SpanJson.Document
                 {
                     if (_convertToAlloc)
                     {
+#if !(NETSTANDARD2_0 || NETCOREAPP2_1)
                         Debug.Assert(_data != null);
+#endif
                         byte[] returnBuf = _data;
                         _data = _data.AsSpan(0, Length).ToArray();
                         _isLocked = true;

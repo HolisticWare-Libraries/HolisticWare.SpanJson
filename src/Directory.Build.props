@@ -5,7 +5,7 @@
   <PropertyGroup>
     <DebugType>embedded</DebugType>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>$(NoWarn);RCS1194</NoWarn>
+    <NoWarn>$(NoWarn);RCS1059;RCS1194</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
     <EnableNETAnalyzers>true</EnableNETAnalyzers>

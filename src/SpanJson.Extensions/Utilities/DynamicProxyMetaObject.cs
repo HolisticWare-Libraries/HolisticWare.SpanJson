@@ -23,10 +23,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
-using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq;
 using System.Linq.Expressions;
 using CuteAnt;
 
@@ -37,7 +34,7 @@ namespace SpanJson.Utilities
         private readonly DynamicProxy<T> _proxy;
 
         internal DynamicProxyMetaObject(Expression expression, T value, DynamicProxy<T> proxy)
-            : base(expression, BindingRestrictions.Empty, value)
+            : base(expression, BindingRestrictions.Empty, value!)
         {
             _proxy = proxy;
         }
@@ -109,7 +106,7 @@ namespace SpanJson.Utilities
                     new GetBinderAdapter(binder),
                     NoArgs,
                     fallback(null),
-                    e => binder.FallbackInvoke(e, args, null)
+                    e => binder.FallbackInvoke(e!, args, null)
                     ),
                 null
                 );
@@ -164,7 +161,7 @@ namespace SpanJson.Utilities
                 : base.BindDeleteIndex(binder, indexes);
         }
 
-        private delegate DynamicMetaObject Fallback(DynamicMetaObject errorSuggestion);
+        private delegate DynamicMetaObject Fallback(DynamicMetaObject? errorSuggestion);
 
         private static Expression[] NoArgs => EmptyArray<Expression>.Instance;
 
@@ -197,7 +194,7 @@ namespace SpanJson.Utilities
             Type t = binder.GetType();
             while (!t.IsVisible)
             {
-                t = t.BaseType;
+                t = t.BaseType!;
             }
             return Expression.Constant(binder, t);
         }
@@ -206,7 +203,7 @@ namespace SpanJson.Utilities
         /// Helper method for generating a MetaObject which calls a
         /// specific method on Dynamic that returns a result
         /// </summary>
-        private DynamicMetaObject CallMethodWithResult(string methodName, DynamicMetaObjectBinder binder, IEnumerable<Expression> args, Fallback fallback, Fallback fallbackInvoke = null)
+        private DynamicMetaObject CallMethodWithResult(string methodName, DynamicMetaObjectBinder binder, IEnumerable<Expression> args, Fallback fallback, Fallback? fallbackInvoke = null)
         {
             //
             // First, call fallback to do default binding
@@ -217,7 +214,7 @@ namespace SpanJson.Utilities
             return BuildCallMethodWithResult(methodName, binder, args, fallbackResult, fallbackInvoke);
         }
 
-        private DynamicMetaObject BuildCallMethodWithResult(string methodName, DynamicMetaObjectBinder binder, IEnumerable<Expression> args, DynamicMetaObject fallbackResult, Fallback fallbackInvoke)
+        private DynamicMetaObject BuildCallMethodWithResult(string methodName, DynamicMetaObjectBinder binder, IEnumerable<Expression> args, DynamicMetaObject fallbackResult, Fallback? fallbackInvoke)
         {
             //
             // Build a new expression like:
@@ -256,7 +253,7 @@ namespace SpanJson.Utilities
                     Expression.Condition(
                         Expression.Call(
                             Expression.Constant(_proxy),
-                            typeof(DynamicProxy<T>).GetMethod(methodName),
+                            typeof(DynamicProxy<T>).GetMethod(methodName)!,
                             callArgs
                             ),
                         resultMetaObject.Expression,
@@ -304,7 +301,7 @@ namespace SpanJson.Utilities
                     Expression.Condition(
                         Expression.Call(
                             Expression.Constant(_proxy),
-                            typeof(DynamicProxy<T>).GetMethod(methodName),
+                            typeof(DynamicProxy<T>).GetMethod(methodName)!,
                             callArgs
                             ),
                         result,
@@ -342,7 +339,7 @@ namespace SpanJson.Utilities
                 Expression.Condition(
                     Expression.Call(
                         Expression.Constant(_proxy),
-                        typeof(DynamicProxy<T>).GetMethod(methodName),
+                        typeof(DynamicProxy<T>).GetMethod(methodName)!,
                         callArgs
                         ),
                     Expression.Empty(),
@@ -366,7 +363,7 @@ namespace SpanJson.Utilities
 
         public override IEnumerable<string> GetDynamicMemberNames()
         {
-            return _proxy.GetDynamicMemberNames((T)Value);
+            return _proxy.GetDynamicMemberNames((T)Value!);
         }
 
         // It is okay to throw NotSupported from this binder. This object
@@ -380,7 +377,7 @@ namespace SpanJson.Utilities
             {
             }
 
-            public override DynamicMetaObject FallbackGetMember(DynamicMetaObject target, DynamicMetaObject errorSuggestion)
+            public override DynamicMetaObject FallbackGetMember(DynamicMetaObject target, DynamicMetaObject? errorSuggestion)
             {
                 throw ThrowHelper.GetNotSupportedException();
             }

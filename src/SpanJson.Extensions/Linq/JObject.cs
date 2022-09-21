@@ -23,9 +23,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using SpanJson.Document;
 using SpanJson.Dynamic;
@@ -38,7 +36,7 @@ namespace SpanJson.Linq
     {
         private readonly JPropertyKeyedCollection _properties = new JPropertyKeyedCollection();
         [IgnoreDataMember]
-        internal object _dynamicJson;
+        internal object? _dynamicJson;
 
         /// <summary>Gets the container's children tokens.</summary>
         /// <value>The container's children tokens.</value>
@@ -62,7 +60,7 @@ namespace SpanJson.Linq
         /// <param name="content">The contents of the object.</param>
         public JObject(object content)
         {
-            if (TryReadJsonDynamic(content, out JToken token))
+            if (TryReadJsonDynamic(content, out JToken? token))
             {
                 if (token.Type == JTokenType.Object)
                 {
@@ -86,14 +84,14 @@ namespace SpanJson.Linq
             return _properties.Compare(t._properties);
         }
 
-        internal override int IndexOfItem(JToken item)
+        internal override int IndexOfItem(JToken? item)
         {
             if (item is null) { return -1; }
 
             return _properties.IndexOfReference(item);
         }
 
-        internal override bool InsertItem(int index, JToken item, bool skipParentCheck)
+        internal override bool InsertItem(int index, JToken? item, bool skipParentCheck)
         {
             // don't add comments to JObject, no name to reference comment by
             if (item is not null && item.Type == JTokenType.Comment) { return false; }
@@ -101,7 +99,7 @@ namespace SpanJson.Linq
             return base.InsertItem(index, item, skipParentCheck);
         }
 
-        internal override void ValidateToken(JToken o, JToken existing)
+        internal override void ValidateToken(JToken o, JToken? existing)
         {
             if (o is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.o); }
 
@@ -128,7 +126,7 @@ namespace SpanJson.Linq
             }
         }
 
-        internal override void MergeItem(object content, JsonMergeSettings settings)
+        internal override void MergeItem(object content, JsonMergeSettings? settings)
         {
             JObject jobj;
             switch (content)
@@ -150,9 +148,9 @@ namespace SpanJson.Linq
                 default: return;
             }
 
-            foreach (KeyValuePair<string, JToken> contentItem in jobj)
+            foreach (KeyValuePair<string, JToken?> contentItem in jobj)
             {
-                JProperty existingProperty;
+                JProperty? existingProperty;
                 var propertyNameComparison = settings?.PropertyNameComparison;
                 if (!propertyNameComparison.HasValue || StringComparison.Ordinal == propertyNameComparison.Value)
                 {
@@ -203,11 +201,11 @@ namespace SpanJson.Linq
         /// <summary>Gets a <see cref="JProperty"/> with the specified name.</summary>
         /// <param name="name">The property name.</param>
         /// <returns>A <see cref="JProperty"/> with the specified name or <c>null</c>.</returns>
-        public JProperty Property(string name)
+        public JProperty? Property(string? name)
         {
             if (name is null) { return null; }
 
-            if (_properties.TryGetValue(name, out JToken property))
+            if (_properties.TryGetValue(name, out JToken? property))
             {
                 return (JProperty)property;
             }
@@ -221,11 +219,11 @@ namespace SpanJson.Linq
         /// <param name="name">The property name.</param>
         /// <param name="comparison">One of the enumeration values that specifies how the strings will be compared.</param>
         /// <returns>A <see cref="JProperty"/> matched with the specified name or <c>null</c>.</returns>
-        public JProperty Property(string name, StringComparison comparison)
+        public JProperty? Property(string? name, StringComparison comparison)
         {
             if (name is null) { return null; }
 
-            if (_properties.TryGetValue(name, out JToken property))
+            if (_properties.TryGetValue(name, out JToken? property))
             {
                 return (JProperty)property;
             }
@@ -255,7 +253,7 @@ namespace SpanJson.Linq
 
         /// <summary>Gets the <see cref="JToken"/> with the specified key.</summary>
         /// <value>The <see cref="JToken"/> with the specified key.</value>
-        public override JToken this[object key]
+        public override JToken? this[object key]
         {
             get
             {
@@ -285,22 +283,22 @@ namespace SpanJson.Linq
 
         /// <summary>Gets or sets the <see cref="JToken"/> with the specified property name.</summary>
         /// <value></value>
-        public JToken this[string propertyName]
+        public JToken? this[string propertyName]
         {
             get
             {
                 if (propertyName is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.propertyName); }
 
-                JProperty property = Property(propertyName);
+                JProperty? property = Property(propertyName);
 
                 return property?.Value;
             }
             set
             {
-                JProperty property = Property(propertyName);
+                JProperty? property = Property(propertyName);
                 if (property is not null)
                 {
-                    property.Value = value;
+                    property.Value = value!;
                 }
                 else
                 {
@@ -314,7 +312,7 @@ namespace SpanJson.Linq
         /// <summary>Gets the <see cref="JToken"/> with the specified property name.</summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <returns>The <see cref="JToken"/> with the specified property name.</returns>
-        public JToken GetValue(string propertyName)
+        public JToken? GetValue(string propertyName)
         {
             //if (propertyName is null) { return null; } // Property 也会对 propertyName 进行判断
 
@@ -330,7 +328,7 @@ namespace SpanJson.Linq
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="comparison">One of the enumeration values that specifies how the strings will be compared.</param>
         /// <returns>The <see cref="JToken"/> with the specified property name.</returns>
-        public JToken GetValue(string propertyName, StringComparison comparison)
+        public JToken? GetValue(string propertyName, StringComparison comparison)
         {
             //if (propertyName is null) { return null; } // Property 也会对 propertyName 进行判断
 
@@ -344,10 +342,10 @@ namespace SpanJson.Linq
         /// The exact property name will be searched for first and if no matching property is found then
         /// the <see cref="StringComparison"/> will be used to match a property.</summary>
         /// <param name="propertyName">Name of the property.</param>
-        /// <param name="value">The value.</param>
         /// <param name="comparison">One of the enumeration values that specifies how the strings will be compared.</param>
+        /// <param name="value">The value.</param>
         /// <returns><c>true</c> if a value was successfully retrieved; otherwise, <c>false</c>.</returns>
-        public bool TryGetValue(string propertyName, StringComparison comparison, out JToken value)
+        public bool TryGetValue(string propertyName, StringComparison comparison, [MaybeNullWhen(false)] out JToken value)
         {
             value = GetValue(propertyName, comparison);
             return (value is not null);

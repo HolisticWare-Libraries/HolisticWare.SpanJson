@@ -6,21 +6,21 @@ namespace SpanJson.Formatters
     {
         public static readonly JTokenFormatter Default = new JTokenFormatter();
 
-        public override JToken Deserialize(ref JsonReader<byte> reader, IJsonFormatterResolver<byte> resolver)
+        public override JToken? Deserialize(ref JsonReader<byte> reader, IJsonFormatterResolver<byte> resolver)
         {
             if (reader.ReadUtf8IsNull()) { return null; }
 
             return JToken.Load(ref reader);
         }
 
-        public override JToken Deserialize(ref JsonReader<char> reader, IJsonFormatterResolver<char> resolver)
+        public override JToken? Deserialize(ref JsonReader<char> reader, IJsonFormatterResolver<char> resolver)
         {
             if (reader.ReadUtf16IsNull()) { return null; }
 
             return JToken.Load(ref reader);
         }
 
-        public override void Serialize(ref JsonWriter<byte> writer, JToken value, IJsonFormatterResolver<byte> resolver)
+        public override void Serialize(ref JsonWriter<byte> writer, JToken? value, IJsonFormatterResolver<byte> resolver)
         {
             if (value is null) { return; }
 
@@ -41,7 +41,7 @@ namespace SpanJson.Formatters
             }
         }
 
-        public override void Serialize(ref JsonWriter<char> writer, JToken value, IJsonFormatterResolver<char> resolver)
+        public override void Serialize(ref JsonWriter<char> writer, JToken? value, IJsonFormatterResolver<char> resolver)
         {
             if (value is null) { return; }
 

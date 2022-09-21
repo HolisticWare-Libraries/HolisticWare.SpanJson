@@ -23,9 +23,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace SpanJson.Linq
@@ -93,9 +90,9 @@ namespace SpanJson.Linq
         /// <param name="source">An <see cref="IEnumerable{T}"/> of <see cref="JToken"/> that contains the source collection.</param>
         /// <param name="key">The token key.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="JToken"/> that contains the values of every token in the source collection with the given key.</returns>
-        public static IJEnumerable<JToken> Values(this IEnumerable<JToken> source, object key)
+        public static IJEnumerable<JToken> Values(this IEnumerable<JToken> source, object? key)
         {
-            return Values<JToken, JToken>(source, key).AsJEnumerable();
+            return Values<JToken, JToken>(source, key)!.AsJEnumerable();
         }
 
         /// <summary>Returns a collection of child values of every object in the source collection.</summary>
@@ -111,7 +108,7 @@ namespace SpanJson.Linq
         /// <param name="source">An <see cref="IEnumerable{T}"/> of <see cref="JToken"/> that contains the source collection.</param>
         /// <param name="key">The token key.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> that contains the converted values of every token in the source collection with the given key.</returns>
-        public static IEnumerable<U> Values<U>(this IEnumerable<JToken> source, object key)
+        public static IEnumerable<U?> Values<U>(this IEnumerable<JToken> source, object? key)
         {
             return Values<JToken, U>(source, key);
         }
@@ -120,7 +117,7 @@ namespace SpanJson.Linq
         /// <typeparam name="U">The type to convert the values to.</typeparam>
         /// <param name="source">An <see cref="IEnumerable{T}"/> of <see cref="JToken"/> that contains the source collection.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> that contains the converted values of every token in the source collection.</returns>
-        public static IEnumerable<U> Values<U>(this IEnumerable<JToken> source)
+        public static IEnumerable<U?> Values<U>(this IEnumerable<JToken> source)
         {
             return Values<JToken, U>(source, null);
         }
@@ -129,7 +126,7 @@ namespace SpanJson.Linq
         /// <typeparam name="U">The type to convert the value to.</typeparam>
         /// <param name="value">A <see cref="JToken"/> cast as a <see cref="IEnumerable{T}"/> of <see cref="JToken"/>.</param>
         /// <returns>A converted value.</returns>
-        public static U Value<U>(this IEnumerable<JToken> value)
+        public static U? Value<U>(this IEnumerable<JToken> value)
         {
             return value.Value<JToken, U>();
         }
@@ -139,7 +136,7 @@ namespace SpanJson.Linq
         /// <typeparam name="U">The type to convert the value to.</typeparam>
         /// <param name="value">A <see cref="JToken"/> cast as a <see cref="IEnumerable{T}"/> of <see cref="JToken"/>.</param>
         /// <returns>A converted value.</returns>
-        public static U Value<T, U>(this IEnumerable<T> value) where T : JToken
+        public static U? Value<T, U>(this IEnumerable<T> value) where T : JToken
         {
             switch (value)
             {
@@ -154,7 +151,7 @@ namespace SpanJson.Linq
             }
         }
 
-        internal static IEnumerable<U> Values<T, U>(this IEnumerable<T> source, object key) where T : JToken
+        internal static IEnumerable<U?> Values<T, U>(this IEnumerable<T> source, object? key) where T : JToken
         {
             if (source is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.source); }
 
@@ -179,7 +176,7 @@ namespace SpanJson.Linq
             {
                 foreach (T token in source)
                 {
-                    JToken value = token[key];
+                    JToken? value = token[key];
                     if (value is not null)
                     {
                         yield return value.Convert<JToken, U>();
@@ -196,22 +193,22 @@ namespace SpanJson.Linq
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="JToken"/> that contains the values of every token in the source collection.</returns>
         public static IJEnumerable<JToken> Children<T>(this IEnumerable<T> source) where T : JToken
         {
-            return Children<T, JToken>(source).AsJEnumerable();
+            return Children<T, JToken>(source)!.AsJEnumerable();
         }
 
         /// <summary>Returns a collection of converted child tokens of every array in the source collection.</summary>
         /// <param name="source">An <see cref="IEnumerable{T}"/> of <see cref="JToken"/> that contains the source collection.</param>
-        /// <typeparam name="U">The type to convert the values to.</typeparam>
         /// <typeparam name="T">The source collection type.</typeparam>
+        /// <typeparam name="U">The type to convert the values to.</typeparam>
         /// <returns>An <see cref="IEnumerable{T}"/> that contains the converted values of every token in the source collection.</returns>
-        public static IEnumerable<U> Children<T, U>(this IEnumerable<T> source) where T : JToken
+        public static IEnumerable<U?> Children<T, U>(this IEnumerable<T> source) where T : JToken
         {
             if (source is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.source); }
 
             return source.SelectMany(c => c.Children()).Convert<JToken, U>();
         }
 
-        internal static IEnumerable<U> Convert<T, U>(this IEnumerable<T> source) where T : JToken
+        internal static IEnumerable<U?> Convert<T, U>(this IEnumerable<T> source) where T : JToken
         {
             if (source is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.source); }
 
@@ -221,7 +218,7 @@ namespace SpanJson.Linq
             }
         }
 
-        internal static U Convert<T, U>(this T token) where T : JToken
+        internal static U? Convert<T, U>(this T token) where T : JToken
         {
             switch (token)
             {
@@ -275,7 +272,7 @@ namespace SpanJson.Linq
             switch (source)
             {
                 case null:
-                    return null;
+                    return null!;
 
                 case IJEnumerable<T> customEnumerable:
                     return customEnumerable;

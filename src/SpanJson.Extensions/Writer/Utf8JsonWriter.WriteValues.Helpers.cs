@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
@@ -40,7 +39,7 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void Base64EncodeAndWrite(in ReadOnlySpan<byte> bytes, ref byte output, int encodingLength, ref int pos)
         {
-            byte[] outputText = null;
+            byte[]? outputText = null;
 
             Span<byte> encodedBytes = (uint)encodingLength <= JsonSharedConstant.StackallocByteThresholdU ?
                 stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :

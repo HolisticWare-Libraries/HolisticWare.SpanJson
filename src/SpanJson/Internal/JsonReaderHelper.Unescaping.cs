@@ -5,6 +5,7 @@ using System;
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -15,9 +16,9 @@ namespace SpanJson.Internal
 {
     partial class JsonReaderHelper
     {
-        public static bool TryGetUnescapedBase64Bytes(in ReadOnlySpan<byte> utf8Source, int idx, out byte[] bytes)
+        public static bool TryGetUnescapedBase64Bytes(in ReadOnlySpan<byte> utf8Source, int idx, [MaybeNullWhen(false)] out byte[] bytes)
         {
-            byte[] unescapedArray = null;
+            byte[]? unescapedArray = null;
 
             Span<byte> utf8Unescaped = (uint)utf8Source.Length <= JsonSharedConstant.StackallocByteThresholdU ?
                 stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
@@ -48,7 +49,7 @@ namespace SpanJson.Internal
         {
             // The escaped name is always >= than the unescaped, so it is safe to use escaped name for the buffer length.
             int length = utf8Source.Length;
-            byte[] pooledName = null;
+            byte[]? pooledName = null;
 
             Span<byte> utf8Unescaped = (uint)length <= JsonSharedConstant.StackallocByteThresholdU ?
                 stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
@@ -75,7 +76,7 @@ namespace SpanJson.Internal
         {
             // The escaped name is always >= than the unescaped, so it is safe to use escaped name for the buffer length.
             int length = utf8Source.Length;
-            byte[] pooledName = null;
+            byte[]? pooledName = null;
 
             Span<byte> utf8Unescaped = (uint)length <= JsonSharedConstant.StackallocByteThresholdU ?
                 stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
@@ -100,7 +101,7 @@ namespace SpanJson.Internal
         {
             Debug.Assert(utf8Source.Length >= other.Length && utf8Source.Length / JsonSharedConstant.MaxExpansionFactorWhileEscaping <= other.Length);
 
-            byte[] unescapedArray = null;
+            byte[]? unescapedArray = null;
 
             Span<byte> utf8Unescaped = (uint)utf8Source.Length <= JsonSharedConstant.StackallocByteThresholdU ?
                 stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
@@ -128,8 +129,8 @@ namespace SpanJson.Internal
             Debug.Assert(!utf8Source.IsSingleSegment);
             Debug.Assert(utf8Source.Length >= other.Length && utf8Source.Length / JsonSharedConstant.MaxExpansionFactorWhileEscaping <= other.Length);
 
-            byte[] escapedArray = null;
-            byte[] unescapedArray = null;
+            byte[]? escapedArray = null;
+            byte[]? unescapedArray = null;
 
             int length = checked((int)utf8Source.Length);
 
@@ -164,7 +165,7 @@ namespace SpanJson.Internal
             return result;
         }
 
-        public static bool TryDecodeBase64InPlace(Span<byte> utf8Unescaped, out byte[] bytes)
+        public static bool TryDecodeBase64InPlace(Span<byte> utf8Unescaped, [MaybeNullWhen(false)] out byte[] bytes)
         {
             OperationStatus status = Base64.DecodeFromUtf8InPlace(utf8Unescaped, out int bytesWritten);
             if (status != OperationStatus.Done)
@@ -176,9 +177,9 @@ namespace SpanJson.Internal
             return true;
         }
 
-        public static bool TryDecodeBase64(in ReadOnlySpan<byte> utf8Unescaped, out byte[] bytes)
+        public static bool TryDecodeBase64(in ReadOnlySpan<byte> utf8Unescaped, [MaybeNullWhen(false)] out byte[] bytes)
         {
-            byte[] pooledArray = null;
+            byte[]? pooledArray = null;
 
             Span<byte> byteSpan = (uint)utf8Unescaped.Length <= JsonSharedConstant.StackallocByteThresholdU ?
                 stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :

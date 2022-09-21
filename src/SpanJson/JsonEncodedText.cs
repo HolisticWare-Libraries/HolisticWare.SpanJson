@@ -32,7 +32,9 @@ namespace SpanJson
 
         private JsonEncodedText(byte[] utf8Value)
         {
+#if !(NETSTANDARD2_0 || NETCOREAPP2_1)
             Debug.Assert(utf8Value is not null);
+#endif
 
             _value = JsonReaderHelper.GetTextFromUtf8(utf8Value);
             _utf8Value = utf8Value;
@@ -40,7 +42,9 @@ namespace SpanJson
 
         private JsonEncodedText(string value)
         {
+#if !(NETSTANDARD2_0 || NETCOREAPP2_1)
             Debug.Assert(value is not null);
+#endif
 
             _value = value;
             _utf8Value = TextEncodings.UTF8NoBOM.GetBytes(value);
@@ -58,7 +62,7 @@ namespace SpanJson
         /// <exception cref="ArgumentException">
         /// Thrown when the specified value is too large or if it contains invalid UTF-16 characters.
         /// </exception>
-        public static JsonEncodedText Encode(string value, JsonEscapeHandling escapeHandling = JsonEscapeHandling.Default, JavaScriptEncoder encoder = null)
+        public static JsonEncodedText Encode(string value, JsonEscapeHandling escapeHandling = JsonEscapeHandling.Default, JavaScriptEncoder? encoder = null)
         {
             if (value is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.value); }
 
@@ -74,7 +78,7 @@ namespace SpanJson
         /// <exception cref="ArgumentException">
         /// Thrown when the specified value is too large or if it contains invalid UTF-16 characters.
         /// </exception>
-        public static JsonEncodedText Encode(in ReadOnlySpan<char> value, JsonEscapeHandling escapeHandling = JsonEscapeHandling.Default, JavaScriptEncoder encoder = null)
+        public static JsonEncodedText Encode(in ReadOnlySpan<char> value, JsonEscapeHandling escapeHandling = JsonEscapeHandling.Default, JavaScriptEncoder? encoder = null)
         {
             if (value.IsEmpty)
             {
@@ -91,13 +95,13 @@ namespace SpanJson
             }
         }
 
-        private static JsonEncodedText TranscodeAndEncode(in ReadOnlySpan<char> value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder)
+        private static JsonEncodedText TranscodeAndEncode(in ReadOnlySpan<char> value, JsonEscapeHandling escapeHandling, JavaScriptEncoder? encoder)
         {
             if ((uint)value.Length > (uint)JsonSharedConstant.MaxCharacterTokenSize) { ThrowHelper.ThrowArgumentException_ValueTooLarge(value.Length); }
 
             int expectedByteCount = JsonReaderHelper.GetUtf8ByteCount(value);
 
-            byte[] utf8Array = null;
+            byte[]? utf8Array = null;
             Span<byte> utf8Bytes = (uint)expectedByteCount <= JsonSharedConstant.StackallocByteThresholdU ?
                 stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (utf8Bytes = ArrayPool<byte>.Shared.Rent(expectedByteCount));
@@ -126,7 +130,7 @@ namespace SpanJson
         /// <exception cref="ArgumentException">
         /// Thrown when the specified value is too large or if it contains invalid UTF-8 bytes.
         /// </exception>
-        public static JsonEncodedText Encode(in ReadOnlySpan<byte> utf8Value, JsonEscapeHandling escapeHandling = JsonEscapeHandling.Default, JavaScriptEncoder encoder = null)
+        public static JsonEncodedText Encode(in ReadOnlySpan<byte> utf8Value, JsonEscapeHandling escapeHandling = JsonEscapeHandling.Default, JavaScriptEncoder? encoder = null)
         {
             if (utf8Value.IsEmpty)
             {
@@ -138,7 +142,7 @@ namespace SpanJson
             return EncodeHelper(utf8Value, escapeHandling, encoder);
         }
 
-        private static JsonEncodedText EncodeHelper(in ReadOnlySpan<byte> utf8Value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder)
+        private static JsonEncodedText EncodeHelper(in ReadOnlySpan<byte> utf8Value, JsonEscapeHandling escapeHandling, JavaScriptEncoder? encoder)
         {
             int idx = EscapingHelper.NeedsEscaping(utf8Value, escapeHandling, encoder);
 
@@ -176,7 +180,7 @@ namespace SpanJson
         /// <remarks>
         /// If <paramref name="obj"/> is null, the method returns false.
         /// </remarks>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is JsonEncodedText encodedText)
             {

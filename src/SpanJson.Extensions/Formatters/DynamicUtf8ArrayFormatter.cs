@@ -1,5 +1,4 @@
-﻿using System;
-using System.Buffers;
+﻿using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using SpanJson.Dynamic;
@@ -11,7 +10,7 @@ namespace SpanJson.Formatters
     {
         public static readonly DynamicUtf8ArrayFormatter Default = new DynamicUtf8ArrayFormatter();
 
-        public override void Serialize(ref JsonWriter<byte> writer, SpanJsonDynamicArray<byte> value, IJsonFormatterResolver<byte> resolver)
+        public override void Serialize(ref JsonWriter<byte> writer, SpanJsonDynamicArray<byte>? value, IJsonFormatterResolver<byte> resolver)
         {
             if (value is null) { writer.WriteUtf8Null(); return; }
 
@@ -40,7 +39,7 @@ namespace SpanJson.Formatters
             }
         }
 
-        public override void Serialize(ref JsonWriter<char> writer, SpanJsonDynamicArray<byte> value, IJsonFormatterResolver<char> resolver)
+        public override void Serialize(ref JsonWriter<char> writer, SpanJsonDynamicArray<byte>? value, IJsonFormatterResolver<char> resolver)
         {
             if (value is null) { writer.WriteUtf16Null(); return; }
 
@@ -49,7 +48,7 @@ namespace SpanJson.Formatters
                 ReadOnlySpan<byte> utf8Json = rawJson;
                 var maxRequired = TextEncodings.Utf8.GetCharCount(utf8Json);
 
-                char[] valueArray = null;
+                char[]? valueArray = null;
 
                 Span<char> utf16Json = (uint)maxRequired <= JsonSharedConstant.StackallocCharThresholdU ?
                     stackalloc char[JsonSharedConstant.StackallocCharThreshold] :

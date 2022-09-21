@@ -23,9 +23,8 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.ComponentModel;
 using System.Globalization;
 using System.Numerics;
@@ -173,7 +172,7 @@ namespace SpanJson.Utilities
             // performance?
             if (ReflectionUtils.IsNullableType(t))
             {
-                Type nonNullable = Nullable.GetUnderlyingType(t);
+                Type nonNullable = Nullable.GetUnderlyingType(t)!;
                 if (nonNullable.IsEnum)
                 {
                     Type nullableUnderlyingType = typeof(Nullable<>).MakeGenericType(Enum.GetUnderlyingType(nonNullable));
@@ -196,22 +195,22 @@ namespace SpanJson.Utilities
             return TimeSpan.Parse(input, CultureInfo.InvariantCulture);
         }
 
-        private static readonly ConcurrentDictionary<StructMultiKey<Type, Type>, Func<object, object>> CastConverters =
-            new ConcurrentDictionary<StructMultiKey<Type, Type>, Func<object, object>>();
+        private static readonly ConcurrentDictionary<StructMultiKey<Type, Type>, Func<object?, object?>?> CastConverters =
+            new ConcurrentDictionary<StructMultiKey<Type, Type>, Func<object?, object?>?>();
 
-        private static Func<object, object> CreateCastConverter(StructMultiKey<Type, Type> t)
+        private static Func<object?, object?>? CreateCastConverter(StructMultiKey<Type, Type> t)
         {
             Type initialType = t.Value1;
             Type targetType = t.Value2;
-            MethodInfo castMethodInfo = targetType.GetMethod("op_Implicit", new[] { initialType })
+            MethodInfo? castMethodInfo = targetType.GetMethod("op_Implicit", new[] { initialType })
                 ?? targetType.GetMethod("op_Explicit", new[] { initialType });
 
-            if (castMethodInfo is null)
+            if (castMethodInfo == null)
             {
                 return null;
             }
 
-            MethodCaller<object, object> call = JsonTypeReflector.ReflectionDelegateFactory.CreateMethodCall<object>(castMethodInfo);
+            MethodCaller<object?, object?> call = JsonTypeReflector.ReflectionDelegateFactory.CreateMethodCall<object?>(castMethodInfo);
 
             return o => call(null, new[] { o });
         }
@@ -237,7 +236,7 @@ namespace SpanJson.Utilities
                     return utf8String.ToString();
 
                 default:
-                    return System.Convert.ToString(value, CultureInfo.InvariantCulture); ;
+                    return System.Convert.ToString(value, CultureInfo.InvariantCulture)!;
             }
         }
 
@@ -352,10 +351,10 @@ namespace SpanJson.Utilities
 
         public static object Convert(object initialValue, CultureInfo culture, Type targetType)
         {
-            switch (TryConvertInternal(initialValue, culture, targetType, out object value))
+            switch (TryConvertInternal(initialValue, culture, targetType, out object? value))
             {
                 case ConvertResult.Success:
-                    return value;
+                    return value!;
                 case ConvertResult.CannotConvertNull:
                     throw ThrowHelper2.GetException_Can_not_convert_null_into_non_nullable(initialValue, targetType);
                 case ConvertResult.NotInstantiableType:
@@ -368,31 +367,32 @@ namespace SpanJson.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryConvert<T>(object initialValue, out T value)
+        public static bool TryConvert<T>(object initialValue, [NotNullWhen(true)] out T? value)
         {
             return TryConvert(initialValue, CultureInfo.InvariantCulture, out value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryConvert<T>(object initialValue, CultureInfo culture, out T value)
+        public static bool TryConvert<T>(object initialValue, CultureInfo culture, [NotNullWhen(true)] out T? value)
         {
-            var result = TryConvert(initialValue, culture, typeof(T), out object tmp);
-            value = result ? (T)tmp : default;
+            var result = TryConvert(initialValue, culture, typeof(T), out object? tmp);
+            value = result ? (T)tmp! : default;
             return result;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryConvert(object initialValue, Type targetType, out object value)
+        public static bool TryConvert(object initialValue, Type targetType, [NotNullWhen(true)] out object? value)
         {
             return TryConvert(initialValue, CultureInfo.InvariantCulture, targetType, out value);
         }
 
-        public static bool TryConvert(object initialValue, CultureInfo culture, Type targetType, out object value)
+        public static bool TryConvert(object? initialValue, CultureInfo culture, Type targetType, [NotNullWhen(true)] out object? value)
         {
             try
             {
-                if (TryConvertInternal(initialValue, culture, targetType, out value) == ConvertResult.Success)
+                if (TryConvertInternal(initialValue, culture, targetType, out var tmp) == ConvertResult.Success)
                 {
+                    value = tmp!;
                     return true;
                 }
             }
@@ -401,13 +401,13 @@ namespace SpanJson.Utilities
             return false;
         }
 
-        private static ConvertResult TryConvertInternal(object initialValue, CultureInfo culture, Type targetType, out object value)
+        private static ConvertResult TryConvertInternal(object? initialValue, CultureInfo culture, Type targetType, out object? value)
         {
             if (initialValue is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.initialValue); }
 
             if (ReflectionUtils.IsNullableType(targetType))
             {
-                targetType = Nullable.GetUnderlyingType(targetType);
+                targetType = Nullable.GetUnderlyingType(targetType)!;
             }
 
             Type initialType = initialValue.GetType();
@@ -423,9 +423,9 @@ namespace SpanJson.Utilities
             {
                 if (targetType.IsEnum)
                 {
-                    if (initialValue is string)
+                    if (initialValue is string strValue)
                     {
-                        value = Enum.Parse(targetType, initialValue.ToString(), true);
+                        value = Enum.Parse(targetType, strValue, true);
                         return ConvertResult.Success;
                     }
                     else if (IsInteger(initialValue))
@@ -489,7 +489,7 @@ namespace SpanJson.Utilities
                     }
                     if (targetType == typeof(Version))
                     {
-                        if (VersionTryParse(s, out Version result))
+                        if (VersionTryParse(s, out Version? result))
                         {
                             value = result;
                             return ConvertResult.Success;
@@ -595,7 +595,7 @@ namespace SpanJson.Utilities
             return ConvertResult.NoValidConversion;
         }
 
-        private static bool VersionTryParse(string input, out Version result)
+        private static bool VersionTryParse(string input, [NotNullWhen(true)] out Version? result)
         {
             return Version.TryParse(input, out result);
         }
@@ -627,9 +627,9 @@ namespace SpanJson.Utilities
         /// <param name="initialValue">The value to convert.</param>
         /// <returns>The converted type. If conversion was unsuccessful, the initial value
         /// is returned if assignable to the target type.</returns>
-        public static T ConvertOrCast<T>(object initialValue)
+        public static T? ConvertOrCast<T>(object? initialValue)
         {
-            return (T)ConvertOrCast(initialValue, CultureInfo.InvariantCulture, typeof(T));
+            return (T?)ConvertOrCast(initialValue, CultureInfo.InvariantCulture, typeof(T));
         }
 
         /// <summary>Converts the value to the specified type. If the value is unable to be converted, the
@@ -638,9 +638,9 @@ namespace SpanJson.Utilities
         /// <param name="culture">The culture to use when converting.</param>
         /// <returns>The converted type. If conversion was unsuccessful, the initial value
         /// is returned if assignable to the target type.</returns>
-        public static T ConvertOrCast<T>(object initialValue, CultureInfo culture)
+        public static T? ConvertOrCast<T>(object? initialValue, CultureInfo culture)
         {
-            return (T)ConvertOrCast(initialValue, culture, typeof(T));
+            return (T?)ConvertOrCast(initialValue, culture, typeof(T));
         }
 
         /// <summary>Converts the value to the specified type. If the value is unable to be converted, the
@@ -649,7 +649,7 @@ namespace SpanJson.Utilities
         /// <param name="targetType">The type to convert or cast the value to.</param>
         /// <returns>The converted type. If conversion was unsuccessful, the initial value
         /// is returned if assignable to the target type.</returns>
-        public static object ConvertOrCast(object initialValue, Type targetType)
+        public static object? ConvertOrCast(object? initialValue, Type targetType)
         {
             return ConvertOrCast(initialValue, CultureInfo.InvariantCulture, targetType);
         }
@@ -661,32 +661,32 @@ namespace SpanJson.Utilities
         /// <param name="targetType">The type to convert or cast the value to.</param>
         /// <returns>The converted type. If conversion was unsuccessful, the initial value
         /// is returned if assignable to the target type.</returns>
-        public static object ConvertOrCast(object initialValue, CultureInfo culture, Type targetType)
+        public static object? ConvertOrCast(object? initialValue, CultureInfo culture, Type targetType)
         {
             if (targetType == typeof(object)) { return initialValue; }
 
             if (initialValue is null && ReflectionUtils.IsNullable(targetType)) { return null; }
 
-            if (TryConvert(initialValue, culture, targetType, out object convertedValue))
+            if (TryConvert(initialValue, culture, targetType, out object? convertedValue))
             {
                 return convertedValue;
             }
 
-            return EnsureTypeAssignable(initialValue, initialValue.GetType(), targetType);
+            return EnsureTypeAssignable(initialValue, initialValue?.GetType(), targetType);
         }
 
-        private static object EnsureTypeAssignable(object value, Type initialType, Type targetType)
+        private static object? EnsureTypeAssignable(object? value, Type? initialType, Type targetType)
         {
             if (value is not null)
             {
-                Type valueType = value?.GetType();
+                Type valueType = value.GetType();
 
                 if (targetType.IsAssignableFrom(valueType))
                 {
                     return value;
                 }
 
-                Func<object, object> castConverter = CastConverters.GetOrAdd(new StructMultiKey<Type, Type>(valueType, targetType), k => CreateCastConverter(k));
+                Func<object?, object?>? castConverter = CastConverters.GetOrAdd(new StructMultiKey<Type, Type>(valueType, targetType), k => CreateCastConverter(k));
                 if (castConverter is not null)
                 {
                     return castConverter(value);
@@ -700,7 +700,7 @@ namespace SpanJson.Utilities
                 }
             }
 
-            throw ThrowHelper2.GetArgumentException_Could_not_cast_or_convert_from(initialType, targetType);
+            throw ThrowHelper2.GetArgumentException_Could_not_cast_or_convert_from(initialType!, targetType);
         }
 
         #endregion

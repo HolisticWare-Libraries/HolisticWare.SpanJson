@@ -2,14 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Buffers;
 using System.Diagnostics;
-using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Threading;
-using System.Threading.Tasks;
 using SpanJson.Internal;
 
 namespace SpanJson
@@ -44,7 +40,7 @@ namespace SpanJson
 
         private JsonWriterOptions _options; // Since JsonWriterOptions is a struct, use a field to avoid a copy for internal code.
 
-        private ArrayPool<byte> _arrayPool;
+        private ArrayPool<byte>? _arrayPool;
         private byte[] _borrowedBuffer;
         private Span<byte> _utf8Span;
         private int _capacity;
@@ -180,7 +176,9 @@ namespace SpanJson
 
         public void Dispose()
         {
+#pragma warning disable CS8601 // 引用类型赋值可能为 null。
             var toReturn = Interlocked.Exchange(ref _borrowedBuffer, null);
+#pragma warning restore CS8601 // 引用类型赋值可能为 null。
             if (toReturn is null) { return; }
 
             var arrayPool = _arrayPool;
@@ -241,10 +239,12 @@ namespace SpanJson
                 var useThreadLocal = _arrayPool is null ? true : false;
                 if (useThreadLocal) { _arrayPool = ArrayPool<byte>.Shared; }
 
-                _utf8Span = _borrowedBuffer = _arrayPool.Rent(newSize);
+                _utf8Span = _borrowedBuffer = _arrayPool!.Rent(newSize);
 
+#if !(NETSTANDARD2_0 || NETCOREAPP2_1)
                 Debug.Assert(oldBuffer.Length >= alreadyWritten);
                 Debug.Assert(_borrowedBuffer.Length >= alreadyWritten);
+#endif
 
                 var previousBuffer = oldBuffer.AsSpan(0, alreadyWritten);
                 previousBuffer.CopyTo(_borrowedBuffer);
@@ -265,7 +265,7 @@ namespace SpanJson
         /// Writes the beginning of a JSON array.
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when the depth of the JSON has exceeded the maximum depth of 1000 
+        /// Thrown when the depth of the JSON has exceeded the maximum depth of 1000
         /// OR if this would result in invalid JSON being written (while validation is enabled).
         /// </exception>
         public void WriteStartArray()
@@ -278,7 +278,7 @@ namespace SpanJson
         /// Writes the beginning of a JSON object.
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when the depth of the JSON has exceeded the maximum depth of 1000 
+        /// Thrown when the depth of the JSON has exceeded the maximum depth of 1000
         /// OR if this would result in invalid JSON being written (while validation is enabled).
         /// </exception>
         public void WriteStartObject()
@@ -309,7 +309,6 @@ namespace SpanJson
         {
             ref var pos = ref _pos;
             EnsureUnsafe(pos, 2); // 1 start token, and optionally, 1 list separator
-
 
             ref byte output = ref PinnableAddress;
             if ((uint)_currentDepth > JsonSharedConstant.TooBigOrNegative)
@@ -399,7 +398,7 @@ namespace SpanJson
         /// </summary>
         /// <param name="propertyName">The JSON-encoded name of the property to write.</param>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when the depth of the JSON has exceeded the maximum depth of 1000 
+        /// Thrown when the depth of the JSON has exceeded the maximum depth of 1000
         /// OR if this would result in invalid JSON being written (while validation is enabled).
         /// </exception>
         public void WriteStartArray(in JsonEncodedText propertyName)
@@ -413,7 +412,7 @@ namespace SpanJson
         /// </summary>
         /// <param name="propertyName">The JSON-encoded name of the property to write.</param>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when the depth of the JSON has exceeded the maximum depth of 1000 
+        /// Thrown when the depth of the JSON has exceeded the maximum depth of 1000
         /// OR if this would result in invalid JSON being written (while validation is enabled).
         /// </exception>
         public void WriteStartObject(in JsonEncodedText propertyName)
@@ -445,7 +444,7 @@ namespace SpanJson
         /// Thrown when the specified property name is too large.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when the depth of the JSON has exceeded the maximum depth of 1000 
+        /// Thrown when the depth of the JSON has exceeded the maximum depth of 1000
         /// OR if this would result in invalid JSON being written (while validation is enabled).
         /// </exception>
         public void WriteStartArray(in ReadOnlySpan<byte> utf8PropertyName)
@@ -470,7 +469,7 @@ namespace SpanJson
         /// Thrown when the specified property name is too large.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when the depth of the JSON has exceeded the maximum depth of 1000 
+        /// Thrown when the depth of the JSON has exceeded the maximum depth of 1000
         /// OR if this would result in invalid JSON being written (while validation is enabled).
         /// </exception>
         public void WriteStartObject(in ReadOnlySpan<byte> utf8PropertyName)
@@ -519,7 +518,7 @@ namespace SpanJson
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= utf8PropertyName.Length);
             Debug.Assert(firstEscapeIndexProp >= 0 && firstEscapeIndexProp < utf8PropertyName.Length);
 
-            byte[] propertyArray = null;
+            byte[]? propertyArray = null;
 
             int length = EscapingHelper.GetMaxEscapedLength(utf8PropertyName.Length, firstEscapeIndexProp);
 
@@ -558,7 +557,7 @@ namespace SpanJson
         /// The <paramref name="propertyName"/> parameter is <see langword="null"/>.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when the depth of the JSON has exceeded the maximum depth of 1000 
+        /// Thrown when the depth of the JSON has exceeded the maximum depth of 1000
         /// OR if this would result in invalid JSON being written (while validation is enabled).
         /// </exception>
         public void WriteStartArray(string propertyName)
@@ -581,7 +580,7 @@ namespace SpanJson
         /// The <paramref name="propertyName"/> parameter is <see langword="null"/>.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when the depth of the JSON has exceeded the maximum depth of 1000 
+        /// Thrown when the depth of the JSON has exceeded the maximum depth of 1000
         /// OR if this would result in invalid JSON being written (while validation is enabled).
         /// </exception>
         public void WriteStartObject(string propertyName)
@@ -601,7 +600,7 @@ namespace SpanJson
         /// Thrown when the specified property name is too large.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when the depth of the JSON has exceeded the maximum depth of 1000 
+        /// Thrown when the depth of the JSON has exceeded the maximum depth of 1000
         /// OR if this would result in invalid JSON being written (while validation is enabled).
         /// </exception>
         public void WriteStartArray(in ReadOnlySpan<char> propertyName)
@@ -626,7 +625,7 @@ namespace SpanJson
         /// Thrown when the specified property name is too large.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when the depth of the JSON has exceeded the maximum depth of 1000 
+        /// Thrown when the depth of the JSON has exceeded the maximum depth of 1000
         /// OR if this would result in invalid JSON being written (while validation is enabled).
         /// </exception>
         public void WriteStartObject(in ReadOnlySpan<char> propertyName)
@@ -675,7 +674,7 @@ namespace SpanJson
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= propertyName.Length);
             Debug.Assert(firstEscapeIndexProp >= 0 && firstEscapeIndexProp < propertyName.Length);
 
-            char[] propertyArray = null;
+            char[]? propertyArray = null;
 
             int length = EscapingHelper.GetMaxEscapedLength(propertyName.Length, firstEscapeIndexProp);
 

@@ -301,7 +301,7 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static DateTime ParseUtf8DateTimeAllocating(in ReadOnlySpan<byte> input, int backslashIdx, int pos)
         {
-            byte[] unescapedArray = null;
+            byte[]? unescapedArray = null;
             Span<byte> utf8Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocByteThresholdU ?
                 stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (unescapedArray = ArrayPool<byte>.Shared.Rent(input.Length));
@@ -344,7 +344,7 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static DateTimeOffset ParseUtf8DateTimeOffsetAllocating(in ReadOnlySpan<byte> input, int backslashIdx, int pos)
         {
-            byte[] unescapedArray = null;
+            byte[]? unescapedArray = null;
             Span<byte> utf8Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocByteThresholdU ?
                 stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (unescapedArray = ArrayPool<byte>.Shared.Rent(input.Length));
@@ -387,7 +387,7 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static TimeSpan ParseUtf8TimeSpanAllocating(in ReadOnlySpan<byte> input, int backslashIdx, int pos)
         {
-            byte[] unescapedArray = null;
+            byte[]? unescapedArray = null;
             Span<byte> utf8Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocByteThresholdU ?
                 stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (unescapedArray = ArrayPool<byte>.Shared.Rent(input.Length));
@@ -430,7 +430,7 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static Guid ParseUtf8GuidAllocating(in ReadOnlySpan<byte> input, int backslashIdx, int pos)
         {
-            byte[] unescapedArray = null;
+            byte[]? unescapedArray = null;
             Span<byte> utf8Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocByteThresholdU ?
                 stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (unescapedArray = ArrayPool<byte>.Shared.Rent(input.Length));
@@ -477,7 +477,7 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static CombGuid ParseUtf8CombGuidAllocating(in ReadOnlySpan<byte> input, int backslashIdx, int pos)
         {
-            byte[] unescapedArray = null;
+            byte[]? unescapedArray = null;
             Span<byte> utf8Unescaped = (uint)input.Length <= JsonSharedConstant.StackallocByteThresholdU ?
                 stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
                 (unescapedArray = ArrayPool<byte>.Shared.Rent(input.Length));
@@ -542,7 +542,7 @@ namespace SpanJson
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public byte[] ReadUtf8BytesFromBase64()
+        public byte[]? ReadUtf8BytesFromBase64()
         {
             ref var pos = ref _pos;
             ref byte bStart = ref MemoryMarshal.GetReference(_utf8Span);
@@ -551,7 +551,7 @@ namespace SpanJson
                 return null;
             }
 
-            byte[] bytes;
+            byte[]? bytes;
             var span = ReadUtf8StringSpanInternal(ref bStart, ref pos, _length, out int backslashIdx);
             var result = (uint)backslashIdx > JsonSharedConstant.TooBigOrNegative
                  ? JsonReaderHelper.TryDecodeBase64(span, out bytes)
@@ -560,7 +560,7 @@ namespace SpanJson
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public string ReadUtf8String()
+        public string? ReadUtf8String()
         {
             ref var pos = ref _pos;
             ref byte bStart = ref MemoryMarshal.GetReference(_utf8Span);
@@ -947,7 +947,7 @@ namespace SpanJson
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Version ReadUtf8Version()
+        public Version? ReadUtf8Version()
         {
             var stringValue = ReadUtf8String();
             if (stringValue is null)
@@ -959,7 +959,7 @@ namespace SpanJson
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Uri ReadUtf8Uri()
+        public Uri? ReadUtf8Uri()
         {
             var stringValue = ReadUtf8String();
             if (stringValue is null)
@@ -967,7 +967,7 @@ namespace SpanJson
                 return default;
             }
 
-            if (Uri.TryCreate(stringValue, UriKind.RelativeOrAbsolute, out Uri value))
+            if (Uri.TryCreate(stringValue, UriKind.RelativeOrAbsolute, out Uri? value))
             {
                 return value;
             }
@@ -1202,12 +1202,12 @@ namespace SpanJson
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public object ReadUtf8Dynamic()
+        public object? ReadUtf8Dynamic()
         {
             return ReadUtf8Dynamic(0);
         }
 
-        public object ReadUtf8Dynamic(int stack)
+        public object? ReadUtf8Dynamic(int stack)
         {
             ref var pos = ref _pos;
             var nextToken = ReadUtf8NextToken();
@@ -1253,7 +1253,7 @@ namespace SpanJson
                         var startOffset = pos;
                         pos++;
                         var count = 0;
-                        var dictionary = new Dictionary<string, object>(StringComparer.Ordinal);
+                        var dictionary = new Dictionary<string, object?>(StringComparer.Ordinal);
                         while (!TryReadUtf8IsEndObjectOrValueSeparator(ref count))
                         {
                             var name = ReadUtf8EscapedName();
@@ -1275,7 +1275,7 @@ namespace SpanJson
                         var startOffset = pos;
                         pos++;
                         var count = 0;
-                        object[] temp = null;
+                        object[]? temp = null;
                         try
                         {
                             temp = ArrayPool<object>.Shared.Rent(4);
@@ -1286,7 +1286,7 @@ namespace SpanJson
                                     FormatterUtils.GrowArray(ref temp);
                                 }
 
-                                temp[count - 1] = ReadUtf8Dynamic(stack + 1);
+                                temp[count - 1] = ReadUtf8Dynamic(stack + 1)!;
                             }
 
                             object[] result;

@@ -31,8 +31,8 @@ namespace SpanJson.Linq
 {
     partial class JContainer : INotifyCollectionChanged
     {
-        internal ListChangedEventHandler _listChanged;
-        internal AddingNewEventHandler _addingNew;
+        internal ListChangedEventHandler? _listChanged;
+        internal AddingNewEventHandler? _addingNew;
 
         private bool _busy;
 
@@ -50,10 +50,10 @@ namespace SpanJson.Linq
             remove => _addingNew -= value;
         }
 
-        internal NotifyCollectionChangedEventHandler _collectionChanged;
+        internal NotifyCollectionChangedEventHandler? _collectionChanged;
 
         /// <summary>Occurs when the items list of the collection has changed, or the collection is reset.</summary>
-        public event NotifyCollectionChangedEventHandler CollectionChanged
+        public event NotifyCollectionChangedEventHandler? CollectionChanged
         {
             add { _collectionChanged += value; }
             remove { _collectionChanged -= value; }
@@ -76,7 +76,7 @@ namespace SpanJson.Linq
         /// <param name="e">The <see cref="ListChangedEventArgs"/> instance containing the event data.</param>
         protected virtual void OnListChanged(ListChangedEventArgs e)
         {
-            ListChangedEventHandler handler = _listChanged;
+            ListChangedEventHandler? handler = _listChanged;
 
             if (handler is not null)
             {
@@ -96,7 +96,7 @@ namespace SpanJson.Linq
         /// <param name="e">The <see cref="NotifyCollectionChangedEventArgs"/> instance containing the event data.</param>
         protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            NotifyCollectionChangedEventHandler handler = _collectionChanged;
+            NotifyCollectionChangedEventHandler? handler = _collectionChanged;
 
             if (handler is not null)
             {

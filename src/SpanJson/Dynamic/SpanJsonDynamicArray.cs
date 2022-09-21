@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
@@ -63,16 +60,16 @@ namespace SpanJson.Dynamic
             }
         }
 
-        public override bool TryConvert(ConvertBinder binder, out object result)
+        public override bool TryConvert(ConvertBinder binder, out object? result)
         {
             var returnType = binder.ReturnType;
             if (returnType.IsArray)
             {
                 // ReSharper disable ConvertClosureToMethodGroup
-                var functor = Enumerables.GetOrAdd(returnType.GetElementType(), x => CreateEnumerable(x));
+                var functor = Enumerables.GetOrAdd(returnType.GetElementType()!, x => CreateEnumerable(x));
                 // ReSharper restore ConvertClosureToMethodGroup
                 var enumerable = functor(_input);
-                var array = Array.CreateInstance(returnType.GetElementType(), enumerable.Count);
+                var array = Array.CreateInstance(returnType.GetElementType()!, enumerable.Count);
                 var index = 0;
                 foreach (var value in enumerable)
                 {
@@ -106,7 +103,7 @@ namespace SpanJson.Dynamic
 
         private static Func<object[], ICountableEnumerable> CreateEnumerable(Type type)
         {
-            var ctor = typeof(Enumerable<>).GetCachedGenericType(typeof(TSymbol), type).GetConstructor(new[] { typeof(object[]) });
+            var ctor = typeof(Enumerable<>).GetCachedGenericType(typeof(TSymbol), type).GetConstructor(new[] { typeof(object[]) })!;
             var paramExpression = Expression.Parameter(typeof(object[]), "input");
             var lambda =
                 Expression.Lambda<Func<object[], ICountableEnumerable>>(
@@ -164,7 +161,7 @@ namespace SpanJson.Dynamic
                 _input = input;
                 _length = input.Length;
                 _index = 0;
-                Current = default;
+                Current = default!;
             }
 
             public bool MoveNext()
@@ -175,7 +172,7 @@ namespace SpanJson.Dynamic
                 }
 
                 var value = _input[_index++];
-                Current = (TOutput)_converter.ConvertTo(value, typeof(TOutput));
+                Current = (TOutput)_converter.ConvertTo(value, typeof(TOutput))!;
                 return true;
             }
 
@@ -186,7 +183,7 @@ namespace SpanJson.Dynamic
 
             public TOutput Current { get; private set; }
 
-            object IEnumerator.Current => Current;
+            object IEnumerator.Current => Current!;
 
             public void Dispose() { }
         }
@@ -212,7 +209,7 @@ namespace SpanJson.Dynamic
                     return new Enumerator<SpanJsonDynamicNumber<TSymbol>.DynamicTypeConverter, TOutput>(NumberTypeConverter, input);
                 }
 
-                return null;
+                return null!;
             }
         }
 

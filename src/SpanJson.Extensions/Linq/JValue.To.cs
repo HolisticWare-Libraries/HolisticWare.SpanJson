@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Numerics;
 using SpanJson.Document;
 using SpanJson.Dynamic;
@@ -12,7 +10,7 @@ namespace SpanJson.Linq
 {
     partial class JValue
     {
-        protected override T ToObjectInternal<T, TUtf8Resolver, TUtf16Resolver>()
+        protected override T? ToObjectInternal<T, TUtf8Resolver, TUtf16Resolver>() where T : default
         {
             var value = this.Value;
             switch (value)
@@ -45,7 +43,8 @@ namespace SpanJson.Linq
                         switch (_valueType)
                         {
                             case JTokenType.String:
-                                return JsonSerializer.Generic.Utf16.Deserialize<T, TUtf16Resolver>($"\"{_value.ToString()}\"");
+                                var vj = _value?.ToString() ?? "null";
+                                return JsonSerializer.Generic.Utf16.Deserialize<T, TUtf16Resolver>($"\"{vj}\"");
                             case JTokenType.Raw when _value is string utf16Json:
                                 return JsonSerializer.Generic.Utf16.Deserialize<T, TUtf16Resolver>(utf16Json);
                             case JTokenType.Raw when _value is byte[] utf8Json:
@@ -57,7 +56,7 @@ namespace SpanJson.Linq
             }
         }
 
-        protected override object ToObjectInternal<TUtf8Resolver, TUtf16Resolver>(Type objectType)
+        protected override object? ToObjectInternal<TUtf8Resolver, TUtf16Resolver>(Type objectType)
         {
             var value = this.Value;
             switch (value)
@@ -90,7 +89,8 @@ namespace SpanJson.Linq
                         switch (_valueType)
                         {
                             case JTokenType.String:
-                                return JsonSerializer.NonGeneric.Utf16.Deserialize<TUtf16Resolver>($"\"{_value.ToString()}\"", objectType);
+                                var vj = _value?.ToString() ?? "null";
+                                return JsonSerializer.NonGeneric.Utf16.Deserialize<TUtf16Resolver>($"\"{vj}\"", objectType);
                             case JTokenType.Raw when _value is string utf16Json:
                                 return JsonSerializer.NonGeneric.Utf16.Deserialize<TUtf16Resolver>(utf16Json, objectType);
                             case JTokenType.Raw when _value is byte[] utf8Json:
@@ -102,12 +102,12 @@ namespace SpanJson.Linq
             }
         }
 
-        protected override T ToObjectInternal<T, TUtf8Resolver, TUtf16Resolver>(NJsonSerializer jsonSerializer)
+        protected override T? ToObjectInternal<T, TUtf8Resolver, TUtf16Resolver>(NJsonSerializer jsonSerializer) where T : default
         {
             return ToObjectInternal<T, TUtf8Resolver, TUtf16Resolver>();
         }
 
-        protected override object ToObjectInternal<TUtf8Resolver, TUtf16Resolver>(Type objectType, NJsonSerializer jsonSerializer)
+        protected override object? ToObjectInternal<TUtf8Resolver, TUtf16Resolver>(Type objectType, NJsonSerializer jsonSerializer)
         {
             return ToObjectInternal<TUtf8Resolver, TUtf16Resolver>(objectType);
         }
@@ -317,7 +317,7 @@ namespace SpanJson.Linq
             throw MiscellaneousUtils.CreateArgumentOutOfRangeException(nameof(Type), _valueType, "Unexpected token type.");
         }
 
-        private static Newtonsoft.Json.JsonConverter GetMatchingConverter(IList<Newtonsoft.Json.JsonConverter> converters, Type objectType)
+        private static Newtonsoft.Json.JsonConverter? GetMatchingConverter(IList<Newtonsoft.Json.JsonConverter> converters, Type objectType)
         {
             if (converters is not null)
             {

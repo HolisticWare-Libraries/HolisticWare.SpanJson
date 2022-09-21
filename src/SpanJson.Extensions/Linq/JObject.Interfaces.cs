@@ -23,13 +23,12 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SpanJson.Linq
 {
-    partial class JObject : IDictionary<string, JToken>, ICustomTypeDescriptor
+    partial class JObject : IDictionary<string, JToken?>, ICustomTypeDescriptor
     {
         #region -- IDictionary<string,JToken> Members --
 
@@ -38,7 +37,7 @@ namespace SpanJson.Linq
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="value">The value.</param>
-        public void Add(string propertyName, JToken value)
+        public void Add(string propertyName, JToken? value)
         {
             Add(new JProperty(propertyName, value));
         }
@@ -55,7 +54,7 @@ namespace SpanJson.Linq
             return _properties.Contains(propertyName);
         }
 
-        ICollection<string> IDictionary<string, JToken>.Keys => _properties.Keys;
+        ICollection<string> IDictionary<string, JToken?>.Keys => _properties.Keys;
 
         /// <summary>
         /// Removes the property with the specified name.
@@ -64,7 +63,7 @@ namespace SpanJson.Linq
         /// <returns><c>true</c> if item was successfully removed; otherwise, <c>false</c>.</returns>
         public bool Remove(string propertyName)
         {
-            JProperty property = Property(propertyName);
+            JProperty? property = Property(propertyName);
             if (property is null)
             {
                 return false;
@@ -80,9 +79,9 @@ namespace SpanJson.Linq
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="value">The value.</param>
         /// <returns><c>true</c> if a value was successfully retrieved; otherwise, <c>false</c>.</returns>
-        public bool TryGetValue(string propertyName, out JToken value)
+        public bool TryGetValue(string propertyName, [MaybeNullWhen(false)] out JToken value)
         {
-            JProperty property = Property(propertyName);
+            JProperty? property = Property(propertyName);
             if (property is not null)
             {
                 value = property.Value;
@@ -93,25 +92,25 @@ namespace SpanJson.Linq
             return false;
         }
 
-        ICollection<JToken> IDictionary<string, JToken>.Values => throw ThrowHelper.GetNotImplementedException();
+        ICollection<JToken?> IDictionary<string, JToken?>.Values => throw ThrowHelper.GetNotImplementedException();
 
         #endregion
 
         #region -- ICollection<KeyValuePair<string,JToken>> Members --
 
-        void ICollection<KeyValuePair<string, JToken>>.Add(KeyValuePair<string, JToken> item)
+        void ICollection<KeyValuePair<string, JToken?>>.Add(KeyValuePair<string, JToken?> item)
         {
             Add(new JProperty(item.Key, item.Value));
         }
 
-        void ICollection<KeyValuePair<string, JToken>>.Clear()
+        void ICollection<KeyValuePair<string, JToken?>>.Clear()
         {
             RemoveAll();
         }
 
-        bool ICollection<KeyValuePair<string, JToken>>.Contains(KeyValuePair<string, JToken> item)
+        bool ICollection<KeyValuePair<string, JToken?>>.Contains(KeyValuePair<string, JToken?> item)
         {
-            JProperty property = Property(item.Key);
+            JProperty? property = Property(item.Key);
             if (property is null)
             {
                 return false;
@@ -120,7 +119,7 @@ namespace SpanJson.Linq
             return (property.Value == item.Value);
         }
 
-        void ICollection<KeyValuePair<string, JToken>>.CopyTo(KeyValuePair<string, JToken>[] array, int arrayIndex)
+        void ICollection<KeyValuePair<string, JToken?>>.CopyTo(KeyValuePair<string, JToken?>[] array, int arrayIndex)
         {
             if (array is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.array); }
             if ((uint)arrayIndex > JsonSharedConstant.TooBigOrNegative) { ThrowHelper2.ThrowArgumentOutOfRangeException_ArrayIndex(); }
@@ -130,16 +129,16 @@ namespace SpanJson.Linq
             int index = 0;
             foreach (JProperty property in _properties)
             {
-                array[arrayIndex + index] = new KeyValuePair<string, JToken>(property.Name, property.Value);
+                array[arrayIndex + index] = new KeyValuePair<string, JToken?>(property.Name, property.Value);
                 index++;
             }
         }
 
-        bool ICollection<KeyValuePair<string, JToken>>.IsReadOnly => false;
+        bool ICollection<KeyValuePair<string, JToken?>>.IsReadOnly => false;
 
-        bool ICollection<KeyValuePair<string, JToken>>.Remove(KeyValuePair<string, JToken> item)
+        bool ICollection<KeyValuePair<string, JToken?>>.Remove(KeyValuePair<string, JToken?> item)
         {
-            if (!((ICollection<KeyValuePair<string, JToken>>)this).Contains(item))
+            if (!((ICollection<KeyValuePair<string, JToken?>>)this).Contains(item))
             {
                 return false;
             }
@@ -152,11 +151,11 @@ namespace SpanJson.Linq
 
         /// <summary>Returns an enumerator that can be used to iterate through the collection.</summary>
         /// <returns>A <see cref="IEnumerator{T}"/> that can be used to iterate through the collection.</returns>
-        public IEnumerator<KeyValuePair<string, JToken>> GetEnumerator()
+        public IEnumerator<KeyValuePair<string, JToken?>> GetEnumerator()
         {
             foreach (JProperty property in _properties)
             {
-                yield return new KeyValuePair<string, JToken>(property.Name, property.Value);
+                yield return new KeyValuePair<string, JToken?>(property.Name, property.Value);
             }
         }
 
@@ -169,11 +168,11 @@ namespace SpanJson.Linq
             return ((ICustomTypeDescriptor)this).GetProperties(null);
         }
 
-        PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties(Attribute[] attributes)
+        PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties(Attribute[]? attributes)
         {
             PropertyDescriptor[] propertiesArray = new PropertyDescriptor[Count];
             int i = 0;
-            foreach (KeyValuePair<string, JToken> propertyValue in this)
+            foreach (KeyValuePair<string, JToken?> propertyValue in this)
             {
                 propertiesArray[i] = new JPropertyDescriptor(propertyValue.Key);
                 i++;
@@ -187,12 +186,12 @@ namespace SpanJson.Linq
             return AttributeCollection.Empty;
         }
 
-        string ICustomTypeDescriptor.GetClassName()
+        string? ICustomTypeDescriptor.GetClassName()
         {
             return null;
         }
 
-        string ICustomTypeDescriptor.GetComponentName()
+        string? ICustomTypeDescriptor.GetComponentName()
         {
             return null;
         }
@@ -202,22 +201,22 @@ namespace SpanJson.Linq
             return new TypeConverter();
         }
 
-        EventDescriptor ICustomTypeDescriptor.GetDefaultEvent()
+        EventDescriptor? ICustomTypeDescriptor.GetDefaultEvent()
         {
             return null;
         }
 
-        PropertyDescriptor ICustomTypeDescriptor.GetDefaultProperty()
+        PropertyDescriptor? ICustomTypeDescriptor.GetDefaultProperty()
         {
             return null;
         }
 
-        object ICustomTypeDescriptor.GetEditor(Type editorBaseType)
+        object? ICustomTypeDescriptor.GetEditor(Type editorBaseType)
         {
             return null;
         }
 
-        EventDescriptorCollection ICustomTypeDescriptor.GetEvents(Attribute[] attributes)
+        EventDescriptorCollection ICustomTypeDescriptor.GetEvents(Attribute[]? attributes)
         {
             return EventDescriptorCollection.Empty;
         }
@@ -227,7 +226,7 @@ namespace SpanJson.Linq
             return EventDescriptorCollection.Empty;
         }
 
-        object ICustomTypeDescriptor.GetPropertyOwner(PropertyDescriptor pd)
+        object? ICustomTypeDescriptor.GetPropertyOwner(PropertyDescriptor? pd)
         {
             if (pd is JPropertyDescriptor)
             {

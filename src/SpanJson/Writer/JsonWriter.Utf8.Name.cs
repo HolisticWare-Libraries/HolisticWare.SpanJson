@@ -35,12 +35,12 @@
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void WriteUtf8Name(string value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
+        public void WriteUtf8Name(string value, JsonEscapeHandling escapeHandling, JavaScriptEncoder? encoder = null)
         {
             WriteUtf8Name(value.AsSpan(), escapeHandling, encoder);
         }
 
-        public void WriteUtf8Name(in ReadOnlySpan<char> value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
+        public void WriteUtf8Name(in ReadOnlySpan<char> value, JsonEscapeHandling escapeHandling, JavaScriptEncoder? encoder = null)
         {
             switch (escapeHandling)
             {

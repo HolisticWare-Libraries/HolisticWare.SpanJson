@@ -23,7 +23,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
 using System.Globalization;
 using System.Reflection;
 using CuteAnt.Reflection;
@@ -32,7 +31,7 @@ namespace SpanJson.Utilities
 {
     internal abstract class ReflectionDelegateFactory
     {
-        public Func<T, object> CreateGet<T>(MemberInfo memberInfo)
+        public Func<T, object?> CreateGet<T>(MemberInfo memberInfo)
         {
             if (memberInfo is PropertyInfo propertyInfo)
             {
@@ -68,12 +67,12 @@ namespace SpanJson.Utilities
             throw new Exception(string.Format(CultureInfo.InvariantCulture, "Could not create setter for {0}.", memberInfo));
         }
 
-        public abstract MethodCaller<T, object> CreateMethodCall<T>(MethodBase method);
+        public abstract MethodCaller<T, object?> CreateMethodCall<T>(MethodBase method);
         public abstract CtorInvoker<object> CreateParameterizedConstructor(MethodBase method);
         public abstract Func<T> CreateDefaultConstructor<T>(Type type);
-        public abstract Func<T, object> CreateGet<T>(PropertyInfo propertyInfo);
-        public abstract Func<T, object> CreateGet<T>(FieldInfo fieldInfo);
-        public abstract Action<T, object> CreateSet<T>(FieldInfo fieldInfo);
-        public abstract Action<T, object> CreateSet<T>(PropertyInfo propertyInfo);
+        public abstract Func<T, object?> CreateGet<T>(PropertyInfo propertyInfo);
+        public abstract Func<T, object?> CreateGet<T>(FieldInfo fieldInfo);
+        public abstract Action<T, object?> CreateSet<T>(FieldInfo fieldInfo);
+        public abstract Action<T, object?> CreateSet<T>(PropertyInfo propertyInfo);
     }
 }

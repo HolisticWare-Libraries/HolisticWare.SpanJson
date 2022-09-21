@@ -7,7 +7,6 @@
     <AssemblyName>NodaTime.Serialization.JsonSpan</AssemblyName>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <NoWarn>$(NoWarn);1701;1702;</NoWarn>
-    <Deterministic>True</Deterministic>
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet">

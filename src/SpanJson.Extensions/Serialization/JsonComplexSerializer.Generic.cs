@@ -1,9 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Threading;
-using System.Threading.Tasks;
 using SpanJson.Linq;
 
 namespace SpanJson.Serialization
@@ -21,7 +17,7 @@ namespace SpanJson.Serialization
         {
             if (IsPolymorphically<T>())
             {
-                return SerializerPool.SerializeObject(input, input.GetType());
+                return SerializerPool.SerializeObject(input, input?.GetType());
             }
             return JsonSerializer.Generic.Inner<T, char, TUtf16Resolver>.InnerSerializeToString(input);
         }
@@ -35,7 +31,7 @@ namespace SpanJson.Serialization
         {
             if (IsPolymorphically<T>())
             {
-                return SerializerPool.SerializeObject(input, input.GetType()).ToCharArray();
+                return SerializerPool.SerializeObject(input, input?.GetType()).ToCharArray();
             }
             return JsonSerializer.Generic.Inner<T, char, TUtf16Resolver>.InnerSerializeToCharArray(input);
         }
@@ -50,7 +46,7 @@ namespace SpanJson.Serialization
         {
             if (IsPolymorphically<T>())
             {
-                var token = JToken.FromPolymorphicObject(input);
+                var token = JToken.FromPolymorphicObject(input!);
                 return JsonSerializer.Generic.Inner<JToken, char, TUtf16Resolver>.InnerSerializeToCharArrayPool(token);
             }
             return JsonSerializer.Generic.Inner<T, char, TUtf16Resolver>.InnerSerializeToCharArrayPool(input);
@@ -67,7 +63,7 @@ namespace SpanJson.Serialization
         {
             if (IsPolymorphically<T>())
             {
-                SerializerPool.SerializeToWriter(writer, input, input.GetType());
+                SerializerPool.SerializeToWriter(writer, input, input?.GetType());
                 return default;
             }
             return JsonSerializer.Generic.Inner<T, char, TUtf16Resolver>.InnerSerializeAsync(input, writer, cancellationToken);
@@ -82,11 +78,11 @@ namespace SpanJson.Serialization
         /// <param name="input">Input</param>
         /// <returns>Deserialized object</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Deserialize<T>(string input)
+        public T? Deserialize<T>(string input)
         {
             if (IsPolymorphically<T>())
             {
-                return (T)DeserializerPool.DeserializeObject(input, typeof(T));
+                return (T?)DeserializerPool.DeserializeObject(input, typeof(T));
             }
 #if NETSTANDARD2_0
             return JsonSerializer.Generic.Inner<T, char, TUtf16Resolver>.InnerDeserialize(input.AsSpan());
@@ -100,11 +96,11 @@ namespace SpanJson.Serialization
         /// <param name="input">Input</param>
         /// <returns>Deserialized object</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Deserialize<T>(char[] input)
+        public T? Deserialize<T>(char[] input)
         {
             if (IsPolymorphically<T>())
             {
-                return (T)DeserializerPool.DeserializeObject(input.AsSpan().ToString(), typeof(T));
+                return (T?)DeserializerPool.DeserializeObject(input.AsSpan().ToString(), typeof(T));
             }
             return JsonSerializer.Generic.Inner<T, char, TUtf16Resolver>.InnerDeserialize(input);
         }
@@ -114,11 +110,11 @@ namespace SpanJson.Serialization
         /// <param name="input">Input</param>
         /// <returns>Deserialized object</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Deserialize<T>(ArraySegment<char> input)
+        public T? Deserialize<T>(ArraySegment<char> input)
         {
             if (IsPolymorphically<T>())
             {
-                return (T)DeserializerPool.DeserializeObject(input.AsSpan().ToString(), typeof(T));
+                return (T?)DeserializerPool.DeserializeObject(input.AsSpan().ToString(), typeof(T));
             }
             return JsonSerializer.Generic.Inner<T, char, TUtf16Resolver>.InnerDeserialize(input);
         }
@@ -128,11 +124,11 @@ namespace SpanJson.Serialization
         /// <param name="input">Input</param>
         /// <returns>Deserialized object</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Deserialize<T>(in ReadOnlyMemory<char> input)
+        public T? Deserialize<T>(in ReadOnlyMemory<char> input)
         {
             if (IsPolymorphically<T>())
             {
-                return (T)DeserializerPool.DeserializeObject(input.ToString(), typeof(T));
+                return (T?)DeserializerPool.DeserializeObject(input.ToString(), typeof(T));
             }
             return JsonSerializer.Generic.Inner<T, char, TUtf16Resolver>.InnerDeserialize(input);
         }
@@ -142,11 +138,11 @@ namespace SpanJson.Serialization
         /// <param name="input">Input</param>
         /// <returns>Deserialized object</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Deserialize<T>(in ReadOnlySpan<char> input)
+        public T? Deserialize<T>(in ReadOnlySpan<char> input)
         {
             if (IsPolymorphically<T>())
             {
-                return (T)DeserializerPool.DeserializeObject(input.ToString(), typeof(T));
+                return (T?)DeserializerPool.DeserializeObject(input.ToString(), typeof(T));
             }
             return JsonSerializer.Generic.Inner<T, char, TUtf16Resolver>.InnerDeserialize(input);
         }
@@ -157,12 +153,12 @@ namespace SpanJson.Serialization
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Deserialized object</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ValueTask<T> DeserializeAsync<T>(TextReader reader, CancellationToken cancellationToken = default)
+        public ValueTask<T?> DeserializeAsync<T>(TextReader reader, CancellationToken cancellationToken = default)
         {
             if (IsPolymorphically<T>())
             {
-                var result = (T)DeserializerPool.DeserializeFromReader(reader, typeof(T));
-                return new ValueTask<T>(result);
+                var result = (T?)DeserializerPool.DeserializeFromReader(reader, typeof(T));
+                return new ValueTask<T?>(result);
             }
             return JsonSerializer.Generic.Inner<T, char, TUtf16Resolver>.InnerDeserializeAsync(reader, cancellationToken);
         }
@@ -226,11 +222,11 @@ namespace SpanJson.Serialization
         /// <param name="input">Input</param>
         /// <returns>Deserialized object</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Deserialize<T>(byte[] input)
+        public T? Deserialize<T>(byte[] input)
         {
             if (IsPolymorphically<T>())
             {
-                return (T)DeserializerPool.DeserializeFromByteArray(input, typeof(T));
+                return (T?)DeserializerPool.DeserializeFromByteArray(input, typeof(T));
             }
             return JsonSerializer.Generic.Inner<T, byte, TUtf8Resolver>.InnerDeserialize(input);
         }
@@ -240,11 +236,11 @@ namespace SpanJson.Serialization
         /// <param name="input">Input</param>
         /// <returns>Deserialized object</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Deserialize<T>(ArraySegment<byte> input)
+        public T? Deserialize<T>(ArraySegment<byte> input)
         {
             if (IsPolymorphically<T>())
             {
-                return (T)DeserializerPool.DeserializeFromByteArray(input.Array, input.Offset, input.Count, typeof(T));
+                return (T?)DeserializerPool.DeserializeFromByteArray(input.Array!, input.Offset, input.Count, typeof(T));
             }
             return JsonSerializer.Generic.Inner<T, byte, TUtf8Resolver>.InnerDeserialize(input);
         }
@@ -254,17 +250,17 @@ namespace SpanJson.Serialization
         /// <param name="input">Input</param>
         /// <returns>Deserialized object</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Deserialize<T>(in ReadOnlyMemory<byte> input)
+        public T? Deserialize<T>(in ReadOnlyMemory<byte> input)
         {
             if (IsPolymorphically<T>())
             {
                 if (MemoryMarshal.TryGetArray(input, out ArraySegment<byte> segment))
                 {
-                    return (T)DeserializerPool.DeserializeFromByteArray(segment.Array, segment.Offset, segment.Count, typeof(T));
+                    return (T?)DeserializerPool.DeserializeFromByteArray(segment.Array!, segment.Offset, segment.Count, typeof(T));
                 }
                 else
                 {
-                    return (T)DeserializerPool.DeserializeFromByteArray(input.ToArray(), typeof(T));
+                    return (T?)DeserializerPool.DeserializeFromByteArray(input.ToArray(), typeof(T));
                 }
             }
             return JsonSerializer.Generic.Inner<T, byte, TUtf8Resolver>.InnerDeserialize(input);
@@ -275,11 +271,11 @@ namespace SpanJson.Serialization
         /// <param name="input">Input</param>
         /// <returns>Deserialized object</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Deserialize<T>(in ReadOnlySpan<byte> input)
+        public T? Deserialize<T>(in ReadOnlySpan<byte> input)
         {
             if (IsPolymorphically<T>())
             {
-                return (T)DeserializerPool.DeserializeFromByteArray(input.ToArray(), typeof(T));
+                return (T?)DeserializerPool.DeserializeFromByteArray(input.ToArray(), typeof(T));
             }
             return JsonSerializer.Generic.Inner<T, byte, TUtf8Resolver>.InnerDeserialize(input);
         }
@@ -290,12 +286,12 @@ namespace SpanJson.Serialization
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Task</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ValueTask<T> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
+        public ValueTask<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
         {
             if (IsPolymorphically<T>())
             {
-                var result = (T)DeserializerPool.DeserializeFromStream(stream, typeof(T));
-                return new ValueTask<T>(result);
+                var result = (T?)DeserializerPool.DeserializeFromStream(stream, typeof(T));
+                return new ValueTask<T?>(result);
             }
             return JsonSerializer.Generic.Inner<T, byte, TUtf8Resolver>.InnerDeserializeAsync(stream, cancellationToken);
         }

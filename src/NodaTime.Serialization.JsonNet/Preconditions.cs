@@ -14,7 +14,7 @@ namespace NodaTime.Serialization.JsonNet
     {
         internal static T CheckNotNull<T>(T argument, string paramName) where T : class
             => argument ?? throw new ArgumentNullException(paramName);
-        
+
         internal static void CheckArgument(bool expression, string parameter, string message)
         {
             if (!expression)

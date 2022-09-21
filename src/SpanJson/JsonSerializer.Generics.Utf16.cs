@@ -120,7 +120,7 @@ namespace SpanJson
                 /// <param name="input">Input</param>
                 /// <returns>Deserialized object</returns>
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                public static T Deserialize<T>(string input)
+                public static T? Deserialize<T>(string input)
                 {
 #if NETSTANDARD2_0
                     return Inner<T, char, ExcludeNullsOriginalCaseResolver<char>>.InnerDeserialize(input.AsSpan());
@@ -135,7 +135,7 @@ namespace SpanJson
                 /// <param name="input">Input</param>
                 /// <returns>Deserialized object</returns>
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                public static T Deserialize<T, TResolver>(string input)
+                public static T? Deserialize<T, TResolver>(string input)
                     where TResolver : IJsonFormatterResolver<char, TResolver>, new()
                 {
 #if NETSTANDARD2_0
@@ -150,7 +150,7 @@ namespace SpanJson
                 /// <param name="input">Input</param>
                 /// <returns>Deserialized object</returns>
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                public static T Deserialize<T>(char[] input)
+                public static T? Deserialize<T>(char[] input)
                 {
                     return Inner<T, char, ExcludeNullsOriginalCaseResolver<char>>.InnerDeserialize(input);
                 }
@@ -161,7 +161,7 @@ namespace SpanJson
                 /// <param name="input">Input</param>
                 /// <returns>Deserialized object</returns>
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                public static T Deserialize<T, TResolver>(char[] input)
+                public static T? Deserialize<T, TResolver>(char[] input)
                     where TResolver : IJsonFormatterResolver<char, TResolver>, new()
                 {
                     return Inner<T, char, TResolver>.InnerDeserialize(input);
@@ -173,9 +173,9 @@ namespace SpanJson
                 /// <returns>Deserialized object</returns>
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if !NETSTANDARD2_0
-                public static T Deserialize<T>(in ArraySegment<char> input)
+                public static T? Deserialize<T>(in ArraySegment<char> input)
 #else
-                public static T Deserialize<T>(ArraySegment<char> input)
+                public static T? Deserialize<T>(ArraySegment<char> input)
 #endif
                 {
                     return Inner<T, char, ExcludeNullsOriginalCaseResolver<char>>.InnerDeserialize(input);
@@ -188,9 +188,9 @@ namespace SpanJson
                 /// <returns>Deserialized object</returns>
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if !NETSTANDARD2_0
-                public static T Deserialize<T, TResolver>(in ArraySegment<char> input)
+                public static T? Deserialize<T, TResolver>(in ArraySegment<char> input)
 #else
-                public static T Deserialize<T, TResolver>(ArraySegment<char> input)
+                public static T? Deserialize<T, TResolver>(ArraySegment<char> input)
 #endif
                     where TResolver : IJsonFormatterResolver<char, TResolver>, new()
                 {
@@ -202,7 +202,7 @@ namespace SpanJson
                 /// <param name="input">Input</param>
                 /// <returns>Deserialized object</returns>
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                public static T Deserialize<T>(in ReadOnlyMemory<char> input)
+                public static T? Deserialize<T>(in ReadOnlyMemory<char> input)
                 {
                     return Inner<T, char, ExcludeNullsOriginalCaseResolver<char>>.InnerDeserialize(input);
                 }
@@ -213,7 +213,7 @@ namespace SpanJson
                 /// <param name="input">Input</param>
                 /// <returns>Deserialized object</returns>
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                public static T Deserialize<T, TResolver>(in ReadOnlyMemory<char> input)
+                public static T? Deserialize<T, TResolver>(in ReadOnlyMemory<char> input)
                     where TResolver : IJsonFormatterResolver<char, TResolver>, new()
                 {
                     return Inner<T, char, TResolver>.InnerDeserialize(input);
@@ -224,7 +224,7 @@ namespace SpanJson
                 /// <param name="input">Input</param>
                 /// <returns>Deserialized object</returns>
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                public static T Deserialize<T>(in ReadOnlySpan<char> input)
+                public static T? Deserialize<T>(in ReadOnlySpan<char> input)
                 {
                     return Inner<T, char, ExcludeNullsOriginalCaseResolver<char>>.InnerDeserialize(input);
                 }
@@ -235,7 +235,7 @@ namespace SpanJson
                 /// <param name="input">Input</param>
                 /// <returns>Deserialized object</returns>
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                public static T Deserialize<T, TResolver>(in ReadOnlySpan<char> input)
+                public static T? Deserialize<T, TResolver>(in ReadOnlySpan<char> input)
                     where TResolver : IJsonFormatterResolver<char, TResolver>, new()
                 {
                     return Inner<T, char, TResolver>.InnerDeserialize(input);
@@ -247,7 +247,7 @@ namespace SpanJson
                 /// <param name="cancellationToken">CancellationToken</param>
                 /// <returns>Deserialized object</returns>
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                public static ValueTask<T> DeserializeAsync<T>(TextReader reader, CancellationToken cancellationToken = default)
+                public static ValueTask<T?> DeserializeAsync<T>(TextReader reader, CancellationToken cancellationToken = default)
                 {
                     return Inner<T, char, ExcludeNullsOriginalCaseResolver<char>>.InnerDeserializeAsync(reader, cancellationToken);
                 }
@@ -259,7 +259,7 @@ namespace SpanJson
                 /// <param name="cancellationToken">CancellationToken</param>
                 /// <returns>Task</returns>
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                public static ValueTask<T> DeserializeAsync<T, TResolver>(TextReader reader, CancellationToken cancellationToken = default)
+                public static ValueTask<T?> DeserializeAsync<T, TResolver>(TextReader reader, CancellationToken cancellationToken = default)
                     where TResolver : IJsonFormatterResolver<char, TResolver>, new()
                 {
                     return Inner<T, char, TResolver>.InnerDeserializeAsync(reader, cancellationToken);

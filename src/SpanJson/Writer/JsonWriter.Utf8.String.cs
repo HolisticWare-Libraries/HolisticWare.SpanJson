@@ -34,12 +34,12 @@
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void WriteUtf8String(string value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
+        public void WriteUtf8String(string value, JsonEscapeHandling escapeHandling, JavaScriptEncoder? encoder = null)
         {
             WriteUtf8String(value.AsSpan(), escapeHandling, encoder);
         }
 
-        public void WriteUtf8String(in ReadOnlySpan<char> value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
+        public void WriteUtf8String(in ReadOnlySpan<char> value, JsonEscapeHandling escapeHandling, JavaScriptEncoder? encoder = null)
         {
             switch (escapeHandling)
             {
@@ -159,7 +159,7 @@
             if (withNameSeparator) { WriteUtf8NameSeparator(ref pinnableAddr, ref pos); }
         }
 
-        private void WriteUtf8StringEscapeNonAscii(in ReadOnlySpan<char> value, bool withNameSeparator, JavaScriptEncoder encoder)
+        private void WriteUtf8StringEscapeNonAscii(in ReadOnlySpan<char> value, bool withNameSeparator, JavaScriptEncoder? encoder)
         {
             int firstEscapeIndex = EscapingHelper.NonAscii.NeedsEscaping(value, encoder);
 
@@ -173,12 +173,12 @@
             }
         }
 
-        private void WriteUtf8StringEscapeNonAsciiValue(in ReadOnlySpan<char> value, int firstEscapeIndexVal, bool withNameSeparator, JavaScriptEncoder encoder)
+        private void WriteUtf8StringEscapeNonAsciiValue(in ReadOnlySpan<char> value, int firstEscapeIndexVal, bool withNameSeparator, JavaScriptEncoder? encoder)
         {
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= value.Length);
             Debug.Assert(firstEscapeIndexVal >= 0 && firstEscapeIndexVal < value.Length);
 
-            char[] valueArray = null;
+            char[]? valueArray = null;
 
             int length = EscapingHelper.GetMaxEscapedLength(value.Length, firstEscapeIndexVal);
 

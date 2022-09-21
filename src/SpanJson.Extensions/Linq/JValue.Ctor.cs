@@ -23,7 +23,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
 using System.Collections.Concurrent;
 using System.Numerics;
 using CuteAnt;
@@ -37,11 +36,11 @@ namespace SpanJson.Linq
         public static readonly ConcurrentDictionary<Type, JTokenType> CustomPrimitiveTypes = new ConcurrentDictionary<Type, JTokenType>();
 
         private JTokenType _valueType;
-        private object _value;
+        private object? _value;
 
         #region @@ Constructors @@
 
-        internal JValue(object value, JTokenType type)
+        internal JValue(object? value, JTokenType type)
         {
             _value = value;
             _valueType = type;
@@ -163,7 +162,7 @@ namespace SpanJson.Linq
 
         /// <summary>Initializes a new instance of the <see cref="JValue"/> class with the given value.</summary>
         /// <param name="value">The value.</param>
-        public JValue(object value)
+        public JValue(object? value)
         {
             _valueType = GetValueType(_valueType, value, out _value);
         }
@@ -180,13 +179,13 @@ namespace SpanJson.Linq
 
         /// <summary>Gets or sets the underlying token value.</summary>
         /// <value>The underlying token value.</value>
-        public object Value
+        public object? Value
         {
             get => _value;
             set
             {
-                Type currentType = _value?.GetType();
-                Type newType = value?.GetType();
+                Type? currentType = _value?.GetType();
+                Type? newType = value?.GetType();
 
                 if (currentType != newType)
                 {
@@ -199,7 +198,7 @@ namespace SpanJson.Linq
             }
         }
 
-        private static JTokenType GetValueType(JTokenType? current, object value, out object v)
+        private static JTokenType GetValueType(JTokenType? current, object? value, out object? v)
         {
             v = value;
             switch (value)
@@ -273,7 +272,7 @@ namespace SpanJson.Linq
                     }
             }
 
-            static JTokenType LocalReadJsonElement(JsonElement element, out object v)
+            static JTokenType LocalReadJsonElement(JsonElement element, out object? v)
             {
                 switch (element.ValueKind)
                 {

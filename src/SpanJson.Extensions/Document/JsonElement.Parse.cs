@@ -1,9 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Diagnostics;
-using System.IO;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SpanJson.Document
 {
@@ -46,11 +45,15 @@ namespace SpanJson.Document
         /// </exception>
         public static JsonElement ParseValue(ref Utf8JsonReader reader)
         {
-            bool ret = JsonDocument.TryParseValue(ref reader, out JsonDocument document, shouldThrow: true, useArrayPools: false);
+            bool ret = JsonDocument.TryParseValue(ref reader, out JsonDocument? document, shouldThrow: true, useArrayPools: false);
 
             Debug.Assert(ret, "TryParseValue returned false with shouldThrow: true.");
             Debug.Assert(document != null, "null document returned with shouldThrow: true.");
+#if !(NETSTANDARD2_0 || NETCOREAPP2_1)
             return document.RootElement;
+#else
+            return document!.RootElement;
+#endif
         }
 
         internal static JsonElement ParseValue(Stream utf8Json, JsonDocumentOptions options)
@@ -109,9 +112,9 @@ namespace SpanJson.Document
         /// <exception cref="JsonException">
         ///   A value could not be read from the reader.
         /// </exception>
-        public static bool TryParseValue(ref Utf8JsonReader reader, /*[NotNullWhen(true)] */out JsonElement? element)
+        public static bool TryParseValue(ref Utf8JsonReader reader, [NotNullWhen(true)] out JsonElement? element)
         {
-            bool ret = JsonDocument.TryParseValue(ref reader, out JsonDocument document, shouldThrow: false, useArrayPools: false);
+            bool ret = JsonDocument.TryParseValue(ref reader, out JsonDocument? document, shouldThrow: false, useArrayPools: false);
             element = document?.RootElement;
             return ret;
         }

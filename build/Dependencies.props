@@ -1,10 +1,10 @@
 <Project>
   <!-- Shared Package Versions -->
   <PropertyGroup>
-    <MicrosoftBuildPackageVersion>17.2.0</MicrosoftBuildPackageVersion>
-    <MicrosoftBuildRuntimePackageVersion>17.2.0</MicrosoftBuildRuntimePackageVersion>
-    <MicrosoftBuildTasksCorePackageVersion>17.2.0</MicrosoftBuildTasksCorePackageVersion>
-    <MicrosoftBuildUtilitiesCorePackageVersion>17.2.0</MicrosoftBuildUtilitiesCorePackageVersion>
+    <MicrosoftBuildPackageVersion>17.3.1</MicrosoftBuildPackageVersion>
+    <MicrosoftBuildRuntimePackageVersion>17.3.1</MicrosoftBuildRuntimePackageVersion>
+    <MicrosoftBuildTasksCorePackageVersion>17.3.1</MicrosoftBuildTasksCorePackageVersion>
+    <MicrosoftBuildUtilitiesCorePackageVersion>17.3.1</MicrosoftBuildUtilitiesCorePackageVersion>
 
     <MicrosoftBclPackageVersion>1.1.10</MicrosoftBclPackageVersion>
     <MicrosoftBclAsyncPackageVersion>1.0.168</MicrosoftBclAsyncPackageVersion>

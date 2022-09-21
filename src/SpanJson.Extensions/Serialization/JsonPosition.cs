@@ -23,11 +23,8 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
 using System.Buffers;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Text;
 using SpanJson.Internal;
 using SpanJson.Utilities;
@@ -49,7 +46,7 @@ namespace SpanJson.Serialization
 
         internal JsonContainerType Type;
         internal int Position;
-        internal string PropertyName;
+        internal string? PropertyName;
         internal bool HasIndex;
 
         public JsonPosition(JsonContainerType type)
@@ -65,7 +62,7 @@ namespace SpanJson.Serialization
             switch (Type)
             {
                 case JsonContainerType.Object:
-                    return PropertyName.Length + 5;
+                    return PropertyName!.Length + 5;
                 case JsonContainerType.Array:
                     //case JsonContainerType.Constructor:
                     return MathUtils.IntLength((ulong)Position) + 2;
@@ -74,12 +71,12 @@ namespace SpanJson.Serialization
             }
         }
 
-        internal void WriteTo(StringBuilder sb, ref StringWriter writer, ref char[] buffer)
+        internal void WriteTo(StringBuilder sb, ref StringWriter? writer, ref char[]? buffer)
         {
             switch (Type)
             {
                 case JsonContainerType.Object:
-                    string propertyName = PropertyName;
+                    string propertyName = PropertyName!;
                     if (propertyName.IndexOfAny(SpecialCharacters) != -1)
                     {
                         sb.Append(@"['");
@@ -117,14 +114,14 @@ namespace SpanJson.Serialization
             switch (Type)
             {
                 case JsonContainerType.Object:
-                    string propertyName = PropertyName;
+                    string propertyName = PropertyName!;
                     ReadOnlySpan<char> propertySpan = propertyName.AsSpan();
                     var propertyIdx = EscapingHelper.Default.NeedsEscaping(propertySpan);
                     if (propertyIdx != -1)
                     {
                         sb.Append(@"['");
 
-                        char[] propertyArray = null;
+                        char[]? propertyArray = null;
 
                         int length = EscapingHelper.GetMaxEscapedLength(propertySpan.Length, propertyIdx);
 
@@ -184,8 +181,8 @@ namespace SpanJson.Serialization
             }
 
             StringBuilder sb = new StringBuilder(capacity);
-            StringWriter writer = null;
-            char[] buffer = null;
+            StringWriter? writer = null;
+            char[]? buffer = null;
             if (positions is not null)
             {
                 foreach (JsonPosition state in positions)
@@ -201,7 +198,7 @@ namespace SpanJson.Serialization
             return sb.ToString();
         }
 
-        internal static string FormatMessage(NIJsonLineInfo lineInfo, string path, string message)
+        internal static string FormatMessage(NIJsonLineInfo? lineInfo, string path, string message)
         {
             // don't add a fullstop and space when message ends with a new line
             if (!message.EndsWith(Environment.NewLine, StringComparison.Ordinal))

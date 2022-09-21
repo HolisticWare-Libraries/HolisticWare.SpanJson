@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Buffers;
 using System.Diagnostics;
 using SpanJson.Internal;
@@ -183,7 +182,7 @@ namespace SpanJson.Document
                         {
                             int remaining = currentPropertyName.Length - idx;
                             int written = 0;
-                            byte[] rented = null;
+                            byte[]? rented = null;
                             
                             try
                             {

@@ -26,7 +26,7 @@ namespace SpanJson.Formatters
         private static DeserializeDelegate BuildDeserializeDelegate()
         {
             var readerParameter = Expression.Parameter(typeof(JsonReader<TSymbol>).MakeByRefType(), "reader");
-            MethodInfo nameSpanMethodInfo = null;
+            MethodInfo? nameSpanMethodInfo = null;
             if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 nameSpanMethodInfo = FindPublicInstanceMethod(readerParameter.Type, nameof(JsonReader<TSymbol>.ReadUtf8StringSpan));
@@ -50,7 +50,7 @@ namespace SpanJson.Formatters
     {
         public static readonly EnumStringFormatter<T> Default = new EnumStringFormatter<T>();
 
-        public object Arguments { get; set; }
+        public object? Arguments { get; set; }
 
         public T Deserialize(ref JsonReader<byte> reader, IJsonFormatterResolver<byte> resolver)
         {

@@ -1,30 +1,28 @@
-﻿using System;
-using SpanJson.Document;
+﻿using SpanJson.Document;
 
-namespace SpanJson.Converters
+namespace SpanJson.Converters;
+
+public class JsonElementConverter : JsonDocumentConverter
 {
-    public class JsonElementConverter : JsonDocumentConverter
+    public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object? value, Newtonsoft.Json.JsonSerializer serializer)
     {
-        public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+        switch (value)
         {
-            switch (value)
-            {
-                case null:
-                    writer.WriteNull();
-                    break;
+            case null:
+                writer.WriteNull();
+                break;
 
-                case JsonElement element:
-                    WriteElement(writer, element);
-                    break;
+            case JsonElement element:
+                WriteElement(writer, element);
+                break;
 
-                default:
-                    throw ThrowHelper2.GetJsonSerializationException<JsonElement>();
-            }
+            default:
+                throw ThrowHelper2.GetJsonSerializationException<JsonElement>();
         }
+    }
 
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(JsonElement);
-        }
+    public override bool CanConvert(Type objectType)
+    {
+        return objectType == typeof(JsonElement);
     }
 }

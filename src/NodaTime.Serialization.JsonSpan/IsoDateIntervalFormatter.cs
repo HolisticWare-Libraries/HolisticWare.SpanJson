@@ -4,7 +4,7 @@
     using NodaTime.Text;
     using SpanJson;
 
-    /// <summary>SpanJson formatter for <see cref="DateInterval"/>.</summary>   
+    /// <summary>SpanJson formatter for <see cref="DateInterval"/>.</summary>
     public sealed class IsoDateIntervalFormatter : ICustomJsonFormatter<DateInterval>
     {
         public static readonly IsoDateIntervalFormatter Default = new IsoDateIntervalFormatter();

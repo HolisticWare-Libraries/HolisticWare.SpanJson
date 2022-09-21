@@ -1,36 +1,33 @@
-﻿using System.Collections.Generic;
+﻿namespace SpanJson.Linq.JsonPath;
 
-namespace SpanJson.Linq.JsonPath
+internal class QueryScanFilter : PathFilter
 {
-    internal class QueryScanFilter : PathFilter
+    internal QueryExpression Expression;
+
+    public QueryScanFilter(QueryExpression expression)
     {
-        internal QueryExpression Expression;
+        Expression = expression;
+    }
 
-        public QueryScanFilter(QueryExpression expression)
+    public override IEnumerable<JToken> ExecuteFilter(JToken root, IEnumerable<JToken> current, JsonSelectSettings? settings)
+    {
+        foreach (JToken t in current)
         {
-            Expression = expression;
-        }
-
-        public override IEnumerable<JToken> ExecuteFilter(JToken root, IEnumerable<JToken> current, JsonSelectSettings settings)
-        {
-            foreach (JToken t in current)
+            if (t is JContainer c)
             {
-                if (t is JContainer c)
+                foreach (JToken d in c.DescendantsAndSelf())
                 {
-                    foreach (JToken d in c.DescendantsAndSelf())
+                    if (Expression.IsMatch(root, d, settings))
                     {
-                        if (Expression.IsMatch(root, d, settings))
-                        {
-                            yield return d;
-                        }
+                        yield return d;
                     }
                 }
-                else
+            }
+            else
+            {
+                if (Expression.IsMatch(root, t, settings))
                 {
-                    if (Expression.IsMatch(root, t, settings))
-                    {
-                        yield return t;
-                    }
+                    yield return t;
                 }
             }
         }

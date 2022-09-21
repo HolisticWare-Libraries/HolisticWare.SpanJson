@@ -72,7 +72,7 @@ namespace SpanJson.Internal
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int NeedsEscaping(in ReadOnlySpan<byte> utf8Source, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
+        public static int NeedsEscaping(in ReadOnlySpan<byte> utf8Source, JsonEscapeHandling escapeHandling, JavaScriptEncoder? encoder = null)
         {
             switch (escapeHandling)
             {
@@ -87,7 +87,7 @@ namespace SpanJson.Internal
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int NeedsEscaping(in ReadOnlySpan<char> utf16Source, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
+        public static int NeedsEscaping(in ReadOnlySpan<char> utf16Source, JsonEscapeHandling escapeHandling, JavaScriptEncoder? encoder = null)
         {
             switch (escapeHandling)
             {
@@ -106,7 +106,7 @@ namespace SpanJson.Internal
         #region -- EscapeString --
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void EscapeString(in ReadOnlySpan<byte> utf8Source, Span<byte> destination, JsonEscapeHandling escapeHandling, int indexOfFirstByteToEscape, JavaScriptEncoder encoder, out int written)
+        public static void EscapeString(in ReadOnlySpan<byte> utf8Source, Span<byte> destination, JsonEscapeHandling escapeHandling, int indexOfFirstByteToEscape, JavaScriptEncoder? encoder, out int written)
         {
             switch (escapeHandling)
             {
@@ -124,7 +124,7 @@ namespace SpanJson.Internal
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void EscapeString(in ReadOnlySpan<char> utf16Source, Span<char> destination, JsonEscapeHandling escapeHandling, int indexOfFirstByteToEscape, JavaScriptEncoder encoder, out int written)
+        public static void EscapeString(in ReadOnlySpan<char> utf16Source, Span<char> destination, JsonEscapeHandling escapeHandling, int indexOfFirstByteToEscape, JavaScriptEncoder? encoder, out int written)
         {
             switch (escapeHandling)
             {

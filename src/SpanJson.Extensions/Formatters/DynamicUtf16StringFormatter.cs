@@ -1,5 +1,4 @@
-﻿using System;
-using System.Buffers;
+﻿using System.Buffers;
 using System.Runtime.InteropServices;
 using SpanJson.Dynamic;
 using SpanJson.Internal;
@@ -13,12 +12,14 @@ namespace SpanJson.Formatters
     {
         public static readonly DynamicUtf16StringFormatter Default = new DynamicUtf16StringFormatter();
 
-        public override void Serialize(ref JsonWriter<byte> writer, SpanJsonDynamicUtf16String value, IJsonFormatterResolver<byte> resolver)
+        public override void Serialize(ref JsonWriter<byte> writer, SpanJsonDynamicUtf16String? value, IJsonFormatterResolver<byte> resolver)
         {
+            if (value is null) { writer.WriteUtf8Null(); return; }
+
             ReadOnlySpan<char> utf16Json = value.Symbols;
             var maxRequired = utf16Json.Length * JsonSharedConstant.MaxExpansionFactorWhileTranscoding;
 
-            byte[] valueArray = null;
+            byte[]? valueArray = null;
 
             Span<byte> utf8Json = (uint)maxRequired <= JsonSharedConstant.StackallocByteThresholdU ?
                 stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
@@ -37,8 +38,10 @@ namespace SpanJson.Formatters
             if (valueArray is not null) { ArrayPool<byte>.Shared.Return(valueArray); }
         }
 
-        public override void Serialize(ref JsonWriter<char> writer, SpanJsonDynamicUtf16String value, IJsonFormatterResolver<char> resolver)
+        public override void Serialize(ref JsonWriter<char> writer, SpanJsonDynamicUtf16String? value, IJsonFormatterResolver<char> resolver)
         {
+            if (value is null) { writer.WriteUtf16Null(); return; }
+
             writer.WriteUtf16Verbatim(value.Symbols);
         }
     }

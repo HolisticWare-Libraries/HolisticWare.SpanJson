@@ -1,6 +1,6 @@
-﻿using System;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using System.Diagnostics;
 using SpanJson.Internal;
 
 namespace SpanJson
@@ -9,6 +9,7 @@ namespace SpanJson
     {
         #region -- Throw ArgumentException --
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException()
         {
@@ -19,6 +20,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException_SerializerSettings_same_instance()
         {
@@ -29,18 +31,21 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException(ExceptionResource resource)
         {
             throw GetArgumentException(resource);
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException(ExceptionResource resource, ExceptionArgument argument)
         {
             throw GetArgumentException(resource, argument);
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException(string message, ExceptionArgument argument)
         {
@@ -73,6 +78,7 @@ namespace SpanJson
 
         #region -- Throw ArgumentOutOfRangeException --
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException()
         {
@@ -84,18 +90,21 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException(ExceptionArgument argument)
         {
             throw GetArgumentOutOfRangeException(argument);
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
         {
             throw GetArgumentOutOfRangeException(argument, resource);
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException(ExceptionArgument argument, int paramNumber, ExceptionResource resource)
         {
@@ -129,18 +138,21 @@ namespace SpanJson
 
         #region -- Throw ArgumentNullException --
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentNullException(ExceptionArgument argument)
         {
             throw GetArgumentNullException(argument);
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentNullException(ExceptionResource resource)
         {
             throw GetArgumentNullException(resource);
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentNullException(ExceptionArgument argument, ExceptionResource resource)
         {
@@ -174,6 +186,7 @@ namespace SpanJson
 
         #region -- IndexOutOfRangeException --
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowIndexOutOfRangeException()
         {
@@ -189,12 +202,14 @@ namespace SpanJson
 
         #region -- Throw InvalidOperationException --
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowInvalidOperationException(ExceptionResource resource)
         {
             throw GetInvalidOperationException(resource);
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowInvalidOperationException(ExceptionResource resource, Exception e)
         {

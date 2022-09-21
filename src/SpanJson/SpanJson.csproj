@@ -6,6 +6,7 @@
     <RootNamespace>SpanJson</RootNamespace>
     <AssemblyName>SpanJson</AssemblyName>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Nullable>enable</Nullable>
     <NoWarn>$(NoWarn);1701;1702;</NoWarn>
   </PropertyGroup>
 
@@ -28,6 +29,10 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="$(SystemRuntimeCompilerServicesUnsafe2PackageVersion)" />
     <PackageReference Include="System.Text.Encodings.Web" Version="4.6.0" />
+    <PackageReference Include="Nullable" Version="$(NullablePackageVersion)">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Buffers" Version="$(SystemBuffers2PackageVersion)" />
@@ -38,6 +43,10 @@
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="$(SystemThreadingTasksExtensions2PackageVersion)" />
     <PackageReference Include="System.ValueTuple" Version="$(SystemValueTuple2PackageVersion)" />
     <PackageReference Include="Microsoft.CSharp" Version="$(MicrosoftCSharp2PackageVersion)" />
+    <PackageReference Include="Nullable" Version="$(NullablePackageVersion)">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SpanJson.Annotations\SpanJson.Annotations.csproj" />

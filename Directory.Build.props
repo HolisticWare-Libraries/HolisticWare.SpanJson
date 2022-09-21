@@ -32,15 +32,10 @@
   <!-- Common compile parameters -->
   <PropertyGroup>
     <LangVersion>10.0</LangVersion>
-    <!--<LangVersion>latest</LangVersion>-->
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <Prefer32Bit>false</Prefer32Bit>
-    <TieredCompilation>true</TieredCompilation>
+    <Deterministic>true</Deterministic>
+    <ImplicitUsings>enable</ImplicitUsings>
     <DefineConstants>$(DefineConstants);NET_3_5_GREATER;SIGNED</DefineConstants>
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <NoWarn>$(NoWarn);CS1591;NU1803</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 

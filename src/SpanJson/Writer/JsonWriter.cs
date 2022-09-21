@@ -5,18 +5,18 @@
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
-using System.Text.Encodings.Web;
+    using System.Text.Encodings.Web;
     using System.Threading;
     using SpanJson.Internal;
 
     public ref partial struct JsonWriter<TSymbol> where TSymbol : struct
     {
-        private ArrayPool<TSymbol> _arrayPool;
+        private ArrayPool<TSymbol>? _arrayPool;
 
-        private TSymbol[] _borrowedBuffer;
-        internal byte[] _utf8Buffer;
+        private TSymbol[] _borrowedBuffer = null!;
+        internal byte[] _utf8Buffer = null!;
         private Span<byte> _utf8Span;
-        internal char[] _utf16Buffer;
+        internal char[] _utf16Buffer = null!;
         private Span<char> _utf16Span;
         private int _capacity;
 
@@ -95,13 +95,13 @@ using System.Text.Encodings.Web;
             }
             if (SymbolHelper<TSymbol>.IsUtf8)
             {
-                _utf8Span = _utf8Buffer = _borrowedBuffer as byte[];
-                _utf16Span = _utf16Buffer = null;
+                _utf8Span = _utf8Buffer = (_borrowedBuffer as byte[])!;
+                _utf16Span = _utf16Buffer = null!;
             }
             else if (SymbolHelper<TSymbol>.IsUtf16)
             {
-                _utf16Span = _utf16Buffer = _borrowedBuffer as char[];
-                _utf8Span = _utf8Buffer = null;
+                _utf16Span = _utf16Buffer = (_borrowedBuffer as char[])!;
+                _utf8Span = _utf8Buffer = null!;
             }
             else
             {
@@ -122,13 +122,13 @@ using System.Text.Encodings.Web;
             _borrowedBuffer = _arrayPool.Rent(initialCapacity);
             if (SymbolHelper<TSymbol>.IsUtf8)
             {
-                _utf8Span = _utf8Buffer = _borrowedBuffer as byte[];
-                _utf16Span = _utf16Buffer = null;
+                _utf8Span = _utf8Buffer = (_borrowedBuffer as byte[])!;
+                _utf16Span = _utf16Buffer = null!;
             }
             else if (SymbolHelper<TSymbol>.IsUtf16)
             {
-                _utf16Span = _utf16Buffer = _borrowedBuffer as char[];
-                _utf8Span = _utf8Buffer = null;
+                _utf16Span = _utf16Buffer = (_borrowedBuffer as char[])!;
+                _utf8Span = _utf8Buffer = null!;
             }
             else
             {
@@ -139,7 +139,7 @@ using System.Text.Encodings.Web;
 
         public void Dispose()
         {
-            var toReturn = Interlocked.Exchange(ref _borrowedBuffer, null);
+            var toReturn = Interlocked.Exchange(ref _borrowedBuffer!, null);
             if (toReturn is null) { return; }
 
             var arrayPool = _arrayPool;
@@ -149,9 +149,9 @@ using System.Text.Encodings.Web;
                 _arrayPool = null;
             }
 
-            _utf8Buffer = null;
+            _utf8Buffer = null!;
             _utf8Span = default;
-            _utf16Buffer = null;
+            _utf16Buffer = null!;
             _utf16Span = default;
         }
 
@@ -204,21 +204,23 @@ using System.Text.Encodings.Web;
                 var useThreadLocal = _arrayPool is null ? true : false;
                 if (useThreadLocal) { _arrayPool = ArrayPool<TSymbol>.Shared; }
 
-                _borrowedBuffer = _arrayPool.Rent(newSize);
+                _borrowedBuffer = _arrayPool!.Rent(newSize);
                 if (SymbolHelper<TSymbol>.IsUtf8)
                 {
-                    _utf8Span = _utf8Buffer = _borrowedBuffer as byte[];
-                    _utf16Span = _utf16Buffer = null;
+                    _utf8Span = _utf8Buffer = (_borrowedBuffer as byte[])!;
+                    _utf16Span = _utf16Buffer = null!;
                 }
                 else if (SymbolHelper<TSymbol>.IsUtf16)
                 {
-                    _utf16Span = _utf16Buffer = _borrowedBuffer as char[];
-                    _utf8Span = _utf8Buffer = null;
+                    _utf16Span = _utf16Buffer = (_borrowedBuffer as char[])!;
+                    _utf8Span = _utf8Buffer = null!;
                 }
 
+#if !(NETSTANDARD2_0 || NETCOREAPP2_1)
                 Debug.Assert(oldBuffer.Length >= alreadyWritten);
                 Debug.Assert(_borrowedBuffer.Length >= alreadyWritten);
 
+#endif
                 var previousBuffer = oldBuffer.AsSpan(0, alreadyWritten);
                 previousBuffer.CopyTo(_borrowedBuffer);
                 //previousBuffer.Clear();
@@ -425,7 +427,7 @@ using System.Text.Encodings.Web;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void WriteName(string name, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
+        public void WriteName(string name, JsonEscapeHandling escapeHandling, JavaScriptEncoder? encoder = null)
         {
             if (SymbolHelper<TSymbol>.IsUtf8)
             {
@@ -442,7 +444,7 @@ using System.Text.Encodings.Web;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void WriteName(in ReadOnlySpan<char> name, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
+        public void WriteName(in ReadOnlySpan<char> name, JsonEscapeHandling escapeHandling, JavaScriptEncoder? encoder = null)
         {
             if (SymbolHelper<TSymbol>.IsUtf8)
             {
@@ -476,7 +478,7 @@ using System.Text.Encodings.Web;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void WriteString(string value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
+        public void WriteString(string value, JsonEscapeHandling escapeHandling, JavaScriptEncoder? encoder = null)
         {
             if (SymbolHelper<TSymbol>.IsUtf8)
             {
@@ -510,7 +512,7 @@ using System.Text.Encodings.Web;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void WriteString(in ReadOnlySpan<char> value, JsonEscapeHandling escapeHandling, JavaScriptEncoder encoder = null)
+        public void WriteString(in ReadOnlySpan<char> value, JsonEscapeHandling escapeHandling, JavaScriptEncoder? encoder = null)
         {
             if (SymbolHelper<TSymbol>.IsUtf8)
             {

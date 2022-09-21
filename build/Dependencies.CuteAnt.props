@@ -9,26 +9,31 @@
 
     <LinqOptimizerCSharpStrongNamePackageVersion>0.7.0-rtm-1912022030</LinqOptimizerCSharpStrongNamePackageVersion>
 
-    <NodaTimeSerializationJsonNetUnofficialPackageVersion>3.2.3-rtm-220530-01</NodaTimeSerializationJsonNetUnofficialPackageVersion>
-    <NodaTimeSerializationJsonSpanPackageVersion>3.2.3-rtm-220530-01</NodaTimeSerializationJsonSpanPackageVersion>
-    <NodaTimeSerializationMessagePackSpanPackageVersion>3.0.0-rtm-200429-01</NodaTimeSerializationMessagePackSpanPackageVersion>
-
     <!-- Database related packages -->
-    <CuteAntWingsPackageVersion>6.1.0-rtm-220618-01</CuteAntWingsPackageVersion>
-    <CuteAntWingsAbstractionsPackageVersion>6.1.0-rtm-220618-01</CuteAntWingsAbstractionsPackageVersion>
-    <CuteAntWingsMySqlPackageVersion>6.1.0-rtm-220618-01</CuteAntWingsMySqlPackageVersion>
-    <CuteAntWingsPostgreSQLPackageVersion>6.1.0-rtm-220618-01</CuteAntWingsPostgreSQLPackageVersion>
-    <CuteAntWingsSqlitePackageVersion>6.1.0-rtm-220618-01</CuteAntWingsSqlitePackageVersion>
-    <CuteAntWingsSqliteDataPackageVersion>6.1.0-rtm-220618-01</CuteAntWingsSqliteDataPackageVersion>
-    <CuteAntWingsSqlServerPackageVersion>6.1.0-rtm-220618-01</CuteAntWingsSqlServerPackageVersion>
-    <CuteAntWingsSqlServerDataPackageVersion>6.1.0-rtm-220618-01</CuteAntWingsSqlServerDataPackageVersion>
-    <CuteAntWingsSqlServerConvertersPackageVersion>6.1.0-rtm-220618-01</CuteAntWingsSqlServerConvertersPackageVersion>
+    <GraphQLParserUnofficialPackageVersion>8.1.0-rtm-220816-01</GraphQLParserUnofficialPackageVersion>
+    <GraphQLUnofficialPackageVersion>7.0.0-rtm-220826-01</GraphQLUnofficialPackageVersion>
+    <GraphQLConventionsUnofficialPackageVersion>7.0.0-rtm-220826-01</GraphQLConventionsUnofficialPackageVersion>
+    <GraphQLDataLoaderUnofficialPackageVersion>7.0.0-rtm-220826-01</GraphQLDataLoaderUnofficialPackageVersion>
+    <GraphQLMemoryCacheUnofficialPackageVersion>7.0.0-rtm-220826-01</GraphQLMemoryCacheUnofficialPackageVersion>
+    <GraphQLMicrosoftDIUnofficialPackageVersion>7.0.0-rtm-220826-01</GraphQLMicrosoftDIUnofficialPackageVersion>
+    <GraphQLSerializationPackageVersion>7.0.0-rtm-220826-01</GraphQLSerializationPackageVersion>
+    <GraphQLTransportsAspNetCoreUnofficialPackageVersion>7.0.0-rtm-220908-01</GraphQLTransportsAspNetCoreUnofficialPackageVersion>
+    <GraphQLUiAltairUnofficial>7.0.0-rtm-220826-01</GraphQLUiAltairUnofficial>
+    <GraphQLUiGraphiQLUnofficial>7.0.0-rtm-220826-01</GraphQLUiGraphiQLUnofficial>
+    <GraphQLUiPlaygroundUnofficial>7.0.0-rtm-220826-01</GraphQLUiPlaygroundUnofficial>
+    <GraphQLUiVoyagerUnofficial>7.0.0-rtm-220826-01</GraphQLUiVoyagerUnofficial>
+    <CuteAntKendoPackageVersion>1.0.0-rtm-220912-01</CuteAntKendoPackageVersion>
+    <CuteAntWingsPackageVersion>6.1.0-rtm-220801-01</CuteAntWingsPackageVersion>
+    <CuteAntWingsAbstractionsPackageVersion>6.1.0-rtm-220801-01</CuteAntWingsAbstractionsPackageVersion>
+    <CuteAntWingsMySqlPackageVersion>6.1.0-rtm-220801-01</CuteAntWingsMySqlPackageVersion>
+    <CuteAntWingsPostgreSQLPackageVersion>6.1.0-rtm-220801-01</CuteAntWingsPostgreSQLPackageVersion>
+    <CuteAntWingsSqlitePackageVersion>6.1.0-rtm-220801-01</CuteAntWingsSqlitePackageVersion>
+    <CuteAntWingsSqliteDataPackageVersion>6.1.0-rtm-220801-01</CuteAntWingsSqliteDataPackageVersion>
+    <CuteAntWingsSqlServerPackageVersion>6.1.0-rtm-220801-01</CuteAntWingsSqlServerPackageVersion>
+    <CuteAntWingsSqlServerDataPackageVersion>6.1.0-rtm-220801-01</CuteAntWingsSqlServerDataPackageVersion>
+    <CuteAntWingsSqlServerConvertersPackageVersion>6.1.0-rtm-220801-01</CuteAntWingsSqlServerConvertersPackageVersion>
 
-    <!-- H5 related packages -->
-    <FluidUnofficialPackageVersion>2.0.0-rc-220531-01</FluidUnofficialPackageVersion>
-    <EsprimaUnofficialPackageVersion>2.0.0-beta-220412-01</EsprimaUnofficialPackageVersion>
-    <JintUnofficialPackageVersion>3.0.0-beta-220412-01</JintUnofficialPackageVersion>
-
+    <!-- Network related packages -->
     <ReactiveStreamsSignedPackageVersion>1.4.2009.1814</ReactiveStreamsSignedPackageVersion>
     <ReactiveStreamsTCKSignedPackageVersion>1.4.2009.1814</ReactiveStreamsTCKSignedPackageVersion>
 
@@ -50,10 +55,14 @@
     <MessagePackImmutableCollectionUnofficialPackageVersion>1.1.0-rtm-200401-01</MessagePackImmutableCollectionUnofficialPackageVersion>
     <MessagePackLZ4UnofficialPackageVersion>1.1.0-rtm-200401-01</MessagePackLZ4UnofficialPackageVersion>
     <MessagePackUnofficialPackageVersion>1.1.0-rtm-200401-01</MessagePackUnofficialPackageVersion>
-    <ServiceStackTextUnofficialPackageVersion>6.0.3-rtm-220602-01</ServiceStackTextUnofficialPackageVersion>
+    <ServiceStackTextUnofficialPackageVersion>6.1.1-rtm-220629-01</ServiceStackTextUnofficialPackageVersion>
     <SpanJsonAnnotationsPackageVersion>3.2.3</SpanJsonAnnotationsPackageVersion>
-    <SpanJsonUnofficialPackageVersion>3.2.3-rtm-220530-01</SpanJsonUnofficialPackageVersion>
-    <SpanJsonExtensionsPackageVersion>3.2.3-rtm-220530-01</SpanJsonExtensionsPackageVersion>
-    <SpanJsonAspNetCoreFormatterUnofficialPackageVersion>3.2.3-rtm-220530-01</SpanJsonAspNetCoreFormatterUnofficialPackageVersion>
+    <SpanJsonUnofficialPackageVersion>3.2.3-rtm-220628-01</SpanJsonUnofficialPackageVersion>
+    <SpanJsonExtensionsPackageVersion>3.2.3-rtm-220628-01</SpanJsonExtensionsPackageVersion>
+    <SpanJsonAspNetCoreFormatterUnofficialPackageVersion>3.2.3-rtm-220628-01</SpanJsonAspNetCoreFormatterUnofficialPackageVersion>
+
+    <NodaTimeSerializationJsonNetUnofficialPackageVersion>3.2.3-rtm-220620-01</NodaTimeSerializationJsonNetUnofficialPackageVersion>
+    <NodaTimeSerializationJsonSpanPackageVersion>3.2.3-rtm-220620-01</NodaTimeSerializationJsonSpanPackageVersion>
+    <NodaTimeSerializationMessagePackSpanPackageVersion>3.0.0-rtm-200429-01</NodaTimeSerializationMessagePackSpanPackageVersion>
   </PropertyGroup>
 </Project>

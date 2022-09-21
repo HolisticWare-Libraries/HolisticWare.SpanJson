@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Reflection;
 using SpanJson.Document;
 using SpanJson.Dynamic;
 using SpanJson.Linq;
@@ -21,7 +19,7 @@ namespace SpanJson.Formatters
 
         JsonDynamicResolver() { }
 
-        public ICustomJsonFormatter GetFormatter(Type type)
+        public ICustomJsonFormatter? GetFormatter(Type type)
         {
             if (formatterMap.TryGetValue(type, out var formatter))
             {
@@ -114,7 +112,7 @@ namespace SpanJson.Formatters
         public static ICustomJsonFormatter GetDefaultOrCreate(Type type)
         {
             return (ICustomJsonFormatter)(type.GetField("Default", BindingFlags.Public | BindingFlags.Static)
-                                        ?.GetValue(null) ?? Activator.CreateInstance(type)); // leave the createinstance here, this helps with recursive types
+                                        ?.GetValue(null) ?? Activator.CreateInstance(type))!; // leave the createinstance here, this helps with recursive types
         }
 
         static readonly Dictionary<Type, ICustomJsonFormatter> formatterMap = new Dictionary<Type, ICustomJsonFormatter>()

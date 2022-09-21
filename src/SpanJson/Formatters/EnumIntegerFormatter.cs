@@ -28,7 +28,7 @@ namespace SpanJson.Formatters
             var underlyingType = Enum.GetUnderlyingType(typeof(T));
             var writerParameter = Expression.Parameter(typeof(JsonWriter<TSymbol>).MakeByRefType(), "writer");
             var valueParameter = Expression.Parameter(typeof(T), "value");
-            string methodName = null;
+            string? methodName = null;
             if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 methodName = $"WriteUtf8{underlyingType.Name}";
@@ -53,7 +53,7 @@ namespace SpanJson.Formatters
         {
             var underlyingType = Enum.GetUnderlyingType(typeof(T));
             var readerParameter = Expression.Parameter(typeof(JsonReader<TSymbol>).MakeByRefType(), "reader");
-            string methodName = null;
+            string? methodName = null;
             if (SymbolHelper<TSymbol>.IsUtf8)
             {
                 methodName = $"ReadUtf8{underlyingType.Name}";
@@ -83,7 +83,7 @@ namespace SpanJson.Formatters
     {
         public static readonly EnumIntegerFormatter<T> Default = new EnumIntegerFormatter<T>();
 
-        public object Arguments { get; set; }
+        public object? Arguments { get; set; }
 
         public T Deserialize(ref JsonReader<byte> reader, IJsonFormatterResolver<byte> resolver)
         {

@@ -23,8 +23,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
-using SpanJson.Document;
 
 namespace SpanJson.Linq
 {
@@ -37,11 +35,11 @@ namespace SpanJson.Linq
 
         /// <summary>Initializes a new instance of the <see cref="JRaw"/> class.</summary>
         /// <param name="rawJson">The raw json.</param>
-        public JRaw(string rawJson) : base(rawJson, JTokenType.Raw) { }
+        public JRaw(string? rawJson) : base(rawJson, JTokenType.Raw) { }
 
         /// <summary>Initializes a new instance of the <see cref="JRaw"/> class.</summary>
         /// <param name="utf8Json">The raw json.</param>
-        public JRaw(byte[] utf8Json) : base(utf8Json, JTokenType.Raw) { }
+        public JRaw(byte[]? utf8Json) : base(utf8Json, JTokenType.Raw) { }
 
         internal override JToken CloneToken() => new JRaw(this);
     }

@@ -19,10 +19,7 @@
 
 #endregion
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SpanJson.Linq
 {
@@ -64,7 +61,7 @@ namespace SpanJson.Linq
             {
                 if (_enumerable is null) { return JEnumerable<JToken>.Empty; }
 
-                return new JEnumerable<JToken>(_enumerable.Values<T, JToken>(key));
+                return new JEnumerable<JToken>(_enumerable.Values<T, JToken>(key)!);
             }
         }
 
@@ -79,7 +76,7 @@ namespace SpanJson.Linq
         /// <summary>Determines whether the specified <see cref="Object"/> is equal to this instance.</summary>
         /// <param name="obj">The <see cref="Object"/> to compare with this instance.</param>
         /// <returns><c>true</c> if the specified <see cref="Object"/> is equal to this instance; otherwise, <c>false</c>.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is JEnumerable<T> enumerable)
             {

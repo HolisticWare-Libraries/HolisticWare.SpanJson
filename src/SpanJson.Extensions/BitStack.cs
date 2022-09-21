@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -15,7 +14,7 @@ namespace SpanJson
 
         private const int DefaultInitialArraySize = 2;
 
-        private int[] _array;
+        private int[]? _array;
 
         // This ulong container represents a tiny stack to track the state during nested transitions.
         // The first bit represents the state of the current depth (1 == object, 0 == array).
@@ -124,7 +123,7 @@ namespace SpanJson
         {
             int index = _currentDepth - AllocationFreeMaxDepth - 1;
             Debug.Assert(_array is not null);
-            Debug.Assert(index >= 0, $"Get - Negative - index: {index}, arrayLength: {_array.Length}");
+            Debug.Assert(index >= 0, $"Get - Negative - index: {index}, arrayLength: {_array!.Length}");
 
             int elementIndex = Div32Rem(index, out int extraBits);
 
@@ -136,7 +135,7 @@ namespace SpanJson
         private void DoubleArray(int minSize)
         {
             Debug.Assert(_array is not null);
-            Debug.Assert(_array.Length < int.MaxValue / 2, $"Array too large - arrayLength: {_array.Length}");
+            Debug.Assert(_array!.Length < int.MaxValue / 2, $"Array too large - arrayLength: {_array.Length}");
             Debug.Assert(minSize >= 0 && minSize >= _array.Length);
 
             int nextDouble = Math.Max(minSize + 1, _array.Length * 2);

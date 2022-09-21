@@ -23,7 +23,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
 using System.Globalization;
 
 namespace SpanJson.Linq
@@ -47,7 +46,7 @@ namespace SpanJson.Linq
         /// <summary>Creates a <see cref="JValue"/> comment with the given value.</summary>
         /// <param name="value">The value.</param>
         /// <returns>A <see cref="JValue"/> comment with the given value.</returns>
-        public static JValue CreateComment(string value)
+        public static JValue CreateComment(string? value)
         {
             return new JValue(value, JTokenType.Comment);
         }
@@ -88,7 +87,7 @@ namespace SpanJson.Linq
         {
             if (_value is null) { return string.Empty; }
 
-            return _value.ToString();
+            return _value.ToString()!;
         }
 
         /// <summary>Returns a <see cref="String"/> that represents this instance.</summary>
@@ -102,7 +101,7 @@ namespace SpanJson.Linq
         /// <summary>Returns a <see cref="String"/> that represents this instance.</summary>
         /// <param name="formatProvider">The format provider.</param>
         /// <returns>A <see cref="String"/> that represents this instance.</returns>
-        public string ToString(IFormatProvider formatProvider)
+        public string ToString(IFormatProvider? formatProvider)
         {
             return ToString(null, formatProvider);
         }
@@ -111,7 +110,7 @@ namespace SpanJson.Linq
         /// <param name="format">The format.</param>
         /// <param name="formatProvider">The format provider.</param>
         /// <returns>A <see cref="String"/> that represents this instance.</returns>
-        public string ToString(string format, IFormatProvider formatProvider)
+        public string ToString(string? format, IFormatProvider? formatProvider)
         {
             if (_value is null)
             {
@@ -124,7 +123,7 @@ namespace SpanJson.Linq
             }
             else
             {
-                return _value.ToString();
+                return _value.ToString()!;
             }
         }
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using SpanJson.Document;
+﻿using SpanJson.Document;
 using SpanJson.Internal;
 
 namespace SpanJson.Formatters

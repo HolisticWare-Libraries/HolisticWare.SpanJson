@@ -13,7 +13,7 @@ namespace SpanJson.Internal
 
         internal static string GetResourceString(string resourceKey, string defaultString)
         {
-            string resourceString = null;
+            string? resourceString = null;
             try { resourceString = ResourceManager.GetString(resourceKey, null); }
             catch (MissingManifestResourceException) { }
 
@@ -22,7 +22,7 @@ namespace SpanJson.Internal
                 return defaultString;
             }
 
-            return resourceString;
+            return resourceString!;
         }
 
         internal static string Format(string resourceFormat, params object[] args)

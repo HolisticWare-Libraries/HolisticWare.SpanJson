@@ -4,9 +4,9 @@
     {
         public static readonly Base64StringFormatter Default = new Base64StringFormatter();
 
-        public object Arguments { get; set; }
+        public object? Arguments { get; set; }
 
-        public byte[] Deserialize(ref JsonReader<byte> reader, IJsonFormatterResolver<byte> resolver)
+        public byte[]? Deserialize(ref JsonReader<byte> reader, IJsonFormatterResolver<byte> resolver)
         {
             var token = reader.ReadUtf8NextToken();
             if (token == JsonTokenType.String)
@@ -19,7 +19,7 @@
             }
         }
 
-        public void Serialize(ref JsonWriter<byte> writer, byte[] value, IJsonFormatterResolver<byte> resolver)
+        public void Serialize(ref JsonWriter<byte> writer, byte[]? value, IJsonFormatterResolver<byte> resolver)
         {
             if (value is null) { writer.WriteUtf8Null(); return; }
 
@@ -27,7 +27,7 @@
         }
 
 
-        public byte[] Deserialize(ref JsonReader<char> reader, IJsonFormatterResolver<char> resolver)
+        public byte[]? Deserialize(ref JsonReader<char> reader, IJsonFormatterResolver<char> resolver)
         {
             var token = reader.ReadUtf16NextToken();
             if (token == JsonTokenType.String)
@@ -40,7 +40,7 @@
             }
         }
 
-        public void Serialize(ref JsonWriter<char> writer, byte[] value, IJsonFormatterResolver<char> resolver)
+        public void Serialize(ref JsonWriter<char> writer, byte[]? value, IJsonFormatterResolver<char> resolver)
         {
             if (value is null) { writer.WriteUtf16Null(); return; }
 

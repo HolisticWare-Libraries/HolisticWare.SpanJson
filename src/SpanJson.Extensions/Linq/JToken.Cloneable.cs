@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SpanJson.Linq
+﻿namespace SpanJson.Linq
 {
     partial class JToken : ICloneable
     {
@@ -22,7 +20,7 @@ namespace SpanJson.Linq
         /// <param name="t1">The first <see cref="JToken"/> to compare.</param>
         /// <param name="t2">The second <see cref="JToken"/> to compare.</param>
         /// <returns><c>true</c> if the tokens are equal; otherwise <c>false</c>.</returns>
-        public static bool DeepEquals(JToken t1, JToken t2)
+        public static bool DeepEquals(JToken? t1, JToken? t2)
         {
             return (t1 == t2 || (t1 is not null && t2 is not null && t1.DeepEquals(t2)));
         }

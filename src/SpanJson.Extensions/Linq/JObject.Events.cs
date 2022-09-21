@@ -31,10 +31,10 @@ namespace SpanJson.Linq
     partial class JObject : INotifyPropertyChanged, INotifyPropertyChanging
     {
         /// <summary>Occurs when a property value changes.</summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>Occurs when a property value is changing.</summary>
-        public event PropertyChangingEventHandler PropertyChanging;
+        public event PropertyChangingEventHandler? PropertyChanging;
 
         /// <summary>Raises the <see cref="PropertyChanged"/> event with the provided arguments.</summary>
         /// <param name="propertyName">Name of the property.</param>

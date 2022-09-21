@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using CuteAnt.Pool;
 using Newtonsoft.Json;
 using SpanJson.Resolvers;
@@ -31,8 +29,8 @@ namespace SpanJson.Serialization
 
         private readonly NJsonSerializerSettings _serializerSettings;
         private readonly NJsonSerializerSettings _deserializerSettings;
-        private ObjectPool<NJsonSerializer> _serializerPool;
-        private ObjectPool<NJsonSerializer> _deserializerPool;
+        private ObjectPool<NJsonSerializer>? _serializerPool;
+        private ObjectPool<NJsonSerializer>? _deserializerPool;
 
         public JsonComplexSerializer()
         {

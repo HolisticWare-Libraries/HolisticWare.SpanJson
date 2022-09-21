@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace SpanJson
 {
@@ -9,7 +8,7 @@ namespace SpanJson
     public class JsonException : Exception
     {
         // Allow the message to mutate to avoid re-throwing and losing the StackTrace to an inner exception.
-        private string _message;
+        private string? _message;
 
         /// <summary>Creates a new exception object to relay error information to the user.</summary>
         /// <param name="message">The context specific error message.</param>
@@ -18,7 +17,7 @@ namespace SpanJson
         /// <param name="path">The path where the invalid JSON was encountered.</param>
         /// <param name="innerException">The exception that caused the current exception.</param>
         /// <remarks>Note that the <paramref name="bytePositionInLine"/> counts the number of bytes (i.e. UTF-8 code units) and not characters or scalars.</remarks>
-        public JsonException(string message, string path, long? lineNumber, long? bytePositionInLine, Exception innerException) : base(message, innerException)
+        public JsonException(string? message, string? path, long? lineNumber, long? bytePositionInLine, Exception? innerException) : base(message, innerException)
         {
             _message = message;
             LineNumber = lineNumber;
@@ -32,7 +31,7 @@ namespace SpanJson
         /// <param name="lineNumber">The line number at which the invalid JSON was encountered (starting at 0) when deserializing.</param>
         /// <param name="bytePositionInLine">The byte count within the current line where the invalid JSON was encountered (starting at 0).</param>
         /// <remarks>Note that the <paramref name="bytePositionInLine"/> counts the number of bytes (i.e. UTF-8 code units) and not characters or scalars.</remarks>
-        public JsonException(string message, string path, long? lineNumber, long? bytePositionInLine) : base(message)
+        public JsonException(string? message, string? path, long? lineNumber, long? bytePositionInLine) : base(message)
         {
             _message = message;
             LineNumber = lineNumber;
@@ -43,14 +42,14 @@ namespace SpanJson
         /// <summary>Creates a new exception object to relay error information to the user.</summary>
         /// <param name="message">The context specific error message.</param>
         /// <param name="innerException">The exception that caused the current exception.</param>
-        public JsonException(string message, Exception innerException) : base(message, innerException)
+        public JsonException(string? message, Exception? innerException) : base(message, innerException)
         {
             _message = message;
         }
 
         /// <summary>Creates a new exception object to relay error information to the user.</summary>
         /// <param name="message">The context specific error message.</param>
-        public JsonException(string message) : base(message)
+        public JsonException(string? message) : base(message)
         {
             _message = message;
         }
@@ -89,20 +88,20 @@ namespace SpanJson
         public long? BytePositionInLine { get; internal set; }
 
         /// <summary>The path within the JSON where the exception was encountered.</summary>
-        public string Path { get; internal set; }
+        public string? Path { get; internal set; }
 
         /// <summary>Gets a message that describes the current exception.</summary>
         public override string Message => _message ?? base.Message;
 
-        internal void SetMessage(string message) => _message = message;
+        internal void SetMessage(string? message) => _message = message;
     }
 
     // This class exists because the serializer needs to catch reader-originated exceptions in order to throw JsonException which has Path information.
     [Serializable]
     public sealed class JsonReaderException : JsonException
     {
-        public JsonReaderException(string message) : base(message) { }
+        public JsonReaderException(string? message) : base(message) { }
 
-        public JsonReaderException(string message, long lineNumber, long bytePositionInLine) : base(message, path: null, lineNumber, bytePositionInLine) { }
+        public JsonReaderException(string? message, long lineNumber, long bytePositionInLine) : base(message, path: null, lineNumber, bytePositionInLine) { }
     }
 }

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using SpanJson.Internal;
 using SpanJson.Linq;
@@ -89,6 +87,7 @@ namespace SpanJson
             return new ArgumentException("Could not cast or convert from {0} to {1}.".FormatWith(CultureInfo.InvariantCulture, initialType?.ToString() ?? "{null}", targetType));
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException_Cast<TTo>(JToken value)
         {
@@ -113,6 +112,7 @@ namespace SpanJson
             return new ArgumentException("Could not determine JSON object type for type {0}.".FormatWith(CultureInfo.InvariantCulture, value.GetType()));
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException_ArrayIndex()
         {
@@ -124,6 +124,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException_ExpectedJsonTokens()
         {
@@ -135,6 +136,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException_The_number_of_elements()
         {
@@ -146,6 +148,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException_The_specified_item_does_not_exist_in_this_KeyedCollection()
         {
@@ -160,10 +163,11 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static ArgumentException GetArgumentException_Could_not_convert(Type objectType, JToken token, Exception ex)
         {
-            Type enumType = objectType.IsEnum ? objectType : Nullable.GetUnderlyingType(objectType);
-            return new ArgumentException("Could not convert '{0}' to {1}.".FormatWith(CultureInfo.InvariantCulture, (string)token, enumType.Name), ex);
+            Type enumType = objectType.IsEnum ? objectType : Nullable.GetUnderlyingType(objectType)!;
+            return new ArgumentException("Could not convert '{0}' to {1}.".FormatWith(CultureInfo.InvariantCulture, (string?)token, enumType.Name), ex);
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException_CanNotAdd(JToken o)
         {
@@ -174,6 +178,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException_CanNotAdd(JToken o, JContainer container)
         {
@@ -184,6 +189,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException_CanNotAddProperty(JProperty newProperty)
         {
@@ -194,6 +200,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException_JsonDocumentDoesNotSupportComments(ExceptionArgument paramName)
         {
@@ -204,6 +211,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException_Object_serialized_to_JArray_instance_expected(JTokenType tokenType)
         {
@@ -214,6 +222,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException_Object_serialized_to_JObject_instance_expected(JTokenType tokenType)
         {
@@ -231,9 +240,10 @@ namespace SpanJson
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static ArgumentOutOfRangeException GetArgumentOutOfRangeException_UnexpectedValueType(JTokenType valueType)
         {
-            return MiscellaneousUtils.CreateArgumentOutOfRangeException(nameof(valueType), valueType, "Unexpected value type: {0}".FormatWith(CultureInfo.InvariantCulture, valueType)); ;
+            return MiscellaneousUtils.CreateArgumentOutOfRangeException(nameof(valueType), valueType, "Unexpected value type: {0}".FormatWith(CultureInfo.InvariantCulture, valueType));
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException_Unexpected_merge_array_handling_when_merging_JSON()
         {
@@ -245,6 +255,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException_Index_must_be_within_the_bounds_of_the_List(ExceptionArgument argument)
         {
@@ -255,6 +266,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException_Index()
         {
@@ -266,6 +278,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException_ArrayIndex()
         {
@@ -277,6 +290,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException_Index_is_equal_to_or_greater_than_Count()
         {
@@ -288,6 +302,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException_JsonDocumentDoesNotSupportComments(ExceptionArgument argument)
         {
@@ -324,6 +339,7 @@ namespace SpanJson
             return new InvalidOperationException("Can not convert from {0} to {1}.".FormatWith(CultureInfo.InvariantCulture, initialValue.GetType(), targetType));
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowInvalidOperationException_The_parent_is_missing()
         {
@@ -335,6 +351,19 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        internal static void ThrowInvalidOperationException_Unable_to_find_default_constructor_for(Type type)
+        {
+            throw GetInvalidOperationException();
+
+            InvalidOperationException GetInvalidOperationException()
+            {
+                return new InvalidOperationException("Unable to find default constructor for " + type.FullName);
+            }
+        }
+
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowInvalidOperationException_Cannot_change_during_a_collection_change_event(JContainer container)
         {
@@ -375,6 +404,7 @@ namespace SpanJson
             return new FormatException();
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowFormatException_Guid()
         {
@@ -444,6 +474,7 @@ namespace SpanJson
         {
             return new JsonException("Path ended with open indexer.");
         }
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowJsonException_Path_ended_with_open_indexer()
         {
@@ -480,12 +511,14 @@ namespace SpanJson
             return new JsonException(message);
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowJsonException(string message)
         {
             throw GetJsonException(message);
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowJsonException_Cannot_have_multiple_values_JProperty()
         {
@@ -497,6 +530,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowJsonException_Path_returned_multiple_tokens()
         {
@@ -508,6 +542,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowJsonException_Step_cannot_be_zero()
         {
@@ -519,6 +554,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowJsonException_Array_index_expected()
         {
@@ -530,12 +566,14 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowJsonException_Path_ended_with_open_query()
         {
             throw GetJsonException_Path_ended_with_open_query();
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowJsonException_Unexpected_end_while_parsing_path()
         {
@@ -547,6 +585,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowJsonException_Index_not_valid_on(JToken token)
         {
@@ -557,6 +596,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowJsonException_Array_slice_is_not_valid_on(JToken token)
         {
@@ -567,6 +607,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowJsonException_Array_slice_of_to_returned_to_results(int? start, int? end)
         {
@@ -579,6 +620,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowJsonException_Property_does_not_exist_on_JObject(string name)
         {
@@ -589,8 +631,9 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
-        internal static void ThrowJsonException_Property_not_valid_on(string name, JToken token)
+        internal static void ThrowJsonException_Property_not_valid_on(string? name, JToken token)
         {
             throw GetJsonException();
             JsonException GetJsonException()
@@ -599,6 +642,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowJsonException_Property_not_valid_on(List<string> names, JToken token)
         {
@@ -609,6 +653,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowJsonException_Index_outside_the_bounds_of_JArray(int index)
         {
@@ -619,6 +664,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowJsonException_Index_not_valid_on(int index, JToken token)
         {
@@ -641,6 +687,7 @@ namespace SpanJson
             return new JsonException(string.Format(CultureInfo.InvariantCulture, "Could not determine new value to add to '{0}'.", container.GetType()));
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowJsonException_Unexpected_character_while_parsing_path(in ReadOnlySpan<char> expression, int lastCharacterIndex)
         {
@@ -653,6 +700,7 @@ namespace SpanJson
             return new JsonException("Unexpected character while parsing path: " + expression[lastCharacterIndex]);
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowJsonException_Unexpected_character_following_indexer(char currentChar)
         {
@@ -663,6 +711,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowJsonException_Unexpected_character_while_parsing_path_indexer(char currentCharacter)
         {
@@ -673,6 +722,7 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowJsonException_Unexpected_character_while_parsing_path_indexer(in ReadOnlySpan<char> expression, int currentIndex)
         {

@@ -6,14 +6,14 @@ namespace SpanJson.Formatters
     {
         public new static readonly JArrayFormatter Default = new JArrayFormatter();
 
-        public override JArray Deserialize(ref JsonReader<byte> reader, IJsonFormatterResolver<byte> resolver)
+        public override JArray? Deserialize(ref JsonReader<byte> reader, IJsonFormatterResolver<byte> resolver)
         {
             if (reader.ReadUtf8IsNull()) { return null; }
 
             return JArray.Load(ref reader);
         }
 
-        public override JArray Deserialize(ref JsonReader<char> reader, IJsonFormatterResolver<char> resolver)
+        public override JArray? Deserialize(ref JsonReader<char> reader, IJsonFormatterResolver<char> resolver)
         {
             if (reader.ReadUtf16IsNull()) { return null; }
 
@@ -26,7 +26,7 @@ namespace SpanJson.Formatters
     {
         public static readonly JArrayFormatter<TArray> Default = new JArrayFormatter<TArray>();
 
-        public override void Serialize(ref JsonWriter<byte> writer, TArray value, IJsonFormatterResolver<byte> resolver)
+        public override void Serialize(ref JsonWriter<byte> writer, TArray? value, IJsonFormatterResolver<byte> resolver)
         {
             if (value is null) { writer.WriteUtf8Null(); return; }
 
@@ -49,7 +49,7 @@ namespace SpanJson.Formatters
             writer.WriteUtf8EndArray();
         }
 
-        public override void Serialize(ref JsonWriter<char> writer, TArray value, IJsonFormatterResolver<char> resolver)
+        public override void Serialize(ref JsonWriter<char> writer, TArray? value, IJsonFormatterResolver<char> resolver)
         {
             if (value is null) { writer.WriteUtf16Null(); return; }
 

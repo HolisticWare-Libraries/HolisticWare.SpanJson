@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -112,7 +111,7 @@ namespace SpanJson
         {
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= propertyName.Length);
 
-            char[] propertyArray = null;
+            char[]? propertyArray = null;
 
             if (firstEscapeIndexProp != -1)
             {
@@ -271,7 +270,7 @@ namespace SpanJson
         {
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= utf8PropertyName.Length);
 
-            byte[] propertyArray = null;
+            byte[]? propertyArray = null;
 
             if (firstEscapeIndexProp != -1)
             {
@@ -903,7 +902,7 @@ namespace SpanJson
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= utf8Value.Length);
             Debug.Assert(firstEscapeIndex >= 0 && firstEscapeIndex < utf8Value.Length);
 
-            byte[] valueArray = null;
+            byte[]? valueArray = null;
 
             int length = EscapingHelper.GetMaxEscapedLength(utf8Value.Length, firstEscapeIndex);
 
@@ -933,7 +932,7 @@ namespace SpanJson
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= value.Length);
             Debug.Assert(firstEscapeIndex >= 0 && firstEscapeIndex < value.Length);
 
-            char[] valueArray = null;
+            char[]? valueArray = null;
 
             int length = EscapingHelper.GetMaxEscapedLength(value.Length, firstEscapeIndex);
 
@@ -963,7 +962,7 @@ namespace SpanJson
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= propertyName.Length);
             Debug.Assert(firstEscapeIndex >= 0 && firstEscapeIndex < propertyName.Length);
 
-            char[] propertyArray = null;
+            char[]? propertyArray = null;
 
             int length = EscapingHelper.GetMaxEscapedLength(propertyName.Length, firstEscapeIndex);
 
@@ -993,7 +992,7 @@ namespace SpanJson
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= utf8PropertyName.Length);
             Debug.Assert(firstEscapeIndex >= 0 && firstEscapeIndex < utf8PropertyName.Length);
 
-            byte[] propertyArray = null;
+            byte[]? propertyArray = null;
 
             int length = EscapingHelper.GetMaxEscapedLength(utf8PropertyName.Length, firstEscapeIndex);
 
@@ -1099,8 +1098,8 @@ namespace SpanJson
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= value.Length);
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= propertyName.Length);
 
-            char[] valueArray = null;
-            char[] propertyArray = null;
+            char[]? valueArray = null;
+            char[]? propertyArray = null;
 
             ReadOnlySpan<char> escapedValue;
             if (firstEscapeIndexVal != -1)
@@ -1175,8 +1174,8 @@ namespace SpanJson
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= utf8Value.Length);
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= utf8PropertyName.Length);
 
-            byte[] valueArray = null;
-            byte[] propertyArray = null;
+            byte[]? valueArray = null;
+            byte[]? propertyArray = null;
 
             ReadOnlySpan<byte> escapedValue;
             if (firstEscapeIndexVal != -1)
@@ -1251,8 +1250,8 @@ namespace SpanJson
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= utf8Value.Length);
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= propertyName.Length);
 
-            byte[] valueArray = null;
-            char[] propertyArray = null;
+            byte[]? valueArray = null;
+            char[]? propertyArray = null;
 
             ReadOnlySpan<byte> escapedValue;
             if (firstEscapeIndexVal != -1)
@@ -1327,8 +1326,8 @@ namespace SpanJson
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= value.Length);
             Debug.Assert(int.MaxValue / JsonSharedConstant.MaxExpansionFactorWhileEscaping >= utf8PropertyName.Length);
 
-            char[] valueArray = null;
-            byte[] propertyArray = null;
+            char[]? valueArray = null;
+            byte[]? propertyArray = null;
 
             ReadOnlySpan<char> escapedValue;
             if (firstEscapeIndexVal != -1)

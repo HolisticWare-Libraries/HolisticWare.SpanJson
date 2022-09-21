@@ -10,7 +10,7 @@ namespace NodaTime.Serialization.JsonNet
 {
     /// <summary>
     /// Json.NET converter for <see cref="Interval"/>.
-    /// </summary>   
+    /// </summary>
     internal sealed class NodaIsoIntervalConverter : NodaConverterBase<Interval>
     {
         protected override Interval ReadJsonImpl(JsonReader reader, JsonSerializer serializer)

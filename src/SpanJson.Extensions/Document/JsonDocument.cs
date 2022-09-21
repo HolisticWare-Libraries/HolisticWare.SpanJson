@@ -1,13 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Threading;
 using CuteAnt;
 using SpanJson.Internal;
 
@@ -28,13 +27,13 @@ namespace SpanJson.Document
         private ReadOnlyMemory<byte> _utf8Json;
         private MetadataDb _parsedData;
 
-        private byte[] _extraRentedArrayPoolBytes;
+        private byte[]? _extraRentedArrayPoolBytes;
         private bool _hasExtraRentedArrayPoolBytes;
 
-        private PooledByteBufferWriter _extraPooledByteBufferWriter;
+        private PooledByteBufferWriter? _extraPooledByteBufferWriter;
         private bool _hasExtraPooledByteBufferWriter;
 
-        private (int, string) _lastIndexAndString = (-1, null);
+        private (int, string?) _lastIndexAndString = (-1, null);
 
         internal bool IsDisposable { get; }
 
@@ -82,8 +81,8 @@ namespace SpanJson.Document
         private JsonDocument(
             in ReadOnlyMemory<byte> utf8Json,
             MetadataDb parsedData,
-            byte[] extraRentedArrayPoolBytes = null,
-            PooledByteBufferWriter extraPooledByteBufferWriter = null,
+            byte[]? extraRentedArrayPoolBytes = null,
+            PooledByteBufferWriter? extraPooledByteBufferWriter = null,
             bool isDisposable = true)
         {
             Debug.Assert(!utf8Json.IsEmpty);
@@ -125,7 +124,7 @@ namespace SpanJson.Document
 
             if (_hasExtraRentedArrayPoolBytes)
             {
-                byte[] extraRentedBytes = Interlocked.Exchange(ref _extraRentedArrayPoolBytes, null);
+                byte[]? extraRentedBytes = Interlocked.Exchange(ref _extraRentedArrayPoolBytes, null);
 
                 if (extraRentedBytes != null)
                 {
@@ -137,7 +136,7 @@ namespace SpanJson.Document
             }
             else if (_hasExtraPooledByteBufferWriter)
             {
-                PooledByteBufferWriter extraBufferWriter = Interlocked.Exchange(ref _extraPooledByteBufferWriter, null);
+                PooledByteBufferWriter? extraBufferWriter = Interlocked.Exchange(ref _extraPooledByteBufferWriter, null);
                 extraBufferWriter?.Dispose();
             }
         }
@@ -309,11 +308,11 @@ namespace SpanJson.Document
             return _utf8Json.Slice(start, end - start);
         }
 
-        internal string GetString(int index, JsonTokenType expectedType)
+        internal string? GetString(int index, JsonTokenType expectedType)
         {
             CheckNotDisposed();
 
-            (int lastIdx, string lastString) = _lastIndexAndString;
+            (int lastIdx, string? lastString) = _lastIndexAndString;
 
             if (lastIdx == index)
             {
@@ -356,14 +355,14 @@ namespace SpanJson.Document
 
             int matchIndex = isPropertyName ? index - DbRow.Size : index;
 
-            (int lastIdx, string lastString) = _lastIndexAndString;
+            (int lastIdx, string? lastString) = _lastIndexAndString;
 
             if (lastIdx == matchIndex)
             {
                 return otherText.SequenceEqual(lastString.AsSpan());
             }
 
-            byte[] otherUtf8TextArray = null;
+            byte[]? otherUtf8TextArray = null;
 
             int length = checked(otherText.Length * JsonSharedConstant.MaxExpansionFactorWhileTranscoding);
             Span<byte> otherUtf8Text = (uint)length <= JsonSharedConstant.StackallocByteThresholdU ?
@@ -439,10 +438,10 @@ namespace SpanJson.Document
         internal string GetNameOfPropertyValue(int index)
         {
             // The property name is one row before the property value
-            return GetString(index - DbRow.Size, JsonTokenType.PropertyName);
+            return GetString(index - DbRow.Size, JsonTokenType.PropertyName)!;
         }
 
-        internal bool TryGetValue(int index, out byte[] value)
+        internal bool TryGetValue(int index, [MaybeNullWhen(false)] out byte[] value)
         {
             CheckNotDisposed();
 
@@ -1202,7 +1201,7 @@ namespace SpanJson.Document
             throw GetObjectDisposedException();
             static ObjectDisposedException GetObjectDisposedException()
             {
-                return new ObjectDisposedException(nameof(JsonDocument)); ;
+                return new ObjectDisposedException(nameof(JsonDocument));
             }
         }
 

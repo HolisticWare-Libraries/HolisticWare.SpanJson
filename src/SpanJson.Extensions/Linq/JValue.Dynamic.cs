@@ -23,7 +23,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Globalization;
 using System.Linq.Expressions;
@@ -43,7 +43,7 @@ namespace SpanJson.Linq
             return new DynamicProxyMetaObject<JValue>(parameter, this, new JValueDynamicProxy());
         }
 
-        private static bool Operation(ExpressionType operation, object objA, object objB, out object result)
+        private static bool Operation(ExpressionType operation, object? objA, object? objB, out object? result)
         {
             if (objA is string || objB is string)
             {
@@ -200,7 +200,7 @@ namespace SpanJson.Linq
 
         private class JValueDynamicProxy : DynamicProxy<JValue>
         {
-            public override bool TryConvert(JValue instance, ConvertBinder binder, out object result)
+            public override bool TryConvert(JValue instance, ConvertBinder binder, [NotNullWhen(true)] out object? result)
             {
                 if (binder.Type == typeof(JValue) || binder.Type == typeof(JToken))
                 {
@@ -208,7 +208,7 @@ namespace SpanJson.Linq
                     return true;
                 }
 
-                object value = instance.Value;
+                object? value = instance.Value;
 
                 if (value is null)
                 {
@@ -220,9 +220,9 @@ namespace SpanJson.Linq
                 return true;
             }
 
-            public override bool TryBinaryOperation(JValue instance, BinaryOperationBinder binder, object arg, out object result)
+            public override bool TryBinaryOperation(JValue instance, BinaryOperationBinder binder, object arg, [NotNullWhen(true)] out object? result)
             {
-                object compareValue = arg is JValue value ? value.Value : arg;
+                object? compareValue = arg is JValue value ? value.Value : arg;
 
                 switch (binder.Operation)
                 {

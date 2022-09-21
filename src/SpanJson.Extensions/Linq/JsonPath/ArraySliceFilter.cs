@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace SpanJson.Linq.JsonPath
+﻿namespace SpanJson.Linq.JsonPath
 {
     internal class ArraySliceFilter : PathFilter
     {
@@ -9,7 +6,7 @@ namespace SpanJson.Linq.JsonPath
         public int? End { get; set; }
         public int? Step { get; set; }
 
-        public override IEnumerable<JToken> ExecuteFilter(JToken root, IEnumerable<JToken> current, JsonSelectSettings settings)
+        public override IEnumerable<JToken> ExecuteFilter(JToken root, IEnumerable<JToken> current, JsonSelectSettings? settings)
         {
             var step = Step;
             if (step.HasValue && 0u >= (uint)step.Value) { ThrowHelper2.ThrowJsonException_Step_cannot_be_zero(); }

@@ -20,7 +20,7 @@ namespace SpanJson.Formatters
             var count = 0;
             while (!reader.TryReadIsEndArrayOrValueSeparator(ref count)) // count is already preincremented, as it counts the separators
             {
-                values.Add(ArrayFormatter<T, TSymbol, TResolver>.Default.Deserialize(ref reader, resolver));
+                values.Add(ArrayFormatter<T, TSymbol, TResolver>.Default.Deserialize(ref reader, resolver)!);
             }
 
             if (0u >= (uint)values.Count)
@@ -46,7 +46,7 @@ namespace SpanJson.Formatters
             return result;
         }
 
-        public void Serialize(ref JsonWriter<TSymbol> writer, T[,] value, IJsonFormatterResolver<TSymbol> resolver)
+        public void Serialize(ref JsonWriter<TSymbol> writer, T[,]? value, IJsonFormatterResolver<TSymbol> resolver)
         {
             if (value is null)
             {

@@ -15,7 +15,7 @@ namespace SpanJson.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static HashSet<TSource> ToHashSet<TSource>(this IEnumerable<TSource> source) => source.ToHashSet(comparer: null);
 
-        internal static HashSet<TSource> ToHashSet<TSource>(this IEnumerable<TSource> source, IEqualityComparer<TSource> comparer)
+        internal static HashSet<TSource> ToHashSet<TSource>(this IEnumerable<TSource> source, IEqualityComparer<TSource>? comparer)
         {
             if (source is null)
             {
@@ -183,7 +183,7 @@ namespace SpanJson.Internal
         /// <summary>
         /// Emulates Dictionary.TryAdd on netstandard.
         /// </summary>
-        public static bool TryAdd<TKey, TValue>(Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
+        public static bool TryAdd<TKey, TValue>(Dictionary<TKey, TValue> dictionary, TKey key, TValue value) where TKey : notnull
         {
 #if NETFRAMEWORK || NETSTANDARD2_0
             if (!dictionary.ContainsKey(key))

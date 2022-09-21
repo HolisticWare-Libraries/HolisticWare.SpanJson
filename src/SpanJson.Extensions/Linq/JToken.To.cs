@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using CuteAnt;
@@ -21,7 +21,7 @@ namespace SpanJson.Linq
         /// <typeparam name="T">The object type that the token will be deserialized to.</typeparam>
         /// <returns>The new object created from the JSON value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T ToObject<T>()
+        public T? ToObject<T>()
         {
             return ToObject<T, IncludeNullsOriginalCaseResolver<byte>, IncludeNullsOriginalCaseResolver<char>>();
         }
@@ -31,11 +31,11 @@ namespace SpanJson.Linq
         /// <typeparam name="TUtf8Resolver">The Utf8 resolver.</typeparam>
         /// <typeparam name="TUtf16Resolver">The Utf16 resolver.</typeparam>
         /// <returns>The new object created from the JSON value.</returns>
-        public T ToObject<T, TUtf8Resolver, TUtf16Resolver>()
+        public T? ToObject<T, TUtf8Resolver, TUtf16Resolver>()
             where TUtf8Resolver : IJsonFormatterResolver<byte, TUtf8Resolver>, new()
             where TUtf16Resolver : IJsonFormatterResolver<char, TUtf16Resolver>, new()
         {
-            if (TryConvertOrCast(typeof(T), out object result)) { return (T)result; }
+            if (TryConvertOrCast(typeof(T), out var result)) { return (T?)result; }
 
             return ToObjectInternal<T, TUtf8Resolver, TUtf16Resolver>();
         }
@@ -43,7 +43,7 @@ namespace SpanJson.Linq
         /// <summary>Creates an instance of the specified .NET type from the <see cref="JToken"/>.</summary>
         /// <returns>The new object created from the JSON value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public object ToObject(Type objectType)
+        public object? ToObject(Type objectType)
         {
             return ToObject<IncludeNullsOriginalCaseResolver<byte>, IncludeNullsOriginalCaseResolver<char>>(objectType);
         }
@@ -53,13 +53,13 @@ namespace SpanJson.Linq
         /// <typeparam name="TUtf16Resolver">The Utf16 resolver.</typeparam>
         /// <param name="objectType">The object type that the token will be deserialized to.</param>
         /// <returns>The new object created from the JSON value.</returns>
-        public object ToObject<TUtf8Resolver, TUtf16Resolver>(Type objectType)
+        public object? ToObject<TUtf8Resolver, TUtf16Resolver>(Type objectType)
             where TUtf8Resolver : IJsonFormatterResolver<byte, TUtf8Resolver>, new()
             where TUtf16Resolver : IJsonFormatterResolver<char, TUtf16Resolver>, new()
         {
             if (objectType is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.objectType); }
 
-            if (TryConvertOrCast(objectType, out object result)) { return result; }
+            if (TryConvertOrCast(objectType, out var result)) { return result; }
 
             return ToObjectInternal<TUtf8Resolver, TUtf16Resolver>(objectType);
         }
@@ -67,9 +67,9 @@ namespace SpanJson.Linq
         /// <summary>Creates an instance of the specified .NET type from the <see cref="JToken"/>.</summary>
         /// <typeparam name="T">The object type that the token will be deserialized to.</typeparam>
         /// <returns>The new object created from the JSON value.</returns>
-        public T ToPolymorphicObject<T>()
+        public T? ToPolymorphicObject<T>()
         {
-            if (TryConvertOrCast(typeof(T), out object result)) { return (T)result; }
+            if (TryConvertOrCast(typeof(T), out var result)) { return (T?)result; }
 
             var jsonSerializer = PolymorphicDeserializerPool.Take();
             try
@@ -88,7 +88,7 @@ namespace SpanJson.Linq
         /// <param name="jsonSerializer">The <see cref="NJsonSerializer"/> that will be used when creating the object.</param>
         /// <returns>The new object created from the JSON value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T ToPolymorphicObject<T>(NJsonSerializer jsonSerializer)
+        public T? ToPolymorphicObject<T>(NJsonSerializer jsonSerializer)
         {
             return ToPolymorphicObject<T, IncludeNullsOriginalCaseResolver<byte>, IncludeNullsOriginalCaseResolver<char>>(jsonSerializer);
         }
@@ -100,11 +100,11 @@ namespace SpanJson.Linq
         /// <typeparam name="TUtf16Resolver">The Utf16 resolver.</typeparam>
         /// <param name="jsonSerializer">The <see cref="NJsonSerializer"/> that will be used when creating the object.</param>
         /// <returns>The new object created from the JSON value.</returns>
-        public T ToPolymorphicObject<T, TUtf8Resolver, TUtf16Resolver>(NJsonSerializer jsonSerializer)
+        public T? ToPolymorphicObject<T, TUtf8Resolver, TUtf16Resolver>(NJsonSerializer jsonSerializer)
             where TUtf8Resolver : IJsonFormatterResolver<byte, TUtf8Resolver>, new()
             where TUtf16Resolver : IJsonFormatterResolver<char, TUtf16Resolver>, new()
         {
-            if (TryConvertOrCast(typeof(T), out object result)) { return (T)result; }
+            if (TryConvertOrCast(typeof(T), out var result)) { return (T?)result; }
 
             if (jsonSerializer is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.jsonSerializer); }
 
@@ -114,11 +114,11 @@ namespace SpanJson.Linq
         /// <summary>Creates an instance of the specified .NET type from the <see cref="JToken"/>.</summary>
         /// <param name="objectType">The object type that the token will be deserialized to.</param>
         /// <returns>The new object created from the JSON value.</returns>
-        public object ToPolymorphicObject(Type objectType)
+        public object? ToPolymorphicObject(Type objectType)
         {
             if (objectType is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.objectType); }
 
-            if (TryConvertOrCast(objectType, out object result)) { return result; }
+            if (TryConvertOrCast(objectType, out object? result)) { return result; }
 
             var jsonSerializer = PolymorphicDeserializerPool.Take();
             try
@@ -137,7 +137,7 @@ namespace SpanJson.Linq
         /// <param name="jsonSerializer">The <see cref="NJsonSerializer"/> that will be used when creating the object.</param>
         /// <returns>The new object created from the JSON value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public object ToPolymorphicObject(Type objectType, NJsonSerializer jsonSerializer)
+        public object? ToPolymorphicObject(Type objectType, NJsonSerializer jsonSerializer)
         {
             return ToPolymorphicObject<IncludeNullsOriginalCaseResolver<byte>, IncludeNullsOriginalCaseResolver<char>>(objectType, jsonSerializer);
         }
@@ -149,13 +149,13 @@ namespace SpanJson.Linq
         /// <param name="objectType">The object type that the token will be deserialized to.</param>
         /// <param name="jsonSerializer">The <see cref="NJsonSerializer"/> that will be used when creating the object.</param>
         /// <returns>The new object created from the JSON value.</returns>
-        public object ToPolymorphicObject<TUtf8Resolver, TUtf16Resolver>(Type objectType, NJsonSerializer jsonSerializer)
+        public object? ToPolymorphicObject<TUtf8Resolver, TUtf16Resolver>(Type objectType, NJsonSerializer jsonSerializer)
             where TUtf8Resolver : IJsonFormatterResolver<byte, TUtf8Resolver>, new()
             where TUtf16Resolver : IJsonFormatterResolver<char, TUtf16Resolver>, new()
         {
             if (objectType is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.objectType); }
 
-            if (TryConvertOrCast(objectType, out object result)) { return result; }
+            if (TryConvertOrCast(objectType, out object? result)) { return result; }
 
             if (jsonSerializer is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.jsonSerializer); }
 
@@ -188,19 +188,19 @@ namespace SpanJson.Linq
             }
         }
 
-        private bool TryConvertOrCast(Type objectType, out object result)
+        private bool TryConvertOrCast(Type objectType, out object? result)
         {
             PrimitiveTypeCode typeCode = ConvertUtils.GetTypeCode(objectType, out bool isEnum);
 
             if (isEnum)
             {
-                static bool TryParseQuotedInteger(Type type, JValue jv, out object v)
+                static bool TryParseQuotedInteger(Type type, JValue jv, [MaybeNullWhen(false)] out object v)
                 {
                     try
                     {
-                        Type enumType = type.IsEnum ? type : Nullable.GetUnderlyingType(type);
+                        Type enumType = type.IsEnum ? type : Nullable.GetUnderlyingType(type)!;
                         var underlyingType = Enum.GetUnderlyingType(enumType);
-                        v = Enum.ToObject(enumType, jv.ToObject(underlyingType));
+                        v = Enum.ToObject(enumType, jv.ToObject(underlyingType)!);
                         return true;
                     }
                     catch { }
@@ -219,7 +219,7 @@ namespace SpanJson.Linq
                             catch (Exception ex)
                             {
                                 // Try parse quoted number
-                                if (TryParseQuotedInteger(objectType, (JValue)this, out object ev))
+                                if (TryParseQuotedInteger(objectType, (JValue)this, out var ev))
                                 {
                                     result = ev;
                                     return true;
@@ -237,7 +237,7 @@ namespace SpanJson.Linq
                             catch (Exception ex)
                             {
                                 // Try parse quoted number
-                                if (TryParseQuotedInteger(objectType, (JValue)this, out object ev))
+                                if (TryParseQuotedInteger(objectType, (JValue)this, out var ev))
                                 {
                                     result = ev;
                                     return true;
@@ -264,8 +264,8 @@ namespace SpanJson.Linq
                                     }
 
                                 default:
-                                    Type enumType = objectType.IsEnum ? objectType : Nullable.GetUnderlyingType(objectType);
-                                    result = Enum.ToObject(enumType, ((JValue)this).Value);
+                                    Type enumType = objectType.IsEnum ? objectType : Nullable.GetUnderlyingType(objectType)!;
+                                    result = Enum.ToObject(enumType, ((JValue)this).Value!);
                                     return true;
                             }
                         }
@@ -366,7 +366,7 @@ namespace SpanJson.Linq
                     result = (DateTimeOffset)this;
                     return true;
                 case PrimitiveTypeCode.String:
-                    result = (string)this;
+                    result = (string?)this;
                     return true;
                 case PrimitiveTypeCode.GuidNullable:
                     result = (Guid?)this;
@@ -381,7 +381,7 @@ namespace SpanJson.Linq
                     result = (CombGuid)this;
                     return true;
                 case PrimitiveTypeCode.Uri:
-                    result = (Uri)this;
+                    result = (Uri?)this;
                     return true;
                 case PrimitiveTypeCode.TimeSpanNullable:
                     result = (TimeSpan?)this;
@@ -406,7 +406,7 @@ namespace SpanJson.Linq
 
         #endregion
 
-        protected virtual T ToObjectInternal<T, TUtf8Resolver, TUtf16Resolver>()
+        protected virtual T? ToObjectInternal<T, TUtf8Resolver, TUtf16Resolver>()
             where TUtf8Resolver : IJsonFormatterResolver<byte, TUtf8Resolver>, new()
             where TUtf16Resolver : IJsonFormatterResolver<char, TUtf16Resolver>, new()
         {
@@ -414,7 +414,7 @@ namespace SpanJson.Linq
             return JsonSerializer.Generic.Utf8.Deserialize<T, TUtf8Resolver>(utf8Json);
         }
 
-        protected virtual object ToObjectInternal<TUtf8Resolver, TUtf16Resolver>(Type objectType)
+        protected virtual object? ToObjectInternal<TUtf8Resolver, TUtf16Resolver>(Type objectType)
             where TUtf8Resolver : IJsonFormatterResolver<byte, TUtf8Resolver>, new()
             where TUtf16Resolver : IJsonFormatterResolver<char, TUtf16Resolver>, new()
         {
@@ -422,33 +422,33 @@ namespace SpanJson.Linq
             return JsonSerializer.NonGeneric.Utf8.Deserialize<TUtf8Resolver>(utf8Json, objectType);
         }
 
-        protected virtual T ToObjectInternal<T, TUtf8Resolver, TUtf16Resolver>(NJsonSerializer jsonSerializer)
+        protected virtual T? ToObjectInternal<T, TUtf8Resolver, TUtf16Resolver>(NJsonSerializer jsonSerializer)
             where TUtf8Resolver : IJsonFormatterResolver<byte, TUtf8Resolver>, new()
             where TUtf16Resolver : IJsonFormatterResolver<char, TUtf16Resolver>, new()
         {
             var utf8Json = JsonSerializer.NonGeneric.Utf8.SerializeToArrayPool<TUtf8Resolver>(this);
             try
             {
-                return (T)jsonSerializer.DeserializeFromByteArray(utf8Json.Array, utf8Json.Offset, utf8Json.Count, typeof(T));
+                return (T?)jsonSerializer.DeserializeFromByteArray(utf8Json.Array!, utf8Json.Offset, utf8Json.Count, typeof(T));
             }
             finally
             {
-                ArrayPool<byte>.Shared.Return(utf8Json.Array);
+                ArrayPool<byte>.Shared.Return(utf8Json.Array!);
             }
         }
 
-        protected virtual object ToObjectInternal<TUtf8Resolver, TUtf16Resolver>(Type objectType, NJsonSerializer jsonSerializer)
+        protected virtual object? ToObjectInternal<TUtf8Resolver, TUtf16Resolver>(Type objectType, NJsonSerializer jsonSerializer)
             where TUtf8Resolver : IJsonFormatterResolver<byte, TUtf8Resolver>, new()
             where TUtf16Resolver : IJsonFormatterResolver<char, TUtf16Resolver>, new()
         {
             var utf8Json = JsonSerializer.NonGeneric.Utf8.SerializeToArrayPool<TUtf8Resolver>(this);
             try
             {
-                return jsonSerializer.DeserializeFromByteArray(utf8Json.Array, utf8Json.Offset, utf8Json.Count, objectType);
+                return jsonSerializer.DeserializeFromByteArray(utf8Json.Array!, utf8Json.Offset, utf8Json.Count, objectType);
             }
             finally
             {
-                ArrayPool<byte>.Shared.Return(utf8Json.Array);
+                ArrayPool<byte>.Shared.Return(utf8Json.Array!);
             }
         }
 

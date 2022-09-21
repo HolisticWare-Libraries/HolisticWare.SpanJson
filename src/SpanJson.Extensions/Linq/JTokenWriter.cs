@@ -23,7 +23,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
 using System.Globalization;
 using System.Numerics;
 using SpanJson.Document;
@@ -34,18 +33,18 @@ namespace SpanJson.Linq
     /// <summary>Represents a writer that provides a fast, non-cached, forward-only way of generating JSON data.</summary>
     internal sealed class JTokenWriter : Newtonsoft.Json.JsonWriter
     {
-        private JContainer _token;
-        private JContainer _parent;
+        private JContainer? _token;
+        private JContainer? _parent;
         // used when writer is writing single value and the value has no containing parent
-        private JValue _value;
-        private JToken _current;
+        private JValue? _value;
+        private JToken? _current;
 
         /// <summary>Gets the <see cref="JToken"/> at the writer's current position.</summary>
-        public JToken CurrentToken => _current;
+        public JToken? CurrentToken => _current;
 
         /// <summary>Gets the token being written.</summary>
         /// <value>The token being written.</value>
-        public JToken Token
+        public JToken? Token
         {
             get
             {
@@ -103,7 +102,7 @@ namespace SpanJson.Linq
         private void RemoveParent()
         {
             _current = _parent;
-            _parent = _parent.Parent;
+            _parent = _parent!.Parent;
 
             if (_parent is not null && _parent.Type == JTokenType.Property)
             {
@@ -150,12 +149,12 @@ namespace SpanJson.Linq
             base.WritePropertyName(name);
         }
 
-        private void AddValue(object value)
+        private void AddValue(object? value)
         {
             AddValue(new JValue(value));
         }
 
-        internal void AddValue(JValue value)
+        internal void AddValue(JValue? value)
         {
             if (_parent is not null)
             {
@@ -184,7 +183,7 @@ namespace SpanJson.Linq
         /// <summary>Writes a <see cref="Object"/> value.
         /// An error will be raised if the value cannot be written as a single JSON token.</summary>
         /// <param name="value">The <see cref="Object"/> value to write.</param>
-        public override void WriteValue(object value)
+        public override void WriteValue(object? value)
         {
             switch (value)
             {
@@ -205,7 +204,7 @@ namespace SpanJson.Linq
                     break;
 
                 default:
-                    if (JValue.CustomPrimitiveTypes.TryGetValue(value.GetType(), out JTokenType tokenType))
+                    if (value is not null && JValue.CustomPrimitiveTypes.TryGetValue(value.GetType(), out JTokenType tokenType))
                     {
                         AddValue(new JValue(value, tokenType));
                         base.WriteUndefined();
@@ -241,7 +240,7 @@ namespace SpanJson.Linq
 
         /// <summary>Writes raw JSON.</summary>
         /// <param name="json">The raw JSON to write.</param>
-        public override void WriteRaw(string json)
+        public override void WriteRaw(string? json)
         {
             base.WriteRaw(json);
             AddValue(new JRaw(json)/*, JsonToken.Raw*/);
@@ -249,7 +248,7 @@ namespace SpanJson.Linq
 
         /// <summary>Writes a comment <c>/*...*/</c> containing the specified text.</summary>
         /// <param name="text">Text to place inside the comment.</param>
-        public override void WriteComment(string text)
+        public override void WriteComment(string? text)
         {
             base.WriteComment(text);
             AddValue(JValue.CreateComment(text)/*, JsonToken.Comment*/);
@@ -257,7 +256,7 @@ namespace SpanJson.Linq
 
         /// <summary>Writes a <see cref="String"/> value.</summary>
         /// <param name="value">The <see cref="String"/> value to write.</param>
-        public override void WriteValue(string value)
+        public override void WriteValue(string? value)
         {
             base.WriteValue(value);
             AddValue(value/*, JsonToken.String*/);
@@ -389,7 +388,7 @@ namespace SpanJson.Linq
 
         /// <summary>Writes a <see cref="Byte"/>[] value.</summary>
         /// <param name="value">The <see cref="Byte"/>[] value to write.</param>
-        public override void WriteValue(byte[] value)
+        public override void WriteValue(byte[]? value)
         {
             base.WriteValue(value);
             AddValue(value/*, JsonToken.Bytes*/);
@@ -413,7 +412,7 @@ namespace SpanJson.Linq
 
         /// <summary>Writes a <see cref="Uri"/> value.</summary>
         /// <param name="value">The <see cref="Uri"/> value to write.</param>
-        public override void WriteValue(Uri value)
+        public override void WriteValue(Uri? value)
         {
             base.WriteValue(value);
             AddValue(value/*, JsonToken.String*/);

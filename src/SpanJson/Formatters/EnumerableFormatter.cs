@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using SpanJson.Helpers;
+﻿using SpanJson.Helpers;
 using SpanJson.Resolvers;
 
 namespace SpanJson.Formatters
@@ -12,8 +10,8 @@ namespace SpanJson.Formatters
         where TResolver : IJsonFormatterResolver<TSymbol, TResolver>, new() where TSymbol : struct where TEnumerable : IEnumerable<T>
 
     {
-        private static readonly Func<T[], TEnumerable> Converter =
-            StandardResolvers.GetEnumerableConvertFunctor<TSymbol, TResolver, T[], TEnumerable>();
+        private static readonly Func<T[]?, TEnumerable> Converter =
+            StandardResolvers.GetEnumerableConvertFunctor<TSymbol, TResolver, T[]?, TEnumerable>();
 
         public static readonly EnumerableFormatter<TEnumerable, T, TSymbol, TResolver> Default = new EnumerableFormatter<TEnumerable, T, TSymbol, TResolver>();
 
@@ -21,7 +19,7 @@ namespace SpanJson.Formatters
             StandardResolvers.GetFormatter<TSymbol, TResolver, T>();
         private static readonly bool IsRecursionCandidate = RecursionCandidate<T>.IsRecursionCandidate;
 
-        public TEnumerable Deserialize(ref JsonReader<TSymbol> reader, IJsonFormatterResolver<TSymbol> resolver)
+        public TEnumerable? Deserialize(ref JsonReader<TSymbol> reader, IJsonFormatterResolver<TSymbol> resolver)
         {
             if (reader.ReadIsNull())
             {
@@ -44,7 +42,7 @@ namespace SpanJson.Formatters
             {
                 writer.IncrementDepth();
             }
-            IEnumerator<T> enumerator = null;
+            IEnumerator<T>? enumerator = null;
             try
             {
                 enumerator = value.GetEnumerator();

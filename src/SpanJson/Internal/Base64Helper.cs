@@ -6,4 +6,4 @@ namespace SpanJson.Internal
     internal static partial class Base64Helper
     {
     }
-} 
+}

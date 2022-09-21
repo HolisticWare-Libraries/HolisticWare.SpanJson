@@ -8,7 +8,7 @@ namespace SpanJson.Formatters
     {
         public static readonly JPropertyFormatter<TProperty> Default = new JPropertyFormatter<TProperty>();
 
-        public override void Serialize(ref JsonWriter<byte> writer, TProperty value, IJsonFormatterResolver<byte> resolver)
+        public override void Serialize(ref JsonWriter<byte> writer, TProperty? value, IJsonFormatterResolver<byte> resolver)
         {
             if (value is null) { return; }
 
@@ -26,7 +26,7 @@ namespace SpanJson.Formatters
             }
         }
 
-        public override void Serialize(ref JsonWriter<char> writer, TProperty value, IJsonFormatterResolver<char> resolver)
+        public override void Serialize(ref JsonWriter<char> writer, TProperty? value, IJsonFormatterResolver<char> resolver)
         {
             if (value is null) { return; }
 

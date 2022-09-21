@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
-using System.Linq;
 using CuteAnt;
 using SpanJson.Utilities;
 
@@ -42,7 +38,7 @@ namespace SpanJson.Linq.JsonPath
             return IsMatch(root, t, null);
         }
 
-        public abstract bool IsMatch(JToken root, JToken t, JsonSelectSettings settings);
+        public abstract bool IsMatch(JToken root, JToken t, JsonSelectSettings? settings);
     }
 
     internal class CompositeExpression : QueryExpression
@@ -54,7 +50,7 @@ namespace SpanJson.Linq.JsonPath
             Expressions = new List<QueryExpression>();
         }
 
-        public override bool IsMatch(JToken root, JToken t, JsonSelectSettings settings)
+        public override bool IsMatch(JToken root, JToken t, JsonSelectSettings? settings)
         {
             switch (Operator)
             {
@@ -79,15 +75,15 @@ namespace SpanJson.Linq.JsonPath
     internal class BooleanQueryExpression : QueryExpression
     {
         public readonly object Left;
-        public readonly object Right;
+        public readonly object? Right;
 
-        public BooleanQueryExpression(QueryOperator @operator, object left, object right) : base(@operator)
+        public BooleanQueryExpression(QueryOperator @operator, object left, object? right) : base(@operator)
         {
             Left = left;
             Right = right;
         }
 
-        private IEnumerable<JToken> GetResult(JToken root, JToken t, object o)
+        private IEnumerable<JToken> GetResult(JToken root, JToken t, object? o)
         {
             if (o is JToken resultToken)
             {
@@ -102,7 +98,7 @@ namespace SpanJson.Linq.JsonPath
             return EmptyArray<JToken>.Instance;
         }
 
-        public override bool IsMatch(JToken root, JToken t, JsonSelectSettings settings)
+        public override bool IsMatch(JToken root, JToken t, JsonSelectSettings? settings)
         {
             if (Operator == QueryOperator.Exists)
             {
@@ -130,7 +126,7 @@ namespace SpanJson.Linq.JsonPath
             return false;
         }
 
-        private bool MatchTokens(JToken leftResult, JToken rightResult, JsonSelectSettings settings)
+        private bool MatchTokens(JToken leftResult, JToken rightResult, JsonSelectSettings? settings)
         {
             if (leftResult is JValue leftValue && rightResult is JValue rightValue)
             {
@@ -191,14 +187,14 @@ namespace SpanJson.Linq.JsonPath
             return false;
         }
 
-        private static bool RegexEquals(JValue input, JValue pattern, JsonSelectSettings settings)
+        private static bool RegexEquals(JValue input, JValue pattern, JsonSelectSettings? settings)
         {
             if (!input.Type.IsString() || !pattern.Type.IsString())
             {
                 return false;
             }
 
-            string regexText = (string)pattern.Value;
+            string regexText = (string)pattern.Value!;
             int patternOptionDelimiterIndex = regexText.LastIndexOf('/');
 
             string patternText = regexText.Substring(1, patternOptionDelimiterIndex - 1);
@@ -229,9 +225,9 @@ namespace SpanJson.Linq.JsonPath
 
             if (!queryValueType.IsString()) { return false; }
 
-            string queryValueString = (string)queryValue.Value;
+            string queryValueString = (string)queryValue.Value!;
 
-            string currentValueString;
+            string? currentValueString;
 
             // potential performance issue with converting every value to string?
             switch (valueType)
@@ -245,25 +241,25 @@ namespace SpanJson.Linq.JsonPath
                         }
                         else
                         {
-                            DateTimeUtils.WriteDateTimeString(writer, (DateTime)value.Value, Newtonsoft.Json.DateFormatHandling.IsoDateFormat, null, CultureInfo.InvariantCulture);
+                            DateTimeUtils.WriteDateTimeString(writer, (DateTime)value.Value!, Newtonsoft.Json.DateFormatHandling.IsoDateFormat, null, CultureInfo.InvariantCulture);
                         }
 
                         currentValueString = writer.ToString();
                     }
                     break;
                 case JTokenType.Bytes:
-                    currentValueString = Convert.ToBase64String((byte[])value.Value);
+                    currentValueString = Convert.ToBase64String((byte[])value.Value!);
                     break;
                 case JTokenType.Guid:
                 case JTokenType.CombGuid:
                 case JTokenType.TimeSpan:
-                    currentValueString = value.Value.ToString();
+                    currentValueString = value.Value!.ToString();
                     break;
                 case JTokenType.Uri:
-                    currentValueString = ((Uri)value.Value).OriginalString;
+                    currentValueString = ((Uri)value.Value!).OriginalString;
                     break;
                 case JTokenType.Dynamic:
-                    currentValueString = value.Value.ToString();
+                    currentValueString = value.Value!.ToString();
                     break;
 
                 default:
@@ -275,8 +271,10 @@ namespace SpanJson.Linq.JsonPath
 
         internal static bool EqualsWithStrictMatch(JValue value, JValue queryValue)
         {
-            Debug.Assert(value is not null);
-            Debug.Assert(queryValue is not null);
+#if !(NETSTANDARD2_0 || NETCOREAPP2_1)
+            Debug.Assert(value != null);
+            Debug.Assert(queryValue != null);
+#endif
 
             var valueType = value.Type;
             var queryValueType = queryValue.Type;
@@ -295,7 +293,7 @@ namespace SpanJson.Linq.JsonPath
 
             if (valueType.IsString() && queryValueType.IsString())
             {
-                return string.Equals(value.Value.ToString(), queryValue.Value.ToString());
+                return string.Equals(value.Value!.ToString(), queryValue.Value!.ToString());
             }
 
             // we handle floats and integers the exact same way, so they are pseudo equivalent

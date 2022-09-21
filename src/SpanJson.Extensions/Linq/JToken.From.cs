@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using SpanJson.Document;
 using SpanJson.Dynamic;
@@ -36,7 +36,7 @@ namespace SpanJson.Linq
         {
             if (o is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.o); }
 
-            if (TryReadJsonDynamic(o, out JToken token)) { return token; }
+            if (TryReadJsonDynamic(o, out var token)) { return token; }
 
             var utf16Json = JsonSerializer.Generic.Utf16.SerializeToCharArray<T, TResolver>(o);
             return Parse(utf16Json);
@@ -70,7 +70,7 @@ namespace SpanJson.Linq
         {
             if (o is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.o); }
 
-            if (TryReadJsonDynamic(o, out JToken token)) { return token; }
+            if (TryReadJsonDynamic(o, out var token)) { return token; }
 
             var utf16Json = JsonSerializer.NonGeneric.Utf16.SerializeToCharArray<TResolver>(o);
             return Parse(utf16Json);
@@ -123,7 +123,7 @@ namespace SpanJson.Linq
 
         internal static JToken FromObjectInternal(object o, NJsonSerializer jsonSerializer)
         {
-            if (TryReadJsonDynamic(o, out JToken token)) { return token; }
+            if (TryReadJsonDynamic(o, out var token)) { return token; }
 
             if (o is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.o); }
             if (jsonSerializer is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.jsonSerializer); }
@@ -131,7 +131,7 @@ namespace SpanJson.Linq
             using (JTokenWriter jsonWriter = new JTokenWriter())
             {
                 jsonSerializer.Serialize(jsonWriter, o);
-                token = jsonWriter.Token;
+                token = jsonWriter.Token!;
             }
 
             return token;
@@ -162,7 +162,7 @@ namespace SpanJson.Linq
             return false;
         }
 
-        internal static bool TryReadJsonDynamic(object jsonData, out JToken token)
+        internal static bool TryReadJsonDynamic(object? jsonData, [MaybeNullWhen(false)] out JToken token)
         {
             switch (jsonData)
             {
@@ -289,10 +289,10 @@ namespace SpanJson.Linq
             switch (token.Type)
             {
                 case JTokenType.Object:
-                    ((JObject)token)._dynamicJson = doc; ;
+                    ((JObject)token)._dynamicJson = doc;
                     break;
                 case JTokenType.Array:
-                    ((JArray)token)._dynamicJson = doc; ;
+                    ((JArray)token)._dynamicJson = doc;
                     break;
             }
             return token;

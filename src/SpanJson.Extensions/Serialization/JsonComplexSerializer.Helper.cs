@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using CuteAnt;
@@ -11,7 +9,7 @@ namespace SpanJson.Serialization
 {
     partial class JsonComplexSerializer<TUtf16Resolver, TUtf8Resolver>
     {
-        sealed class PolymorphicallyContainer<T>
+        static class PolymorphicallyContainer<T>
         {
             public static readonly bool IsPolymorphically;
 
@@ -42,11 +40,11 @@ namespace SpanJson.Serialization
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private static bool IsPolymorphicallyImpl(Type type, Type parentType, MemberInfo memberInfo, HashSet<Type> parentTypes)
+        private static bool IsPolymorphicallyImpl(Type type, Type? parentType, MemberInfo? memberInfo, HashSet<Type> parentTypes)
         {
-            static Type GetUnderlyingTypeLocal(Type t, Type pt, MemberInfo mi)
+            static Type GetUnderlyingTypeLocal(Type t, Type? pt, MemberInfo? mi)
             {
-                Type underlyingType = null;
+                Type? underlyingType = null;
                 var classType = JsonClassInfo.GetClassType(t);
                 switch (classType)
                 {
@@ -60,7 +58,7 @@ namespace SpanJson.Serialization
 
                 if (underlyingType.IsGenericType && underlyingType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
-                    underlyingType = Nullable.GetUnderlyingType(underlyingType);
+                    underlyingType = Nullable.GetUnderlyingType(underlyingType)!;
                 }
 
                 return underlyingType;

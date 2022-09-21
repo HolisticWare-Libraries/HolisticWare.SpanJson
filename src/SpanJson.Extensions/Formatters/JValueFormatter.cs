@@ -7,7 +7,7 @@ namespace SpanJson.Formatters
     {
         public new static readonly JValueFormatter Default = new JValueFormatter();
 
-        public override JValue Deserialize(ref JsonReader<byte> reader, IJsonFormatterResolver<byte> resolver)
+        public override JValue? Deserialize(ref JsonReader<byte> reader, IJsonFormatterResolver<byte> resolver)
         {
             if (reader.ReadUtf8IsNull()) { return null; }
 
@@ -17,7 +17,7 @@ namespace SpanJson.Formatters
             throw ThrowHelper2.GetJsonReaderException_Error_reading_JValue_from_JsonReader();
         }
 
-        public override JValue Deserialize(ref JsonReader<char> reader, IJsonFormatterResolver<char> resolver)
+        public override JValue? Deserialize(ref JsonReader<char> reader, IJsonFormatterResolver<char> resolver)
         {
             if (reader.ReadUtf16IsNull()) { return null; }
 
@@ -33,7 +33,7 @@ namespace SpanJson.Formatters
     {
         public static readonly JValueFormatter<TValue> Default = new JValueFormatter<TValue>();
 
-        public override void Serialize(ref JsonWriter<byte> writer, TValue value, IJsonFormatterResolver<byte> resolver)
+        public override void Serialize(ref JsonWriter<byte> writer, TValue? value, IJsonFormatterResolver<byte> resolver)
         {
             if (value is null || value.Value is null)
             {
@@ -52,7 +52,7 @@ namespace SpanJson.Formatters
                     }
                     else
                     {
-                        writer.WriteUtf8Verbatim(TextEncodings.UTF8NoBOM.GetBytes(value.Value.ToString()));
+                        writer.WriteUtf8Verbatim(TextEncodings.UTF8NoBOM.GetBytes(value.Value.ToString()!));
                     }
                     break;
                 default:
@@ -62,7 +62,7 @@ namespace SpanJson.Formatters
             }
         }
 
-        public override void Serialize(ref JsonWriter<char> writer, TValue value, IJsonFormatterResolver<char> resolver)
+        public override void Serialize(ref JsonWriter<char> writer, TValue? value, IJsonFormatterResolver<char> resolver)
         {
             if (value is null || value.Value is null)
             {
@@ -82,7 +82,7 @@ namespace SpanJson.Formatters
                     }
                     else
                     {
-                        writer.WriteUtf16Verbatim(value.Value.ToString());
+                        writer.WriteUtf16Verbatim(value.Value.ToString()!);
                     }
                     break;
                 default:

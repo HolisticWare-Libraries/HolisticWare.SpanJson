@@ -1,6 +1,4 @@
-﻿using System;
-using System.Buffers;
-using System.Collections.Generic;
+﻿using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using SpanJson.Dynamic;
@@ -12,7 +10,7 @@ namespace SpanJson.Formatters
     {
         public static readonly DynamicObjectFormatter Default = new DynamicObjectFormatter();
 
-        public override void Serialize(ref JsonWriter<byte> writer, SpanJsonDynamicObject value, IJsonFormatterResolver<byte> resolver)
+        public override void Serialize(ref JsonWriter<byte> writer, SpanJsonDynamicObject? value, IJsonFormatterResolver<byte> resolver)
         {
             if (value is null) { writer.WriteUtf8Null(); return; }
 
@@ -23,7 +21,7 @@ namespace SpanJson.Formatters
                     ReadOnlySpan<char> utf16Json = value.Utf16Raw;
                     var maxRequired = utf16Json.Length * JsonSharedConstant.MaxExpansionFactorWhileTranscoding;
 
-                    byte[] valueArray = null;
+                    byte[]? valueArray = null;
 
                     Span<byte> utf8Json = (uint)maxRequired <= JsonSharedConstant.StackallocByteThresholdU ?
                         stackalloc byte[JsonSharedConstant.StackallocByteThreshold] :
@@ -75,7 +73,7 @@ namespace SpanJson.Formatters
             }
         }
 
-        public override void Serialize(ref JsonWriter<char> writer, SpanJsonDynamicObject value, IJsonFormatterResolver<char> resolver)
+        public override void Serialize(ref JsonWriter<char> writer, SpanJsonDynamicObject? value, IJsonFormatterResolver<char> resolver)
         {
             if (value is null) { writer.WriteUtf16Null(); return; }
 
@@ -90,7 +88,7 @@ namespace SpanJson.Formatters
                     ReadOnlySpan<byte> utf8Json = value.Utf8Raw;
                     var maxRequired = TextEncodings.Utf8.GetCharCount(utf8Json);
 
-                    char[] valueArray = null;
+                    char[]? valueArray = null;
 
                     Span<char> utf16Json = (uint)maxRequired <= JsonSharedConstant.StackallocCharThresholdU ?
                         stackalloc char[JsonSharedConstant.StackallocCharThreshold] :

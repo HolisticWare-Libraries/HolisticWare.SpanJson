@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Reflection;
 
 namespace SpanJson.Resolvers
 {
     public class JsonObjectDescription : IReadOnlyList<JsonMemberInfo>
     {
-        public JsonObjectDescription(ConstructorInfo constructor, JsonConstructorAttribute attribute, JsonMemberInfo[] members, JsonExtensionMemberInfo extensionMemberInfo)
+        public JsonObjectDescription(ConstructorInfo? constructor, JsonConstructorAttribute? attribute, JsonMemberInfo[] members, JsonExtensionMemberInfo? extensionMemberInfo)
         {
             Members = members;
             ExtensionMemberInfo = extensionMemberInfo;
@@ -45,11 +43,11 @@ namespace SpanJson.Resolvers
             }
         }
 
-        public ConstructorInfo Constructor { get; }
-        public JsonConstructorAttribute Attribute { get; }
+        public ConstructorInfo? Constructor { get; }
+        public JsonConstructorAttribute? Attribute { get; }
         public JsonMemberInfo[] Members { get; }
-        public JsonExtensionMemberInfo ExtensionMemberInfo { get; }
-        public IReadOnlyDictionary<string, (Type Type, int Index)> ConstructorMapping { get; }
+        public JsonExtensionMemberInfo? ExtensionMemberInfo { get; }
+        public IReadOnlyDictionary<string, (Type Type, int Index)>? ConstructorMapping { get; }
 
         public int Count => Members.Length;
 
@@ -77,12 +75,12 @@ namespace SpanJson.Resolvers
             }
 
             var constructorValueIndexDictionary = new Dictionary<string, (Type Type, int Index)>(StringComparer.OrdinalIgnoreCase);
-            var constructorParameters = Constructor.GetParameters();
+            var constructorParameters = Constructor!.GetParameters();
             var index = 0;
-            foreach (var constructorParameter in constructorParameters)
+            foreach (ParameterInfo constructorParameter in constructorParameters)
             {
-                if (memberInfoDictionary.TryGetValue(constructorParameter.Name, out var memberInfo) ||
-                    Attribute.ParameterNames is not null && index < Attribute.ParameterNames.Length &&
+                if (memberInfoDictionary.TryGetValue(constructorParameter.Name!, out var memberInfo) ||
+                    Attribute?.ParameterNames is not null && index < Attribute.ParameterNames.Length &&
                     memberInfoDictionary.TryGetValue(Attribute.ParameterNames[index], out memberInfo))
                 {
                     constructorValueIndexDictionary[memberInfo.MemberName] = (memberInfo.MemberType, index++);

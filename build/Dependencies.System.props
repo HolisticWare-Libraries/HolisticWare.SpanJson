@@ -16,17 +16,17 @@
     <WindowsAzureStoragePackageVersion>9.3.3</WindowsAzureStoragePackageVersion>
 
     <!-- IdentityModel packages -->
-    <MicrosoftIdentityModelKeyVaultExtensionsPackageVersion>6.19.0</MicrosoftIdentityModelKeyVaultExtensionsPackageVersion>
-    <MicrosoftIdentityModelLoggingPackageVersion>6.19.0</MicrosoftIdentityModelLoggingPackageVersion>
-    <MicrosoftIdentityModelManagedKeyVaultSecurityKeyPackageVersion>6.19.0</MicrosoftIdentityModelManagedKeyVaultSecurityKeyPackageVersion>
-    <MicrosoftIdentityModelJsonWebTokensPackageVersion>6.19.0</MicrosoftIdentityModelJsonWebTokensPackageVersion>
-    <MicrosoftIdentityModelProtocolsPackageVersion>6.19.0</MicrosoftIdentityModelProtocolsPackageVersion>
-    <MicrosoftIdentityModelProtocolsOpenIdConnectPackageVersion>6.19.0</MicrosoftIdentityModelProtocolsOpenIdConnectPackageVersion>
-    <MicrosoftIdentityModelProtocolsWsFederationPackageVersion>6.19.0</MicrosoftIdentityModelProtocolsWsFederationPackageVersion>
-    <MicrosoftIdentityModelTokensPackageVersion>6.19.0</MicrosoftIdentityModelTokensPackageVersion>
-    <MicrosoftIdentityModelTokensSamlPackageVersion>6.19.0</MicrosoftIdentityModelTokensSamlPackageVersion>
-    <MicrosoftIdentityModelXmlPackageVersion>6.19.0</MicrosoftIdentityModelXmlPackageVersion>
-    <SystemIdentityModelTokensJwtPackageVersion>6.19.0</SystemIdentityModelTokensJwtPackageVersion>
+    <MicrosoftIdentityModelKeyVaultExtensionsPackageVersion>6.21.0</MicrosoftIdentityModelKeyVaultExtensionsPackageVersion>
+    <MicrosoftIdentityModelLoggingPackageVersion>6.21.0</MicrosoftIdentityModelLoggingPackageVersion>
+    <MicrosoftIdentityModelManagedKeyVaultSecurityKeyPackageVersion>6.21.0</MicrosoftIdentityModelManagedKeyVaultSecurityKeyPackageVersion>
+    <MicrosoftIdentityModelJsonWebTokensPackageVersion>6.21.0</MicrosoftIdentityModelJsonWebTokensPackageVersion>
+    <MicrosoftIdentityModelProtocolsPackageVersion>6.21.0</MicrosoftIdentityModelProtocolsPackageVersion>
+    <MicrosoftIdentityModelProtocolsOpenIdConnectPackageVersion>6.21.0</MicrosoftIdentityModelProtocolsOpenIdConnectPackageVersion>
+    <MicrosoftIdentityModelProtocolsWsFederationPackageVersion>6.21.0</MicrosoftIdentityModelProtocolsWsFederationPackageVersion>
+    <MicrosoftIdentityModelTokensPackageVersion>6.21.0</MicrosoftIdentityModelTokensPackageVersion>
+    <MicrosoftIdentityModelTokensSamlPackageVersion>6.21.0</MicrosoftIdentityModelTokensSamlPackageVersion>
+    <MicrosoftIdentityModelXmlPackageVersion>6.21.0</MicrosoftIdentityModelXmlPackageVersion>
+    <SystemIdentityModelTokensJwtPackageVersion>6.21.0</SystemIdentityModelTokensJwtPackageVersion>
 
     <!-- Compatibility packages -->
     <MicrosoftWin32RegistryPackageVersion>5.0.0</MicrosoftWin32RegistryPackageVersion>
@@ -36,7 +36,7 @@
     <SystemCodeDomPackageVersion>6.0.0</SystemCodeDomPackageVersion>
     <SystemComponentModelAnnotationsPackageVersion>6.0.0</SystemComponentModelAnnotationsPackageVersion>
     <SystemComponentModelCompositionPackageVersion>6.0.0</SystemComponentModelCompositionPackageVersion>
-    <SystemConfigurationConfigurationManagerPackageVersion>6.0.0</SystemConfigurationConfigurationManagerPackageVersion>
+    <SystemConfigurationConfigurationManagerPackageVersion>6.0.1</SystemConfigurationConfigurationManagerPackageVersion>
     <SystemDataDataSetExtensionsPackageVersion>4.5.0</SystemDataDataSetExtensionsPackageVersion>
     <SystemDataOdbcPackageVersion>6.0.0</SystemDataOdbcPackageVersion>
     <SystemDataOleDbPackageVersion>6.0.0</SystemDataOleDbPackageVersion>
@@ -65,7 +65,8 @@
     <SystemReflectionMetadataPackageVersion>6.0.0</SystemReflectionMetadataPackageVersion>
 
     <SystemDiagnosticsDiagnosticSourcePackageVersion>6.0.0</SystemDiagnosticsDiagnosticSourcePackageVersion>
-    <SystemIOPipelinesPackageVersion>6.0.2</SystemIOPipelinesPackageVersion>
+    <SystemIOHashingPackageVersion>6.0.2</SystemIOHashingPackageVersion>
+    <SystemIOPipelinesPackageVersion>6.0.3</SystemIOPipelinesPackageVersion>
     <SystemLinqAsyncPackageVersion>6.0.1</SystemLinqAsyncPackageVersion>
     <SystemNetHttpJsonPackageVersion>6.0.0</SystemNetHttpJsonPackageVersion>
     <SystemNetHttpWinHttpHandlerPackageVersion>6.0.0</SystemNetHttpWinHttpHandlerPackageVersion>
@@ -87,9 +88,9 @@
     <SystemSecurityCryptographyOpenSslPackageVersion>5.0.0</SystemSecurityCryptographyOpenSslPackageVersion>
     <SystemSecurityCryptographyPkcsPackageVersion>6.0.1</SystemSecurityCryptographyPkcsPackageVersion>
     <SystemSecurityCryptographyProtectedDataPackageVersion>6.0.0</SystemSecurityCryptographyProtectedDataPackageVersion>
-    <SystemSecurityCryptographyXmlPackageVersion>6.0.0</SystemSecurityCryptographyXmlPackageVersion>
+    <SystemSecurityCryptographyXmlPackageVersion>6.0.1</SystemSecurityCryptographyXmlPackageVersion>
 
-    <SystemTextJsonPackageVersion>6.0.5</SystemTextJsonPackageVersion>
+    <SystemTextJsonPackageVersion>6.0.6</SystemTextJsonPackageVersion>
     <SystemTextEncodingsWebPackageVersion>6.0.0</SystemTextEncodingsWebPackageVersion>
     <SystemThreadingChannelsPackageVersion>6.0.0</SystemThreadingChannelsPackageVersion>
     <SystemThreadingTasksDataflowPackageVersion>6.0.0</SystemThreadingTasksDataflowPackageVersion>

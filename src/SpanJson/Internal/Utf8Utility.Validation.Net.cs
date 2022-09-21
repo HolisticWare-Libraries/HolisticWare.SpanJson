@@ -751,7 +751,7 @@ namespace SpanJson.Internal
         {
             if (!AdvSimd.Arm64.IsSupported || !BitConverter.IsLittleEndian)
             {
-                throw ThrowHelper.GetNotSupportedException(); ;
+                throw ThrowHelper.GetNotSupportedException();
             }
 
             Vector128<byte> mostSignificantBitIsSet = AdvSimd.ShiftRightArithmetic(value.AsSByte(), 7).AsByte();

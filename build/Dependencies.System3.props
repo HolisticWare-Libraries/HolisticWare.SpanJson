@@ -64,7 +64,7 @@
     <SystemReflectionMetadata3PackageVersion>1.8.1</SystemReflectionMetadata3PackageVersion>
 
     <SystemDiagnosticsDiagnosticSource3PackageVersion>4.7.1</SystemDiagnosticsDiagnosticSource3PackageVersion>
-    <SystemIOPipelines3PackageVersion>4.7.3</SystemIOPipelines3PackageVersion>
+    <SystemIOPipelines3PackageVersion>4.7.5</SystemIOPipelines3PackageVersion>
     <SystemNetHttp3PackageVersion>4.3.4</SystemNetHttp3PackageVersion>
     <SystemNetHttpJson3PackageVersion>3.2.1</SystemNetHttpJson3PackageVersion>
     <SystemNetHttpWinHttpHandler3PackageVersion>4.7.2</SystemNetHttpWinHttpHandler3PackageVersion>

@@ -9,7 +9,7 @@ namespace SpanJson.Dynamic
         {
             if (DynamicConverter.TryConvertTo(typeof(Char), input.Symbols, out var value))
             {
-                return (Char) value;
+                return (Char) value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -27,7 +27,7 @@ namespace SpanJson.Dynamic
         {
             if (DynamicConverter.TryConvertTo(typeof(DateTime), input.Symbols, out var value))
             {
-                return (DateTime) value;
+                return (DateTime) value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -45,7 +45,7 @@ namespace SpanJson.Dynamic
         {
             if (DynamicConverter.TryConvertTo(typeof(DateTimeOffset), input.Symbols, out var value))
             {
-                return (DateTimeOffset) value;
+                return (DateTimeOffset) value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -63,7 +63,7 @@ namespace SpanJson.Dynamic
         {
             if (DynamicConverter.TryConvertTo(typeof(TimeSpan), input.Symbols, out var value))
             {
-                return (TimeSpan) value;
+                return (TimeSpan) value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }
@@ -81,7 +81,7 @@ namespace SpanJson.Dynamic
         {
             if (DynamicConverter.TryConvertTo(typeof(Guid), input.Symbols, out var value))
             {
-                return (Guid) value;
+                return (Guid) value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }

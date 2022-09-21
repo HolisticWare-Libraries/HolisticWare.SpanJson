@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SpanJson
+﻿namespace SpanJson
 {
     public class JsonParserException : Exception
     {

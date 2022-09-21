@@ -2,8 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -38,6 +38,8 @@ namespace SpanJson
             return new ArgumentException(message);
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowArgumentException(string message)
         {
             throw GetArgumentException(message);
@@ -48,26 +50,36 @@ namespace SpanJson
             return GetInvalidOperationException(SR.Format(SR.CallFlushToAvoidDataLoss, _buffered));
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowArgumentException_PropertyNameTooLarge(int tokenLength)
         {
             throw GetArgumentException(SR.Format(SR.PropertyNameTooLarge, tokenLength));
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowArgumentException_ValueTooLarge(int tokenLength)
         {
             throw GetArgumentException(SR.Format(SR.ValueTooLarge, tokenLength));
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowArgumentException_ValueNotSupported()
         {
             throw GetArgumentException(SR.SpecialNumberValuesNotSupported);
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowInvalidOperationException_NeedLargerSpan()
         {
             throw GetInvalidOperationException(SR.FailedToGetLargerSpan);
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowArgumentException(in ReadOnlySpan<byte> propertyName, in ReadOnlySpan<byte> value)
         {
             if (propertyName.Length > JsonSharedConstant.MaxUnescapedTokenSize)
@@ -81,6 +93,8 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowArgumentException(in ReadOnlySpan<byte> propertyName, in ReadOnlySpan<char> value)
         {
             if (propertyName.Length > JsonSharedConstant.MaxUnescapedTokenSize)
@@ -94,6 +108,8 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowArgumentException(in ReadOnlySpan<char> propertyName, in ReadOnlySpan<byte> value)
         {
             if (propertyName.Length > JsonSharedConstant.MaxCharacterTokenSize)
@@ -107,6 +123,8 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowArgumentException(in ReadOnlySpan<char> propertyName, in ReadOnlySpan<char> value)
         {
             if (propertyName.Length > JsonSharedConstant.MaxCharacterTokenSize)
@@ -120,6 +138,8 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowInvalidOperationOrArgumentException(in ReadOnlySpan<byte> propertyName, int currentDepth)
         {
             currentDepth &= JsonSharedConstant.RemoveFlagsBitMask;
@@ -134,6 +154,8 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowInvalidOperationException(int currentDepth)
         {
             currentDepth &= JsonSharedConstant.RemoveFlagsBitMask;
@@ -141,6 +163,8 @@ namespace SpanJson
             ThrowInvalidOperationException(SR.Format(SR.DepthTooLarge, currentDepth, JsonSharedConstant.MaxWriterDepth));
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowInvalidOperationException(string message)
         {
             throw GetInvalidOperationException(message);
@@ -154,6 +178,8 @@ namespace SpanJson
             return ex;
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowInvalidOperationException_DepthNonZeroOrEmptyJson(int currentDepth)
         {
             throw GetInvalidOperationException(currentDepth);
@@ -173,6 +199,8 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowInvalidOperationOrArgumentException(in ReadOnlySpan<char> propertyName, int currentDepth)
         {
             currentDepth &= JsonSharedConstant.RemoveFlagsBitMask;
@@ -248,6 +276,8 @@ namespace SpanJson
                 SR.Format(SR.JsonElementHasWrongType, expectedTypeName, actualType.ToValueKind()));
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowJsonReaderException(ref Utf8JsonReader json, ExceptionResource resource, byte nextByte = default, in ReadOnlySpan<byte> bytes = default)
         {
             throw GetJsonReaderException(ref json, resource, nextByte, bytes);
@@ -395,18 +425,22 @@ namespace SpanJson
             return message;
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowInvalidOperationException(ExceptionResource resource, int currentDepth, byte token, JsonTokenType tokenType)
         {
             throw GetInvalidOperationException(resource, currentDepth, token, tokenType);
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowArgumentException_InvalidCommentValue()
         {
             throw new ArgumentException(SR.CannotWriteCommentWithEmbeddedDelimiter);
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowArgumentException_InvalidUTF8(in ReadOnlySpan<byte> value)
         {
             var builder = new StringBuilder();
@@ -434,17 +468,22 @@ namespace SpanJson
             throw new ArgumentException(SR.Format(SR.CannotEncodeInvalidUTF8, builder));
         }
 
+        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowArgumentException_InvalidUTF16(int charAsInt)
         {
             throw new ArgumentException(SR.Format(SR.CannotEncodeInvalidUTF16, $"0x{charAsInt:X2}"));
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowInvalidOperationException_ReadInvalidUTF16(int charAsInt)
         {
             throw GetInvalidOperationException(SR.Format(SR.CannotReadInvalidUTF16, $"0x{charAsInt:X2}"));
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowInvalidOperationException_ReadInvalidUTF16()
         {
             throw GetInvalidOperationException(SR.CannotReadIncompleteUTF16);
@@ -603,7 +642,7 @@ namespace SpanJson
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static NotSupportedException GetNotSupportedException_SerializationNotSupportedCollection(Type propertyType, Type parentType, MemberInfo memberInfo)
+        public static NotSupportedException GetNotSupportedException_SerializationNotSupportedCollection(Type propertyType, Type? parentType, MemberInfo? memberInfo)
         {
             if (parentType is not null && parentType != typeof(object) && memberInfo is not null)
             {

@@ -29,7 +29,7 @@ namespace SpanJson.Dynamic
         {
             if (DynamicConverter.TryConvertTo(typeof(<#= t.Name #>), input.Symbols, out var value))
             {
-                return (<#= t.Name #>) value;
+                return (<#= t.Name #>) value!;
             }
             throw ThrowHelper.GetInvalidCastException();
         }

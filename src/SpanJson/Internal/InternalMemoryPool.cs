@@ -13,7 +13,7 @@
         }
 
         [ThreadStatic]
-        static TSymbol[] s_buffer = null;
+        static TSymbol[]? s_buffer = null;
 
         public static TSymbol[] GetBuffer()
         {

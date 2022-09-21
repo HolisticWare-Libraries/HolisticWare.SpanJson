@@ -160,7 +160,7 @@ namespace SpanJson
 
                 #region -- Deserialize --
 
-                public static T InnerDeserialize(TSymbol[] input)
+                public static T? InnerDeserialize(TSymbol[] input)
                 {
                     if (input is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.input); }
 
@@ -169,22 +169,22 @@ namespace SpanJson
                 }
 
 #if !NETSTANDARD2_0
-                public static T InnerDeserialize(in ArraySegment<TSymbol> input)
+                public static T? InnerDeserialize(in ArraySegment<TSymbol> input)
 #else
-                public static T InnerDeserialize(ArraySegment<TSymbol> input)
+                public static T? InnerDeserialize(ArraySegment<TSymbol> input)
 #endif
                 {
                     var jsonReader = new JsonReader<TSymbol>(input);
                     return Formatter.Deserialize(ref jsonReader, Resolver);
                 }
 
-                public static T InnerDeserialize(in ReadOnlyMemory<TSymbol> input)
+                public static T? InnerDeserialize(in ReadOnlyMemory<TSymbol> input)
                 {
                     var jsonReader = new JsonReader<TSymbol>(input);
                     return Formatter.Deserialize(ref jsonReader, Resolver);
                 }
 
-                public static T InnerDeserialize(in ReadOnlySpan<TSymbol> input)
+                public static T? InnerDeserialize(in ReadOnlySpan<TSymbol> input)
                 {
                     var jsonReader = new JsonReader<TSymbol>(input);
                     return Formatter.Deserialize(ref jsonReader, Resolver);
@@ -194,7 +194,7 @@ namespace SpanJson
 
                 #region -- Utf16 Deserialize --
 
-                public static ValueTask<T> InnerDeserializeAsync(TextReader reader, CancellationToken cancellationToken = default)
+                public static ValueTask<T?> InnerDeserializeAsync(TextReader reader, CancellationToken cancellationToken = default)
                 {
                     if (reader is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.reader); }
 
@@ -202,16 +202,16 @@ namespace SpanJson
                     if (input.IsCompletedSuccessfully())
                     {
 #if NETSTANDARD2_0
-                        return new ValueTask<T>(InnerDeserialize(MemoryMarshal.Cast<char, TSymbol>(input.Result.AsSpan())));
+                        return new ValueTask<T?>(InnerDeserialize(MemoryMarshal.Cast<char, TSymbol>(input.Result.AsSpan())));
 #else
-                        return new ValueTask<T>(InnerDeserialize(MemoryMarshal.Cast<char, TSymbol>(input.Result)));
+                        return new ValueTask<T?>(InnerDeserialize(MemoryMarshal.Cast<char, TSymbol>(input.Result)));
 #endif
                     }
 
                     return AwaitDeserializeAsync(input);
                 }
 
-                private static async ValueTask<T> AwaitDeserializeAsync(Task<string> task)
+                private static async ValueTask<T?> AwaitDeserializeAsync(Task<string> task)
                 {
                     var input = await task.ConfigureAwait(false);
 #if NETSTANDARD2_0
@@ -225,7 +225,7 @@ namespace SpanJson
 
                 #region -- Utf8 Deserialize --
 
-                public static async ValueTask<T> InnerDeserializeAsync(Stream stream, CancellationToken cancellationToken = default)
+                public static async ValueTask<T?> InnerDeserializeAsync(Stream stream, CancellationToken cancellationToken = default)
                 {
                     if (stream is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.stream); }
 
@@ -241,7 +241,7 @@ namespace SpanJson
                     }
                     finally
                     {
-                        ArrayPool<byte>.Shared.Return(drained.Array);
+                        ArrayPool<byte>.Shared.Return(drained.Array!);
                     }
                 }
 
