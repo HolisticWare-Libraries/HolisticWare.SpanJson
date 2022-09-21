@@ -216,7 +216,7 @@ namespace SpanJson.Utilities
         }
 
         //[MethodImpl(MethodImplOptions.AggressiveInlining)] // .NET Core 3.0 Release模式下，会抛出异常 Internal CLR error. (0x80131506)
-        internal static string ToString(object value)
+        internal static string? ToString(object value)
         {
             switch (value)
             {
@@ -236,7 +236,7 @@ namespace SpanJson.Utilities
                     return utf8String.ToString();
 
                 default:
-                    return System.Convert.ToString(value, CultureInfo.InvariantCulture)!;
+                    return System.Convert.ToString(value, CultureInfo.InvariantCulture);
             }
         }
 
@@ -502,6 +502,18 @@ namespace SpanJson.Utilities
                         value = TypeUtils.ResolveType(s);
                         return ConvertResult.Success;
                     }
+#if NET6_0_OR_GREATER
+                    if (targetType == typeof(DateOnly))
+                    {
+                        value = DateOnly.ParseExact(s, "yyyy'-'MM'-'dd", CultureInfo.InvariantCulture);
+                        return ConvertResult.Success;
+                    }
+                    if (targetType == typeof(TimeOnly))
+                    {
+                        value = TimeOnly.ParseExact(s, "HH':'mm':'ss.FFFFFFF", CultureInfo.InvariantCulture);
+                        return ConvertResult.Success;
+                    }
+#endif
                     break;
 
                 case BigInteger integer:

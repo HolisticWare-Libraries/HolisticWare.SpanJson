@@ -149,12 +149,12 @@ namespace SpanJson.Linq
             base.WritePropertyName(name);
         }
 
-        private void AddValue(object? value)
+        private void AddRawValue(object? value, JTokenType type)
         {
-            AddValue(new JValue(value));
+            AddJValue(new JValue(value, type));
         }
 
-        internal void AddValue(JValue? value)
+        internal void AddJValue(JValue? value)
         {
             if (_parent is not null)
             {
@@ -189,7 +189,7 @@ namespace SpanJson.Linq
             {
                 case BigInteger _:
                     base.WriteValue(0); // InternalWriteValue(JsonToken.Integer);
-                    AddValue(value);
+                    AddRawValue(value, JTokenType.Integer);
                     break;
 
                 case CuteAnt.CombGuid _:
@@ -199,14 +199,14 @@ namespace SpanJson.Linq
                 case SpanJsonDynamicUtf8Number _:
                 case SpanJsonDynamicUtf8String _:
                 case JToken _:
-                    AddValue(value);
+                    AddJValue(new JValue(value));
                     base.WriteUndefined();
                     break;
 
                 default:
                     if (value is not null && JValue.CustomPrimitiveTypes.TryGetValue(value.GetType(), out JTokenType tokenType))
                     {
-                        AddValue(new JValue(value, tokenType));
+                        AddJValue(new JValue(value, tokenType));
                         base.WriteUndefined();
                     }
                     else
@@ -221,21 +221,21 @@ namespace SpanJson.Linq
         public override void WriteNull()
         {
             base.WriteNull();
-            AddValue(null/*, JsonToken.Null*/);
+            AddJValue(JValue.CreateNull()/*, JsonToken.Null*/);
         }
 
         /// <summary>Writes an undefined value.</summary>
         public override void WriteUndefined()
         {
             base.WriteUndefined();
-            AddValue(null/*, JsonToken.Undefined*/);
+            AddJValue(JValue.CreateNull()/*, JsonToken.Undefined*/);
         }
 
         /// <summary>Writes an undefined value.</summary>
         public void WriteUndefined(object value)
         {
             base.WriteUndefined();
-            AddValue(new JValue(value, JTokenType.Undefined));
+            AddJValue(new JValue(value, JTokenType.Undefined));
         }
 
         /// <summary>Writes raw JSON.</summary>
@@ -243,7 +243,7 @@ namespace SpanJson.Linq
         public override void WriteRaw(string? json)
         {
             base.WriteRaw(json);
-            AddValue(new JRaw(json)/*, JsonToken.Raw*/);
+            AddJValue(new JRaw(json)/*, JsonToken.Raw*/);
         }
 
         /// <summary>Writes a comment <c>/*...*/</c> containing the specified text.</summary>
@@ -251,7 +251,7 @@ namespace SpanJson.Linq
         public override void WriteComment(string? text)
         {
             base.WriteComment(text);
-            AddValue(JValue.CreateComment(text)/*, JsonToken.Comment*/);
+            AddJValue(JValue.CreateComment(text)/*, JsonToken.Comment*/);
         }
 
         /// <summary>Writes a <see cref="String"/> value.</summary>
@@ -259,7 +259,7 @@ namespace SpanJson.Linq
         public override void WriteValue(string? value)
         {
             base.WriteValue(value);
-            AddValue(value/*, JsonToken.String*/);
+            AddJValue(new JValue(value)/*, JsonToken.String*/);
         }
 
         /// <summary>Writes a <see cref="Int32"/> value.</summary>
@@ -267,7 +267,7 @@ namespace SpanJson.Linq
         public override void WriteValue(int value)
         {
             base.WriteValue(value);
-            AddValue(value/*, JsonToken.Integer*/);
+            AddRawValue(value, JTokenType.Integer/*, JsonToken.Integer*/);
         }
 
         /// <summary>Writes a <see cref="UInt32"/> value.</summary>
@@ -275,7 +275,7 @@ namespace SpanJson.Linq
         public override void WriteValue(uint value)
         {
             base.WriteValue(value);
-            AddValue(value/*, JsonToken.Integer*/);
+            AddRawValue(value, JTokenType.Integer/*, JsonToken.Integer*/);
         }
 
         /// <summary>Writes a <see cref="Int64"/> value.</summary>
@@ -283,7 +283,7 @@ namespace SpanJson.Linq
         public override void WriteValue(long value)
         {
             base.WriteValue(value);
-            AddValue(value/*, JsonToken.Integer*/);
+            AddJValue(new JValue(value)/*, JsonToken.Integer*/);
         }
 
         /// <summary>Writes a <see cref="UInt64"/> value.</summary>
@@ -291,7 +291,7 @@ namespace SpanJson.Linq
         public override void WriteValue(ulong value)
         {
             base.WriteValue(value);
-            AddValue(value/*, JsonToken.Integer*/);
+            AddJValue(new JValue(value)/*, JsonToken.Integer*/);
         }
 
         /// <summary>Writes a <see cref="Single"/> value.</summary>
@@ -299,7 +299,7 @@ namespace SpanJson.Linq
         public override void WriteValue(float value)
         {
             base.WriteValue(value);
-            AddValue(value/*, JsonToken.Float*/);
+            AddJValue(new JValue(value)/*, JsonToken.Float*/);
         }
 
         /// <summary>Writes a <see cref="Double"/> value.</summary>
@@ -307,7 +307,7 @@ namespace SpanJson.Linq
         public override void WriteValue(double value)
         {
             base.WriteValue(value);
-            AddValue(value/*, JsonToken.Float*/);
+            AddJValue(new JValue(value)/*, JsonToken.Float*/);
         }
 
         /// <summary>Writes a <see cref="Boolean"/> value.</summary>
@@ -315,7 +315,7 @@ namespace SpanJson.Linq
         public override void WriteValue(bool value)
         {
             base.WriteValue(value);
-            AddValue(value/*, JsonToken.Boolean*/);
+            AddJValue(new JValue(value)/*, JsonToken.Boolean*/);
         }
 
         /// <summary>Writes a <see cref="Int16"/> value.</summary>
@@ -323,7 +323,7 @@ namespace SpanJson.Linq
         public override void WriteValue(short value)
         {
             base.WriteValue(value);
-            AddValue(value/*, JsonToken.Integer*/);
+            AddRawValue(value, JTokenType.Integer/*, JsonToken.Integer*/);
         }
 
         /// <summary>Writes a <see cref="UInt16"/> value.</summary>
@@ -331,7 +331,7 @@ namespace SpanJson.Linq
         public override void WriteValue(ushort value)
         {
             base.WriteValue(value);
-            AddValue(value/*, JsonToken.Integer*/);
+            AddRawValue(value, JTokenType.Integer/*, JsonToken.Integer*/);
         }
 
         /// <summary>Writes a <see cref="Char"/> value.</summary>
@@ -341,7 +341,7 @@ namespace SpanJson.Linq
             base.WriteValue(value);
             string s;
             s = value.ToString(CultureInfo.InvariantCulture);
-            AddValue(s/*, JsonToken.String*/);
+            AddJValue(new JValue(s)/*, JsonToken.String*/);
         }
 
         /// <summary>Writes a <see cref="Byte"/> value.</summary>
@@ -349,7 +349,7 @@ namespace SpanJson.Linq
         public override void WriteValue(byte value)
         {
             base.WriteValue(value);
-            AddValue(value/*, JsonToken.Integer*/);
+            AddRawValue(value, JTokenType.Integer/*, JsonToken.Integer*/);
         }
 
         /// <summary>Writes a <see cref="SByte"/> value.</summary>
@@ -357,7 +357,7 @@ namespace SpanJson.Linq
         public override void WriteValue(sbyte value)
         {
             base.WriteValue(value);
-            AddValue(value/*, JsonToken.Integer*/);
+            AddRawValue(value, JTokenType.Integer/*, JsonToken.Integer*/);
         }
 
         /// <summary>Writes a <see cref="Decimal"/> value.</summary>
@@ -365,7 +365,7 @@ namespace SpanJson.Linq
         public override void WriteValue(decimal value)
         {
             base.WriteValue(value);
-            AddValue(value/*, JsonToken.Float*/);
+            AddJValue(new JValue(value)/*, JsonToken.Float*/);
         }
 
         /// <summary>Writes a <see cref="DateTime"/> value.</summary>
@@ -375,7 +375,7 @@ namespace SpanJson.Linq
             base.WriteValue(value);
             // JsonWriter 默认 RoundtripKind，不需要转换
             //value = DateTimeUtils.EnsureDateTime(value, DateTimeZoneHandling);
-            AddValue(value/*, JsonToken.Date*/);
+            AddJValue(new JValue(value)/*, JsonToken.Date*/);
         }
 
         /// <summary>Writes a <see cref="DateTimeOffset"/> value.</summary>
@@ -383,7 +383,7 @@ namespace SpanJson.Linq
         public override void WriteValue(DateTimeOffset value)
         {
             base.WriteValue(value);
-            AddValue(value/*, JsonToken.Date*/);
+            AddJValue(new JValue(value)/*, JsonToken.Date*/);
         }
 
         /// <summary>Writes a <see cref="Byte"/>[] value.</summary>
@@ -391,7 +391,7 @@ namespace SpanJson.Linq
         public override void WriteValue(byte[]? value)
         {
             base.WriteValue(value);
-            AddValue(value/*, JsonToken.Bytes*/);
+            AddJValue(new JValue(value, JTokenType.Bytes)/*, JsonToken.Bytes*/);
         }
 
         /// <summary>Writes a <see cref="TimeSpan"/> value.</summary>
@@ -399,7 +399,7 @@ namespace SpanJson.Linq
         public override void WriteValue(TimeSpan value)
         {
             base.WriteValue(value);
-            AddValue(value/*, JsonToken.String*/);
+            AddJValue(new JValue(value)/*, JsonToken.String*/);
         }
 
         /// <summary>Writes a <see cref="Guid"/> value.</summary>
@@ -407,7 +407,7 @@ namespace SpanJson.Linq
         public override void WriteValue(Guid value)
         {
             base.WriteValue(value);
-            AddValue(value/*, JsonToken.String*/);
+            AddJValue(new JValue(value)/*, JsonToken.String*/);
         }
 
         /// <summary>Writes a <see cref="Uri"/> value.</summary>
@@ -415,7 +415,7 @@ namespace SpanJson.Linq
         public override void WriteValue(Uri? value)
         {
             base.WriteValue(value);
-            AddValue(value/*, JsonToken.String*/);
+            AddJValue(new JValue(value)/*, JsonToken.String*/);
         }
 
         public void WriteValue(CuteAnt.CombGuid? value)
@@ -432,7 +432,7 @@ namespace SpanJson.Linq
 
         public void WriteValue(CuteAnt.CombGuid value)
         {
-            AddValue(value);
+            AddJValue(new JValue(value));
         }
 
         #endregion

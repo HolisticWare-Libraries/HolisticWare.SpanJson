@@ -28,6 +28,7 @@ using System.Numerics;
 using CuteAnt;
 using SpanJson.Document;
 using SpanJson.Dynamic;
+using SpanJson.Utilities;
 
 namespace SpanJson.Linq
 {
@@ -55,11 +56,11 @@ namespace SpanJson.Linq
 
         /// <summary>Initializes a new instance of the <see cref="JValue"/> class with the given value.</summary>
         /// <param name="value">The value.</param>
-        public JValue(long value) : this(value, JTokenType.Integer) { }
+        public JValue(long value) : this(BoxedPrimitives.Get(value), JTokenType.Integer) { }
 
         /// <summary>Initializes a new instance of the <see cref="JValue"/> class with the given value.</summary>
         /// <param name="value">The value.</param>
-        public JValue(decimal value) : this(value, JTokenType.Float) { }
+        public JValue(decimal value) : this(BoxedPrimitives.Get(value), JTokenType.Float) { }
 
         /// <summary>Initializes a new instance of the <see cref="JValue"/> class with the given value.</summary>
         /// <param name="value">The value.</param>
@@ -71,7 +72,7 @@ namespace SpanJson.Linq
 
         /// <summary>Initializes a new instance of the <see cref="JValue"/> class with the given value.</summary>
         /// <param name="value">The value.</param>
-        public JValue(double value) : this(value, JTokenType.Float) { }
+        public JValue(double value) : this(BoxedPrimitives.Get(value), JTokenType.Float) { }
 
         /// <summary>Initializes a new instance of the <see cref="JValue"/> class with the given value.</summary>
         /// <param name="value">The value.</param>
@@ -87,11 +88,11 @@ namespace SpanJson.Linq
 
         /// <summary>Initializes a new instance of the <see cref="JValue"/> class with the given value.</summary>
         /// <param name="value">The value.</param>
-        public JValue(bool value) : this(value, JTokenType.Boolean) { }
+        public JValue(bool value) : this(BoxedPrimitives.Get(value), JTokenType.Boolean) { }
 
         /// <summary>Initializes a new instance of the <see cref="JValue"/> class with the given value.</summary>
         /// <param name="value">The value.</param>
-        public JValue(string value) : this(value, JTokenType.String) { }
+        public JValue(string? value) : this(value, JTokenType.String) { }
 
         /// <summary>Initializes a new instance of the <see cref="JValue"/> class with the given value.</summary>
         /// <param name="value">The value.</param>
@@ -103,7 +104,7 @@ namespace SpanJson.Linq
 
         /// <summary>Initializes a new instance of the <see cref="JValue"/> class with the given value.</summary>
         /// <param name="value">The value.</param>
-        public JValue(Uri value) : this(value, (value is not null) ? JTokenType.Uri : JTokenType.Null) { }
+        public JValue(Uri? value) : this(value, (value is not null) ? JTokenType.Uri : JTokenType.Null) { }
 
         /// <summary>Initializes a new instance of the <see cref="JValue"/> class with the given value.</summary>
         /// <param name="value">The value.</param>

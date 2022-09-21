@@ -154,8 +154,8 @@ namespace SpanJson.Linq
                 case JTokenType.Comment:
                 case JTokenType.String:
                 case JTokenType.Raw:
-                    string s1 = ConvertUtils.ToString(objA);
-                    string s2 = ConvertUtils.ToString(objB);
+                    string? s1 = ConvertUtils.ToString(objA);
+                    string? s2 = ConvertUtils.ToString(objB);
 
                     return string.CompareOrdinal(s1, s2);
 

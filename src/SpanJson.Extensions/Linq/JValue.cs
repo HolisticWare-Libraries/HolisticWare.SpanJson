@@ -66,12 +66,12 @@ namespace SpanJson.Linq
             return new JValue(null, JTokenType.Null);
         }
 
-        ///// <summary>Creates a <see cref="JValue"/> undefined value.</summary>
-        ///// <returns>A <see cref="JValue"/> undefined value.</returns>
-        //public static JValue CreateUndefined()
-        //{
-        //    return new JValue(null, JTokenType.Undefined);
-        //}
+        /// <summary>Creates a <see cref="JValue"/> undefined value.</summary>
+        /// <returns>A <see cref="JValue"/> undefined value.</returns>
+        public static JValue CreateUndefined()
+        {
+            return new JValue(null, JTokenType.Undefined);
+        }
 
         internal override int GetDeepHashCode()
         {

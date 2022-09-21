@@ -289,7 +289,13 @@ namespace SpanJson.Linq
 
         internal override int GetDeepHashCode()
         {
-            return _name.GetHashCode() ^ (Value?.GetDeepHashCode() ?? 0);
+            int hash;
+#if !NETSTANDARD2_0
+            hash = _name.GetHashCode(StringComparison.Ordinal);
+#else
+            hash = _name.GetHashCode();
+#endif
+            return hash ^ (Value?.GetDeepHashCode() ?? 0);
         }
     }
 }

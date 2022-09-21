@@ -233,6 +233,17 @@ namespace SpanJson
             }
         }
 
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        internal static void ThrowArgumentException_Could_not_determine_JSON_object_type_for_type(object content)
+        {
+            throw GetArgumentException();
+            ArgumentException GetArgumentException()
+            {
+                return new ArgumentException("Could not determine JSON object type for type {0}.".FormatWith(CultureInfo.InvariantCulture, content.GetType()), nameof(content));
+            }
+        }
+
         #endregion
 
         #region -- ArgumentOutOfRangeException --

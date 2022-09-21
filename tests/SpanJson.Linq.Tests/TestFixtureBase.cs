@@ -276,6 +276,21 @@ namespace SpanJson.Tests
         {
             return @"@""" + json.Replace(@"""", @"""""") + @"""";
         }
+
+        protected string GetNestedJson(int depth)
+        {
+            JObject root = new JObject();
+            JObject current = root;
+            for (int i = 0; i < depth - 1; i++)
+            {
+                JObject nested = new JObject();
+                current[i.ToString()] = nested;
+
+                current = nested;
+            }
+
+            return root.ToString();
+        }
     }
 
     public static class CustomAssert

@@ -27,6 +27,8 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using SpanJson.Utilities;
+using System.Globalization;
 
 namespace SpanJson.Linq
 {
@@ -545,9 +547,12 @@ namespace SpanJson.Linq
 
         /// <summary>Merge the specified content into this <see cref="JToken"/>.</summary>
         /// <param name="content">The content to be merged.</param>
-        public void Merge(object content)
+        public void Merge(object? content)
         {
-            MergeItem(content, new JsonMergeSettings());
+            if (content == null) { return; }
+
+            ValidateContent(content);
+            MergeItem(content, null);
         }
 
         /// <summary>Merge the specified content into this <see cref="JToken"/> using <see cref="JsonMergeSettings"/>.</summary>
@@ -555,7 +560,24 @@ namespace SpanJson.Linq
         /// <param name="settings">The <see cref="JsonMergeSettings"/> used to merge the content.</param>
         public void Merge(object content, JsonMergeSettings? settings)
         {
+            if (content is null) { return; }
+
+            ValidateContent(content);
             MergeItem(content, settings);
+        }
+
+        private void ValidateContent(object content)
+        {
+            if (content.GetType().IsSubclassOf(typeof(JToken)))
+            {
+                return;
+            }
+            if (IsMultiContent(content))
+            {
+                return;
+            }
+
+            ThrowHelper2.ThrowArgumentException_Could_not_determine_JSON_object_type_for_type(content);
         }
 
         internal int ContentsHashCode()
@@ -584,7 +606,7 @@ namespace SpanJson.Linq
                 case MergeArrayHandling.Concat:
                     foreach (var item in content)
                     {
-                        target.Add(item);
+                        target.Add(CreateFromContent(item));
                     }
                     break;
                 case MergeArrayHandling.Union:
@@ -592,9 +614,11 @@ namespace SpanJson.Linq
 
                     foreach (var item in content)
                     {
-                        if (items.Add((JToken)item!))
+                        JToken contentItem = CreateFromContent(item);
+
+                        if (items.Add(contentItem))
                         {
-                            target.Add(item);
+                            target.Add(contentItem);
                         }
                     }
                     break;
@@ -603,7 +627,7 @@ namespace SpanJson.Linq
                     target.ClearItems();
                     foreach (var item in content)
                     {
-                        target.Add(item);
+                        target.Add(CreateFromContent(item));
                     }
                     break;
                 case MergeArrayHandling.Merge:
@@ -632,7 +656,7 @@ namespace SpanJson.Linq
                         }
                         else
                         {
-                            target.Add(targetItem);
+                            target.Add(CreateFromContent(targetItem));
                         }
 
                         i++;
