@@ -164,7 +164,7 @@ namespace SpanJson.Resolvers
             return new JsonObjectDescription(null, null, result.ToArray(), null);
         }
 
-        public IJsonFormatter<object, TSymbol> GetRuntimeFormatter() => RuntimeFormatter<TSymbol, TResolver>.Default;
+        public IJsonFormatter<object?, TSymbol> GetRuntimeFormatter() => RuntimeFormatter<TSymbol, TResolver>.Default;
         public IJsonFormatter<T, TSymbol> GetEnumStringFormatter<T>() where T : struct, Enum
         {
             var type = typeof(T);

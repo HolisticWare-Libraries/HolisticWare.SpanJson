@@ -482,12 +482,9 @@ namespace SpanJson
         /// as if <see cref="WriteNull(in System.ReadOnlySpan{byte})"/> were called.
         /// </para>
         /// </remarks>
-        public void WriteString(string propertyName, string value)
+        public void WriteString(string propertyName, string? value)
         {
-            if (propertyName is null)
-            {
-                throw new ArgumentNullException(nameof(propertyName));
-            }
+            if (propertyName is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.propertyName); }
 
             if (value is null)
             {
@@ -567,7 +564,7 @@ namespace SpanJson
         /// as if <see cref="WriteNull(in JsonEncodedText)"/> was called.
         /// </para>
         /// </remarks>
-        public void WriteString(in JsonEncodedText propertyName, string value)
+        public void WriteString(in JsonEncodedText propertyName, string? value)
         {
             if (value is null)
             {
@@ -813,7 +810,7 @@ namespace SpanJson
         /// as if <see cref="WriteNull(in System.ReadOnlySpan{char})"/> was called.
         /// </para>
         /// </remarks>
-        public void WriteString(in ReadOnlySpan<char> propertyName, string value)
+        public void WriteString(in ReadOnlySpan<char> propertyName, string? value)
         {
             if (value is null)
             {
@@ -885,7 +882,7 @@ namespace SpanJson
         /// as if <see cref="WriteNull(in System.ReadOnlySpan{byte})"/> was called.
         /// </para>
         /// </remarks>
-        public void WriteString(in ReadOnlySpan<byte> utf8PropertyName, string value)
+        public void WriteString(in ReadOnlySpan<byte> utf8PropertyName, string? value)
         {
             if (value is null)
             {

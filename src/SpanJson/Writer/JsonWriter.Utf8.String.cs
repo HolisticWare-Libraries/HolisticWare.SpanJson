@@ -23,7 +23,7 @@
             WriteUtf8DoubleQuote(ref pinnableAddr, ref pos);
         }
 
-        public void WriteUtf8String(string value)
+        public void WriteUtf8String(string? value)
         {
             WriteUtf8StringEscapeValue(value.AsSpan(), false);
         }
@@ -34,7 +34,7 @@
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void WriteUtf8String(string value, JsonEscapeHandling escapeHandling, JavaScriptEncoder? encoder = null)
+        public void WriteUtf8String(string? value, JsonEscapeHandling escapeHandling, JavaScriptEncoder? encoder = null)
         {
             WriteUtf8String(value.AsSpan(), escapeHandling, encoder);
         }

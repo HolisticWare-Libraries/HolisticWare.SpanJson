@@ -312,15 +312,8 @@ namespace SpanJson.Serialization
         /// </remarks>
         public static Type? ExtractGenericInterface(Type queryType, Type interfaceType)
         {
-            if (queryType is null)
-            {
-                throw new ArgumentNullException(nameof(queryType));
-            }
-
-            if (interfaceType is null)
-            {
-                throw new ArgumentNullException(nameof(interfaceType));
-            }
+            if (queryType is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.queryType); }
+            if (interfaceType is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.interfaceType); }
 
             if (IsGenericInstantiation(queryType, interfaceType))
             {

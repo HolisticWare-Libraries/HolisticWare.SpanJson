@@ -48,7 +48,7 @@ namespace SpanJson
         /// as if <see cref="WriteNullValue"/> was called.
         /// </para>
         /// </remarks>
-        public void WriteStringValue(string value)
+        public void WriteStringValue(string? value)
         {
             if (value is null)
             {

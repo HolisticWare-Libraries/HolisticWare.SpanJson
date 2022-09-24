@@ -117,7 +117,7 @@
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public IJsonFormatter<object, TSymbol> GetRuntimeFormatter() => RuntimeFormatter<TSymbol, TResolver>.Default;
+            public IJsonFormatter<object?, TSymbol> GetRuntimeFormatter() => RuntimeFormatter<TSymbol, TResolver>.Default;
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public IJsonFormatter<T, TSymbol> GetEnumStringFormatter<T>() where T : struct, Enum
             {

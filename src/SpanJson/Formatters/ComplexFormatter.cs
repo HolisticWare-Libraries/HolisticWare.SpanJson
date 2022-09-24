@@ -496,7 +496,7 @@ namespace SpanJson.Formatters
         }
 
         private static void SerializeExtension<TSymbol, TResolver>(ref JsonWriter<TSymbol> writer,
-            IJsonFormatterResolver<TSymbol> resolver, IDictionary<string, object> value, bool writeSeparator,
+            IJsonFormatterResolver<TSymbol> resolver, IDictionary<string, object?> value, bool writeSeparator,
             bool excludeNulls, HashSet<string> knownNames)
             where TResolver : IJsonFormatterResolver<TSymbol, TResolver>, new() where TSymbol : struct
         {
@@ -524,7 +524,7 @@ namespace SpanJson.Formatters
                     }
 
                     writer.IncrementDepth();
-                    SerializeRuntimeDecisionInternal<object, TSymbol, TResolver>(ref writer, kvp.Value!, RuntimeFormatter<TSymbol, TResolver>.Default, resolver);
+                    SerializeRuntimeDecisionInternal<object?, TSymbol, TResolver>(ref writer, kvp.Value, RuntimeFormatter<TSymbol, TResolver>.Default, resolver);
                     writer.DecrementDepth();
                     writeSeparator = true;
                 }

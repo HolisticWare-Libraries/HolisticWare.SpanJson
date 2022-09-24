@@ -31,7 +31,7 @@ namespace SpanJson
         [EditorBrowsable(EditorBrowsableState.Never)]
         bool IsSupportedType(Type type);
 
-        IJsonFormatter<object, TSymbol> GetRuntimeFormatter();
+        IJsonFormatter<object?, TSymbol> GetRuntimeFormatter();
         IJsonFormatter<T, TSymbol> GetEnumStringFormatter<T>() where T : struct, Enum;
         IJsonFormatter<T, TSymbol> GetEnumIntegerFormatter<T>() where T : struct, Enum;
         IJsonFormatter<T, TSymbol> GetFormatter<T>();

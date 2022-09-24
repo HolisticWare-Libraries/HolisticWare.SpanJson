@@ -7,7 +7,7 @@ using SpanJson.Resolvers;
 
 namespace SpanJson.Formatters
 {
-    public sealed class RuntimeFormatter<TSymbol, TResolver> : BaseFormatter, IJsonFormatter<object, TSymbol>
+    public sealed class RuntimeFormatter<TSymbol, TResolver> : BaseFormatter, IJsonFormatter<object?, TSymbol>
         where TResolver : IJsonFormatterResolver<TSymbol, TResolver>, new()
         where TSymbol : struct
     {
@@ -43,7 +43,7 @@ namespace SpanJson.Formatters
             var resolverParameter = Expression.Parameter(typeof(IJsonFormatterResolver<TSymbol>), "resolver");
             if (type == typeof(object)) // if it's an object we can't do anything about so we write an empty object
             {
-                return (ref JsonWriter<TSymbol> writer, object value, IJsonFormatterResolver<TSymbol> resolver) =>
+                return (ref JsonWriter<TSymbol> writer, object? value, IJsonFormatterResolver<TSymbol> resolver) =>
                 {
                     writer.WriteBeginObject();
                     writer.WriteEndObject();
@@ -74,6 +74,6 @@ namespace SpanJson.Formatters
             return true;
         }
 
-        private delegate void SerializeDelegate(ref JsonWriter<TSymbol> writer, object value, IJsonFormatterResolver<TSymbol> resolver);
+        private delegate void SerializeDelegate(ref JsonWriter<TSymbol> writer, object? value, IJsonFormatterResolver<TSymbol> resolver);
     }
 }

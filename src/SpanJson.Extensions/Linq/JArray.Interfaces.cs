@@ -26,7 +26,7 @@
 
 namespace SpanJson.Linq
 {
-    partial class JArray : IList<JToken>
+    partial class JArray : IList<JToken>, IReadOnlyList<JToken>
     {
         #region -- IList<JToken> Members --
 

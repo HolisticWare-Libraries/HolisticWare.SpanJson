@@ -23,7 +23,7 @@ using System.Diagnostics;
             WriteUtf16DoubleQuote(ref pinnableAddr, ref pos);
         }
 
-        public void WriteUtf16String(string value)
+        public void WriteUtf16String(string? value)
         {
             WriteUtf16StringEscapeValue(value.AsSpan(), false);
         }
@@ -34,7 +34,7 @@ using System.Diagnostics;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void WriteUtf16String(string value, JsonEscapeHandling escapeHandling, JavaScriptEncoder? encoder = null)
+        public void WriteUtf16String(string? value, JsonEscapeHandling escapeHandling, JavaScriptEncoder? encoder = null)
         {
             WriteUtf16String(value.AsSpan(), escapeHandling, encoder);
         }
