@@ -1,8 +1,8 @@
 ﻿namespace SpanJson
 {
     /// <summary>Annotate constructors with this attribute to use the constructor instead of members directly for deserialization.</summary>
-    [AttributeUsage(AttributeTargets.Constructor)]
-    public class JsonConstructorAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Constructor, AllowMultiple = false)]
+    public class JsonConstructorAttribute : JsonAttribute
     {
         /// <summary>The names of the constructor's parameters need to match the member names of the type (case-insensitive), the order is not relevant.</summary>
         public JsonConstructorAttribute() { }

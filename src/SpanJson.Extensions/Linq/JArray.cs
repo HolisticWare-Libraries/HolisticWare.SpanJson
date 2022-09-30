@@ -25,7 +25,6 @@
 
 using System.Collections;
 using System.Collections.Specialized;
-using System.Runtime.Serialization;
 using SpanJson.Utilities;
 
 namespace SpanJson.Linq
@@ -34,7 +33,7 @@ namespace SpanJson.Linq
     public partial class JArray : JContainer, IList<JToken>
     {
         private readonly List<JToken> _values = new List<JToken>();
-        [IgnoreDataMember]
+        [JsonIgnore]
         internal object? _dynamicJson;
 
         /// <summary>Gets the container's children tokens.</summary>

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using SpanJson.Helpers;
 
@@ -12,7 +10,7 @@ namespace SpanJson.Formatters
         where TResolver : IJsonFormatterResolver<TSymbol, TResolver>, new()
         where TSymbol : struct, IEquatable<TSymbol>
     {
-        private static readonly SerializeDelegate Serializer = BuildSerializeDelegate(s => s);
+        private static readonly SerializeDelegate Serializer = BuildSerializeDelegate<TResolver>(s => s);
         private static readonly DeserializeDelegate Deserializer = BuildDeserializeDelegate();
         private static readonly T[] Flags = BuildFlags();
         private static readonly T? ZeroFlag = GetZeroFlag();
@@ -103,7 +101,7 @@ namespace SpanJson.Formatters
         {
             var nameSpan = Expression.Parameter(typeof(ReadOnlySpan<TSymbol>), "nameSpan");
             Expression nameSpanExpression = nameSpan;
-            return BuildDeserializeDelegateExpressions<DeserializeDelegate, TEnumBase>(nameSpan, nameSpanExpression);
+            return BuildDeserializeDelegateExpressions<DeserializeDelegate, TResolver, TEnumBase>(nameSpan, nameSpanExpression);
         }
 
 

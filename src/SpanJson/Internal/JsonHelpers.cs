@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 #if NETSTANDARD2_0
 using System.Collections.Concurrent;
-using System.Linq;
-using System.Reflection;
 #endif
 
 namespace SpanJson.Internal
@@ -67,6 +64,11 @@ namespace SpanJson.Internal
             return result;
         }
 #endif
+
+        internal static bool IsIgnored(MemberInfo memberInfo)
+        {
+            return memberInfo.HasAttribute<JsonIgnoreAttribute>() || memberInfo.HasAttributeNamed("JsonIgnore") ? true : false;
+        }
 
         // borrowed from https://github.com/dotnet/corefx/blob/8135319caa7e457ed61053ca1418313b88057b51/src/System.Text.Json/src/System/Text/Json/JsonHelpers.cs#L11
 

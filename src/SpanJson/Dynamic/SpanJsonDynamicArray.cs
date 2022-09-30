@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Dynamic;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using CuteAnt.Reflection;
 using SpanJson.Internal;
 
@@ -40,10 +39,10 @@ namespace SpanJson.Dynamic
             return false;
         }
 
-        [IgnoreDataMember]
+        [JsonIgnore]
         public object this[int index] => _input[index];
 
-        [IgnoreDataMember]
+        [JsonIgnore]
         public int Length => _input.Length;
 
         IEnumerator IEnumerable.GetEnumerator()

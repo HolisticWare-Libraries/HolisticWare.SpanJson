@@ -53,6 +53,28 @@ namespace SpanJson.Tests
         }
 
         [Theory]
+        [InlineData(TestEnum.Hello, "\"hello\"")]
+        [InlineData(TestEnum.World, "\"world\"")]
+        [InlineData(TestEnum.Universe, "\"universe\"")]
+        [InlineData(TestEnum.Renamed, "\"solarSystem\"")]
+        public void SerializeUtf16_CamelCase(TestEnum value, string comparison)
+        {
+            var serialized = JsonCamelCaseSerializer.Generic.Utf16.Serialize(value);
+            Assert.Equal(comparison, serialized);
+        }
+
+        [Theory]
+        [InlineData(TestEnum.Hello, "\"hello\"")]
+        [InlineData(TestEnum.World, "\"world\"")]
+        [InlineData(TestEnum.Universe, "\"universe\"")]
+        [InlineData(TestEnum.Renamed, "\"solar_system\"")]
+        public void SerializeUtf16_SnakeCase(TestEnum value, string comparison)
+        {
+            var serialized = JsonSnakeCaseSerializer.Generic.Utf16.Serialize(value);
+            Assert.Equal(comparison, serialized);
+        }
+
+        [Theory]
         [InlineData("\"Hello\"", TestEnum.Hello)]
         [InlineData("\"World\"", TestEnum.World)]
         [InlineData("\"Universe\"", TestEnum.Universe)]
@@ -60,6 +82,60 @@ namespace SpanJson.Tests
         public void DeserializeUtf16(string value, TestEnum comparison)
         {
             var deserialized = JsonSerializer.Generic.Utf16.Deserialize<TestEnum>(value);
+            Assert.Equal(deserialized, comparison);
+        }
+
+        [Theory]
+        [InlineData("\"Hello\"", TestEnum.Hello)]
+        [InlineData("\"World\"", TestEnum.World)]
+        [InlineData("\"Universe\"", TestEnum.Universe)]
+        [InlineData("\"SolarSystem\"", TestEnum.Renamed)]
+        [InlineData("\"Renamed\"", TestEnum.Renamed)]
+        [InlineData("\"hello\"", TestEnum.Hello)]
+        [InlineData("\"world\"", TestEnum.World)]
+        [InlineData("\"universe\"", TestEnum.Universe)]
+        [InlineData("\"solarSystem\"", TestEnum.Renamed)]
+        [InlineData("\"solar_system\"", TestEnum.Renamed)]
+        [InlineData("\"renamed\"", TestEnum.Renamed)]
+        public void DeserializeUtf16_IC(string value, TestEnum comparison)
+        {
+            var deserialized = JsonSerializer.Generic.Utf16.Deserialize<TestEnum>(value);
+            Assert.Equal(deserialized, comparison);
+        }
+
+        [Theory]
+        [InlineData("\"Hello\"", TestEnum.Hello)]
+        [InlineData("\"World\"", TestEnum.World)]
+        [InlineData("\"Universe\"", TestEnum.Universe)]
+        [InlineData("\"SolarSystem\"", TestEnum.Renamed)]
+        [InlineData("\"Renamed\"", TestEnum.Renamed)]
+        [InlineData("\"hello\"", TestEnum.Hello)]
+        [InlineData("\"world\"", TestEnum.World)]
+        [InlineData("\"universe\"", TestEnum.Universe)]
+        [InlineData("\"solarSystem\"", TestEnum.Renamed)]
+        [InlineData("\"solar_system\"", TestEnum.Renamed)]
+        [InlineData("\"renamed\"", TestEnum.Renamed)]
+        public void DeserializeUtf16_IC_CamelCase(string value, TestEnum comparison)
+        {
+            var deserialized = JsonCamelCaseSerializer.Generic.Utf16.Deserialize<TestEnum>(value);
+            Assert.Equal(deserialized, comparison);
+        }
+
+        [Theory]
+        [InlineData("\"Hello\"", TestEnum.Hello)]
+        [InlineData("\"World\"", TestEnum.World)]
+        [InlineData("\"Universe\"", TestEnum.Universe)]
+        [InlineData("\"SolarSystem\"", TestEnum.Renamed)]
+        [InlineData("\"Renamed\"", TestEnum.Renamed)]
+        [InlineData("\"hello\"", TestEnum.Hello)]
+        [InlineData("\"world\"", TestEnum.World)]
+        [InlineData("\"universe\"", TestEnum.Universe)]
+        [InlineData("\"solarSystem\"", TestEnum.Renamed)]
+        [InlineData("\"solar_system\"", TestEnum.Renamed)]
+        [InlineData("\"renamed\"", TestEnum.Renamed)]
+        public void DeserializeUtf16_IC_SnakeCase(string value, TestEnum comparison)
+        {
+            var deserialized = JsonSnakeCaseSerializer.Generic.Utf16.Deserialize<TestEnum>(value);
             Assert.Equal(deserialized, comparison);
         }
 
@@ -81,11 +157,63 @@ namespace SpanJson.Tests
         [InlineData(TestEnum.World)]
         [InlineData(TestEnum.Universe)]
         [InlineData(TestEnum.Renamed)]
+        public void SerializeDeserializeUtf8_CamelCase(TestEnum value)
+        {
+            var serialized = JsonCamelCaseSerializer.Generic.Utf8.Serialize(value);
+            Assert.NotNull(serialized);
+            var deserialized = JsonCamelCaseSerializer.Generic.Utf8.Deserialize<TestEnum>(serialized);
+            Assert.Equal(value, deserialized);
+        }
+
+        [Theory]
+        [InlineData(TestEnum.Hello)]
+        [InlineData(TestEnum.World)]
+        [InlineData(TestEnum.Universe)]
+        [InlineData(TestEnum.Renamed)]
+        public void SerializeDeserializeUtf8_SnakeCase(TestEnum value)
+        {
+            var serialized = JsonSnakeCaseSerializer.Generic.Utf8.Serialize(value);
+            Assert.NotNull(serialized);
+            var deserialized = JsonSnakeCaseSerializer.Generic.Utf8.Deserialize<TestEnum>(serialized);
+            Assert.Equal(value, deserialized);
+        }
+
+        [Theory]
+        [InlineData(TestEnum.Hello)]
+        [InlineData(TestEnum.World)]
+        [InlineData(TestEnum.Universe)]
+        [InlineData(TestEnum.Renamed)]
         public void SerializeDeserializeUtf16(TestEnum value)
         {
             var serialized = JsonSerializer.Generic.Utf16.Serialize(value);
             Assert.NotNull(serialized);
             var deserialized = JsonSerializer.Generic.Utf16.Deserialize<TestEnum>(serialized);
+            Assert.Equal(value, deserialized);
+        }
+
+        [Theory]
+        [InlineData(TestEnum.Hello)]
+        [InlineData(TestEnum.World)]
+        [InlineData(TestEnum.Universe)]
+        [InlineData(TestEnum.Renamed)]
+        public void SerializeDeserializeUtf16_CamelCase(TestEnum value)
+        {
+            var serialized = JsonCamelCaseSerializer.Generic.Utf16.Serialize(value);
+            Assert.NotNull(serialized);
+            var deserialized = JsonCamelCaseSerializer.Generic.Utf16.Deserialize<TestEnum>(serialized);
+            Assert.Equal(value, deserialized);
+        }
+
+        [Theory]
+        [InlineData(TestEnum.Hello)]
+        [InlineData(TestEnum.World)]
+        [InlineData(TestEnum.Universe)]
+        [InlineData(TestEnum.Renamed)]
+        public void SerializeDeserializeUtf16_SnakeCase(TestEnum value)
+        {
+            var serialized = JsonSnakeCaseSerializer.Generic.Utf16.Serialize(value);
+            Assert.NotNull(serialized);
+            var deserialized = JsonSnakeCaseSerializer.Generic.Utf16.Deserialize<TestEnum>(serialized);
             Assert.Equal(value, deserialized);
         }
 
@@ -144,6 +272,34 @@ namespace SpanJson.Tests
             string value = "\"   First, Second   , Third,    Fourth  \"";
             var deserialized = JsonSerializer.Generic.Utf8.Deserialize<FlagsEnum>(Encoding.UTF8.GetBytes(value));
             Assert.Equal(FlagsEnum.First | FlagsEnum.Second | FlagsEnum.Third | FlagsEnum.Fourth, deserialized);
+
+            value = "\"   first, second   , third,    fourth  \"";
+            deserialized = JsonSerializer.Generic.Utf8.Deserialize<FlagsEnum>(Encoding.UTF8.GetBytes(value));
+            Assert.Equal(FlagsEnum.First | FlagsEnum.Second | FlagsEnum.Third | FlagsEnum.Fourth, deserialized);
+        }
+
+        [Fact]
+        public void DeserializeFlagsEnumWithWhitespaceUtf8_CamelCase()
+        {
+            string value = "\"   First, Second   , Third,    Fourth  \"";
+            var deserialized = JsonCamelCaseSerializer.Generic.Utf8.Deserialize<FlagsEnum>(Encoding.UTF8.GetBytes(value));
+            Assert.Equal(FlagsEnum.First | FlagsEnum.Second | FlagsEnum.Third | FlagsEnum.Fourth, deserialized);
+
+            value = "\"   first, second   , third,    fourth  \"";
+            deserialized = JsonCamelCaseSerializer.Generic.Utf8.Deserialize<FlagsEnum>(Encoding.UTF8.GetBytes(value));
+            Assert.Equal(FlagsEnum.First | FlagsEnum.Second | FlagsEnum.Third | FlagsEnum.Fourth, deserialized);
+        }
+
+        [Fact]
+        public void DeserializeFlagsEnumWithWhitespaceUtf8_SnakeCase()
+        {
+            string value = "\"   First, Second   , Third,    Fourth  \"";
+            var deserialized = JsonSnakeCaseSerializer.Generic.Utf8.Deserialize<FlagsEnum>(Encoding.UTF8.GetBytes(value));
+            Assert.Equal(FlagsEnum.First | FlagsEnum.Second | FlagsEnum.Third | FlagsEnum.Fourth, deserialized);
+
+            value = "\"   first, second   , third,    fourth  \"";
+            deserialized = JsonSnakeCaseSerializer.Generic.Utf8.Deserialize<FlagsEnum>(Encoding.UTF8.GetBytes(value));
+            Assert.Equal(FlagsEnum.First | FlagsEnum.Second | FlagsEnum.Third | FlagsEnum.Fourth, deserialized);
         }
 
         [Fact]
@@ -166,7 +322,7 @@ namespace SpanJson.Tests
         [Fact]
         public void SerializeDeserializeNullableEnumUtf16()
         {
-            var test = new TestDO {Value = null, AnotherValue = 1, Flags = FlagsEnum.Fourth | FlagsEnum.First};
+            var test = new TestDO { Value = null, AnotherValue = 1, Flags = FlagsEnum.Fourth | FlagsEnum.First };
             var serialized = JsonSerializer.Generic.Utf16.Serialize<TestDO, IncludeNullsOriginalCaseResolver<char>>(test);
             Assert.Contains("null", serialized);
             var deserialized = JsonSerializer.Generic.Utf16.Deserialize<TestDO, IncludeNullsOriginalCaseResolver<char>>(serialized);
@@ -177,7 +333,7 @@ namespace SpanJson.Tests
         [Fact]
         public void SerializeDeserializeNullableEnumUtf8()
         {
-            var test = new TestDO {Value = null, AnotherValue = 1, Flags = null};
+            var test = new TestDO { Value = null, AnotherValue = 1, Flags = null };
             var serialized = JsonSerializer.Generic.Utf8.Serialize<TestDO, IncludeNullsOriginalCaseResolver<byte>>(test);
             Assert.Contains("null", Encoding.UTF8.GetString(serialized));
             var deserialized = JsonSerializer.Generic.Utf8.Deserialize<TestDO, IncludeNullsOriginalCaseResolver<byte>>(serialized);

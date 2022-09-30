@@ -23,8 +23,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-using System;
-using System.Runtime.Serialization;
 using SpanJson.Linq;
 
 namespace SpanJson.Tests
@@ -37,7 +35,7 @@ namespace SpanJson.Tests
         private JRaw _rawContent;
 
         [Newtonsoft.Json.JsonIgnore]
-        [IgnoreDataMember]
+        [JsonIgnore]
         public Guid InternalId
         {
             get { return _internalId; }
@@ -45,7 +43,6 @@ namespace SpanJson.Tests
         }
 
         [Newtonsoft.Json.JsonProperty("first_name")]
-        [DataMember(Name = "first_name")]
         public string FirstName
         {
             get { return _firstName; }
@@ -59,7 +56,6 @@ namespace SpanJson.Tests
         }
 
         [Newtonsoft.Json.JsonProperty("last_name")]
-        [DataMember(Name = "last_name")]
         public string LastName
         {
             get { return _lastName; }

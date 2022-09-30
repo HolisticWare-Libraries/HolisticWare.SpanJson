@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Text;
 using Xunit;
+using Utf16Serializer = SpanJson.JsonSerializer.Generic.Utf16;
+using Utf8Serializer = SpanJson.JsonSerializer.Generic.Utf8;
+using Utf16CamelCaseSerializer = SpanJson.JsonCamelCaseSerializer.Generic.Utf16;
+using Utf8CamelCaseSerializer = SpanJson.JsonCamelCaseSerializer.Generic.Utf8;
 using Utf16SnakeCaseSerializer = SpanJson.JsonSnakeCaseSerializer.Generic.Utf16;
 using Utf8SnakeCaseSerializer = SpanJson.JsonSnakeCaseSerializer.Generic.Utf8;
 
@@ -19,12 +23,36 @@ namespace SpanJson.Tests
         }
 
         [Fact]
+        public void SerializeDeserializeUtf16_mix()
+        {
+            var input = new TestObject { SnakeCaseText = "Hello World" };
+            var serialized = Utf16SnakeCaseSerializer.Serialize<TestObject>(input);
+            Assert.Contains("\"snake_case_text\":", serialized);
+            var deserialized = Utf16Serializer.Deserialize<TestObject>(serialized);
+            Assert.Equal(input, deserialized);
+            deserialized = Utf16CamelCaseSerializer.Deserialize<TestObject>(serialized);
+            Assert.Equal(input, deserialized);
+        }
+
+        [Fact]
         public void SerializeDeserializeUtf8()
         {
             var input = new TestObject { SnakeCaseText = "Hello World"};
             var serialized = Utf8SnakeCaseSerializer.Serialize<TestObject>(input);
             Assert.Contains("\"snake_case_text\":", Encoding.UTF8.GetString(serialized));
             var deserialized = Utf8SnakeCaseSerializer.Deserialize<TestObject>(serialized);
+            Assert.Equal(input, deserialized);
+        }
+
+        [Fact]
+        public void SerializeDeserializeUtf8_mix()
+        {
+            var input = new TestObject { SnakeCaseText = "Hello World" };
+            var serialized = Utf8SnakeCaseSerializer.Serialize<TestObject>(input);
+            Assert.Contains("\"snake_case_text\":", Encoding.UTF8.GetString(serialized));
+            var deserialized = Utf8Serializer.Deserialize<TestObject>(serialized);
+            Assert.Equal(input, deserialized);
+            deserialized = Utf8CamelCaseSerializer.Deserialize<TestObject>(serialized);
             Assert.Equal(input, deserialized);
         }
 

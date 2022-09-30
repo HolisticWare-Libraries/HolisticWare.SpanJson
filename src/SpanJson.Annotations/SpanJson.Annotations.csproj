@@ -2,7 +2,7 @@
   <Import Project="..\nuget.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;netstandard2.0</TargetFrameworks>
     <RootNamespace>SpanJson</RootNamespace>
     <AssemblyName>SpanJson.Annotations</AssemblyName>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
@@ -16,6 +16,13 @@
     <Description>SpanJson(Unofficial) is a JSON serializer for .Net451+</Description>
     <PackageTags>JSON</PackageTags>
   </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="Nullable" Version="$(NullablePackageVersion)">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
   <Import Project="..\version.annotations.props" />
 </Project>

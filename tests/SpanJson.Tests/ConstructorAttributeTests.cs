@@ -178,6 +178,23 @@ namespace SpanJson.Tests
             var serialized = JsonSerializer.Generic.Utf8.Serialize(ctorAdditional);
             var deserialized = JsonSerializer.Generic.Utf8.Deserialize<CtorAdditional>(serialized);
             Assert.Equal(ctorAdditional, deserialized);
+
+            serialized = JsonCamelCaseSerializer.Generic.Utf8.Serialize(ctorAdditional);
+            deserialized = JsonCamelCaseSerializer.Generic.Utf8.Deserialize<CtorAdditional>(serialized);
+            Assert.Equal(ctorAdditional, deserialized);
+
+            serialized = JsonSnakeCaseSerializer.Generic.Utf8.Serialize(ctorAdditional);
+            deserialized = JsonSnakeCaseSerializer.Generic.Utf8.Deserialize<CtorAdditional>(serialized);
+            Assert.Equal(ctorAdditional, deserialized);
+        }
+
+        [Fact]
+        public void TestCtorAdditionalUtf8_IC()
+        {
+            var ctorAdditional = new CtorAdditional(5, "Hello") { Additional = "World" };
+            var serialized = JsonCamelCaseSerializer.Generic.Utf8.Serialize(ctorAdditional);
+            var deserialized = JsonSerializer.Generic.Utf8.Deserialize<CtorAdditional>(serialized);
+            Assert.Equal(ctorAdditional, deserialized);
         }
 
         [Fact]
@@ -185,6 +202,23 @@ namespace SpanJson.Tests
         {
             var ctorAdditional = new CtorAdditional(5, "Hello") { Additional = "World" };
             var serialized = JsonSerializer.Generic.Utf16.Serialize(ctorAdditional);
+            var deserialized = JsonSerializer.Generic.Utf16.Deserialize<CtorAdditional>(serialized);
+            Assert.Equal(ctorAdditional, deserialized);
+
+            serialized = JsonCamelCaseSerializer.Generic.Utf16.Serialize(ctorAdditional);
+            deserialized = JsonCamelCaseSerializer.Generic.Utf16.Deserialize<CtorAdditional>(serialized);
+            Assert.Equal(ctorAdditional, deserialized);
+
+            serialized = JsonSnakeCaseSerializer.Generic.Utf16.Serialize(ctorAdditional);
+            deserialized = JsonSnakeCaseSerializer.Generic.Utf16.Deserialize<CtorAdditional>(serialized);
+            Assert.Equal(ctorAdditional, deserialized);
+        }
+
+        [Fact]
+        public void TestCtorAdditionalUtf16_IC()
+        {
+            var ctorAdditional = new CtorAdditional(5, "Hello") { Additional = "World" };
+            var serialized = JsonCamelCaseSerializer.Generic.Utf16.Serialize(ctorAdditional);
             var deserialized = JsonSerializer.Generic.Utf16.Deserialize<CtorAdditional>(serialized);
             Assert.Equal(ctorAdditional, deserialized);
         }
@@ -467,7 +501,7 @@ namespace SpanJson.Tests
         [Fact]
         public void SerializeDeserializePositionalRecordExceptionsUtf16()
         {
-            var positionalRecord = new PositionalRecordExceptions("Hello", "World") {AnotherName = "Universe"};
+            var positionalRecord = new PositionalRecordExceptions("Hello", "World") { AnotherName = "Universe" };
             var serialized = JsonSerializer.Generic.Utf16.Serialize(positionalRecord);
             Assert.NotNull(serialized);
             var deserialized = JsonSerializer.Generic.Utf16.Deserialize<PositionalRecordExceptions>(serialized);
@@ -478,7 +512,7 @@ namespace SpanJson.Tests
         [Fact]
         public void SerializeDeserializePositionalRecordExceptionsUtf8()
         {
-            var positionalRecord = new PositionalRecordExceptions("Hello", "World") {AnotherName = "Universe"};
+            var positionalRecord = new PositionalRecordExceptions("Hello", "World") { AnotherName = "Universe" };
             var serialized = JsonSerializer.Generic.Utf8.Serialize(positionalRecord);
             Assert.NotNull(serialized);
             var deserialized = JsonSerializer.Generic.Utf8.Deserialize<PositionalRecordExceptions>(serialized);

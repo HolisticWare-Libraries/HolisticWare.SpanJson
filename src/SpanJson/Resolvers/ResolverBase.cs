@@ -155,9 +155,10 @@ namespace SpanJson.Resolvers
             var result = new List<JsonMemberInfo>();
             foreach (var memberInfoName in members)
             {
-                string name = ResolvePropertyName(memberInfoName);
-                var escapedName = GetEncodedPropertyName(memberInfoName);
-                result.Add(new JsonMemberInfo(memberInfoName, typeof(object), null, name, escapedName,
+                var resolvedName = ResolvePropertyName(memberInfoName);
+                var escapedName = JsonHelpers.GetEncodedText(resolvedName, _escapeHandling, _encoder);
+                result.Add(new JsonMemberInfo(
+                    memberInfoName, null, typeof(object), null, resolvedName, escapedName,
                     _spanJsonOptions.NullOption == NullOptions.ExcludeNulls, true, true, null, null));
             }
 
@@ -200,8 +201,9 @@ namespace SpanJson.Resolvers
             {
                 var memberType = memberInfo is FieldInfo fi ? fi.FieldType :
                     memberInfo is PropertyInfo pi ? pi.PropertyType : null;
-                var name = ResolvePropertyName(GetAttributeName(memberInfo) ?? memberInfo.Name);
-                var escapedName = GetEncodedPropertyName(name);
+                var alias = GetAttributeName(memberInfo);
+                var resolvedName = alias ?? ResolvePropertyName(memberInfo.Name);
+                var escapedName = JsonHelpers.GetEncodedText(resolvedName, _escapeHandling, _encoder);
 
                 var canRead = true;
                 var canWrite = true;
@@ -215,11 +217,13 @@ namespace SpanJson.Resolvers
                 {
                     extensionMemberInfo = new JsonExtensionMemberInfo(memberInfo.Name, memberType!, excludeNulls);
                 }
-                else if (!IsIgnored(memberInfo))
+                else if (!JsonHelpers.IsIgnored(memberInfo))
                 {
                     var customSerializerAttr = memberInfo.FirstAttribute<JsonCustomSerializerAttribute>();
                     var shouldSerialize = type.GetMethod($"ShouldSerialize{memberInfo.Name}");
-                    result.Add(new JsonMemberInfo(memberInfo.Name, memberType!, shouldSerialize, name, escapedName, excludeNulls, canRead, canWrite, customSerializerAttr?.Type, customSerializerAttr?.Arguments));
+                    result.Add(new JsonMemberInfo(
+                        memberInfo.Name, alias, memberType!, shouldSerialize, resolvedName, escapedName,
+                        excludeNulls, canRead, canWrite, customSerializerAttr?.Type, customSerializerAttr?.Arguments));
                 }
             }
 
@@ -287,14 +291,36 @@ namespace SpanJson.Resolvers
             return true;
         }
 
-        private static bool IsIgnored(MemberInfo memberInfo)
-        {
-            return memberInfo.HasAttribute<IgnoreDataMemberAttribute>() || memberInfo.HasAttributeNamed("JsonIgnore") ? true : false;
-        }
-
         private static string? GetAttributeName(MemberInfo memberInfo)
         {
-            return memberInfo.FirstAttribute<DataMemberAttribute>()?.Name;
+            var alias = memberInfo.FirstAttribute<JsonPropertyNameAttribute>()?.Name;
+            if (alias is null)
+            {
+                var attrs = memberInfo.GetAllAttributes();
+                foreach (var attr in attrs)
+                {
+                    var attrType = attr.GetType();
+                    if (attrType.Name == "JsonPropertyNameAttribute") // System.Text.Json
+                    {
+                        var nameProperty = attrType.GetInstanceProperties(true).FirstOrDefault(x => x.Name == "Name");
+                        if (nameProperty is not null && attr.TryGetPropertyValue(nameProperty, out var pv))
+                        {
+                            alias = pv as string;
+                        }
+                        break;
+                    }
+                    else if (attrType.Name == "JsonPropertyAttribute") // Newtonsoft.Json
+                    {
+                        var nameProperty = attrType.GetInstanceProperties(true).FirstOrDefault(x => x.Name == "PropertyName");
+                        if (nameProperty is not null && attr.TryGetPropertyValue(nameProperty, out var pv))
+                        {
+                            alias = pv as string;
+                        }
+                        break;
+                    }
+                }
+            }
+            return alias;
         }
 
         private IJsonFormatter BuildFormatter(Type type)

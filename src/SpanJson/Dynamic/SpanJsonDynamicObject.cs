@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
-using System.Runtime.Serialization;
 
 namespace SpanJson.Dynamic
 {
@@ -22,13 +21,13 @@ namespace SpanJson.Dynamic
             _isUtf16 = isUtf16;
         }
 
-        [IgnoreDataMember]
+        [JsonIgnore]
         internal bool HasRaw => _rawJson is not null;
-        [IgnoreDataMember]
+        [JsonIgnore]
         internal bool IsUtf16 => _isUtf16;
-        [IgnoreDataMember]
+        [JsonIgnore]
         internal ArraySegment<char> Utf16Raw => _rawJson is not null ? (ArraySegment<char>)_rawJson : default;
-        [IgnoreDataMember]
+        [JsonIgnore]
         internal ArraySegment<byte> Utf8Raw => _rawJson is not null ? (ArraySegment<byte>)_rawJson : default;
 
         /// <summary>Gets or sets the <see cref="object"/> with the specified name.</summary>

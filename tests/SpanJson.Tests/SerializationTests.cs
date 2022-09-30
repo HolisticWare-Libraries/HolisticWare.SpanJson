@@ -56,6 +56,18 @@ namespace SpanJson.Tests
             public string 你好你好 { get; set; }
         }
 
+        sealed class CaseSExcludeNullsOriginalCaseResolver<TSymbol> : ResolverBase<TSymbol, CaseSExcludeNullsOriginalCaseResolver<TSymbol>> where TSymbol : struct
+        {
+            public CaseSExcludeNullsOriginalCaseResolver() : base(new SpanJsonOptions
+            {
+                NullOption = NullOptions.ExcludeNulls,
+                EnumOption = EnumOptions.String,
+                PropertyNameCaseInsensitive = false,
+            })
+            {
+            }
+        }
+
         [Fact]
         public void NoNameMatches()
         {
@@ -65,7 +77,7 @@ namespace SpanJson.Tests
             serializedWithCamelCase = serializedWithCamelCase.ToLowerInvariant();
             Assert.Contains("age", serializedWithCamelCase);
             var deserialized =
-                JsonSerializer.Generic.Utf16.Deserialize<AnotherParent, ExcludeNullsOriginalCaseResolver<char>>(serializedWithCamelCase);
+                JsonSerializer.Generic.Utf16.Deserialize<AnotherParent, CaseSExcludeNullsOriginalCaseResolver<char>>(serializedWithCamelCase);
             Assert.NotNull(deserialized);
             Assert.Null(deserialized.Children);
             Assert.Equal(0, deserialized.Age);
@@ -80,7 +92,6 @@ namespace SpanJson.Tests
             var ex = Assert.Throws<InvalidOperationException>(() => JsonSerializer.Generic.Utf16.Serialize(node));
             Assert.Contains("Nesting Limit", ex.Message);
         }
-
 
         [Fact]
         public void SerializeDeserializeOneChinesePropertyNameUtf16()

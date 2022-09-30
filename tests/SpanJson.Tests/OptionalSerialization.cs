@@ -1,5 +1,4 @@
-﻿using System.Runtime.Serialization;
-using SpanJson.Resolvers;
+﻿using SpanJson.Resolvers;
 using Xunit;
 
 namespace SpanJson.Tests
@@ -8,9 +7,9 @@ namespace SpanJson.Tests
     {
         public class Optional
         {
-            [DataMember(Name = "AnotherName")] public string DifferentName;
+            [JsonPropertyName("AnotherName")] public string DifferentName;
 
-            [IgnoreDataMember]
+            [JsonIgnore]
             public int Excluded { get; set; }
 
             public string ExcludeNull { get; set; }
@@ -57,6 +56,124 @@ namespace SpanJson.Tests
             var deserialized =
                 JsonSerializer.Generic.Utf16.Deserialize<Optional, ExcludeNullsOriginalCaseResolver<char>>(
                     "{\"AnotherName\": \"Hello World\"}");
+            Assert.Equal("Hello World", deserialized.DifferentName);
+        }
+
+        [Fact]
+        public void DifferentName_CamelCase()
+        {
+            var optional = new Optional { DifferentName = "Hello World" };
+            var serialized = JsonSerializer.Generic.Utf16.Serialize<Optional, ExcludeNullsCamelCaseResolver<char>>(optional);
+            Assert.Contains("\"AnotherName\":\"Hello World\"", serialized);
+            Assert.False(serialized.EndsWith(",}"));
+
+            var deserialized =
+                JsonSerializer.Generic.Utf16.Deserialize<Optional, ExcludeNullsCamelCaseResolver<char>>(
+                    "{\"anotherName\": \"Hello World\"}");
+            Assert.Equal("Hello World", deserialized.DifferentName);
+        }
+
+        [Fact]
+        public void DifferentName_SnakeCase()
+        {
+            var optional = new Optional { DifferentName = "Hello World" };
+            var serialized = JsonSerializer.Generic.Utf16.Serialize<Optional, ExcludeNullsSnakeCaseResolver<char>>(optional);
+            Assert.Contains("\"AnotherName\":\"Hello World\"", serialized);
+            Assert.False(serialized.EndsWith(",}"));
+
+            var deserialized =
+                JsonSerializer.Generic.Utf16.Deserialize<Optional, ExcludeNullsSnakeCaseResolver<char>>(
+                    "{\"another_name\": \"Hello World\"}");
+            Assert.Equal("Hello World", deserialized.DifferentName);
+        }
+
+        [Fact]
+        public void DeserializeDifferentName_IC()
+        {
+            var deserialized =
+                JsonSerializer.Generic.Utf16.Deserialize<Optional, ExcludeNullsOriginalCaseResolver<char>>(
+                    "{\"AnotherName\": \"Hello World\"}");
+            Assert.Equal("Hello World", deserialized.DifferentName);
+            deserialized =
+                JsonSerializer.Generic.Utf16.Deserialize<Optional, ExcludeNullsOriginalCaseResolver<char>>(
+                    "{\"anotherName\": \"Hello World\"}");
+            Assert.Equal("Hello World", deserialized.DifferentName);
+            deserialized =
+                JsonSerializer.Generic.Utf16.Deserialize<Optional, ExcludeNullsOriginalCaseResolver<char>>(
+                    "{\"another_name\": \"Hello World\"}");
+            Assert.Equal("Hello World", deserialized.DifferentName);
+
+            deserialized =
+                JsonSerializer.Generic.Utf16.Deserialize<Optional, ExcludeNullsOriginalCaseResolver<char>>(
+                    "{\"DifferentName\": \"Hello World\"}");
+            Assert.Equal("Hello World", deserialized.DifferentName);
+            deserialized =
+                JsonSerializer.Generic.Utf16.Deserialize<Optional, ExcludeNullsOriginalCaseResolver<char>>(
+                    "{\"differentName\": \"Hello World\"}");
+            Assert.Equal("Hello World", deserialized.DifferentName);
+            deserialized =
+                JsonSerializer.Generic.Utf16.Deserialize<Optional, ExcludeNullsOriginalCaseResolver<char>>(
+                    "{\"different_name\": \"Hello World\"}");
+            Assert.Equal("Hello World", deserialized.DifferentName);
+        }
+
+        [Fact]
+        public void DeserializeDifferentName_IC_CamelCase()
+        {
+            var deserialized =
+                JsonSerializer.Generic.Utf16.Deserialize<Optional, ExcludeNullsCamelCaseResolver<char>>(
+                    "{\"AnotherName\": \"Hello World\"}");
+            Assert.Equal("Hello World", deserialized.DifferentName);
+            deserialized =
+                JsonSerializer.Generic.Utf16.Deserialize<Optional, ExcludeNullsCamelCaseResolver<char>>(
+                    "{\"anotherName\": \"Hello World\"}");
+            Assert.Equal("Hello World", deserialized.DifferentName);
+            deserialized =
+                JsonSerializer.Generic.Utf16.Deserialize<Optional, ExcludeNullsCamelCaseResolver<char>>(
+                    "{\"another_name\": \"Hello World\"}");
+            Assert.Equal("Hello World", deserialized.DifferentName);
+
+            deserialized =
+                JsonSerializer.Generic.Utf16.Deserialize<Optional, ExcludeNullsCamelCaseResolver<char>>(
+                    "{\"DifferentName\": \"Hello World\"}");
+            Assert.Equal("Hello World", deserialized.DifferentName);
+            deserialized =
+                JsonSerializer.Generic.Utf16.Deserialize<Optional, ExcludeNullsCamelCaseResolver<char>>(
+                    "{\"differentName\": \"Hello World\"}");
+            Assert.Equal("Hello World", deserialized.DifferentName);
+            deserialized =
+                JsonSerializer.Generic.Utf16.Deserialize<Optional, ExcludeNullsCamelCaseResolver<char>>(
+                    "{\"different_name\": \"Hello World\"}");
+            Assert.Equal("Hello World", deserialized.DifferentName);
+        }
+
+        [Fact]
+        public void DeserializeDifferentName_IC_SnakeCase()
+        {
+            var deserialized =
+                JsonSerializer.Generic.Utf16.Deserialize<Optional, ExcludeNullsSnakeCaseResolver<char>>(
+                    "{\"AnotherName\": \"Hello World\"}");
+            Assert.Equal("Hello World", deserialized.DifferentName);
+            deserialized =
+                JsonSerializer.Generic.Utf16.Deserialize<Optional, ExcludeNullsSnakeCaseResolver<char>>(
+                    "{\"anotherName\": \"Hello World\"}");
+            Assert.Equal("Hello World", deserialized.DifferentName);
+            deserialized =
+                JsonSerializer.Generic.Utf16.Deserialize<Optional, ExcludeNullsSnakeCaseResolver<char>>(
+                    "{\"another_name\": \"Hello World\"}");
+            Assert.Equal("Hello World", deserialized.DifferentName);
+
+            deserialized =
+                JsonSerializer.Generic.Utf16.Deserialize<Optional, ExcludeNullsSnakeCaseResolver<char>>(
+                    "{\"DifferentName\": \"Hello World\"}");
+            Assert.Equal("Hello World", deserialized.DifferentName);
+            deserialized =
+                JsonSerializer.Generic.Utf16.Deserialize<Optional, ExcludeNullsSnakeCaseResolver<char>>(
+                    "{\"differentName\": \"Hello World\"}");
+            Assert.Equal("Hello World", deserialized.DifferentName);
+            deserialized =
+                JsonSerializer.Generic.Utf16.Deserialize<Optional, ExcludeNullsSnakeCaseResolver<char>>(
+                    "{\"different_name\": \"Hello World\"}");
             Assert.Equal("Hello World", deserialized.DifferentName);
         }
 

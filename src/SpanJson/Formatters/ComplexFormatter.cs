@@ -1,8 +1,5 @@
-﻿using System;
-using System.Buffers;
-using System.Collections.Generic;
+﻿using System.Buffers;
 using System.Diagnostics;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -300,7 +297,7 @@ namespace SpanJson.Formatters
             // We need to decide during generation if we handle constructors or normal member assignment, the difference is done in the functor below
             Func<JsonMemberInfo, Expression> matchExpressionFunctor;
             Expression[]? constructorParameterExpressions = null;
-            List<(string, Expression)> additionalAfterCtorParameterExpressions = new List<(string, Expression)>();
+            var additionalAfterCtorParameterExpressions = new Dictionary<string, (ParameterExpression HasVariable, Expression Variable)>(StringComparer.OrdinalIgnoreCase);
             if (objectDescription.Constructor is not null)
             {
                 // If we want to use the constructor we serialize into an array of variables internally and then create the object from that
@@ -308,30 +305,51 @@ namespace SpanJson.Formatters
                 constructorParameterExpressions = new Expression[dict.Count];
                 foreach (var valueTuple in dict)
                 {
-                    constructorParameterExpressions[valueTuple.Value.Index] = Expression.Variable(valueTuple.Value.Type);
+                    constructorParameterExpressions[valueTuple.Value.Index] = Expression.Variable(valueTuple.Value.Type, StringMutator.ToCamelCaseWithCache(valueTuple.Key));
                 }
 
                 matchExpressionFunctor = memberInfo =>
                 {
                     Expression assignValueExpression;
+                    // Ctor-Functor stores values in local variables to assign them before calling the ctor.
+                    // Therefore we need a 'hasVariable' to check if it has been assigned, like:
+                    // var result = new Value(var1, var2);
+                    // if(hasVar3) { result.Var3 = var3; }
+                    ParameterExpression? hasVariable = null;
                     if (dict.TryGetValue(memberInfo.MemberName, out var element))
                     {
                         assignValueExpression = constructorParameterExpressions[element.Index];
                     }
                     else
                     {
-                        var variable = Expression.Variable(memberInfo.MemberType);
-                        additionalAfterCtorParameterExpressions.Add((memberInfo.MemberName, variable));
-                        assignValueExpression = variable;
+                        if (!additionalAfterCtorParameterExpressions.TryGetValue(memberInfo.MemberName, out var variableInfo))
+                        {
+                            var variable = Expression.Variable(memberInfo.MemberType, StringMutator.ToCamelCaseWithCache(memberInfo.MemberName));
+                            hasVariable = Expression.Variable(typeof(bool), $"has{ToPascalCase(variable.Name!)}");
+                            variableInfo = (hasVariable, variable);
+                            additionalAfterCtorParameterExpressions.Add(memberInfo.MemberName, variableInfo);
+                        }
+                        else
+                        {
+                            hasVariable = variableInfo.HasVariable;
+                        }
+                        assignValueExpression = variableInfo.Variable;
                     }
                     var formatter = resolver.GetFormatter(memberInfo);
                     var formatterType = formatter.GetType();
                     var fieldInfo = formatterType.GetField("Default", BindingFlags.Static | BindingFlags.Public)!;
-                    return Expression.Assign(assignValueExpression,
+                    var assignVariableExpression = Expression.Assign(assignValueExpression,
                         Expression.Call(Expression.Field(null, fieldInfo),
                             FindPublicInstanceMethod(formatterType, "Deserialize", readerParameter.Type.MakeByRefType(), resolverParameter.Type),
                             readerParameter, resolverParameter));
+
+                    if (hasVariable is null) { return assignVariableExpression; }
+
+                    var assignHasVariableExpression = Expression.Assign(hasVariable, Expression.Constant(true));
+                    return Expression.Block(assignHasVariableExpression, assignVariableExpression);
                 };
+
+                static string ToPascalCase(string name) => char.ToUpperInvariant(name[0]) + name.Substring(1);
             }
             else
             {
@@ -341,7 +359,8 @@ namespace SpanJson.Formatters
                     var formatter = resolver.GetFormatter(memberInfo);
                     var formatterType = formatter.GetType();
                     var fieldInfo = formatterType.GetField("Default", BindingFlags.Static | BindingFlags.Public)!;
-                    return Expression.Assign(Expression.PropertyOrField(returnValue, memberInfo.MemberName),
+                    var pf = Expression.PropertyOrField(returnValue, memberInfo.MemberName);
+                    return Expression.Assign(pf,
                         Expression.Call(Expression.Field(null, fieldInfo),
                             FindPublicInstanceMethod(formatterType, "Deserialize", readerParameter.Type.MakeByRefType(), resolverParameter.Type),
                             readerParameter, resolverParameter));
@@ -405,12 +424,12 @@ namespace SpanJson.Formatters
             }
 
             var expressions = new List<Expression>();
-            if (memberInfos.Count > 0)
+            if ((uint)memberInfos.Count > 0u)
             {
                 expressions.Add(assignNameSpan);
                 expressions.Add(lengthExpression);
                 expressions.Add(
-                    MemberComparisonBuilder.Build<TSymbol>(memberInfos, 0, lengthParameter, byteNameSpan, endOfBlockLabel, matchExpressionFunctor));
+                    MemberComparisonBuilder.Build<TSymbol>(MemberComparisonBuilder.ConvertMemberInfos(memberInfos, resolver.JsonOptions.PropertyNameCaseInsensitive), 0, lengthParameter, byteNameSpan, endOfBlockLabel, matchExpressionFunctor));
                 expressions.Add(skipCall);
                 expressions.Add(Expression.Label(endOfBlockLabel));
             }
@@ -430,26 +449,62 @@ namespace SpanJson.Formatters
             if (objectDescription.Constructor is not null)
             {
                 var blockParameters = new List<ParameterExpression> { returnValue, countExpression };
-                // ReSharper disable AssignNullToNotNullAttribute
                 blockParameters.AddRange(constructorParameterExpressions!.OfType<ParameterExpression>());
-                blockParameters.AddRange(additionalAfterCtorParameterExpressions.Select(a => a.Item2).OfType<ParameterExpression>());
-                var blockExpressions = new List<Expression>
+                blockParameters.AddRange(additionalAfterCtorParameterExpressions.SelectMany(a => new[] { a.Value.HasVariable, a.Value.Variable })
+                    .OfType<ParameterExpression>());
+
+                var blockExpressions = new List<Expression>();
+                for (var i = 0; i < objectDescription.Constructor.GetParameters().Length; i++)
                 {
-                    readBeginObject,
-                    Expression.Loop(
-                        Expression.IfThenElse(abortExpression, Expression.Break(loopAbort),
-                            deserializeMemberBlock), loopAbort
-                    ),
-                    Expression.Assign(returnValue, Expression.New(objectDescription.Constructor, constructorParameterExpressions))
-                };
-                foreach (var (memberName, valueVariable) in additionalAfterCtorParameterExpressions)
+                    var parameterInfo = objectDescription.Constructor.GetParameters()[i];
+                    if (parameterInfo.HasDefaultValue)
+                    {
+                        var parameterType = parameterInfo.ParameterType;
+                        var defaultValue = parameterInfo.DefaultValue;
+                        if (defaultValue is not null && parameterType.TryGetNullableUnderlyingType(out var notNullType) && notNullType.IsEnum)
+                        {
+                            // Fix for nullable enums, which come with their integer value.
+                            defaultValue = Enum.ToObject(notNullType, defaultValue);
+                        }
+
+                        blockExpressions.Add(Expression.Assign(constructorParameterExpressions![i], Expression.Constant(defaultValue, parameterType)));
+                    }
+                }
+
+                blockExpressions.Add(readBeginObject);
+                blockExpressions.Add(Expression.Loop(Expression.IfThenElse(abortExpression, Expression.Break(loopAbort), deserializeMemberBlock), loopAbort));
+                blockExpressions.Add(Expression.Assign(returnValue, Expression.New(objectDescription.Constructor, constructorParameterExpressions)));
+
+                foreach (var item in additionalAfterCtorParameterExpressions)
                 {
-                    blockExpressions.Add(Expression.Assign(Expression.PropertyOrField(returnValue, memberName), valueVariable));
+                    var assignValueExpression = Expression.Assign(Expression.PropertyOrField(returnValue, item.Key), item.Value.Variable);
+                    var assignIfHasValueExpression = Expression.IfThen(item.Value.HasVariable, assignValueExpression);
+                    blockExpressions.Add(assignIfHasValueExpression);
                 }
 
                 blockExpressions.Add(Expression.Label(returnTarget, returnValue));
-                // ReSharper restore AssignNullToNotNullAttribute
                 block = Expression.Block(blockParameters, blockExpressions.ToArray());
+                //var blockParameters = new List<ParameterExpression> { returnValue, countExpression };
+                //// ReSharper disable AssignNullToNotNullAttribute
+                //blockParameters.AddRange(constructorParameterExpressions!.OfType<ParameterExpression>());
+                //blockParameters.AddRange(additionalAfterCtorParameterExpressions.Select(a => a.Value).OfType<ParameterExpression>());
+                //var blockExpressions = new List<Expression>
+                //{
+                //    readBeginObject,
+                //    Expression.Loop(
+                //        Expression.IfThenElse(abortExpression, Expression.Break(loopAbort),
+                //            deserializeMemberBlock), loopAbort
+                //    ),
+                //    Expression.Assign(returnValue, Expression.New(objectDescription.Constructor, constructorParameterExpressions))
+                //};
+                //foreach (var item in additionalAfterCtorParameterExpressions)
+                //{
+                //    blockExpressions.Add(Expression.Assign(Expression.PropertyOrField(returnValue, item.Key), item.Value));
+                //}
+
+                //blockExpressions.Add(Expression.Label(returnTarget, returnValue));
+                //// ReSharper restore AssignNullToNotNullAttribute
+                //block = Expression.Block(blockParameters, blockExpressions.ToArray());
             }
             else
             {

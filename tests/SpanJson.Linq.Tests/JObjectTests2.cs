@@ -180,6 +180,44 @@ namespace SpanJson.Tests
         }
 
         [Fact]
+        public void FromDynamicUtf8Object_IC()
+        {
+            dynamic obj = JsonSerializer.Generic.Utf8.Deserialize<dynamic>(Encoding.UTF8.GetBytes(TestSR.BasicJson));
+
+            var jObj = JObject.FromObject(obj);
+            var basicJson = jObj.ToObject<BasicJson>();
+            Assert.NotNull(basicJson);
+            Assert.Equal(30, basicJson.Age);
+            Assert.Equal("John", basicJson.First);
+            Assert.Equal("Smith", basicJson.Last);
+            Assert.NotNull(basicJson.PhoneNumbers);
+
+            Assert.Equal(2, basicJson.PhoneNumbers.Length);
+            Assert.Equal("425-000-1212", basicJson.PhoneNumbers[0]);
+            Assert.Equal("425-000-1213", basicJson.PhoneNumbers[1]);
+
+            var jArray = (JArray)jObj["phoneNumbers"];
+            var utf8Json = JsonSerializer.Generic.Utf8.Serialize(jArray);
+            Assert.True(jArray.DeepEquals(JArray.Parse(utf8Json)));
+            Assert.True(jArray.DeepEquals(JsonSerializer.Generic.Utf8.Deserialize<JArray>(utf8Json)));
+            Assert.True(jArray.DeepEquals((JArray)JsonSerializer.NonGeneric.Utf8.Deserialize(utf8Json, typeof(JArray))));
+
+            var phoneNumbers = jArray.ToObject<List<string>>();
+            Assert.Equal(2, phoneNumbers.Count);
+            Assert.Equal("425-000-1212", phoneNumbers[0]);
+            Assert.Equal("425-000-1213", phoneNumbers[1]);
+
+            Assert.NotNull(basicJson.Address);
+            Assert.Equal("1 Microsoft Way", basicJson.Address.Street);
+            Assert.Equal("Redmond", basicJson.Address.City);
+            Assert.Equal(98052, basicJson.Address.Zip);
+            var addr = ((JObject)jObj["address"]).ToObject<BasicAddr>();
+            Assert.Equal("1 Microsoft Way", addr.Street);
+            Assert.Equal("Redmond", addr.City);
+            Assert.Equal(98052, addr.Zip);
+        }
+
+        [Fact]
         public void JsonNetObject()
         {
             var jObj = NJObject.Parse(TestSR.BasicJson);

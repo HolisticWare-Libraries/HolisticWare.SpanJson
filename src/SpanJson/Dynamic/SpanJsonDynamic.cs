@@ -1,7 +1,5 @@
-﻿using System;
-using System.Dynamic;
+﻿using System.Dynamic;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using System.Text;
 
 namespace SpanJson.Dynamic
@@ -24,10 +22,10 @@ namespace SpanJson.Dynamic
             IsFloat = isFloat;
         }
 
-        [IgnoreDataMember]
+        [JsonIgnore]
         internal readonly bool IsFloat;
 
-        [IgnoreDataMember]
+        [JsonIgnore]
         public ArraySegment<TSymbol> Symbols { get; }
 
         protected abstract BaseDynamicTypeConverter<TSymbol> Converter { get; }

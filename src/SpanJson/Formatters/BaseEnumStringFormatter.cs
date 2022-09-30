@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
 using SpanJson.Helpers;
 using SpanJson.Internal;
 using SpanJson.Resolvers;
@@ -14,7 +12,8 @@ namespace SpanJson.Formatters
     public abstract class BaseEnumStringFormatter<T, TSymbol> : BaseFormatter where T : struct, Enum
         where TSymbol : struct
     {
-        protected static SerializeDelegate BuildSerializeDelegate(Func<string, string> escapeFunctor)
+        protected static SerializeDelegate BuildSerializeDelegate<TResolver>(Func<string, string> escapeFunctor)
+            where TResolver : IJsonFormatterResolver<TSymbol, TResolver>, new()
         {
             var writerParameter = Expression.Parameter(typeof(JsonWriter<TSymbol>).MakeByRefType(), "writer");
             var valueParameter = Expression.Parameter(typeof(T), "value");
@@ -32,12 +31,13 @@ namespace SpanJson.Formatters
                 ThrowHelper.ThrowNotSupportedException();
             }
 
+            var resolver = StandardResolvers.GetResolver<TSymbol, TResolver>();
+
             var cases = new List<SwitchCase>();
             foreach (var name in Enum.GetNames(typeof(T)))
             {
                 Expression? valueConstant = null;
-                // TODO Enum (NamingPolicy、StringEscapeHandling)
-                var formattedValue = escapeFunctor(GetFormattedValue(name));
+                var formattedValue = escapeFunctor(resolver.GetEncodedPropertyName(GetFormattedValue(name)).ToString());
                 if (SymbolHelper<TSymbol>.IsUtf8)
                 {
                     valueConstant = Expression.Constant(TextEncodings.UTF8NoBOM.GetBytes(formattedValue));
@@ -64,12 +64,18 @@ namespace SpanJson.Formatters
             return lambdaExpression.Compile();
         }
 
-        private static string GetFormattedValue(string enumValue)
+        private static string? GetAlias(string enumValue)
         {
-           return typeof(T).GetMember(enumValue)?.FirstOrDefault()?.FirstAttribute<EnumMemberAttribute>()?.Value ?? enumValue;
+            return typeof(T).GetMember(enumValue)?.FirstOrDefault()?.FirstAttribute<EnumMemberAttribute>()?.Value;
         }
 
-        protected static TDelegate BuildDeserializeDelegateExpressions<TDelegate, TReturn>(ParameterExpression inputExpression, Expression nameSpanExpression)
+        private static string GetFormattedValue(string enumValue)
+        {
+            return GetAlias(enumValue) ?? enumValue;
+        }
+
+        protected static TDelegate BuildDeserializeDelegateExpressions<TDelegate, TResolver, TReturn>(ParameterExpression inputExpression, Expression nameSpanExpression)
+            where TResolver : IJsonFormatterResolver<TSymbol, TResolver>, new()
         {
             var nameSpan = Expression.Variable(typeof(ReadOnlySpan<TSymbol>), "nameSpan");
             var returnValue = Expression.Variable(typeof(TReturn), "returnValue");
@@ -92,23 +98,27 @@ namespace SpanJson.Formatters
                 byteNameSpan = nameSpan;
             }
 
+            var resolver = StandardResolvers.GetResolver<TSymbol, TResolver>();
             var memberInfos = new List<JsonMemberInfo>();
             var dict = new Dictionary<string, TReturn>(StringComparer.Ordinal);
-            foreach (var name in Enum.GetNames(typeof(T)))
+            foreach (var originalName in Enum.GetNames(typeof(T)))
             {
-                var formattedValue = GetFormattedValue(name);
-                // TODO Enum (NamingPolicy、StringEscapeHandling)
-                var escapedName = EscapingHelper.Default.GetEncodedText(name);
-                memberInfos.Add(new JsonMemberInfo(name, typeof(T), null, formattedValue, escapedName, false, true, false, null, null));
-                var value = Enum.Parse(typeof(T), name);
-                dict.Add(name, (TReturn) Convert.ChangeType(value, typeof(TReturn)));
+                var alias = GetAlias(originalName);
+                var resolvedName = alias ?? resolver.ResolvePropertyName(originalName);
+                var escapedName = JsonHelpers.GetEncodedText(resolvedName, resolver.EscapeHandling, resolver.Encoder);
+                memberInfos.Add(new JsonMemberInfo(
+                    originalName, alias, typeof(T), null,
+                    resolvedName, escapedName,
+                    false, true, false, null, null));
+                var value = Enum.Parse(typeof(T), originalName);
+                dict.Add(originalName, (TReturn)Convert.ChangeType(value, typeof(TReturn)));
             }
 
-            Expression MatchExpressionFunctor(JsonMemberInfo memberInfo)
+            Func<JsonMemberInfo, Expression> matchExpressionFunctor = memberInfo =>
             {
                 var enumValue = dict[memberInfo.MemberName];
                 return Expression.Assign(returnValue, Expression.Constant(enumValue));
-            }
+            };
 
             var returnTarget = Expression.Label(returnValue.Type);
             var returnLabel = Expression.Label(returnTarget, returnValue);
@@ -116,7 +126,9 @@ namespace SpanJson.Formatters
             {
                 assignNameSpan,
                 lengthExpression,
-                MemberComparisonBuilder.Build<TSymbol>(memberInfos, 0, lengthParameter, byteNameSpan, endOfBlockLabel, MatchExpressionFunctor),
+                MemberComparisonBuilder.Build<TSymbol>(
+                    MemberComparisonBuilder.ConvertMemberInfos(memberInfos, resolver.JsonOptions.PropertyNameCaseInsensitive),
+                    0, lengthParameter, byteNameSpan, endOfBlockLabel, matchExpressionFunctor),
                 Expression.Throw(Expression.Constant(new InvalidOperationException())),
                 Expression.Label(endOfBlockLabel),
                 returnLabel
@@ -126,8 +138,6 @@ namespace SpanJson.Formatters
                 Expression.Lambda<TDelegate>(blockExpression, inputExpression);
             return lambdaExpression.Compile();
         }
-
-
 
         protected delegate void SerializeDelegate(ref JsonWriter<TSymbol> writer, T value);
     }

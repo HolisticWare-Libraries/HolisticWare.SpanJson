@@ -1,8 +1,6 @@
-﻿using System;
-using System.Text;
-using System.Runtime.Serialization;
-using SpanJson.Resolvers;
+﻿using System.Text;
 using SpanJson.Internal;
+using SpanJson.Resolvers;
 using Xunit;
 
 namespace SpanJson.Tests
@@ -14,17 +12,17 @@ namespace SpanJson.Tests
             /// <summary>
             /// People
             /// </summary>
-            [DataMember(Name = "人\r\n才")]
+            [JsonPropertyName( "人\r\n才")]
             public string 人 { get; set; }
             /// <summary>
             /// Name
             /// </summary>
-            [DataMember(Name = "名\r\n称")]
+            [JsonPropertyName( "名\r\n称")]
             public string 名称 { get; set; }
             /// <summary>
             /// Number
             /// </summary>
-            [DataMember(Name = "数\r\n字")]
+            [JsonPropertyName( "数\r\n字")]
             public Numbers 数 { get; set; }
         }
 
@@ -89,7 +87,7 @@ namespace SpanJson.Tests
                 数 = Numbers.三,
             };
             var serialized = JsonSerializer.Generic.Utf16.Serialize<Person, NonAsciiEscapeResolver<char>>(person);
-            Assert.Equal("{\"\\u4eba\\r\\n\\u624d\":\"\\u81ea\",\"\\u540d\\r\\n\\u79f0\":\"\\u7537\",\"\\u6570\\r\\n\\u5b57\":\"三\"}", serialized, ignoreCase: true);
+            Assert.Equal("{\"\\u4eba\\r\\n\\u624d\":\"\\u81ea\",\"\\u540d\\r\\n\\u79f0\":\"\\u7537\",\"\\u6570\\r\\n\\u5b57\":\"\\u4E09\"}", serialized, ignoreCase: true);
             var deserialized = JsonSerializer.Generic.Utf16.Deserialize<Person, NonAsciiEscapeResolver<char>>(serialized);
             Assert.NotNull(deserialized);
             Assert.Equal(person.人, deserialized.人);
@@ -108,7 +106,7 @@ namespace SpanJson.Tests
             };
             var serialized = JsonSerializer.Generic.Utf8.Serialize<Person, NonAsciiEscapeResolver<byte>>(person);
             var utf16Serialized = Encoding.UTF8.GetString(serialized);
-            Assert.Equal("{\"\\u4eba\\r\\n\\u624d\":\"\\u7136\",\"\\u540d\\r\\n\\u79f0\":\"\\u5973\",\"\\u6570\\r\\n\\u5b57\":\"二\"}", utf16Serialized, ignoreCase: true);
+            Assert.Equal("{\"\\u4eba\\r\\n\\u624d\":\"\\u7136\",\"\\u540d\\r\\n\\u79f0\":\"\\u5973\",\"\\u6570\\r\\n\\u5b57\":\"\\u4E8C\"}", utf16Serialized, ignoreCase: true);
             var deserialized = JsonSerializer.Generic.Utf8.Deserialize<Person, NonAsciiEscapeResolver<byte>>(serialized);
             Assert.NotNull(deserialized);
             Assert.Equal(person.人, deserialized.人);

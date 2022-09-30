@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using CuteAnt.Reflection;
-#if NETSTANDARD2_0
 using SpanJson.Internal;
-#endif
 
 namespace SpanJson.Helpers
 {
@@ -52,7 +47,7 @@ namespace SpanJson.Helpers
                 foreach (var memberInfo in publicMembers)
                 {
                     var memberType = memberInfo is PropertyInfo pi ? pi.PropertyType : memberInfo is FieldInfo fi ? fi.FieldType : null;
-                    if (memberType is null || memberInfo.FirstAttribute<IgnoreDataMemberAttribute>() is not null)
+                    if (memberType is null || JsonHelpers.IsIgnored(memberInfo))
                     {
                         continue;
                     }

@@ -11,7 +11,11 @@ namespace SpanJson.Tests.Generated
         [Theory]
         [InlineData("-1.79769313486231E+308")]
         [InlineData("1.79769313486231E+308")]
-        [InlineData("5E-324")] // 4.94065645841247E-324
+#if !NETCOREAPP2_1
+        [InlineData("5E-324")]
+#else
+        [InlineData("4.94065645841247E-324")]
+#endif
         public void SerializeDeserializeMinMaxUtf8(string input)
         {
             var doubleValue = double.Parse(input, CultureInfo.InvariantCulture);
@@ -24,7 +28,11 @@ namespace SpanJson.Tests.Generated
         [Theory]
         [InlineData("-1.79769313486231E+308")]
         [InlineData("1.79769313486231E+308")]
-        [InlineData("5E-324")] // 4.94065645841247E-324
+#if !NETCOREAPP2_1
+        [InlineData("5E-324")]
+#else
+        [InlineData("4.94065645841247E-324")]
+#endif
         public void SerializeDeserializeMinMaxUtf16(string input)
         {
             var doubleValue = double.Parse(input, CultureInfo.InvariantCulture);

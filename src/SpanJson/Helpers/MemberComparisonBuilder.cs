@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using SpanJson.Internal;
@@ -9,7 +6,7 @@ using SpanJson.Resolvers;
 
 namespace SpanJson.Helpers
 {
-    public static class MemberComparisonBuilder
+    internal static class MemberComparisonBuilder
     {
         private static int GetSymbolSize<TSymbol>() where TSymbol : struct
         {
@@ -24,6 +21,56 @@ namespace SpanJson.Helpers
             }
 
             throw ThrowHelper.GetNotSupportedException();
+        }
+
+        internal static List<(string memberName, JsonMemberInfo memberInfo)> ConvertMemberInfos(List<JsonMemberInfo> memberInfos, bool caseInsensitive = true)
+        {
+            if (caseInsensitive)
+            {
+                var result = new Dictionary<string, JsonMemberInfo>(StringComparer.Ordinal);
+                for (var idx = 0; idx < memberInfos.Count; idx++)
+                {
+                    var memberInfo = memberInfos[idx];
+                    result.Add(memberInfo.Name, memberInfo);
+                    if (!result.TryGetValue(memberInfo.MemberName, out _))
+                    {
+                        result.Add(memberInfo.MemberName, memberInfo);
+                    }
+                    var camelCaseName = StringMutator.ToCamelCaseWithCache(memberInfo.MemberName);
+                    if (!result.TryGetValue(camelCaseName, out _))
+                    {
+                        result.Add(camelCaseName, memberInfo);
+                    }
+                    var snakeCaseName = StringMutator.ToSnakeCaseWithCache(memberInfo.MemberName);
+                    if (!result.TryGetValue(snakeCaseName, out _))
+                    {
+                        result.Add(snakeCaseName, memberInfo);
+                    }
+                    var alias = memberInfo.Alias;
+                    if (alias is not null)
+                    {
+                        if (!result.TryGetValue(alias, out _))
+                        {
+                            result.Add(alias, memberInfo);
+                        }
+                        camelCaseName = StringMutator.ToCamelCaseWithCache(alias);
+                        if (!result.TryGetValue(camelCaseName, out _))
+                        {
+                            result.Add(camelCaseName, memberInfo);
+                        }
+                        snakeCaseName = StringMutator.ToSnakeCaseWithCache(alias);
+                        if (!result.TryGetValue(snakeCaseName, out _))
+                        {
+                            result.Add(snakeCaseName, memberInfo);
+                        }
+                    }
+                }
+                return result.Select(x => (x.Key, x.Value)).ToList();
+            }
+            else
+            {
+                return memberInfos.Select(x => (x.Name, x)).ToList();
+            }
         }
 
         /// <summary>
@@ -41,36 +88,37 @@ namespace SpanJson.Helpers
         /// The speed for both is practically the same with this method
         /// It also simplifies the code if the member name is actually multibyte utf8 (e.g. chinese)
         /// </summary>
-        public static Expression Build<TSymbol>(List<JsonMemberInfo> memberInfos, int index, ParameterExpression lengthParameter,
+        public static Expression Build<TSymbol>(List<(string memberName, JsonMemberInfo memberInfo)> jsonMemberInfos, int index, ParameterExpression lengthParameter,
             ParameterExpression nameSpanExpression, LabelTarget endOfBlockLabel,
             Func<JsonMemberInfo, Expression> matchExpressionFunctor) where TSymbol : struct
         {
             var symbolSize = GetSymbolSize<TSymbol>();
-            var grouping = memberInfos.Where(a => a.CanRead && GetLength<TSymbol>(a.Name) >= index).GroupBy(a => CalculateKey<TSymbol>(a.Name, index))
+            var grouping = jsonMemberInfos.Where(a => a.memberInfo.CanRead && GetLength<TSymbol>(a.memberName) >= index).GroupBy(a => CalculateKey<TSymbol>(a.memberName, index))
                 .OrderByDescending(a => a.Key.Key).ToList();
-            if (!grouping.Any())
+            if (0u >= (uint)grouping.Count)
             {
                 ThrowHelper.ThrowInvalidOperationException(); // should never happen
             }
 
             var expressions = new List<Expression>();
-            foreach (var group in grouping)
+            for (int i = 0; i < grouping.Count; i++)
             {
+                var group = grouping[i];
                 if (group.Count() == 1) // need to check remaining values too 
                 {
-                    var memberInfo = group.Single();
+                    var jsonMemberInfo = group.Single();
                     var length = index + group.Key.offset;
-                    var matchExpression = matchExpressionFunctor(memberInfo);
+                    var matchExpression = matchExpressionFunctor(jsonMemberInfo.memberInfo);
                     matchExpression = Expression.Block(matchExpression, Expression.Goto(endOfBlockLabel));
                     Expression? comparisonExpression = null;
                     if (group.Key.Key != 0 || group.Key.offset != 0)
                     {
                         comparisonExpression = Expression.Equal(GetReadMethod(nameSpanExpression, group.Key.intType, Expression.Constant(index * symbolSize)),
                             GetConstantExpressionForGroupKey(group.Key.Key, group.Key.intType));
-                        var nameLength = GetLength<TSymbol>(memberInfo.Name);
+                        var nameLength = GetLength<TSymbol>(jsonMemberInfo.memberName);
                         while (length < nameLength)
                         {
-                            var subKey = CalculateKey<TSymbol>(memberInfo.Name, length);
+                            var subKey = CalculateKey<TSymbol>(jsonMemberInfo.memberName, length);
                             comparisonExpression = Expression.AndAlso(comparisonExpression,
                                 Expression.Equal(GetReadMethod(nameSpanExpression, subKey.intType, Expression.Constant(length * symbolSize)),
                                     GetConstantExpressionForGroupKey(subKey.Key, subKey.intType)));
@@ -116,17 +164,17 @@ namespace SpanJson.Helpers
         {
             if (intType == typeof(byte))
             {
-                return Expression.Constant((byte) key);
+                return Expression.Constant((byte)key);
             }
 
             if (intType == typeof(ushort))
             {
-                return Expression.Constant((ushort) key);
+                return Expression.Constant((ushort)key);
             }
 
             if (intType == typeof(uint))
             {
-                return Expression.Constant((uint) key);
+                return Expression.Constant((uint)key);
             }
 
             if (intType == typeof(ulong))

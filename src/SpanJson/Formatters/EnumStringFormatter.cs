@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace SpanJson.Formatters
 {
@@ -9,7 +7,7 @@ namespace SpanJson.Formatters
         where TResolver : IJsonFormatterResolver<TSymbol, TResolver>, new()
         where TSymbol : struct
     {
-        private static readonly SerializeDelegate Serializer = BuildSerializeDelegate(s => "\"" + s + "\"");
+        private static readonly SerializeDelegate Serializer = BuildSerializeDelegate<TResolver>(s => "\"" + s + "\"");
         private static readonly DeserializeDelegate Deserializer = BuildDeserializeDelegate();
         public static readonly EnumStringFormatter<T, TSymbol, TResolver> Default = new EnumStringFormatter<T, TSymbol, TResolver>();
 
@@ -40,7 +38,7 @@ namespace SpanJson.Formatters
                 ThrowHelper.ThrowNotSupportedException();
             }
             Expression nameSpanExpression = Expression.Call(readerParameter, nameSpanMethodInfo);
-            return BuildDeserializeDelegateExpressions<DeserializeDelegate, T>(readerParameter, nameSpanExpression);
+            return BuildDeserializeDelegateExpressions<DeserializeDelegate, TResolver, T>(readerParameter, nameSpanExpression);
         }
 
         private delegate T DeserializeDelegate(ref JsonReader<TSymbol> reader);

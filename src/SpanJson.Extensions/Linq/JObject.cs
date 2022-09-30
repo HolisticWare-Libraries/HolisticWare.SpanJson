@@ -24,7 +24,6 @@
 #endregion
 
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Serialization;
 using SpanJson.Document;
 using SpanJson.Dynamic;
 using SpanJson.Resolvers;
@@ -35,7 +34,7 @@ namespace SpanJson.Linq
     public partial class JObject : JContainer
     {
         private readonly JPropertyKeyedCollection _properties = new JPropertyKeyedCollection();
-        [IgnoreDataMember]
+        [JsonIgnore]
         internal object? _dynamicJson;
 
         /// <summary>Gets the container's children tokens.</summary>
