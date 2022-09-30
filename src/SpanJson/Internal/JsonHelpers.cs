@@ -70,6 +70,11 @@ namespace SpanJson.Internal
             return memberInfo.HasAttribute<JsonIgnoreAttribute>() || memberInfo.HasAttributeNamed("JsonIgnore") ? true : false;
         }
 
+        internal static bool HasExtensionAttribute(MemberInfo memberInfo)
+        {
+            return memberInfo.HasAttribute<JsonExtensionDataAttribute>() || memberInfo.HasAttributeNamed("JsonExtensionData") ? true : false;
+        }
+
         // borrowed from https://github.com/dotnet/corefx/blob/8135319caa7e457ed61053ca1418313b88057b51/src/System.Text.Json/src/System/Text/Json/JsonHelpers.cs#L11
 
         /// <summary>

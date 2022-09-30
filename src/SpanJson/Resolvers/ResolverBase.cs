@@ -213,7 +213,7 @@ namespace SpanJson.Resolvers
                     canWrite = propertyInfo.CanWrite;
                 }
 
-                if (memberInfo.FirstAttribute<JsonExtensionDataAttribute>() is not null && typeof(IDictionary<string, object>).IsAssignableFrom(memberType) && canRead && canWrite)
+                if (JsonHelpers.HasExtensionAttribute(memberInfo) && typeof(IDictionary<string, object>).IsAssignableFrom(memberType) && canRead && canWrite)
                 {
                     extensionMemberInfo = new JsonExtensionMemberInfo(memberInfo.Name, memberType!, excludeNulls);
                 }
