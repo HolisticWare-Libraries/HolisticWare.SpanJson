@@ -15,7 +15,7 @@ namespace SpanJson.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public string Serialize<T>(T input)
         {
-            if (IsPolymorphically<T>())
+            if (JsonMetadata.IsPolymorphic<T>())
             {
                 return SerializerPool.SerializeObject(input, input?.GetType());
             }
@@ -29,7 +29,7 @@ namespace SpanJson.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public char[] SerializeToCharArray<T>(T input)
         {
-            if (IsPolymorphically<T>())
+            if (JsonMetadata.IsPolymorphic<T>())
             {
                 return SerializerPool.SerializeObject(input, input?.GetType()).ToCharArray();
             }
@@ -44,7 +44,7 @@ namespace SpanJson.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ArraySegment<char> SerializeToArrayPool<T>(T input)
         {
-            if (IsPolymorphically<T>())
+            if (JsonMetadata.IsPolymorphic<T>())
             {
                 var token = JToken.FromPolymorphicObject(input!);
                 return JsonSerializer.Generic.Inner<JToken, char, TUtf16Resolver>.InnerSerializeToCharArrayPool(token);
@@ -61,7 +61,7 @@ namespace SpanJson.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ValueTask SerializeAsync<T>(T input, TextWriter writer, CancellationToken cancellationToken = default)
         {
-            if (IsPolymorphically<T>())
+            if (JsonMetadata.IsPolymorphic<T>())
             {
                 SerializerPool.SerializeToWriter(writer, input, input?.GetType());
                 return default;
@@ -80,7 +80,7 @@ namespace SpanJson.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T? Deserialize<T>(string input)
         {
-            if (IsPolymorphically<T>())
+            if (JsonMetadata.IsPolymorphic<T>())
             {
                 return (T?)DeserializerPool.DeserializeObject(input, typeof(T));
             }
@@ -98,7 +98,7 @@ namespace SpanJson.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T? Deserialize<T>(char[] input)
         {
-            if (IsPolymorphically<T>())
+            if (JsonMetadata.IsPolymorphic<T>())
             {
                 return (T?)DeserializerPool.DeserializeObject(input.AsSpan().ToString(), typeof(T));
             }
@@ -112,7 +112,7 @@ namespace SpanJson.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T? Deserialize<T>(ArraySegment<char> input)
         {
-            if (IsPolymorphically<T>())
+            if (JsonMetadata.IsPolymorphic<T>())
             {
                 return (T?)DeserializerPool.DeserializeObject(input.AsSpan().ToString(), typeof(T));
             }
@@ -126,7 +126,7 @@ namespace SpanJson.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T? Deserialize<T>(in ReadOnlyMemory<char> input)
         {
-            if (IsPolymorphically<T>())
+            if (JsonMetadata.IsPolymorphic<T>())
             {
                 return (T?)DeserializerPool.DeserializeObject(input.ToString(), typeof(T));
             }
@@ -140,7 +140,7 @@ namespace SpanJson.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T? Deserialize<T>(in ReadOnlySpan<char> input)
         {
-            if (IsPolymorphically<T>())
+            if (JsonMetadata.IsPolymorphic<T>())
             {
                 return (T?)DeserializerPool.DeserializeObject(input.ToString(), typeof(T));
             }
@@ -155,7 +155,7 @@ namespace SpanJson.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ValueTask<T?> DeserializeAsync<T>(TextReader reader, CancellationToken cancellationToken = default)
         {
-            if (IsPolymorphically<T>())
+            if (JsonMetadata.IsPolymorphic<T>())
             {
                 var result = (T?)DeserializerPool.DeserializeFromReader(reader, typeof(T));
                 return new ValueTask<T?>(result);
@@ -174,7 +174,7 @@ namespace SpanJson.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public byte[] SerializeToUtf8Bytes<T>(T input)
         {
-            if (IsPolymorphically<T>())
+            if (JsonMetadata.IsPolymorphic<T>())
             {
                 return SerializerPool.SerializeToByteArray(input);
             }
@@ -189,7 +189,7 @@ namespace SpanJson.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ArraySegment<byte> SerializeToUtf8ArrayPool<T>(T input)
         {
-            if (IsPolymorphically<T>())
+            if (JsonMetadata.IsPolymorphic<T>())
             {
                 return SerializerPool.SerializeToMemoryPool(input);
             }
@@ -205,7 +205,7 @@ namespace SpanJson.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ValueTask SerializeAsync<T>(T input, Stream stream, CancellationToken cancellationToken = default)
         {
-            if (IsPolymorphically<T>())
+            if (JsonMetadata.IsPolymorphic<T>())
             {
                 SerializerPool.SerializeToStream(stream, input);
                 return default;
@@ -224,7 +224,7 @@ namespace SpanJson.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T? Deserialize<T>(byte[] input)
         {
-            if (IsPolymorphically<T>())
+            if (JsonMetadata.IsPolymorphic<T>())
             {
                 return (T?)DeserializerPool.DeserializeFromByteArray(input, typeof(T));
             }
@@ -238,7 +238,7 @@ namespace SpanJson.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T? Deserialize<T>(ArraySegment<byte> input)
         {
-            if (IsPolymorphically<T>())
+            if (JsonMetadata.IsPolymorphic<T>())
             {
                 return (T?)DeserializerPool.DeserializeFromByteArray(input.Array!, input.Offset, input.Count, typeof(T));
             }
@@ -252,7 +252,7 @@ namespace SpanJson.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T? Deserialize<T>(in ReadOnlyMemory<byte> input)
         {
-            if (IsPolymorphically<T>())
+            if (JsonMetadata.IsPolymorphic<T>())
             {
                 if (MemoryMarshal.TryGetArray(input, out ArraySegment<byte> segment))
                 {
@@ -273,7 +273,7 @@ namespace SpanJson.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T? Deserialize<T>(in ReadOnlySpan<byte> input)
         {
-            if (IsPolymorphically<T>())
+            if (JsonMetadata.IsPolymorphic<T>())
             {
                 return (T?)DeserializerPool.DeserializeFromByteArray(input.ToArray(), typeof(T));
             }
@@ -288,7 +288,7 @@ namespace SpanJson.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ValueTask<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
         {
-            if (IsPolymorphically<T>())
+            if (JsonMetadata.IsPolymorphic<T>())
             {
                 var result = (T?)DeserializerPool.DeserializeFromStream(stream, typeof(T));
                 return new ValueTask<T?>(result);

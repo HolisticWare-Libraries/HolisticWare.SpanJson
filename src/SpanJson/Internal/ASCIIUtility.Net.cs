@@ -15,7 +15,7 @@ using System.Runtime.Intrinsics.X86;
 
 namespace SpanJson.Internal
 {
-    partial class ASCIIUtility
+    static partial class ASCIIUtility
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static int GetIndexOfFirstNonAsciiByteInLane_AdvSimd(Vector128<byte> value, Vector128<byte> bitmask)

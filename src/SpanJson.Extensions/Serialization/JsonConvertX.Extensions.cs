@@ -1,8 +1,6 @@
 ﻿using System.Buffers;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using CuteAnt.Collections;
-using CuteAnt.Pool;
 using CuteAnt.Reflection;
 using NFormatting = Newtonsoft.Json.Formatting;
 using NIJsonLineInfo = Newtonsoft.Json.IJsonLineInfo;
@@ -14,7 +12,7 @@ using NJsonSerializerSettings = Newtonsoft.Json.JsonSerializerSettings;
 
 namespace SpanJson.Serialization
 {
-    partial class JsonConvertX
+    static partial class JsonConvertX
     {
         #region @@ Constructors @@
 
@@ -25,9 +23,6 @@ namespace SpanJson.Serialization
         private static readonly FieldInfo s_formattingField;
         private static readonly MemberGetter<NJsonSerializer> s_formattingGetter;
         private static readonly MemberSetter<NJsonSerializer> s_formattingSetter;
-
-        private static readonly DictionaryCache<NJsonSerializerSettings, ObjectPool<NJsonSerializer>> s_jsonSerializerPoolCache;
-        private static readonly ObjectPool<NJsonSerializer> s_defaultJsonSerializerPool;
 
         public static readonly Newtonsoft.Json.IArrayPool<char> GlobalCharacterArrayPool;
 
@@ -42,9 +37,6 @@ namespace SpanJson.Serialization
             s_formattingField = typeof(NJsonSerializer).LookupTypeField("_formatting");
             s_formattingGetter = s_formattingField.GetValueGetter<NJsonSerializer>();
             s_formattingSetter = s_formattingField.GetValueSetter<NJsonSerializer>();
-
-            s_defaultJsonSerializerPool = _defaultObjectPoolProvider.Create(new JsonSerializerObjectPolicy(null));
-            s_jsonSerializerPoolCache = new DictionaryCache<NJsonSerializerSettings, ObjectPool<NJsonSerializer>>(DictionaryCacheConstants.SIZE_SMALL);
 
             GlobalCharacterArrayPool = new JsonArrayPool<char>(ArrayPool<char>.Shared);
 
@@ -126,40 +118,6 @@ namespace SpanJson.Serialization
             }
 
             return new NJsonSerializationException(message, path, lineNumber, linePosition, ex);
-        }
-
-        #endregion
-
-        #region -- Allocate & Free NJsonSerializer --
-
-        public static ObjectPool<NJsonSerializer> GetJsonSerializerPool(NJsonSerializerSettings jsonSettings)
-        {
-            return s_jsonSerializerPoolCache.GetItem(jsonSettings, s_getJsonSerializerPoolFunc);
-        }
-
-        public static NJsonSerializer AllocateSerializer(NJsonSerializerSettings jsonSettings)
-        {
-            if (jsonSettings is null) { return s_defaultJsonSerializerPool.Take(); }
-
-            var pool = s_jsonSerializerPoolCache.GetItem(jsonSettings, s_getJsonSerializerPoolFunc);
-            return pool.Take();
-        }
-
-        public static void FreeSerializer(NJsonSerializerSettings jsonSettings, NJsonSerializer jsonSerializer)
-        {
-            if (jsonSettings is null) { s_defaultJsonSerializerPool.Return(jsonSerializer); return; }
-
-            if (s_jsonSerializerPoolCache.TryGetValue(jsonSettings, out ObjectPool<NJsonSerializer> pool))
-            {
-                pool.Return(jsonSerializer);
-            }
-        }
-
-        private static readonly Func<NJsonSerializerSettings, ObjectPool<NJsonSerializer>> s_getJsonSerializerPoolFunc = GetJsonSerializerPoolInternal;
-        private static readonly SynchronizedObjectPoolProvider _defaultObjectPoolProvider = SynchronizedObjectPoolProvider.Default;
-        private static ObjectPool<NJsonSerializer> GetJsonSerializerPoolInternal(NJsonSerializerSettings jsonSettings)
-        {
-            return _defaultObjectPoolProvider.Create(new JsonSerializerObjectPolicy(jsonSettings));
         }
 
         #endregion

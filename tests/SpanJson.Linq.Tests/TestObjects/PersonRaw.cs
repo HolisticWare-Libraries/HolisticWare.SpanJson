@@ -35,7 +35,7 @@ namespace SpanJson.Tests
         private JRaw _rawContent;
 
         [Newtonsoft.Json.JsonIgnore]
-        [JsonIgnore]
+        //[JsonIgnore] // 测试 HasNamedAttr
         public Guid InternalId
         {
             get { return _internalId; }

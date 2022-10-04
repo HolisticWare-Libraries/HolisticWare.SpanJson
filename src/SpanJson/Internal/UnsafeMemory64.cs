@@ -5,7 +5,7 @@ namespace SpanJson.Internal
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
 
-    partial class UnsafeMemory64
+    static partial class UnsafeMemory64
     {
         public static void WriteRaw(ref byte destination, ref byte source, int sourceBytesToCopy, ref int idx)
         {

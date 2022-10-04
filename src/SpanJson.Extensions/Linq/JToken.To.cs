@@ -17,6 +17,8 @@ namespace SpanJson.Linq
 {
     partial class JToken
     {
+        #region -- ToObject --
+
         /// <summary>Creates an instance of the specified .NET type from the <see cref="JToken"/>.</summary>
         /// <typeparam name="T">The object type that the token will be deserialized to.</typeparam>
         /// <returns>The new object created from the JSON value.</returns>
@@ -24,6 +26,15 @@ namespace SpanJson.Linq
         public T? ToObject<T>()
         {
             return ToObject<T, IncludeNullsOriginalCaseResolver<byte>, IncludeNullsOriginalCaseResolver<char>>();
+        }
+
+        /// <summary>Creates an instance of the specified .NET type from the <see cref="JToken"/>.</summary>
+        /// <typeparam name="T">The object type that the token will be deserialized to.</typeparam>
+        /// <returns>The new object created from the JSON value.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public T? ToObject<T>(Type objectType)
+        {
+            return (T?)ToObject(objectType);
         }
 
         /// <summary>Creates an instance of the specified .NET type from the <see cref="JToken"/>.</summary>
@@ -37,7 +48,23 @@ namespace SpanJson.Linq
         {
             if (TryConvertOrCast(typeof(T), out var result)) { return (T?)result; }
 
+            if (JsonMetadata.IsPolymorphic<T>())
+            {
+                return ToPolymorphicObjectInternal<T, TUtf8Resolver, TUtf16Resolver>();
+            }
             return ToObjectInternal<T, TUtf8Resolver, TUtf16Resolver>();
+        }
+
+        /// <summary>Creates an instance of the specified .NET type from the <see cref="JToken"/>.</summary>
+        /// <typeparam name="T">The object type that the token will be deserialized to.</typeparam>
+        /// <typeparam name="TUtf8Resolver">The Utf8 resolver.</typeparam>
+        /// <typeparam name="TUtf16Resolver">The Utf16 resolver.</typeparam>
+        /// <returns>The new object created from the JSON value.</returns>
+        public T? ToObject<T, TUtf8Resolver, TUtf16Resolver>(Type objectType)
+            where TUtf8Resolver : IJsonFormatterResolver<byte, TUtf8Resolver>, new()
+            where TUtf16Resolver : IJsonFormatterResolver<char, TUtf16Resolver>, new()
+        {
+            return (T?)ToObject<TUtf8Resolver, TUtf16Resolver>(objectType);
         }
 
         /// <summary>Creates an instance of the specified .NET type from the <see cref="JToken"/>.</summary>
@@ -61,20 +88,47 @@ namespace SpanJson.Linq
 
             if (TryConvertOrCast(objectType, out var result)) { return result; }
 
+            if (JsonMetadata.IsPolymorphic(objectType))
+            {
+                return ToPolymorphicObjectInternal<TUtf8Resolver, TUtf16Resolver>(objectType);
+            }
             return ToObjectInternal<TUtf8Resolver, TUtf16Resolver>(objectType);
         }
+
+        #endregion
+
+        #region -- ToPolymorphicObject --
 
         /// <summary>Creates an instance of the specified .NET type from the <see cref="JToken"/>.</summary>
         /// <typeparam name="T">The object type that the token will be deserialized to.</typeparam>
         /// <returns>The new object created from the JSON value.</returns>
         public T? ToPolymorphicObject<T>()
         {
+            return ToPolymorphicObject<T, IncludeNullsOriginalCaseResolver<byte>, IncludeNullsOriginalCaseResolver<char>>();
+        }
+
+        /// <summary>Creates an instance of the specified .NET type from the <see cref="JToken"/>
+        /// using the specified <see cref="NJsonSerializer"/>.</summary>
+        /// <typeparam name="T">The object type that the token will be deserialized to.</typeparam>
+        /// <typeparam name="TUtf8Resolver">The Utf8 resolver.</typeparam>
+        /// <typeparam name="TUtf16Resolver">The Utf16 resolver.</typeparam>
+        public T? ToPolymorphicObject<T, TUtf8Resolver, TUtf16Resolver>()
+            where TUtf8Resolver : IJsonFormatterResolver<byte, TUtf8Resolver>, new()
+            where TUtf16Resolver : IJsonFormatterResolver<char, TUtf16Resolver>, new()
+        {
             if (TryConvertOrCast(typeof(T), out var result)) { return (T?)result; }
 
+            return ToPolymorphicObjectInternal<T, TUtf8Resolver, TUtf16Resolver>();
+        }
+
+        private T? ToPolymorphicObjectInternal<T, TUtf8Resolver, TUtf16Resolver>()
+            where TUtf8Resolver : IJsonFormatterResolver<byte, TUtf8Resolver>, new()
+            where TUtf16Resolver : IJsonFormatterResolver<char, TUtf16Resolver>, new()
+        {
             var jsonSerializer = PolymorphicDeserializerPool.Take();
             try
             {
-                return ToObjectInternal<T, IncludeNullsOriginalCaseResolver<byte>, IncludeNullsOriginalCaseResolver<char>>(jsonSerializer);
+                return ToObjectInternal<T, TUtf8Resolver, TUtf16Resolver>(jsonSerializer);
             }
             finally
             {
@@ -116,14 +170,38 @@ namespace SpanJson.Linq
         /// <returns>The new object created from the JSON value.</returns>
         public object? ToPolymorphicObject(Type objectType)
         {
+            return ToPolymorphicObject<IncludeNullsOriginalCaseResolver<byte>, IncludeNullsOriginalCaseResolver<char>>(objectType);
+        }
+
+        /// <summary>Creates an instance of the specified .NET type from the <see cref="JToken"/>
+        /// using the specified <see cref="NJsonSerializer"/>.</summary>
+        /// <typeparam name="TUtf8Resolver">The Utf8 resolver.</typeparam>
+        /// <typeparam name="TUtf16Resolver">The Utf16 resolver.</typeparam>
+        /// <param name="objectType">The object type that the token will be deserialized to.</param>
+        public object? ToPolymorphicObject<TUtf8Resolver, TUtf16Resolver>(Type objectType)
+            where TUtf8Resolver : IJsonFormatterResolver<byte, TUtf8Resolver>, new()
+            where TUtf16Resolver : IJsonFormatterResolver<char, TUtf16Resolver>, new()
+        {
             if (objectType is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.objectType); }
 
             if (TryConvertOrCast(objectType, out object? result)) { return result; }
 
+            return ToPolymorphicObjectInternal<TUtf8Resolver, TUtf16Resolver>(objectType);
+        }
+
+        /// <summary>Creates an instance of the specified .NET type from the <see cref="JToken"/>
+        /// using the specified <see cref="NJsonSerializer"/>.</summary>
+        /// <typeparam name="TUtf8Resolver">The Utf8 resolver.</typeparam>
+        /// <typeparam name="TUtf16Resolver">The Utf16 resolver.</typeparam>
+        /// <param name="objectType">The object type that the token will be deserialized to.</param>
+        private object? ToPolymorphicObjectInternal<TUtf8Resolver, TUtf16Resolver>(Type objectType)
+            where TUtf8Resolver : IJsonFormatterResolver<byte, TUtf8Resolver>, new()
+            where TUtf16Resolver : IJsonFormatterResolver<char, TUtf16Resolver>, new()
+        {
             var jsonSerializer = PolymorphicDeserializerPool.Take();
             try
             {
-                return ToObjectInternal<IncludeNullsOriginalCaseResolver<byte>, IncludeNullsOriginalCaseResolver<char>>(objectType, jsonSerializer);
+                return ToObjectInternal<TUtf8Resolver, TUtf16Resolver>(objectType, jsonSerializer);
             }
             finally
             {
@@ -162,16 +240,14 @@ namespace SpanJson.Linq
             return ToObjectInternal<TUtf8Resolver, TUtf16Resolver>(objectType, jsonSerializer);
         }
 
+        #endregion
+
         #region ** TryConvertOrCast **
 
         sealed class InnerEnumStringResolver<TSymbol> : ResolverBase<TSymbol, InnerEnumStringResolver<TSymbol>> where TSymbol : struct
         {
             public InnerEnumStringResolver()
-                : base(new SpanJsonOptions
-                {
-                    NullOption = NullOptions.ExcludeNulls,
-                    EnumOption = EnumOptions.String
-                })
+                : base(new SpanJsonOptions(NullOptions.ExcludeNulls, EnumOptions.String))
             {
             }
         }
@@ -179,11 +255,7 @@ namespace SpanJson.Linq
         sealed class InnerEnumIntegerResolver<TSymbol> : ResolverBase<TSymbol, InnerEnumIntegerResolver<TSymbol>> where TSymbol : struct
         {
             public InnerEnumIntegerResolver()
-                : base(new SpanJsonOptions
-                {
-                    NullOption = NullOptions.ExcludeNulls,
-                    EnumOption = EnumOptions.Integer
-                })
+                : base(new SpanJsonOptions(NullOptions.ExcludeNulls, EnumOptions.Integer))
             {
             }
         }
@@ -406,6 +478,8 @@ namespace SpanJson.Linq
 
         #endregion
 
+        #region ++ ToObjectInternal ++
+
         protected virtual T? ToObjectInternal<T, TUtf8Resolver, TUtf16Resolver>()
             where TUtf8Resolver : IJsonFormatterResolver<byte, TUtf8Resolver>, new()
             where TUtf16Resolver : IJsonFormatterResolver<char, TUtf16Resolver>, new()
@@ -452,20 +526,25 @@ namespace SpanJson.Linq
             }
         }
 
+        #endregion
+
+        #region -- WriteTo --
+
         /// <summary>Writes this token to a <see cref="NJsonWriter"/>.</summary>
         /// <param name="writer">A <see cref="NJsonWriter"/> into which this method will write.</param>
         /// <param name="serializer">The calling serializer.</param>
         public abstract void WriteTo(NJsonWriter writer, NJsonSerializer serializer);
+
+        #endregion
+
+        #region -- ToString --
 
         /// <summary>Returns the indented JSON for this token.</summary>
         /// <remarks><c>ToString()</c> returns a non-JSON string value for tokens with a type of <see cref="JTokenType.String"/>.
         /// If you want the JSON for all token types then you should use <see cref="WriteTo(NJsonWriter, NJsonSerializer)"/>.</remarks>
         /// <returns>The indented JSON for this token.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override string ToString()
-        {
-            return ToString(true);
-        }
+        public override string ToString() => ToString(true); // 默认跟随Json.NET
 
         /// <summary>Returns the JSON for this token using the given formatting and converters.</summary>
         /// <param name="writeIndented">Indicates how the output should be formatted.</param>
@@ -477,26 +556,36 @@ namespace SpanJson.Linq
             {
                 return ToStringInternal(this);
             }
-            else
-            {
-                return JsonSerializer.NonGeneric.Utf16.Serialize<IncludeNullsOriginalCaseResolver<char>>(this);
-            }
+            return JsonSerializer.NonGeneric.Utf16.Serialize<IncludeNullsOriginalCaseResolver<char>>(this);
         }
 
         /// <summary>Returns the JSON for this token using the given resolver.</summary>
         /// <returns>The JSON for this token using the given resolver.</returns>
-        public string ToString<TResolver>(bool writeIndented)
+        public string ToString<TResolver>(bool writeIndented = false)
             where TResolver : IJsonFormatterResolver<char, TResolver>, new()
         {
-            if (writeIndented)
-            {
-                var utf16Json = JsonSerializer.NonGeneric.Utf16.Serialize<TResolver>(this);
-                return JsonSerializer.PrettyPrinter.Print(utf16Json);
-            }
-            else
+            if (!writeIndented)
             {
                 return JsonSerializer.NonGeneric.Utf16.Serialize<TResolver>(this);
             }
+            var utf16Json = JsonSerializer.NonGeneric.Utf16.SerializeToArrayPool<TResolver>(this);
+            var result = JsonSerializer.PrettyPrinter.Print(utf16Json);
+            ArrayPool<char>.Shared.Return(utf16Json.Array!);
+            return result;
+        }
+
+        /// <summary>Returns the JSON for this token using the given resolver.</summary>
+        /// <returns>The JSON for this token using the given resolver.</returns>
+        public string ToString(JsonKnownNamingPolicy namingPolicy, bool writeIndented = false)
+        {
+            if (!writeIndented)
+            {
+                return JsonSerializer.NonGeneric.Utf16.Serialize(this, namingPolicy);
+            }
+            var utf16Json = JsonSerializer.NonGeneric.Utf16.SerializeToArrayPool(this, namingPolicy);
+            var result = JsonSerializer.PrettyPrinter.Print(utf16Json);
+            ArrayPool<char>.Shared.Return(utf16Json.Array!);
+            return result;
         }
 
         private static string ToStringInternal(JToken token)
@@ -524,5 +613,7 @@ namespace SpanJson.Linq
                 DefaultSerializerPool.Return(jsonSerializer);
             }
         }
+
+        #endregion
     }
 }

@@ -4,11 +4,11 @@
     using System.Runtime.CompilerServices;
     using System.Text;
 
-    partial class TextEncodings
+    static partial class TextEncodings
     {
         public static partial class Utf16
         {
-            static readonly AsymmetricKeyHashTable<string> s_stringCache = new AsymmetricKeyHashTable<string>(StringReadOnlySpanByteAscymmetricEqualityComparer.Instance);
+            static readonly AsymmetricKeyHashTable<string> s_stringCache = new(StringReadOnlySpanByteAscymmetricEqualityComparer.Instance);
 
             /// <summary>For short strings use only.</summary>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]

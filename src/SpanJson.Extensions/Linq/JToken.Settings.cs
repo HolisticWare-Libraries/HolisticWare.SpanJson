@@ -123,21 +123,21 @@ namespace SpanJson.Linq
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static ObjectPool<NJsonSerializer> EnsureSerializerPoolCreated()
         {
-            Interlocked.CompareExchange(ref _defaultSerializerPool, JsonConvertX.GetJsonSerializerPool(_defaultSerializerSettings), null);
+            Interlocked.CompareExchange(ref _defaultSerializerPool, JsonSerializerPool.GetJsonSerializerPool(_defaultSerializerSettings), null);
             return _defaultSerializerPool;
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static ObjectPool<NJsonSerializer> EnsurePolymorphicSerializerPoolCreated()
         {
-            Interlocked.CompareExchange(ref _polymorphicSerializerPool, JsonConvertX.GetJsonSerializerPool(_polymorphicSerializerSettings), null);
+            Interlocked.CompareExchange(ref _polymorphicSerializerPool, JsonSerializerPool.GetJsonSerializerPool(_polymorphicSerializerSettings), null);
             return _polymorphicSerializerPool;
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static ObjectPool<NJsonSerializer> EnsurePolymorphicDeserializerPoolCreated()
         {
-            Interlocked.CompareExchange(ref _polymorphicDeserializerPool, JsonConvertX.GetJsonSerializerPool(_polymorphicDeserializerSettings), null);
+            Interlocked.CompareExchange(ref _polymorphicDeserializerPool, JsonSerializerPool.GetJsonSerializerPool(_polymorphicDeserializerSettings), null);
             return _polymorphicDeserializerPool;
         }
     }

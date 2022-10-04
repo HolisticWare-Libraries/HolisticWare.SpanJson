@@ -244,7 +244,7 @@ namespace SpanJson.Internal
                 uint SizeOfVectorInChars = (uint)Vector<ushort>.Count; // JIT will make this a const
                 uint SizeOfVectorInBytes = (uint)Vector<byte>.Count; // JIT will make this a const
 
-                Vector<ushort> maxAscii = new Vector<ushort>(0x007F);
+                Vector<ushort> maxAscii = new(0x007F);
 
                 if (Vector.LessThanOrEqualAll(Unsafe.ReadUnaligned<Vector<ushort>>(pBuffer), maxAscii))
                 {
@@ -521,7 +521,7 @@ namespace SpanJson.Internal
                         }
                     }
 
-                    Vector<ushort> maxAscii = new Vector<ushort>(0x007F);
+                    Vector<ushort> maxAscii = new(0x007F);
 
                     nuint finalOffsetWhereCanLoop = elementCount - 2 * SizeOfVector;
                     do

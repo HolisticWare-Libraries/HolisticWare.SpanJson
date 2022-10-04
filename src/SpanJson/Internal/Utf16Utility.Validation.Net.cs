@@ -15,7 +15,7 @@ using System.Numerics;
 
 namespace SpanJson.Internal
 {
-    unsafe partial class Utf16Utility
+    static unsafe partial class Utf16Utility
     {
         // Returns &inputBuffer[inputLength] if the input buffer is valid.
         /// <summary>
@@ -319,10 +319,10 @@ namespace SpanJson.Internal
             {
                 if (inputLength >= Vector<ushort>.Count)
                 {
-                    Vector<ushort> vector0080 = new Vector<ushort>(0x0080);
-                    Vector<ushort> vector0400 = new Vector<ushort>(0x0400);
-                    Vector<ushort> vector0800 = new Vector<ushort>(0x0800);
-                    Vector<ushort> vectorD800 = new Vector<ushort>(0xD800);
+                    Vector<ushort> vector0080 = new(0x0080);
+                    Vector<ushort> vector0400 = new(0x0400);
+                    Vector<ushort> vector0800 = new(0x0800);
+                    Vector<ushort> vectorD800 = new(0xD800);
 
                     char* pHighestAddressWhereCanReadOneVector = pEndOfInputBuffer - Vector<ushort>.Count;
                     Debug.Assert(pHighestAddressWhereCanReadOneVector >= pInputBuffer);

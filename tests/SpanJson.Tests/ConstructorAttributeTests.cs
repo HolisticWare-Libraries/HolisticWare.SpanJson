@@ -446,9 +446,9 @@ namespace SpanJson.Tests
 
         public sealed class CustomResolver<TSymbol> : ResolverBase<TSymbol, CustomResolver<TSymbol>> where TSymbol : struct
         {
-            public CustomResolver() : base(new SpanJsonOptions())
+            public CustomResolver()
+                : base(new SpanJsonOptions())
             {
-
             }
 
             protected override void TryGetAnnotatedAttributeConstructor(Type type, out ConstructorInfo constructor, out JsonConstructorAttribute attribute)

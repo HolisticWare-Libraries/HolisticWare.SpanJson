@@ -2,7 +2,7 @@
 {
     public sealed class Base64StringFormatter : ICustomJsonFormatter<byte[]>
     {
-        public static readonly Base64StringFormatter Default = new Base64StringFormatter();
+        public static readonly Base64StringFormatter Default = new();
 
         public object? Arguments { get; set; }
 

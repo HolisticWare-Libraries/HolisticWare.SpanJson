@@ -12,7 +12,7 @@ namespace SpanJson.Internal
     using System.Runtime.Intrinsics.X86;
 #endif
 
-    partial class SpanHelpers
+    static partial class SpanHelpers
     {
         #region -- Contains --
 
@@ -515,7 +515,7 @@ namespace SpanJson.Internal
 
                 if (lengthToExamine > 0)
                 {
-                    Vector<ushort> values = new Vector<ushort>((ushort)value);
+                    Vector<ushort> values = new((ushort)value);
                     do
                     {
                         Debug.Assert(lengthToExamine >= Vector<ushort>.Count);
@@ -757,8 +757,8 @@ namespace SpanJson.Internal
                     length = (int)((pEndCh - pCh) & ~(Vector<ushort>.Count - 1));
 
                     // Get comparison Vector
-                    Vector<ushort> values0 = new Vector<ushort>(value0);
-                    Vector<ushort> values1 = new Vector<ushort>(value1);
+                    Vector<ushort> values0 = new(value0);
+                    Vector<ushort> values1 = new(value1);
 
                     while (length > 0)
                     {
@@ -854,9 +854,9 @@ namespace SpanJson.Internal
                     length = (int)((pEndCh - pCh) & ~(Vector<ushort>.Count - 1));
 
                     // Get comparison Vector
-                    Vector<ushort> values0 = new Vector<ushort>(value0);
-                    Vector<ushort> values1 = new Vector<ushort>(value1);
-                    Vector<ushort> values2 = new Vector<ushort>(value2);
+                    Vector<ushort> values0 = new(value0);
+                    Vector<ushort> values1 = new(value1);
+                    Vector<ushort> values2 = new(value2);
 
                     while (length > 0)
                     {
@@ -954,10 +954,10 @@ namespace SpanJson.Internal
                     length = (int)((pEndCh - pCh) & ~(Vector<ushort>.Count - 1));
 
                     // Get comparison Vector
-                    Vector<ushort> values0 = new Vector<ushort>(value0);
-                    Vector<ushort> values1 = new Vector<ushort>(value1);
-                    Vector<ushort> values2 = new Vector<ushort>(value2);
-                    Vector<ushort> values3 = new Vector<ushort>(value3);
+                    Vector<ushort> values0 = new(value0);
+                    Vector<ushort> values1 = new(value1);
+                    Vector<ushort> values2 = new(value2);
+                    Vector<ushort> values3 = new(value3);
 
                     while (length > 0)
                     {
@@ -1056,11 +1056,11 @@ namespace SpanJson.Internal
                     length = (int)((pEndCh - pCh) & ~(Vector<ushort>.Count - 1));
 
                     // Get comparison Vector
-                    Vector<ushort> values0 = new Vector<ushort>(value0);
-                    Vector<ushort> values1 = new Vector<ushort>(value1);
-                    Vector<ushort> values2 = new Vector<ushort>(value2);
-                    Vector<ushort> values3 = new Vector<ushort>(value3);
-                    Vector<ushort> values4 = new Vector<ushort>(value4);
+                    Vector<ushort> values0 = new(value0);
+                    Vector<ushort> values1 = new(value1);
+                    Vector<ushort> values2 = new(value2);
+                    Vector<ushort> values3 = new(value3);
+                    Vector<ushort> values4 = new(value4);
 
                     while (length > 0)
                     {
@@ -1202,7 +1202,7 @@ namespace SpanJson.Internal
                     length = (int)((pCh - pEndCh) & ~(Vector<ushort>.Count - 1));
 
                     // Get comparison Vector
-                    Vector<ushort> vComparison = new Vector<ushort>(value);
+                    Vector<ushort> vComparison = new(value);
 
                     while (length > 0)
                     {

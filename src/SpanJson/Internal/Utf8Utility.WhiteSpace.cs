@@ -9,7 +9,7 @@ using System.Text;
 
 namespace SpanJson.Internal
 {
-    partial class Utf8Utility
+    static partial class Utf8Utility
     {
         /// <summary>
         /// Returns the index in <paramref name="utf8Data"/> where the first non-whitespace character

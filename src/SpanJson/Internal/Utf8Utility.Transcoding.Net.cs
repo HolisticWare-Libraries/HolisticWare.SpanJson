@@ -16,7 +16,7 @@ using System.Runtime.Intrinsics.X86;
 
 namespace SpanJson.Internal
 {
-    unsafe partial class Utf8Utility
+    static unsafe partial class Utf8Utility
     {
         // On method return, pInputBufferRemaining and pOutputBufferRemaining will both point to where
         // the next byte would have been consumed from / the next char would have been written to.

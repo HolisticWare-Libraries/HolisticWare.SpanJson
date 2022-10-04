@@ -68,7 +68,7 @@ namespace SpanJson.Benchmarks
                 Shapes = new List<Shape>();
             }
 
-            [JsonPolymorphically]
+            [JsonPolymorphism]
             public IList<Shape> Shapes { get; set; }
         }
 

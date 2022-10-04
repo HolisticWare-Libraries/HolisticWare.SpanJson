@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 
 namespace SpanJson.Internal
 {
-    partial class Base64Helper
+    static partial class Base64Helper
     {
         private const int base64LineBreakPosition = 76;
 
@@ -65,7 +65,7 @@ namespace SpanJson.Internal
             if (0u >= (uint)bytes.Length) { return string.Empty; }
 
             bool insertLineBreaks = (options == Base64FormattingOptions.InsertLineBreaks);
-            string result = /*string.FastAllocateString*/new string('\0', ToBase64_CalculateAndValidateOutputLength(bytes.Length, insertLineBreaks));
+            string result = /*string.FastAllocateString*/new('\0', ToBase64_CalculateAndValidateOutputLength(bytes.Length, insertLineBreaks));
 
             unsafe
             {

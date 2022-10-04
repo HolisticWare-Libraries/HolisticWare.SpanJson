@@ -753,7 +753,7 @@ namespace SpanJson.Internal
             {
                 lengthToExamine = GetByteVectorSpanLength(offset, length);
 
-                Vector<byte> values = new Vector<byte>(value);
+                Vector<byte> values = new(value);
 
                 while ((byte*)lengthToExamine > (byte*)offset)
                 {
@@ -1030,8 +1030,8 @@ namespace SpanJson.Internal
             {
                 lengthToExamine = GetByteVectorSpanLength(offset, length);
 
-                Vector<byte> values0 = new Vector<byte>(value0);
-                Vector<byte> values1 = new Vector<byte>(value1);
+                Vector<byte> values0 = new(value0);
+                Vector<byte> values1 = new(value1);
 
                 while ((byte*)lengthToExamine > (byte*)offset)
                 {
@@ -1275,9 +1275,9 @@ namespace SpanJson.Internal
             {
                 lengthToExamine = GetByteVectorSpanLength(offset, length);
 
-                Vector<byte> values0 = new Vector<byte>(value0);
-                Vector<byte> values1 = new Vector<byte>(value1);
-                Vector<byte> values2 = new Vector<byte>(value2);
+                Vector<byte> values0 = new(value0);
+                Vector<byte> values1 = new(value1);
+                Vector<byte> values2 = new(value2);
 
                 while ((byte*)lengthToExamine > (byte*)offset)
                 {
@@ -1434,7 +1434,7 @@ namespace SpanJson.Internal
             {
                 lengthToExamine = (IntPtr)((int)(byte*)offset & ~(Vector<byte>.Count - 1));
 
-                Vector<byte> values = new Vector<byte>(value);
+                Vector<byte> values = new(value);
 
                 while ((byte*)lengthToExamine > (byte*)(Vector<byte>.Count - 1))
                 {
@@ -1575,8 +1575,8 @@ namespace SpanJson.Internal
             {
                 lengthToExamine = (IntPtr)((int)(byte*)offset & ~(Vector<byte>.Count - 1));
 
-                Vector<byte> values0 = new Vector<byte>(value0);
-                Vector<byte> values1 = new Vector<byte>(value1);
+                Vector<byte> values0 = new(value0);
+                Vector<byte> values1 = new(value1);
 
                 while ((byte*)lengthToExamine > (byte*)(Vector<byte>.Count - 1))
                 {
@@ -1700,9 +1700,9 @@ namespace SpanJson.Internal
             {
                 lengthToExamine = (IntPtr)((int)(byte*)offset & ~(Vector<byte>.Count - 1));
 
-                Vector<byte> values0 = new Vector<byte>(value0);
-                Vector<byte> values1 = new Vector<byte>(value1);
-                Vector<byte> values2 = new Vector<byte>(value2);
+                Vector<byte> values0 = new(value0);
+                Vector<byte> values1 = new(value1);
+                Vector<byte> values2 = new(value2);
 
                 while ((byte*)lengthToExamine > (byte*)(Vector<byte>.Count - 1))
                 {
@@ -1837,8 +1837,8 @@ namespace SpanJson.Internal
                 lengthToExamine = GetByteVectorSpanLength(offset, length);
 
                 // Get comparison Vector
-                Vector<byte> values = new Vector<byte>(value);
-                Vector<byte> valuesLessThan = new Vector<byte>(lessThan);
+                Vector<byte> values = new(value);
+                Vector<byte> valuesLessThan = new(lessThan);
 
                 while ((byte*)lengthToExamine > (byte*)offset)
                 {
@@ -1969,9 +1969,9 @@ namespace SpanJson.Internal
                 lengthToExamine = GetByteVectorSpanLength(offset, length);
 
                 // Get comparison Vector
-                Vector<byte> values0 = new Vector<byte>(value0);
-                Vector<byte> values1 = new Vector<byte>(value1);
-                Vector<byte> valuesLessThan = new Vector<byte>(lessThan);
+                Vector<byte> values0 = new(value0);
+                Vector<byte> values1 = new(value1);
+                Vector<byte> valuesLessThan = new(lessThan);
 
                 while ((byte*)lengthToExamine > (byte*)offset)
                 {
@@ -2102,10 +2102,10 @@ namespace SpanJson.Internal
                 lengthToExamine = GetByteVectorSpanLength(offset, length);
 
                 // Get comparison Vector
-                Vector<byte> values0 = new Vector<byte>(value0);
-                Vector<byte> values1 = new Vector<byte>(value1);
-                Vector<byte> values2 = new Vector<byte>(value2);
-                Vector<byte> valuesLessThan = new Vector<byte>(lessThan);
+                Vector<byte> values0 = new(value0);
+                Vector<byte> values1 = new(value1);
+                Vector<byte> values2 = new(value2);
+                Vector<byte> valuesLessThan = new(lessThan);
 
                 while ((byte*)lengthToExamine > (byte*)offset)
                 {

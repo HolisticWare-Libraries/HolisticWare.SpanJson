@@ -1,16 +1,22 @@
 ﻿using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using CuteAnt.Pool;
-using Newtonsoft.Json;
 using SpanJson.Resolvers;
 using NJsonSerializer = Newtonsoft.Json.JsonSerializer;
 using NJsonSerializerSettings = Newtonsoft.Json.JsonSerializerSettings;
 
 namespace SpanJson.Serialization
 {
-    public sealed class JsonComplexSerializer : JsonComplexSerializer<IncludeNullsOriginalCaseResolver<char>, IncludeNullsOriginalCaseResolver<byte>>
+    public sealed class JsonComplexSerializer
     {
-        public static readonly JsonComplexSerializer Instance = new JsonComplexSerializer();
+        public static readonly IJsonSerializer Default = new JsonComplexSerializer<IncludeNullsOriginalCaseResolver<char>, IncludeNullsOriginalCaseResolver<byte>>(JsonKnownNamingPolicy.CamelCase);
+        public static readonly IJsonSerializer CamelCase = new JsonComplexSerializer<IncludeNullsCamelCaseResolver<char>, IncludeNullsCamelCaseResolver<byte>>(JsonKnownNamingPolicy.CamelCase);
+        public static readonly IJsonSerializer SnakeCase = new JsonComplexSerializer<IncludeNullsSnakeCaseResolver<char>, IncludeNullsSnakeCaseResolver<byte>>(JsonKnownNamingPolicy.SnakeCase);
+        public static readonly IJsonSerializer AdaCase = new JsonComplexSerializer<IncludeNullsAdaCaseResolver<char>, IncludeNullsAdaCaseResolver<byte>>(JsonKnownNamingPolicy.AdaCase);
+        public static readonly IJsonSerializer MacroCase = new JsonComplexSerializer<IncludeNullsMacroCaseResolver<char>, IncludeNullsMacroCaseResolver<byte>>(JsonKnownNamingPolicy.MacroCase);
+        public static readonly IJsonSerializer KebabCase = new JsonComplexSerializer<IncludeNullsKebabCaseResolver<char>, IncludeNullsKebabCaseResolver<byte>>(JsonKnownNamingPolicy.KebabCase);
+        public static readonly IJsonSerializer TrainCase = new JsonComplexSerializer<IncludeNullsTrainCaseResolver<char>, IncludeNullsTrainCaseResolver<byte>>(JsonKnownNamingPolicy.TrainCase);
+        public static readonly IJsonSerializer CobolCase = new JsonComplexSerializer<IncludeNullsCobolCaseResolver<char>, IncludeNullsCobolCaseResolver<byte>>(JsonKnownNamingPolicy.CobolCase);
     }
 
     public partial class JsonComplexSerializer<TUtf16Resolver, TUtf8Resolver> : IJsonSerializer
@@ -32,33 +38,10 @@ namespace SpanJson.Serialization
         private ObjectPool<NJsonSerializer>? _serializerPool;
         private ObjectPool<NJsonSerializer>? _deserializerPool;
 
-        public JsonComplexSerializer()
+        internal JsonComplexSerializer(JsonKnownNamingPolicy namingPolicy)
         {
-            _serializerSettings = new NJsonSerializerSettings
-            {
-                //NullValueHandling = NullValueHandling.Ignore,
-
-                SerializationBinder = JsonSerializationBinder.Instance,
-                TypeNameHandling = TypeNameHandling.Auto
-            };
-            _serializerSettings.Converters.Add(Newtonsoft.Json.Converters.IPAddressConverter.Instance);
-            _serializerSettings.Converters.Add(Newtonsoft.Json.Converters.IPEndPointConverter.Instance);
-            _serializerSettings.Converters.Add(Newtonsoft.Json.Converters.CombGuidConverter.Instance);
-            _serializerSettings.Converters.Add(SpanJson.Converters.JTokenConverter.Instance);
-
-            _deserializerSettings = new NJsonSerializerSettings
-            {
-                ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
-
-                DateParseHandling = DateParseHandling.None,
-
-                SerializationBinder = JsonSerializationBinder.Instance,
-                TypeNameHandling = TypeNameHandling.Auto
-            };
-            _deserializerSettings.Converters.Add(Newtonsoft.Json.Converters.IPAddressConverter.Instance);
-            _deserializerSettings.Converters.Add(Newtonsoft.Json.Converters.IPEndPointConverter.Instance);
-            _deserializerSettings.Converters.Add(Newtonsoft.Json.Converters.CombGuidConverter.Instance);
-            _deserializerSettings.Converters.Add(SpanJson.Converters.JTokenConverter.Instance);
+            _serializerSettings = JsonSerializerPool.CreateSerializerSettings(namingPolicy, excludeNulls: false, isPolymorphic: true);
+            _deserializerSettings = JsonSerializerPool.CreateDeserializerSettings(namingPolicy, excludeNulls: false, isPolymorphic: true);
         }
 
         public JsonComplexSerializer(NJsonSerializerSettings serializerSettings, NJsonSerializerSettings deserializerSettings)
@@ -81,7 +64,7 @@ namespace SpanJson.Serialization
         [MethodImpl(MethodImplOptions.NoInlining)]
         private ObjectPool<NJsonSerializer> EnsureSerializerPoolCreated()
         {
-            Interlocked.CompareExchange(ref _serializerPool, JsonConvertX.GetJsonSerializerPool(_serializerSettings), null);
+            Interlocked.CompareExchange(ref _serializerPool, JsonSerializerPool.GetJsonSerializerPool(_serializerSettings), null);
             return _serializerPool;
         }
 
@@ -95,7 +78,7 @@ namespace SpanJson.Serialization
         [MethodImpl(MethodImplOptions.NoInlining)]
         private ObjectPool<NJsonSerializer> EnsureDeserializerPoolCreated()
         {
-            Interlocked.CompareExchange(ref _deserializerPool, JsonConvertX.GetJsonSerializerPool(_deserializerSettings), null);
+            Interlocked.CompareExchange(ref _deserializerPool, JsonSerializerPool.GetJsonSerializerPool(_deserializerSettings), null);
             return _deserializerPool;
         }
 

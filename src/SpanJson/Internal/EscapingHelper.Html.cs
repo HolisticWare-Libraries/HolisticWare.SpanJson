@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 
 namespace SpanJson.Internal
 {
-    partial class EscapingHelper
+    static partial class EscapingHelper
     {
         public static class Html
         {
@@ -34,7 +34,7 @@ namespace SpanJson.Internal
             };
 
             private static readonly ConcurrentDictionary<string, JsonEncodedText> s_encodedTextCache =
-                new ConcurrentDictionary<string, JsonEncodedText>(StringComparer.Ordinal);
+                new(StringComparer.Ordinal);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static JsonEncodedText GetEncodedText(string text)

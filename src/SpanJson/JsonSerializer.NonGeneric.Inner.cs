@@ -9,13 +9,13 @@ using SpanJson.Internal;
 
 namespace SpanJson
 {
-    partial class JsonSerializer
+    static partial class JsonSerializer
     {
-        partial class NonGeneric
+        static partial class NonGeneric
         {
             public static class Inner<TSymbol, TResolver> where TResolver : IJsonFormatterResolver<TSymbol, TResolver>, new() where TSymbol : struct
             {
-                internal static readonly ConcurrentDictionary<Type, Invoker> Invokers = new ConcurrentDictionary<Type, Invoker>();
+                internal static readonly ConcurrentDictionary<Type, Invoker> Invokers = new();
 
                 internal static readonly Func<Type, Invoker> InvokerFactory = x => BuildInvoker(x);
 
@@ -64,7 +64,6 @@ namespace SpanJson
                 #endregion
 
                 #region -- Utf8 Serialize --
-
 
                 public static byte[] InnerSerializeToByteArray(object? input)
                 {

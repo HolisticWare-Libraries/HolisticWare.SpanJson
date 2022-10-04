@@ -1,17 +1,13 @@
-﻿using System;
-using System.Buffers;
-using System.IO;
+﻿using System.Buffers;
 using System.Runtime.InteropServices;
-using System.Threading;
-using System.Threading.Tasks;
 using SpanJson.Internal;
 using SpanJson.Resolvers;
 
 namespace SpanJson
 {
-    partial class JsonSerializer
+    static partial class JsonSerializer
     {
-        partial class Generic
+        static partial class Generic
         {
             public static class Inner<T, TSymbol, TResolver> where TResolver : IJsonFormatterResolver<TSymbol, TResolver>, new() where TSymbol : struct
             {
@@ -70,6 +66,10 @@ namespace SpanJson
                     {
                         jsonWriter.Dispose();
                         throw;
+                    }
+                    finally
+                    {
+                        jsonWriter.Clear();
                     }
                 }
 
@@ -132,6 +132,10 @@ namespace SpanJson
                     {
                         jsonWriter.Dispose();
                         throw;
+                    }
+                    finally
+                    {
+                        jsonWriter.Clear();
                     }
                 }
 

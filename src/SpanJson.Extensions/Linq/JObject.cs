@@ -139,7 +139,7 @@ namespace SpanJson.Linq
                     break;
 
                 case SpanJsonDynamicObject dynamicObject:
-                    jobj = (JObject)FromDynamicInternal<IncludeNullsOriginalCaseResolver<char>>(dynamicObject);
+                    jobj = (JObject)JToken.FromDynamic(dynamicObject);
                     break;
 
                 case JObject o: jobj = o; break;

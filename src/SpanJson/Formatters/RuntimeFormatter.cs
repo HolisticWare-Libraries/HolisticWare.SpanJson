@@ -11,10 +11,10 @@ namespace SpanJson.Formatters
         where TResolver : IJsonFormatterResolver<TSymbol, TResolver>, new()
         where TSymbol : struct
     {
-        public static readonly RuntimeFormatter<TSymbol, TResolver> Default = new RuntimeFormatter<TSymbol, TResolver>();
+        public static readonly RuntimeFormatter<TSymbol, TResolver> Default = new();
 
         private static readonly ConcurrentDictionary<Type, SerializeDelegate> RuntimeSerializerDictionary =
-            new ConcurrentDictionary<Type, SerializeDelegate>();
+            new();
 
         public object? Deserialize(ref JsonReader<TSymbol> reader, IJsonFormatterResolver<TSymbol> resolver)
         {

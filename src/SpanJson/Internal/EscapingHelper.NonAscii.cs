@@ -14,7 +14,7 @@ using System.Text.Encodings.Web;
 
 namespace SpanJson.Internal
 {
-    partial class EscapingHelper
+    static partial class EscapingHelper
     {
         public static partial class NonAscii
         {
@@ -46,7 +46,7 @@ namespace SpanJson.Internal
             };
 
             private static readonly ConcurrentDictionary<string, JsonEncodedText> s_encodedTextCache =
-                new ConcurrentDictionary<string, JsonEncodedText>(StringComparer.Ordinal);
+                new(StringComparer.Ordinal);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private static bool NeedsEscapingNoBoundsCheck(char value) => 0u >= (uint)AllowList[value] ? true : false;

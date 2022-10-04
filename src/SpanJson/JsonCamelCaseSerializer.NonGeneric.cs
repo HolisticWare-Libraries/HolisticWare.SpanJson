@@ -7,7 +7,7 @@ using SpanJson.Resolvers;
 
 namespace SpanJson
 {
-    partial class JsonCamelCaseSerializer
+    static partial class JsonCamelCaseSerializer
     {
         /// <summary>Non-Generic part</summary>
         public static partial class NonGeneric

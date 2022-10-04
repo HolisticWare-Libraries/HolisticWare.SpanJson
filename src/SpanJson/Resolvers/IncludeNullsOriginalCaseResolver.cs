@@ -2,11 +2,8 @@
 {
     public sealed class IncludeNullsOriginalCaseResolver<TSymbol> : ResolverBase<TSymbol, IncludeNullsOriginalCaseResolver<TSymbol>> where TSymbol : struct
     {
-        public IncludeNullsOriginalCaseResolver() : base(new SpanJsonOptions
-        {
-            NullOption = NullOptions.IncludeNulls,
-            EnumOption = EnumOptions.String
-        })
+        public IncludeNullsOriginalCaseResolver()
+            : base(new SpanJsonOptions(NullOptions.IncludeNulls, EnumOptions.String))
         {
         }
     }

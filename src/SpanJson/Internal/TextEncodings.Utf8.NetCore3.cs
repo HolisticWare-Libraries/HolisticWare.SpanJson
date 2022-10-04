@@ -8,7 +8,7 @@ namespace SpanJson.Internal
     using System.Runtime.InteropServices;
     using System.Text;
 
-    partial class TextEncodings
+    static partial class TextEncodings
     {
         public static partial class Utf8
         {

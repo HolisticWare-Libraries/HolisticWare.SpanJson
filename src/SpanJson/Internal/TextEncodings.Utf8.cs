@@ -7,7 +7,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
 
-    partial class TextEncodings
+    static partial class TextEncodings
     {
         // borrowed from https://github.com/dotnet/corefxlab/tree/master/src/System.Text.Primitives/System/Text/Encoders
 
@@ -86,14 +86,14 @@
 #endif
             }
 
-            private static readonly ConcurrentDictionary<string, byte[]> s_cachedUtf8Bytes = new ConcurrentDictionary<string, byte[]>(StringComparer.Ordinal);
+            private static readonly ConcurrentDictionary<string, byte[]> s_cachedUtf8Bytes = new(StringComparer.Ordinal);
             /// <summary>For short strings use only.</summary>
             public static byte[] GetBytesWithCache(string formattedName)
             {
                 return s_cachedUtf8Bytes.GetOrAdd(formattedName, _ => UTF8NoBOM.GetBytes(_));
             }
 
-            static readonly AsymmetricKeyHashTable<string> s_stringCache = new AsymmetricKeyHashTable<string>(StringReadOnlySpanByteAscymmetricEqualityComparer.Instance);
+            static readonly AsymmetricKeyHashTable<string> s_stringCache = new(StringReadOnlySpanByteAscymmetricEqualityComparer.Instance);
             /// <summary>For short strings use only.</summary>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static string GetStringWithCache(in ReadOnlySpan<byte> utf8Source)

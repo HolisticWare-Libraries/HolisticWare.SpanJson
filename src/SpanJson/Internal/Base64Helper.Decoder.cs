@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 
 namespace SpanJson.Internal
 {
-    partial class Base64Helper
+    static partial class Base64Helper
     {
         /// <summary>Converts the specified string, which encodes binary data as Base64 digits, to the equivalent byte array.</summary>
         /// <param name="s">The string to convert</param>

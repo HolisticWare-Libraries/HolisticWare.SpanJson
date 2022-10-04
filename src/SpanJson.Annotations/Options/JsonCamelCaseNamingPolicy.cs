@@ -2,10 +2,14 @@
 {
     using SpanJson.Internal;
 
-    /// <summary>The default naming strategy. Property names are unchanged.</summary>
-    public class JsonCamelCaseNamingPolicy : JsonNamingPolicy
+    /// <summary>A camel case naming strategy.</summary>
+    sealed class JsonCamelCaseNamingPolicy : JsonNamingPolicy
     {
+        public static readonly JsonCamelCaseNamingPolicy Instance = new();
+
+        private JsonCamelCaseNamingPolicy() { }
+
         /// <inheritdoc />
-        public override string ConvertName(string name) => StringMutator.ToCamelCaseWithCache(name);
+        public override string ConvertName(string name) => StringMutator.ToCamelCase(name);
     }
 }

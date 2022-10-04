@@ -9,7 +9,7 @@ namespace SpanJson.Helpers
 {
     public abstract class RecursionCandidate
     {
-        protected static readonly ConcurrentDictionary<Type, bool> RuntimeLookup = new ConcurrentDictionary<Type, bool>();
+        protected static readonly ConcurrentDictionary<Type, bool> RuntimeLookup = new();
 
         public static bool LookupRecursionCandidate(Type type)
         {

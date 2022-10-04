@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using SpanJson.Document;
-using SpanJson.Linq;
+﻿using SpanJson.Document;
 using SpanJson.Internal;
+using SpanJson.Linq;
 using SpanJson.Serialization;
 using Xunit;
 
@@ -48,8 +46,8 @@ namespace SpanJson.Tests
                     new Circle { Radius = 5 }
                 }
             };
-            var utf16Json = JsonComplexSerializer.Instance.SerializeObject(drawing);
-            var deserialized = JsonComplexSerializer.Instance.Deserialize<Drawing>(utf16Json);
+            var utf16Json = JsonComplexSerializer.Default.SerializeObject(drawing);
+            var deserialized = JsonComplexSerializer.Default.Deserialize<Drawing>(utf16Json);
             Assert.NotNull(deserialized);
             Assert.Equal(3, deserialized.Shapes.Count);
             Assert.Equal(typeof(Square), deserialized.Shapes[0].GetType());
@@ -88,8 +86,8 @@ namespace SpanJson.Tests
                     new Circle { Radius = 5 }
                 }
             };
-            var utf8Json = JsonComplexSerializer.Instance.SerializeObjectToUtf8Bytes(drawing);
-            var deserialized = JsonComplexSerializer.Instance.Deserialize<Drawing>(utf8Json);
+            var utf8Json = JsonComplexSerializer.Default.SerializeObjectToUtf8Bytes(drawing);
+            var deserialized = JsonComplexSerializer.Default.Deserialize<Drawing>(utf8Json);
             Assert.NotNull(deserialized);
             Assert.Equal(3, deserialized.Shapes.Count);
             Assert.Equal(typeof(Square), deserialized.Shapes[0].GetType());
@@ -113,7 +111,7 @@ namespace SpanJson.Tests
                 }
             };
             var jObj = JObject.FromObject(drawing);
-            Assert.Throws<JsonParserException>(() => jObj.ToObject<Drawing>());
+            Assert.Throws<Newtonsoft.Json.JsonSerializationException>(() => jObj.ToObject<Drawing>());
         }
 
         [Fact]
@@ -260,8 +258,8 @@ namespace SpanJson.Tests
         [Fact]
         public static void IsPolymorphically()
         {
-            Assert.False(JsonComplexSerializer.IsPolymorphically<LayerSettings>());
-            Assert.False(JsonComplexSerializer.IsPolymorphically<IList<string>>());
+            Assert.False(JsonMetadata.IsPolymorphic<LayerSettings>());
+            Assert.False(JsonMetadata.IsPolymorphic<IList<string>>());
         }
 
         public class LayerSettings
@@ -277,7 +275,7 @@ namespace SpanJson.Tests
                 Shapes = new List<Shape>();
             }
 
-            [JsonPolymorphically]
+            [JsonPolymorphism]
             public IList<Shape> Shapes { get; set; }
         }
 

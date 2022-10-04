@@ -2,10 +2,14 @@
 {
     using SpanJson.Internal;
 
-    /// <summary>The default naming strategy. Property names are unchanged.</summary>
-    public class JsonSnakeCaseNamingPolicy : JsonNamingPolicy
+    /// <summary>A snake case naming strategy.</summary>
+    sealed class JsonSnakeCaseNamingPolicy : JsonNamingPolicy
     {
+        public static readonly JsonSnakeCaseNamingPolicy Instance = new();
+
+        private JsonSnakeCaseNamingPolicy() { }
+
         /// <inheritdoc />
-        public override string ConvertName(string name) => StringMutator.ToSnakeCaseWithCache(name);
+        public override string ConvertName(string name) => StringMutator.ToSnakeCase(name);
     }
 }

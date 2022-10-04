@@ -10,7 +10,7 @@ namespace SpanJson.Formatters
 {
     public sealed class SByteUtf16Formatter : IJsonFormatter<SByte, Char>
     {
-        public static readonly SByteUtf16Formatter Default = new SByteUtf16Formatter();
+        public static readonly SByteUtf16Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Char> writer, SByte value, IJsonFormatterResolver<Char> resolver)
         {
@@ -24,7 +24,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableSByteUtf16Formatter : IJsonFormatter<SByte?, Char>
     {
-        public static readonly NullableSByteUtf16Formatter Default = new NullableSByteUtf16Formatter();
+        public static readonly NullableSByteUtf16Formatter Default = new();
         private static readonly SByteUtf16Formatter ElementFormatter = SByteUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, SByte? value, IJsonFormatterResolver<Char> resolver)
         {
@@ -50,7 +50,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableSByteUtf16ArrayFormatter : IJsonFormatter<SByte?[], Char>
     {
-        public static readonly NullableSByteUtf16ArrayFormatter Default = new NullableSByteUtf16ArrayFormatter();
+        public static readonly NullableSByteUtf16ArrayFormatter Default = new();
         private static readonly NullableSByteUtf16Formatter ElementFormatter = NullableSByteUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, SByte?[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -120,7 +120,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableSByteUtf16ListFormatter : IJsonFormatter<List<SByte?>, Char>
     {
-        public static readonly NullableSByteUtf16ListFormatter Default = new NullableSByteUtf16ListFormatter();
+        public static readonly NullableSByteUtf16ListFormatter Default = new();
         private static readonly NullableSByteUtf16Formatter ElementFormatter = NullableSByteUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<SByte?> value, IJsonFormatterResolver<Char> resolver)
@@ -179,7 +179,7 @@ namespace SpanJson.Formatters
 
     public sealed class SByteUtf16ArrayFormatter : IJsonFormatter<SByte[], Char>
     {
-        public static readonly SByteUtf16ArrayFormatter Default = new SByteUtf16ArrayFormatter();
+        public static readonly SByteUtf16ArrayFormatter Default = new();
         private static readonly SByteUtf16Formatter ElementFormatter = SByteUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, SByte[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -249,7 +249,7 @@ namespace SpanJson.Formatters
 
     public sealed class SByteUtf16ListFormatter : IJsonFormatter<List<SByte>, Char>
     {
-        public static readonly SByteUtf16ListFormatter Default = new SByteUtf16ListFormatter();
+        public static readonly SByteUtf16ListFormatter Default = new();
         private static readonly SByteUtf16Formatter ElementFormatter = SByteUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<SByte> value, IJsonFormatterResolver<Char> resolver)
@@ -307,7 +307,7 @@ namespace SpanJson.Formatters
     }
     public sealed class SByteUtf8Formatter : IJsonFormatter<SByte, Byte>
     {
-        public static readonly SByteUtf8Formatter Default = new SByteUtf8Formatter();
+        public static readonly SByteUtf8Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Byte> writer, SByte value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -321,7 +321,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableSByteUtf8Formatter : IJsonFormatter<SByte?, Byte>
     {
-        public static readonly NullableSByteUtf8Formatter Default = new NullableSByteUtf8Formatter();
+        public static readonly NullableSByteUtf8Formatter Default = new();
         private static readonly SByteUtf8Formatter ElementFormatter = SByteUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, SByte? value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -347,7 +347,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableSByteUtf8ArrayFormatter : IJsonFormatter<SByte?[], Byte>
     {
-        public static readonly NullableSByteUtf8ArrayFormatter Default = new NullableSByteUtf8ArrayFormatter();
+        public static readonly NullableSByteUtf8ArrayFormatter Default = new();
         private static readonly NullableSByteUtf8Formatter ElementFormatter = NullableSByteUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, SByte?[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -417,7 +417,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableSByteUtf8ListFormatter : IJsonFormatter<List<SByte?>, Byte>
     {
-        public static readonly NullableSByteUtf8ListFormatter Default = new NullableSByteUtf8ListFormatter();
+        public static readonly NullableSByteUtf8ListFormatter Default = new();
         private static readonly NullableSByteUtf8Formatter ElementFormatter = NullableSByteUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<SByte?> value, IJsonFormatterResolver<Byte> resolver)
@@ -476,7 +476,7 @@ namespace SpanJson.Formatters
 
     public sealed class SByteUtf8ArrayFormatter : IJsonFormatter<SByte[], Byte>
     {
-        public static readonly SByteUtf8ArrayFormatter Default = new SByteUtf8ArrayFormatter();
+        public static readonly SByteUtf8ArrayFormatter Default = new();
         private static readonly SByteUtf8Formatter ElementFormatter = SByteUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, SByte[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -546,7 +546,7 @@ namespace SpanJson.Formatters
 
     public sealed class SByteUtf8ListFormatter : IJsonFormatter<List<SByte>, Byte>
     {
-        public static readonly SByteUtf8ListFormatter Default = new SByteUtf8ListFormatter();
+        public static readonly SByteUtf8ListFormatter Default = new();
         private static readonly SByteUtf8Formatter ElementFormatter = SByteUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<SByte> value, IJsonFormatterResolver<Byte> resolver)
@@ -604,7 +604,7 @@ namespace SpanJson.Formatters
     }
     public sealed class Int16Utf16Formatter : IJsonFormatter<Int16, Char>
     {
-        public static readonly Int16Utf16Formatter Default = new Int16Utf16Formatter();
+        public static readonly Int16Utf16Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Char> writer, Int16 value, IJsonFormatterResolver<Char> resolver)
         {
@@ -618,7 +618,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableInt16Utf16Formatter : IJsonFormatter<Int16?, Char>
     {
-        public static readonly NullableInt16Utf16Formatter Default = new NullableInt16Utf16Formatter();
+        public static readonly NullableInt16Utf16Formatter Default = new();
         private static readonly Int16Utf16Formatter ElementFormatter = Int16Utf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Int16? value, IJsonFormatterResolver<Char> resolver)
         {
@@ -644,7 +644,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableInt16Utf16ArrayFormatter : IJsonFormatter<Int16?[], Char>
     {
-        public static readonly NullableInt16Utf16ArrayFormatter Default = new NullableInt16Utf16ArrayFormatter();
+        public static readonly NullableInt16Utf16ArrayFormatter Default = new();
         private static readonly NullableInt16Utf16Formatter ElementFormatter = NullableInt16Utf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Int16?[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -714,7 +714,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableInt16Utf16ListFormatter : IJsonFormatter<List<Int16?>, Char>
     {
-        public static readonly NullableInt16Utf16ListFormatter Default = new NullableInt16Utf16ListFormatter();
+        public static readonly NullableInt16Utf16ListFormatter Default = new();
         private static readonly NullableInt16Utf16Formatter ElementFormatter = NullableInt16Utf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Int16?> value, IJsonFormatterResolver<Char> resolver)
@@ -773,7 +773,7 @@ namespace SpanJson.Formatters
 
     public sealed class Int16Utf16ArrayFormatter : IJsonFormatter<Int16[], Char>
     {
-        public static readonly Int16Utf16ArrayFormatter Default = new Int16Utf16ArrayFormatter();
+        public static readonly Int16Utf16ArrayFormatter Default = new();
         private static readonly Int16Utf16Formatter ElementFormatter = Int16Utf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Int16[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -843,7 +843,7 @@ namespace SpanJson.Formatters
 
     public sealed class Int16Utf16ListFormatter : IJsonFormatter<List<Int16>, Char>
     {
-        public static readonly Int16Utf16ListFormatter Default = new Int16Utf16ListFormatter();
+        public static readonly Int16Utf16ListFormatter Default = new();
         private static readonly Int16Utf16Formatter ElementFormatter = Int16Utf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Int16> value, IJsonFormatterResolver<Char> resolver)
@@ -901,7 +901,7 @@ namespace SpanJson.Formatters
     }
     public sealed class Int16Utf8Formatter : IJsonFormatter<Int16, Byte>
     {
-        public static readonly Int16Utf8Formatter Default = new Int16Utf8Formatter();
+        public static readonly Int16Utf8Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Byte> writer, Int16 value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -915,7 +915,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableInt16Utf8Formatter : IJsonFormatter<Int16?, Byte>
     {
-        public static readonly NullableInt16Utf8Formatter Default = new NullableInt16Utf8Formatter();
+        public static readonly NullableInt16Utf8Formatter Default = new();
         private static readonly Int16Utf8Formatter ElementFormatter = Int16Utf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Int16? value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -941,7 +941,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableInt16Utf8ArrayFormatter : IJsonFormatter<Int16?[], Byte>
     {
-        public static readonly NullableInt16Utf8ArrayFormatter Default = new NullableInt16Utf8ArrayFormatter();
+        public static readonly NullableInt16Utf8ArrayFormatter Default = new();
         private static readonly NullableInt16Utf8Formatter ElementFormatter = NullableInt16Utf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Int16?[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -1011,7 +1011,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableInt16Utf8ListFormatter : IJsonFormatter<List<Int16?>, Byte>
     {
-        public static readonly NullableInt16Utf8ListFormatter Default = new NullableInt16Utf8ListFormatter();
+        public static readonly NullableInt16Utf8ListFormatter Default = new();
         private static readonly NullableInt16Utf8Formatter ElementFormatter = NullableInt16Utf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Int16?> value, IJsonFormatterResolver<Byte> resolver)
@@ -1070,7 +1070,7 @@ namespace SpanJson.Formatters
 
     public sealed class Int16Utf8ArrayFormatter : IJsonFormatter<Int16[], Byte>
     {
-        public static readonly Int16Utf8ArrayFormatter Default = new Int16Utf8ArrayFormatter();
+        public static readonly Int16Utf8ArrayFormatter Default = new();
         private static readonly Int16Utf8Formatter ElementFormatter = Int16Utf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Int16[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -1140,7 +1140,7 @@ namespace SpanJson.Formatters
 
     public sealed class Int16Utf8ListFormatter : IJsonFormatter<List<Int16>, Byte>
     {
-        public static readonly Int16Utf8ListFormatter Default = new Int16Utf8ListFormatter();
+        public static readonly Int16Utf8ListFormatter Default = new();
         private static readonly Int16Utf8Formatter ElementFormatter = Int16Utf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Int16> value, IJsonFormatterResolver<Byte> resolver)
@@ -1198,7 +1198,7 @@ namespace SpanJson.Formatters
     }
     public sealed class Int32Utf16Formatter : IJsonFormatter<Int32, Char>
     {
-        public static readonly Int32Utf16Formatter Default = new Int32Utf16Formatter();
+        public static readonly Int32Utf16Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Char> writer, Int32 value, IJsonFormatterResolver<Char> resolver)
         {
@@ -1212,7 +1212,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableInt32Utf16Formatter : IJsonFormatter<Int32?, Char>
     {
-        public static readonly NullableInt32Utf16Formatter Default = new NullableInt32Utf16Formatter();
+        public static readonly NullableInt32Utf16Formatter Default = new();
         private static readonly Int32Utf16Formatter ElementFormatter = Int32Utf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Int32? value, IJsonFormatterResolver<Char> resolver)
         {
@@ -1238,7 +1238,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableInt32Utf16ArrayFormatter : IJsonFormatter<Int32?[], Char>
     {
-        public static readonly NullableInt32Utf16ArrayFormatter Default = new NullableInt32Utf16ArrayFormatter();
+        public static readonly NullableInt32Utf16ArrayFormatter Default = new();
         private static readonly NullableInt32Utf16Formatter ElementFormatter = NullableInt32Utf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Int32?[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -1308,7 +1308,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableInt32Utf16ListFormatter : IJsonFormatter<List<Int32?>, Char>
     {
-        public static readonly NullableInt32Utf16ListFormatter Default = new NullableInt32Utf16ListFormatter();
+        public static readonly NullableInt32Utf16ListFormatter Default = new();
         private static readonly NullableInt32Utf16Formatter ElementFormatter = NullableInt32Utf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Int32?> value, IJsonFormatterResolver<Char> resolver)
@@ -1367,7 +1367,7 @@ namespace SpanJson.Formatters
 
     public sealed class Int32Utf16ArrayFormatter : IJsonFormatter<Int32[], Char>
     {
-        public static readonly Int32Utf16ArrayFormatter Default = new Int32Utf16ArrayFormatter();
+        public static readonly Int32Utf16ArrayFormatter Default = new();
         private static readonly Int32Utf16Formatter ElementFormatter = Int32Utf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Int32[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -1437,7 +1437,7 @@ namespace SpanJson.Formatters
 
     public sealed class Int32Utf16ListFormatter : IJsonFormatter<List<Int32>, Char>
     {
-        public static readonly Int32Utf16ListFormatter Default = new Int32Utf16ListFormatter();
+        public static readonly Int32Utf16ListFormatter Default = new();
         private static readonly Int32Utf16Formatter ElementFormatter = Int32Utf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Int32> value, IJsonFormatterResolver<Char> resolver)
@@ -1495,7 +1495,7 @@ namespace SpanJson.Formatters
     }
     public sealed class Int32Utf8Formatter : IJsonFormatter<Int32, Byte>
     {
-        public static readonly Int32Utf8Formatter Default = new Int32Utf8Formatter();
+        public static readonly Int32Utf8Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Byte> writer, Int32 value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -1509,7 +1509,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableInt32Utf8Formatter : IJsonFormatter<Int32?, Byte>
     {
-        public static readonly NullableInt32Utf8Formatter Default = new NullableInt32Utf8Formatter();
+        public static readonly NullableInt32Utf8Formatter Default = new();
         private static readonly Int32Utf8Formatter ElementFormatter = Int32Utf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Int32? value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -1535,7 +1535,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableInt32Utf8ArrayFormatter : IJsonFormatter<Int32?[], Byte>
     {
-        public static readonly NullableInt32Utf8ArrayFormatter Default = new NullableInt32Utf8ArrayFormatter();
+        public static readonly NullableInt32Utf8ArrayFormatter Default = new();
         private static readonly NullableInt32Utf8Formatter ElementFormatter = NullableInt32Utf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Int32?[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -1605,7 +1605,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableInt32Utf8ListFormatter : IJsonFormatter<List<Int32?>, Byte>
     {
-        public static readonly NullableInt32Utf8ListFormatter Default = new NullableInt32Utf8ListFormatter();
+        public static readonly NullableInt32Utf8ListFormatter Default = new();
         private static readonly NullableInt32Utf8Formatter ElementFormatter = NullableInt32Utf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Int32?> value, IJsonFormatterResolver<Byte> resolver)
@@ -1664,7 +1664,7 @@ namespace SpanJson.Formatters
 
     public sealed class Int32Utf8ArrayFormatter : IJsonFormatter<Int32[], Byte>
     {
-        public static readonly Int32Utf8ArrayFormatter Default = new Int32Utf8ArrayFormatter();
+        public static readonly Int32Utf8ArrayFormatter Default = new();
         private static readonly Int32Utf8Formatter ElementFormatter = Int32Utf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Int32[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -1734,7 +1734,7 @@ namespace SpanJson.Formatters
 
     public sealed class Int32Utf8ListFormatter : IJsonFormatter<List<Int32>, Byte>
     {
-        public static readonly Int32Utf8ListFormatter Default = new Int32Utf8ListFormatter();
+        public static readonly Int32Utf8ListFormatter Default = new();
         private static readonly Int32Utf8Formatter ElementFormatter = Int32Utf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Int32> value, IJsonFormatterResolver<Byte> resolver)
@@ -1792,7 +1792,7 @@ namespace SpanJson.Formatters
     }
     public sealed class Int64Utf16Formatter : IJsonFormatter<Int64, Char>
     {
-        public static readonly Int64Utf16Formatter Default = new Int64Utf16Formatter();
+        public static readonly Int64Utf16Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Char> writer, Int64 value, IJsonFormatterResolver<Char> resolver)
         {
@@ -1806,7 +1806,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableInt64Utf16Formatter : IJsonFormatter<Int64?, Char>
     {
-        public static readonly NullableInt64Utf16Formatter Default = new NullableInt64Utf16Formatter();
+        public static readonly NullableInt64Utf16Formatter Default = new();
         private static readonly Int64Utf16Formatter ElementFormatter = Int64Utf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Int64? value, IJsonFormatterResolver<Char> resolver)
         {
@@ -1832,7 +1832,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableInt64Utf16ArrayFormatter : IJsonFormatter<Int64?[], Char>
     {
-        public static readonly NullableInt64Utf16ArrayFormatter Default = new NullableInt64Utf16ArrayFormatter();
+        public static readonly NullableInt64Utf16ArrayFormatter Default = new();
         private static readonly NullableInt64Utf16Formatter ElementFormatter = NullableInt64Utf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Int64?[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -1902,7 +1902,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableInt64Utf16ListFormatter : IJsonFormatter<List<Int64?>, Char>
     {
-        public static readonly NullableInt64Utf16ListFormatter Default = new NullableInt64Utf16ListFormatter();
+        public static readonly NullableInt64Utf16ListFormatter Default = new();
         private static readonly NullableInt64Utf16Formatter ElementFormatter = NullableInt64Utf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Int64?> value, IJsonFormatterResolver<Char> resolver)
@@ -1961,7 +1961,7 @@ namespace SpanJson.Formatters
 
     public sealed class Int64Utf16ArrayFormatter : IJsonFormatter<Int64[], Char>
     {
-        public static readonly Int64Utf16ArrayFormatter Default = new Int64Utf16ArrayFormatter();
+        public static readonly Int64Utf16ArrayFormatter Default = new();
         private static readonly Int64Utf16Formatter ElementFormatter = Int64Utf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Int64[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -2031,7 +2031,7 @@ namespace SpanJson.Formatters
 
     public sealed class Int64Utf16ListFormatter : IJsonFormatter<List<Int64>, Char>
     {
-        public static readonly Int64Utf16ListFormatter Default = new Int64Utf16ListFormatter();
+        public static readonly Int64Utf16ListFormatter Default = new();
         private static readonly Int64Utf16Formatter ElementFormatter = Int64Utf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Int64> value, IJsonFormatterResolver<Char> resolver)
@@ -2089,7 +2089,7 @@ namespace SpanJson.Formatters
     }
     public sealed class Int64Utf8Formatter : IJsonFormatter<Int64, Byte>
     {
-        public static readonly Int64Utf8Formatter Default = new Int64Utf8Formatter();
+        public static readonly Int64Utf8Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Byte> writer, Int64 value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -2103,7 +2103,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableInt64Utf8Formatter : IJsonFormatter<Int64?, Byte>
     {
-        public static readonly NullableInt64Utf8Formatter Default = new NullableInt64Utf8Formatter();
+        public static readonly NullableInt64Utf8Formatter Default = new();
         private static readonly Int64Utf8Formatter ElementFormatter = Int64Utf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Int64? value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -2129,7 +2129,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableInt64Utf8ArrayFormatter : IJsonFormatter<Int64?[], Byte>
     {
-        public static readonly NullableInt64Utf8ArrayFormatter Default = new NullableInt64Utf8ArrayFormatter();
+        public static readonly NullableInt64Utf8ArrayFormatter Default = new();
         private static readonly NullableInt64Utf8Formatter ElementFormatter = NullableInt64Utf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Int64?[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -2199,7 +2199,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableInt64Utf8ListFormatter : IJsonFormatter<List<Int64?>, Byte>
     {
-        public static readonly NullableInt64Utf8ListFormatter Default = new NullableInt64Utf8ListFormatter();
+        public static readonly NullableInt64Utf8ListFormatter Default = new();
         private static readonly NullableInt64Utf8Formatter ElementFormatter = NullableInt64Utf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Int64?> value, IJsonFormatterResolver<Byte> resolver)
@@ -2258,7 +2258,7 @@ namespace SpanJson.Formatters
 
     public sealed class Int64Utf8ArrayFormatter : IJsonFormatter<Int64[], Byte>
     {
-        public static readonly Int64Utf8ArrayFormatter Default = new Int64Utf8ArrayFormatter();
+        public static readonly Int64Utf8ArrayFormatter Default = new();
         private static readonly Int64Utf8Formatter ElementFormatter = Int64Utf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Int64[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -2328,7 +2328,7 @@ namespace SpanJson.Formatters
 
     public sealed class Int64Utf8ListFormatter : IJsonFormatter<List<Int64>, Byte>
     {
-        public static readonly Int64Utf8ListFormatter Default = new Int64Utf8ListFormatter();
+        public static readonly Int64Utf8ListFormatter Default = new();
         private static readonly Int64Utf8Formatter ElementFormatter = Int64Utf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Int64> value, IJsonFormatterResolver<Byte> resolver)
@@ -2386,7 +2386,7 @@ namespace SpanJson.Formatters
     }
     public sealed class ByteUtf16Formatter : IJsonFormatter<Byte, Char>
     {
-        public static readonly ByteUtf16Formatter Default = new ByteUtf16Formatter();
+        public static readonly ByteUtf16Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Char> writer, Byte value, IJsonFormatterResolver<Char> resolver)
         {
@@ -2400,7 +2400,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableByteUtf16Formatter : IJsonFormatter<Byte?, Char>
     {
-        public static readonly NullableByteUtf16Formatter Default = new NullableByteUtf16Formatter();
+        public static readonly NullableByteUtf16Formatter Default = new();
         private static readonly ByteUtf16Formatter ElementFormatter = ByteUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Byte? value, IJsonFormatterResolver<Char> resolver)
         {
@@ -2426,7 +2426,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableByteUtf16ArrayFormatter : IJsonFormatter<Byte?[], Char>
     {
-        public static readonly NullableByteUtf16ArrayFormatter Default = new NullableByteUtf16ArrayFormatter();
+        public static readonly NullableByteUtf16ArrayFormatter Default = new();
         private static readonly NullableByteUtf16Formatter ElementFormatter = NullableByteUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Byte?[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -2496,7 +2496,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableByteUtf16ListFormatter : IJsonFormatter<List<Byte?>, Char>
     {
-        public static readonly NullableByteUtf16ListFormatter Default = new NullableByteUtf16ListFormatter();
+        public static readonly NullableByteUtf16ListFormatter Default = new();
         private static readonly NullableByteUtf16Formatter ElementFormatter = NullableByteUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Byte?> value, IJsonFormatterResolver<Char> resolver)
@@ -2555,7 +2555,7 @@ namespace SpanJson.Formatters
 
     public sealed class ByteUtf16ArrayFormatter : IJsonFormatter<Byte[], Char>
     {
-        public static readonly ByteUtf16ArrayFormatter Default = new ByteUtf16ArrayFormatter();
+        public static readonly ByteUtf16ArrayFormatter Default = new();
         private static readonly ByteUtf16Formatter ElementFormatter = ByteUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Byte[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -2625,7 +2625,7 @@ namespace SpanJson.Formatters
 
     public sealed class ByteUtf16ListFormatter : IJsonFormatter<List<Byte>, Char>
     {
-        public static readonly ByteUtf16ListFormatter Default = new ByteUtf16ListFormatter();
+        public static readonly ByteUtf16ListFormatter Default = new();
         private static readonly ByteUtf16Formatter ElementFormatter = ByteUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Byte> value, IJsonFormatterResolver<Char> resolver)
@@ -2683,7 +2683,7 @@ namespace SpanJson.Formatters
     }
     public sealed class ByteUtf8Formatter : IJsonFormatter<Byte, Byte>
     {
-        public static readonly ByteUtf8Formatter Default = new ByteUtf8Formatter();
+        public static readonly ByteUtf8Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Byte> writer, Byte value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -2697,7 +2697,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableByteUtf8Formatter : IJsonFormatter<Byte?, Byte>
     {
-        public static readonly NullableByteUtf8Formatter Default = new NullableByteUtf8Formatter();
+        public static readonly NullableByteUtf8Formatter Default = new();
         private static readonly ByteUtf8Formatter ElementFormatter = ByteUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Byte? value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -2723,7 +2723,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableByteUtf8ArrayFormatter : IJsonFormatter<Byte?[], Byte>
     {
-        public static readonly NullableByteUtf8ArrayFormatter Default = new NullableByteUtf8ArrayFormatter();
+        public static readonly NullableByteUtf8ArrayFormatter Default = new();
         private static readonly NullableByteUtf8Formatter ElementFormatter = NullableByteUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Byte?[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -2793,7 +2793,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableByteUtf8ListFormatter : IJsonFormatter<List<Byte?>, Byte>
     {
-        public static readonly NullableByteUtf8ListFormatter Default = new NullableByteUtf8ListFormatter();
+        public static readonly NullableByteUtf8ListFormatter Default = new();
         private static readonly NullableByteUtf8Formatter ElementFormatter = NullableByteUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Byte?> value, IJsonFormatterResolver<Byte> resolver)
@@ -2852,7 +2852,7 @@ namespace SpanJson.Formatters
 
     public sealed class ByteUtf8ArrayFormatter : IJsonFormatter<Byte[], Byte>
     {
-        public static readonly ByteUtf8ArrayFormatter Default = new ByteUtf8ArrayFormatter();
+        public static readonly ByteUtf8ArrayFormatter Default = new();
         private static readonly ByteUtf8Formatter ElementFormatter = ByteUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Byte[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -2922,7 +2922,7 @@ namespace SpanJson.Formatters
 
     public sealed class ByteUtf8ListFormatter : IJsonFormatter<List<Byte>, Byte>
     {
-        public static readonly ByteUtf8ListFormatter Default = new ByteUtf8ListFormatter();
+        public static readonly ByteUtf8ListFormatter Default = new();
         private static readonly ByteUtf8Formatter ElementFormatter = ByteUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Byte> value, IJsonFormatterResolver<Byte> resolver)
@@ -2980,7 +2980,7 @@ namespace SpanJson.Formatters
     }
     public sealed class UInt16Utf16Formatter : IJsonFormatter<UInt16, Char>
     {
-        public static readonly UInt16Utf16Formatter Default = new UInt16Utf16Formatter();
+        public static readonly UInt16Utf16Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Char> writer, UInt16 value, IJsonFormatterResolver<Char> resolver)
         {
@@ -2994,7 +2994,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableUInt16Utf16Formatter : IJsonFormatter<UInt16?, Char>
     {
-        public static readonly NullableUInt16Utf16Formatter Default = new NullableUInt16Utf16Formatter();
+        public static readonly NullableUInt16Utf16Formatter Default = new();
         private static readonly UInt16Utf16Formatter ElementFormatter = UInt16Utf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, UInt16? value, IJsonFormatterResolver<Char> resolver)
         {
@@ -3020,7 +3020,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableUInt16Utf16ArrayFormatter : IJsonFormatter<UInt16?[], Char>
     {
-        public static readonly NullableUInt16Utf16ArrayFormatter Default = new NullableUInt16Utf16ArrayFormatter();
+        public static readonly NullableUInt16Utf16ArrayFormatter Default = new();
         private static readonly NullableUInt16Utf16Formatter ElementFormatter = NullableUInt16Utf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, UInt16?[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -3090,7 +3090,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableUInt16Utf16ListFormatter : IJsonFormatter<List<UInt16?>, Char>
     {
-        public static readonly NullableUInt16Utf16ListFormatter Default = new NullableUInt16Utf16ListFormatter();
+        public static readonly NullableUInt16Utf16ListFormatter Default = new();
         private static readonly NullableUInt16Utf16Formatter ElementFormatter = NullableUInt16Utf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<UInt16?> value, IJsonFormatterResolver<Char> resolver)
@@ -3149,7 +3149,7 @@ namespace SpanJson.Formatters
 
     public sealed class UInt16Utf16ArrayFormatter : IJsonFormatter<UInt16[], Char>
     {
-        public static readonly UInt16Utf16ArrayFormatter Default = new UInt16Utf16ArrayFormatter();
+        public static readonly UInt16Utf16ArrayFormatter Default = new();
         private static readonly UInt16Utf16Formatter ElementFormatter = UInt16Utf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, UInt16[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -3219,7 +3219,7 @@ namespace SpanJson.Formatters
 
     public sealed class UInt16Utf16ListFormatter : IJsonFormatter<List<UInt16>, Char>
     {
-        public static readonly UInt16Utf16ListFormatter Default = new UInt16Utf16ListFormatter();
+        public static readonly UInt16Utf16ListFormatter Default = new();
         private static readonly UInt16Utf16Formatter ElementFormatter = UInt16Utf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<UInt16> value, IJsonFormatterResolver<Char> resolver)
@@ -3277,7 +3277,7 @@ namespace SpanJson.Formatters
     }
     public sealed class UInt16Utf8Formatter : IJsonFormatter<UInt16, Byte>
     {
-        public static readonly UInt16Utf8Formatter Default = new UInt16Utf8Formatter();
+        public static readonly UInt16Utf8Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Byte> writer, UInt16 value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -3291,7 +3291,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableUInt16Utf8Formatter : IJsonFormatter<UInt16?, Byte>
     {
-        public static readonly NullableUInt16Utf8Formatter Default = new NullableUInt16Utf8Formatter();
+        public static readonly NullableUInt16Utf8Formatter Default = new();
         private static readonly UInt16Utf8Formatter ElementFormatter = UInt16Utf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, UInt16? value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -3317,7 +3317,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableUInt16Utf8ArrayFormatter : IJsonFormatter<UInt16?[], Byte>
     {
-        public static readonly NullableUInt16Utf8ArrayFormatter Default = new NullableUInt16Utf8ArrayFormatter();
+        public static readonly NullableUInt16Utf8ArrayFormatter Default = new();
         private static readonly NullableUInt16Utf8Formatter ElementFormatter = NullableUInt16Utf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, UInt16?[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -3387,7 +3387,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableUInt16Utf8ListFormatter : IJsonFormatter<List<UInt16?>, Byte>
     {
-        public static readonly NullableUInt16Utf8ListFormatter Default = new NullableUInt16Utf8ListFormatter();
+        public static readonly NullableUInt16Utf8ListFormatter Default = new();
         private static readonly NullableUInt16Utf8Formatter ElementFormatter = NullableUInt16Utf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<UInt16?> value, IJsonFormatterResolver<Byte> resolver)
@@ -3446,7 +3446,7 @@ namespace SpanJson.Formatters
 
     public sealed class UInt16Utf8ArrayFormatter : IJsonFormatter<UInt16[], Byte>
     {
-        public static readonly UInt16Utf8ArrayFormatter Default = new UInt16Utf8ArrayFormatter();
+        public static readonly UInt16Utf8ArrayFormatter Default = new();
         private static readonly UInt16Utf8Formatter ElementFormatter = UInt16Utf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, UInt16[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -3516,7 +3516,7 @@ namespace SpanJson.Formatters
 
     public sealed class UInt16Utf8ListFormatter : IJsonFormatter<List<UInt16>, Byte>
     {
-        public static readonly UInt16Utf8ListFormatter Default = new UInt16Utf8ListFormatter();
+        public static readonly UInt16Utf8ListFormatter Default = new();
         private static readonly UInt16Utf8Formatter ElementFormatter = UInt16Utf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<UInt16> value, IJsonFormatterResolver<Byte> resolver)
@@ -3574,7 +3574,7 @@ namespace SpanJson.Formatters
     }
     public sealed class UInt32Utf16Formatter : IJsonFormatter<UInt32, Char>
     {
-        public static readonly UInt32Utf16Formatter Default = new UInt32Utf16Formatter();
+        public static readonly UInt32Utf16Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Char> writer, UInt32 value, IJsonFormatterResolver<Char> resolver)
         {
@@ -3588,7 +3588,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableUInt32Utf16Formatter : IJsonFormatter<UInt32?, Char>
     {
-        public static readonly NullableUInt32Utf16Formatter Default = new NullableUInt32Utf16Formatter();
+        public static readonly NullableUInt32Utf16Formatter Default = new();
         private static readonly UInt32Utf16Formatter ElementFormatter = UInt32Utf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, UInt32? value, IJsonFormatterResolver<Char> resolver)
         {
@@ -3614,7 +3614,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableUInt32Utf16ArrayFormatter : IJsonFormatter<UInt32?[], Char>
     {
-        public static readonly NullableUInt32Utf16ArrayFormatter Default = new NullableUInt32Utf16ArrayFormatter();
+        public static readonly NullableUInt32Utf16ArrayFormatter Default = new();
         private static readonly NullableUInt32Utf16Formatter ElementFormatter = NullableUInt32Utf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, UInt32?[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -3684,7 +3684,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableUInt32Utf16ListFormatter : IJsonFormatter<List<UInt32?>, Char>
     {
-        public static readonly NullableUInt32Utf16ListFormatter Default = new NullableUInt32Utf16ListFormatter();
+        public static readonly NullableUInt32Utf16ListFormatter Default = new();
         private static readonly NullableUInt32Utf16Formatter ElementFormatter = NullableUInt32Utf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<UInt32?> value, IJsonFormatterResolver<Char> resolver)
@@ -3743,7 +3743,7 @@ namespace SpanJson.Formatters
 
     public sealed class UInt32Utf16ArrayFormatter : IJsonFormatter<UInt32[], Char>
     {
-        public static readonly UInt32Utf16ArrayFormatter Default = new UInt32Utf16ArrayFormatter();
+        public static readonly UInt32Utf16ArrayFormatter Default = new();
         private static readonly UInt32Utf16Formatter ElementFormatter = UInt32Utf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, UInt32[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -3813,7 +3813,7 @@ namespace SpanJson.Formatters
 
     public sealed class UInt32Utf16ListFormatter : IJsonFormatter<List<UInt32>, Char>
     {
-        public static readonly UInt32Utf16ListFormatter Default = new UInt32Utf16ListFormatter();
+        public static readonly UInt32Utf16ListFormatter Default = new();
         private static readonly UInt32Utf16Formatter ElementFormatter = UInt32Utf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<UInt32> value, IJsonFormatterResolver<Char> resolver)
@@ -3871,7 +3871,7 @@ namespace SpanJson.Formatters
     }
     public sealed class UInt32Utf8Formatter : IJsonFormatter<UInt32, Byte>
     {
-        public static readonly UInt32Utf8Formatter Default = new UInt32Utf8Formatter();
+        public static readonly UInt32Utf8Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Byte> writer, UInt32 value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -3885,7 +3885,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableUInt32Utf8Formatter : IJsonFormatter<UInt32?, Byte>
     {
-        public static readonly NullableUInt32Utf8Formatter Default = new NullableUInt32Utf8Formatter();
+        public static readonly NullableUInt32Utf8Formatter Default = new();
         private static readonly UInt32Utf8Formatter ElementFormatter = UInt32Utf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, UInt32? value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -3911,7 +3911,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableUInt32Utf8ArrayFormatter : IJsonFormatter<UInt32?[], Byte>
     {
-        public static readonly NullableUInt32Utf8ArrayFormatter Default = new NullableUInt32Utf8ArrayFormatter();
+        public static readonly NullableUInt32Utf8ArrayFormatter Default = new();
         private static readonly NullableUInt32Utf8Formatter ElementFormatter = NullableUInt32Utf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, UInt32?[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -3981,7 +3981,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableUInt32Utf8ListFormatter : IJsonFormatter<List<UInt32?>, Byte>
     {
-        public static readonly NullableUInt32Utf8ListFormatter Default = new NullableUInt32Utf8ListFormatter();
+        public static readonly NullableUInt32Utf8ListFormatter Default = new();
         private static readonly NullableUInt32Utf8Formatter ElementFormatter = NullableUInt32Utf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<UInt32?> value, IJsonFormatterResolver<Byte> resolver)
@@ -4040,7 +4040,7 @@ namespace SpanJson.Formatters
 
     public sealed class UInt32Utf8ArrayFormatter : IJsonFormatter<UInt32[], Byte>
     {
-        public static readonly UInt32Utf8ArrayFormatter Default = new UInt32Utf8ArrayFormatter();
+        public static readonly UInt32Utf8ArrayFormatter Default = new();
         private static readonly UInt32Utf8Formatter ElementFormatter = UInt32Utf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, UInt32[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -4110,7 +4110,7 @@ namespace SpanJson.Formatters
 
     public sealed class UInt32Utf8ListFormatter : IJsonFormatter<List<UInt32>, Byte>
     {
-        public static readonly UInt32Utf8ListFormatter Default = new UInt32Utf8ListFormatter();
+        public static readonly UInt32Utf8ListFormatter Default = new();
         private static readonly UInt32Utf8Formatter ElementFormatter = UInt32Utf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<UInt32> value, IJsonFormatterResolver<Byte> resolver)
@@ -4168,7 +4168,7 @@ namespace SpanJson.Formatters
     }
     public sealed class UInt64Utf16Formatter : IJsonFormatter<UInt64, Char>
     {
-        public static readonly UInt64Utf16Formatter Default = new UInt64Utf16Formatter();
+        public static readonly UInt64Utf16Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Char> writer, UInt64 value, IJsonFormatterResolver<Char> resolver)
         {
@@ -4182,7 +4182,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableUInt64Utf16Formatter : IJsonFormatter<UInt64?, Char>
     {
-        public static readonly NullableUInt64Utf16Formatter Default = new NullableUInt64Utf16Formatter();
+        public static readonly NullableUInt64Utf16Formatter Default = new();
         private static readonly UInt64Utf16Formatter ElementFormatter = UInt64Utf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, UInt64? value, IJsonFormatterResolver<Char> resolver)
         {
@@ -4208,7 +4208,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableUInt64Utf16ArrayFormatter : IJsonFormatter<UInt64?[], Char>
     {
-        public static readonly NullableUInt64Utf16ArrayFormatter Default = new NullableUInt64Utf16ArrayFormatter();
+        public static readonly NullableUInt64Utf16ArrayFormatter Default = new();
         private static readonly NullableUInt64Utf16Formatter ElementFormatter = NullableUInt64Utf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, UInt64?[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -4278,7 +4278,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableUInt64Utf16ListFormatter : IJsonFormatter<List<UInt64?>, Char>
     {
-        public static readonly NullableUInt64Utf16ListFormatter Default = new NullableUInt64Utf16ListFormatter();
+        public static readonly NullableUInt64Utf16ListFormatter Default = new();
         private static readonly NullableUInt64Utf16Formatter ElementFormatter = NullableUInt64Utf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<UInt64?> value, IJsonFormatterResolver<Char> resolver)
@@ -4337,7 +4337,7 @@ namespace SpanJson.Formatters
 
     public sealed class UInt64Utf16ArrayFormatter : IJsonFormatter<UInt64[], Char>
     {
-        public static readonly UInt64Utf16ArrayFormatter Default = new UInt64Utf16ArrayFormatter();
+        public static readonly UInt64Utf16ArrayFormatter Default = new();
         private static readonly UInt64Utf16Formatter ElementFormatter = UInt64Utf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, UInt64[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -4407,7 +4407,7 @@ namespace SpanJson.Formatters
 
     public sealed class UInt64Utf16ListFormatter : IJsonFormatter<List<UInt64>, Char>
     {
-        public static readonly UInt64Utf16ListFormatter Default = new UInt64Utf16ListFormatter();
+        public static readonly UInt64Utf16ListFormatter Default = new();
         private static readonly UInt64Utf16Formatter ElementFormatter = UInt64Utf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<UInt64> value, IJsonFormatterResolver<Char> resolver)
@@ -4465,7 +4465,7 @@ namespace SpanJson.Formatters
     }
     public sealed class UInt64Utf8Formatter : IJsonFormatter<UInt64, Byte>
     {
-        public static readonly UInt64Utf8Formatter Default = new UInt64Utf8Formatter();
+        public static readonly UInt64Utf8Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Byte> writer, UInt64 value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -4479,7 +4479,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableUInt64Utf8Formatter : IJsonFormatter<UInt64?, Byte>
     {
-        public static readonly NullableUInt64Utf8Formatter Default = new NullableUInt64Utf8Formatter();
+        public static readonly NullableUInt64Utf8Formatter Default = new();
         private static readonly UInt64Utf8Formatter ElementFormatter = UInt64Utf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, UInt64? value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -4505,7 +4505,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableUInt64Utf8ArrayFormatter : IJsonFormatter<UInt64?[], Byte>
     {
-        public static readonly NullableUInt64Utf8ArrayFormatter Default = new NullableUInt64Utf8ArrayFormatter();
+        public static readonly NullableUInt64Utf8ArrayFormatter Default = new();
         private static readonly NullableUInt64Utf8Formatter ElementFormatter = NullableUInt64Utf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, UInt64?[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -4575,7 +4575,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableUInt64Utf8ListFormatter : IJsonFormatter<List<UInt64?>, Byte>
     {
-        public static readonly NullableUInt64Utf8ListFormatter Default = new NullableUInt64Utf8ListFormatter();
+        public static readonly NullableUInt64Utf8ListFormatter Default = new();
         private static readonly NullableUInt64Utf8Formatter ElementFormatter = NullableUInt64Utf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<UInt64?> value, IJsonFormatterResolver<Byte> resolver)
@@ -4634,7 +4634,7 @@ namespace SpanJson.Formatters
 
     public sealed class UInt64Utf8ArrayFormatter : IJsonFormatter<UInt64[], Byte>
     {
-        public static readonly UInt64Utf8ArrayFormatter Default = new UInt64Utf8ArrayFormatter();
+        public static readonly UInt64Utf8ArrayFormatter Default = new();
         private static readonly UInt64Utf8Formatter ElementFormatter = UInt64Utf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, UInt64[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -4704,7 +4704,7 @@ namespace SpanJson.Formatters
 
     public sealed class UInt64Utf8ListFormatter : IJsonFormatter<List<UInt64>, Byte>
     {
-        public static readonly UInt64Utf8ListFormatter Default = new UInt64Utf8ListFormatter();
+        public static readonly UInt64Utf8ListFormatter Default = new();
         private static readonly UInt64Utf8Formatter ElementFormatter = UInt64Utf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<UInt64> value, IJsonFormatterResolver<Byte> resolver)
@@ -4762,7 +4762,7 @@ namespace SpanJson.Formatters
     }
     public sealed class SingleUtf16Formatter : IJsonFormatter<Single, Char>
     {
-        public static readonly SingleUtf16Formatter Default = new SingleUtf16Formatter();
+        public static readonly SingleUtf16Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Char> writer, Single value, IJsonFormatterResolver<Char> resolver)
         {
@@ -4776,7 +4776,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableSingleUtf16Formatter : IJsonFormatter<Single?, Char>
     {
-        public static readonly NullableSingleUtf16Formatter Default = new NullableSingleUtf16Formatter();
+        public static readonly NullableSingleUtf16Formatter Default = new();
         private static readonly SingleUtf16Formatter ElementFormatter = SingleUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Single? value, IJsonFormatterResolver<Char> resolver)
         {
@@ -4802,7 +4802,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableSingleUtf16ArrayFormatter : IJsonFormatter<Single?[], Char>
     {
-        public static readonly NullableSingleUtf16ArrayFormatter Default = new NullableSingleUtf16ArrayFormatter();
+        public static readonly NullableSingleUtf16ArrayFormatter Default = new();
         private static readonly NullableSingleUtf16Formatter ElementFormatter = NullableSingleUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Single?[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -4872,7 +4872,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableSingleUtf16ListFormatter : IJsonFormatter<List<Single?>, Char>
     {
-        public static readonly NullableSingleUtf16ListFormatter Default = new NullableSingleUtf16ListFormatter();
+        public static readonly NullableSingleUtf16ListFormatter Default = new();
         private static readonly NullableSingleUtf16Formatter ElementFormatter = NullableSingleUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Single?> value, IJsonFormatterResolver<Char> resolver)
@@ -4931,7 +4931,7 @@ namespace SpanJson.Formatters
 
     public sealed class SingleUtf16ArrayFormatter : IJsonFormatter<Single[], Char>
     {
-        public static readonly SingleUtf16ArrayFormatter Default = new SingleUtf16ArrayFormatter();
+        public static readonly SingleUtf16ArrayFormatter Default = new();
         private static readonly SingleUtf16Formatter ElementFormatter = SingleUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Single[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -5001,7 +5001,7 @@ namespace SpanJson.Formatters
 
     public sealed class SingleUtf16ListFormatter : IJsonFormatter<List<Single>, Char>
     {
-        public static readonly SingleUtf16ListFormatter Default = new SingleUtf16ListFormatter();
+        public static readonly SingleUtf16ListFormatter Default = new();
         private static readonly SingleUtf16Formatter ElementFormatter = SingleUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Single> value, IJsonFormatterResolver<Char> resolver)
@@ -5059,7 +5059,7 @@ namespace SpanJson.Formatters
     }
     public sealed class SingleUtf8Formatter : IJsonFormatter<Single, Byte>
     {
-        public static readonly SingleUtf8Formatter Default = new SingleUtf8Formatter();
+        public static readonly SingleUtf8Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Byte> writer, Single value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -5073,7 +5073,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableSingleUtf8Formatter : IJsonFormatter<Single?, Byte>
     {
-        public static readonly NullableSingleUtf8Formatter Default = new NullableSingleUtf8Formatter();
+        public static readonly NullableSingleUtf8Formatter Default = new();
         private static readonly SingleUtf8Formatter ElementFormatter = SingleUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Single? value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -5099,7 +5099,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableSingleUtf8ArrayFormatter : IJsonFormatter<Single?[], Byte>
     {
-        public static readonly NullableSingleUtf8ArrayFormatter Default = new NullableSingleUtf8ArrayFormatter();
+        public static readonly NullableSingleUtf8ArrayFormatter Default = new();
         private static readonly NullableSingleUtf8Formatter ElementFormatter = NullableSingleUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Single?[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -5169,7 +5169,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableSingleUtf8ListFormatter : IJsonFormatter<List<Single?>, Byte>
     {
-        public static readonly NullableSingleUtf8ListFormatter Default = new NullableSingleUtf8ListFormatter();
+        public static readonly NullableSingleUtf8ListFormatter Default = new();
         private static readonly NullableSingleUtf8Formatter ElementFormatter = NullableSingleUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Single?> value, IJsonFormatterResolver<Byte> resolver)
@@ -5228,7 +5228,7 @@ namespace SpanJson.Formatters
 
     public sealed class SingleUtf8ArrayFormatter : IJsonFormatter<Single[], Byte>
     {
-        public static readonly SingleUtf8ArrayFormatter Default = new SingleUtf8ArrayFormatter();
+        public static readonly SingleUtf8ArrayFormatter Default = new();
         private static readonly SingleUtf8Formatter ElementFormatter = SingleUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Single[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -5298,7 +5298,7 @@ namespace SpanJson.Formatters
 
     public sealed class SingleUtf8ListFormatter : IJsonFormatter<List<Single>, Byte>
     {
-        public static readonly SingleUtf8ListFormatter Default = new SingleUtf8ListFormatter();
+        public static readonly SingleUtf8ListFormatter Default = new();
         private static readonly SingleUtf8Formatter ElementFormatter = SingleUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Single> value, IJsonFormatterResolver<Byte> resolver)
@@ -5356,7 +5356,7 @@ namespace SpanJson.Formatters
     }
     public sealed class DoubleUtf16Formatter : IJsonFormatter<Double, Char>
     {
-        public static readonly DoubleUtf16Formatter Default = new DoubleUtf16Formatter();
+        public static readonly DoubleUtf16Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Char> writer, Double value, IJsonFormatterResolver<Char> resolver)
         {
@@ -5370,7 +5370,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableDoubleUtf16Formatter : IJsonFormatter<Double?, Char>
     {
-        public static readonly NullableDoubleUtf16Formatter Default = new NullableDoubleUtf16Formatter();
+        public static readonly NullableDoubleUtf16Formatter Default = new();
         private static readonly DoubleUtf16Formatter ElementFormatter = DoubleUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Double? value, IJsonFormatterResolver<Char> resolver)
         {
@@ -5396,7 +5396,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableDoubleUtf16ArrayFormatter : IJsonFormatter<Double?[], Char>
     {
-        public static readonly NullableDoubleUtf16ArrayFormatter Default = new NullableDoubleUtf16ArrayFormatter();
+        public static readonly NullableDoubleUtf16ArrayFormatter Default = new();
         private static readonly NullableDoubleUtf16Formatter ElementFormatter = NullableDoubleUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Double?[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -5466,7 +5466,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableDoubleUtf16ListFormatter : IJsonFormatter<List<Double?>, Char>
     {
-        public static readonly NullableDoubleUtf16ListFormatter Default = new NullableDoubleUtf16ListFormatter();
+        public static readonly NullableDoubleUtf16ListFormatter Default = new();
         private static readonly NullableDoubleUtf16Formatter ElementFormatter = NullableDoubleUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Double?> value, IJsonFormatterResolver<Char> resolver)
@@ -5525,7 +5525,7 @@ namespace SpanJson.Formatters
 
     public sealed class DoubleUtf16ArrayFormatter : IJsonFormatter<Double[], Char>
     {
-        public static readonly DoubleUtf16ArrayFormatter Default = new DoubleUtf16ArrayFormatter();
+        public static readonly DoubleUtf16ArrayFormatter Default = new();
         private static readonly DoubleUtf16Formatter ElementFormatter = DoubleUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Double[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -5595,7 +5595,7 @@ namespace SpanJson.Formatters
 
     public sealed class DoubleUtf16ListFormatter : IJsonFormatter<List<Double>, Char>
     {
-        public static readonly DoubleUtf16ListFormatter Default = new DoubleUtf16ListFormatter();
+        public static readonly DoubleUtf16ListFormatter Default = new();
         private static readonly DoubleUtf16Formatter ElementFormatter = DoubleUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Double> value, IJsonFormatterResolver<Char> resolver)
@@ -5653,7 +5653,7 @@ namespace SpanJson.Formatters
     }
     public sealed class DoubleUtf8Formatter : IJsonFormatter<Double, Byte>
     {
-        public static readonly DoubleUtf8Formatter Default = new DoubleUtf8Formatter();
+        public static readonly DoubleUtf8Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Byte> writer, Double value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -5667,7 +5667,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableDoubleUtf8Formatter : IJsonFormatter<Double?, Byte>
     {
-        public static readonly NullableDoubleUtf8Formatter Default = new NullableDoubleUtf8Formatter();
+        public static readonly NullableDoubleUtf8Formatter Default = new();
         private static readonly DoubleUtf8Formatter ElementFormatter = DoubleUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Double? value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -5693,7 +5693,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableDoubleUtf8ArrayFormatter : IJsonFormatter<Double?[], Byte>
     {
-        public static readonly NullableDoubleUtf8ArrayFormatter Default = new NullableDoubleUtf8ArrayFormatter();
+        public static readonly NullableDoubleUtf8ArrayFormatter Default = new();
         private static readonly NullableDoubleUtf8Formatter ElementFormatter = NullableDoubleUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Double?[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -5763,7 +5763,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableDoubleUtf8ListFormatter : IJsonFormatter<List<Double?>, Byte>
     {
-        public static readonly NullableDoubleUtf8ListFormatter Default = new NullableDoubleUtf8ListFormatter();
+        public static readonly NullableDoubleUtf8ListFormatter Default = new();
         private static readonly NullableDoubleUtf8Formatter ElementFormatter = NullableDoubleUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Double?> value, IJsonFormatterResolver<Byte> resolver)
@@ -5822,7 +5822,7 @@ namespace SpanJson.Formatters
 
     public sealed class DoubleUtf8ArrayFormatter : IJsonFormatter<Double[], Byte>
     {
-        public static readonly DoubleUtf8ArrayFormatter Default = new DoubleUtf8ArrayFormatter();
+        public static readonly DoubleUtf8ArrayFormatter Default = new();
         private static readonly DoubleUtf8Formatter ElementFormatter = DoubleUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Double[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -5892,7 +5892,7 @@ namespace SpanJson.Formatters
 
     public sealed class DoubleUtf8ListFormatter : IJsonFormatter<List<Double>, Byte>
     {
-        public static readonly DoubleUtf8ListFormatter Default = new DoubleUtf8ListFormatter();
+        public static readonly DoubleUtf8ListFormatter Default = new();
         private static readonly DoubleUtf8Formatter ElementFormatter = DoubleUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Double> value, IJsonFormatterResolver<Byte> resolver)
@@ -5950,7 +5950,7 @@ namespace SpanJson.Formatters
     }
     public sealed class DecimalUtf16Formatter : IJsonFormatter<Decimal, Char>
     {
-        public static readonly DecimalUtf16Formatter Default = new DecimalUtf16Formatter();
+        public static readonly DecimalUtf16Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Char> writer, Decimal value, IJsonFormatterResolver<Char> resolver)
         {
@@ -5964,7 +5964,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableDecimalUtf16Formatter : IJsonFormatter<Decimal?, Char>
     {
-        public static readonly NullableDecimalUtf16Formatter Default = new NullableDecimalUtf16Formatter();
+        public static readonly NullableDecimalUtf16Formatter Default = new();
         private static readonly DecimalUtf16Formatter ElementFormatter = DecimalUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Decimal? value, IJsonFormatterResolver<Char> resolver)
         {
@@ -5990,7 +5990,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableDecimalUtf16ArrayFormatter : IJsonFormatter<Decimal?[], Char>
     {
-        public static readonly NullableDecimalUtf16ArrayFormatter Default = new NullableDecimalUtf16ArrayFormatter();
+        public static readonly NullableDecimalUtf16ArrayFormatter Default = new();
         private static readonly NullableDecimalUtf16Formatter ElementFormatter = NullableDecimalUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Decimal?[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -6060,7 +6060,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableDecimalUtf16ListFormatter : IJsonFormatter<List<Decimal?>, Char>
     {
-        public static readonly NullableDecimalUtf16ListFormatter Default = new NullableDecimalUtf16ListFormatter();
+        public static readonly NullableDecimalUtf16ListFormatter Default = new();
         private static readonly NullableDecimalUtf16Formatter ElementFormatter = NullableDecimalUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Decimal?> value, IJsonFormatterResolver<Char> resolver)
@@ -6119,7 +6119,7 @@ namespace SpanJson.Formatters
 
     public sealed class DecimalUtf16ArrayFormatter : IJsonFormatter<Decimal[], Char>
     {
-        public static readonly DecimalUtf16ArrayFormatter Default = new DecimalUtf16ArrayFormatter();
+        public static readonly DecimalUtf16ArrayFormatter Default = new();
         private static readonly DecimalUtf16Formatter ElementFormatter = DecimalUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Decimal[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -6189,7 +6189,7 @@ namespace SpanJson.Formatters
 
     public sealed class DecimalUtf16ListFormatter : IJsonFormatter<List<Decimal>, Char>
     {
-        public static readonly DecimalUtf16ListFormatter Default = new DecimalUtf16ListFormatter();
+        public static readonly DecimalUtf16ListFormatter Default = new();
         private static readonly DecimalUtf16Formatter ElementFormatter = DecimalUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Decimal> value, IJsonFormatterResolver<Char> resolver)
@@ -6247,7 +6247,7 @@ namespace SpanJson.Formatters
     }
     public sealed class DecimalUtf8Formatter : IJsonFormatter<Decimal, Byte>
     {
-        public static readonly DecimalUtf8Formatter Default = new DecimalUtf8Formatter();
+        public static readonly DecimalUtf8Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Byte> writer, Decimal value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -6261,7 +6261,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableDecimalUtf8Formatter : IJsonFormatter<Decimal?, Byte>
     {
-        public static readonly NullableDecimalUtf8Formatter Default = new NullableDecimalUtf8Formatter();
+        public static readonly NullableDecimalUtf8Formatter Default = new();
         private static readonly DecimalUtf8Formatter ElementFormatter = DecimalUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Decimal? value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -6287,7 +6287,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableDecimalUtf8ArrayFormatter : IJsonFormatter<Decimal?[], Byte>
     {
-        public static readonly NullableDecimalUtf8ArrayFormatter Default = new NullableDecimalUtf8ArrayFormatter();
+        public static readonly NullableDecimalUtf8ArrayFormatter Default = new();
         private static readonly NullableDecimalUtf8Formatter ElementFormatter = NullableDecimalUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Decimal?[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -6357,7 +6357,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableDecimalUtf8ListFormatter : IJsonFormatter<List<Decimal?>, Byte>
     {
-        public static readonly NullableDecimalUtf8ListFormatter Default = new NullableDecimalUtf8ListFormatter();
+        public static readonly NullableDecimalUtf8ListFormatter Default = new();
         private static readonly NullableDecimalUtf8Formatter ElementFormatter = NullableDecimalUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Decimal?> value, IJsonFormatterResolver<Byte> resolver)
@@ -6416,7 +6416,7 @@ namespace SpanJson.Formatters
 
     public sealed class DecimalUtf8ArrayFormatter : IJsonFormatter<Decimal[], Byte>
     {
-        public static readonly DecimalUtf8ArrayFormatter Default = new DecimalUtf8ArrayFormatter();
+        public static readonly DecimalUtf8ArrayFormatter Default = new();
         private static readonly DecimalUtf8Formatter ElementFormatter = DecimalUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Decimal[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -6486,7 +6486,7 @@ namespace SpanJson.Formatters
 
     public sealed class DecimalUtf8ListFormatter : IJsonFormatter<List<Decimal>, Byte>
     {
-        public static readonly DecimalUtf8ListFormatter Default = new DecimalUtf8ListFormatter();
+        public static readonly DecimalUtf8ListFormatter Default = new();
         private static readonly DecimalUtf8Formatter ElementFormatter = DecimalUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Decimal> value, IJsonFormatterResolver<Byte> resolver)
@@ -6544,7 +6544,7 @@ namespace SpanJson.Formatters
     }
     public sealed class BooleanUtf16Formatter : IJsonFormatter<Boolean, Char>
     {
-        public static readonly BooleanUtf16Formatter Default = new BooleanUtf16Formatter();
+        public static readonly BooleanUtf16Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Char> writer, Boolean value, IJsonFormatterResolver<Char> resolver)
         {
@@ -6558,7 +6558,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableBooleanUtf16Formatter : IJsonFormatter<Boolean?, Char>
     {
-        public static readonly NullableBooleanUtf16Formatter Default = new NullableBooleanUtf16Formatter();
+        public static readonly NullableBooleanUtf16Formatter Default = new();
         private static readonly BooleanUtf16Formatter ElementFormatter = BooleanUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Boolean? value, IJsonFormatterResolver<Char> resolver)
         {
@@ -6584,7 +6584,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableBooleanUtf16ArrayFormatter : IJsonFormatter<Boolean?[], Char>
     {
-        public static readonly NullableBooleanUtf16ArrayFormatter Default = new NullableBooleanUtf16ArrayFormatter();
+        public static readonly NullableBooleanUtf16ArrayFormatter Default = new();
         private static readonly NullableBooleanUtf16Formatter ElementFormatter = NullableBooleanUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Boolean?[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -6654,7 +6654,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableBooleanUtf16ListFormatter : IJsonFormatter<List<Boolean?>, Char>
     {
-        public static readonly NullableBooleanUtf16ListFormatter Default = new NullableBooleanUtf16ListFormatter();
+        public static readonly NullableBooleanUtf16ListFormatter Default = new();
         private static readonly NullableBooleanUtf16Formatter ElementFormatter = NullableBooleanUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Boolean?> value, IJsonFormatterResolver<Char> resolver)
@@ -6713,7 +6713,7 @@ namespace SpanJson.Formatters
 
     public sealed class BooleanUtf16ArrayFormatter : IJsonFormatter<Boolean[], Char>
     {
-        public static readonly BooleanUtf16ArrayFormatter Default = new BooleanUtf16ArrayFormatter();
+        public static readonly BooleanUtf16ArrayFormatter Default = new();
         private static readonly BooleanUtf16Formatter ElementFormatter = BooleanUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Boolean[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -6783,7 +6783,7 @@ namespace SpanJson.Formatters
 
     public sealed class BooleanUtf16ListFormatter : IJsonFormatter<List<Boolean>, Char>
     {
-        public static readonly BooleanUtf16ListFormatter Default = new BooleanUtf16ListFormatter();
+        public static readonly BooleanUtf16ListFormatter Default = new();
         private static readonly BooleanUtf16Formatter ElementFormatter = BooleanUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Boolean> value, IJsonFormatterResolver<Char> resolver)
@@ -6841,7 +6841,7 @@ namespace SpanJson.Formatters
     }
     public sealed class BooleanUtf8Formatter : IJsonFormatter<Boolean, Byte>
     {
-        public static readonly BooleanUtf8Formatter Default = new BooleanUtf8Formatter();
+        public static readonly BooleanUtf8Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Byte> writer, Boolean value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -6855,7 +6855,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableBooleanUtf8Formatter : IJsonFormatter<Boolean?, Byte>
     {
-        public static readonly NullableBooleanUtf8Formatter Default = new NullableBooleanUtf8Formatter();
+        public static readonly NullableBooleanUtf8Formatter Default = new();
         private static readonly BooleanUtf8Formatter ElementFormatter = BooleanUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Boolean? value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -6881,7 +6881,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableBooleanUtf8ArrayFormatter : IJsonFormatter<Boolean?[], Byte>
     {
-        public static readonly NullableBooleanUtf8ArrayFormatter Default = new NullableBooleanUtf8ArrayFormatter();
+        public static readonly NullableBooleanUtf8ArrayFormatter Default = new();
         private static readonly NullableBooleanUtf8Formatter ElementFormatter = NullableBooleanUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Boolean?[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -6951,7 +6951,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableBooleanUtf8ListFormatter : IJsonFormatter<List<Boolean?>, Byte>
     {
-        public static readonly NullableBooleanUtf8ListFormatter Default = new NullableBooleanUtf8ListFormatter();
+        public static readonly NullableBooleanUtf8ListFormatter Default = new();
         private static readonly NullableBooleanUtf8Formatter ElementFormatter = NullableBooleanUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Boolean?> value, IJsonFormatterResolver<Byte> resolver)
@@ -7010,7 +7010,7 @@ namespace SpanJson.Formatters
 
     public sealed class BooleanUtf8ArrayFormatter : IJsonFormatter<Boolean[], Byte>
     {
-        public static readonly BooleanUtf8ArrayFormatter Default = new BooleanUtf8ArrayFormatter();
+        public static readonly BooleanUtf8ArrayFormatter Default = new();
         private static readonly BooleanUtf8Formatter ElementFormatter = BooleanUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Boolean[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -7080,7 +7080,7 @@ namespace SpanJson.Formatters
 
     public sealed class BooleanUtf8ListFormatter : IJsonFormatter<List<Boolean>, Byte>
     {
-        public static readonly BooleanUtf8ListFormatter Default = new BooleanUtf8ListFormatter();
+        public static readonly BooleanUtf8ListFormatter Default = new();
         private static readonly BooleanUtf8Formatter ElementFormatter = BooleanUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Boolean> value, IJsonFormatterResolver<Byte> resolver)
@@ -7138,7 +7138,7 @@ namespace SpanJson.Formatters
     }
     public sealed class CharUtf16Formatter : IJsonFormatter<Char, Char>
     {
-        public static readonly CharUtf16Formatter Default = new CharUtf16Formatter();
+        public static readonly CharUtf16Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Char> writer, Char value, IJsonFormatterResolver<Char> resolver)
         {
@@ -7152,7 +7152,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableCharUtf16Formatter : IJsonFormatter<Char?, Char>
     {
-        public static readonly NullableCharUtf16Formatter Default = new NullableCharUtf16Formatter();
+        public static readonly NullableCharUtf16Formatter Default = new();
         private static readonly CharUtf16Formatter ElementFormatter = CharUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Char? value, IJsonFormatterResolver<Char> resolver)
         {
@@ -7178,7 +7178,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableCharUtf16ArrayFormatter : IJsonFormatter<Char?[], Char>
     {
-        public static readonly NullableCharUtf16ArrayFormatter Default = new NullableCharUtf16ArrayFormatter();
+        public static readonly NullableCharUtf16ArrayFormatter Default = new();
         private static readonly NullableCharUtf16Formatter ElementFormatter = NullableCharUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Char?[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -7248,7 +7248,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableCharUtf16ListFormatter : IJsonFormatter<List<Char?>, Char>
     {
-        public static readonly NullableCharUtf16ListFormatter Default = new NullableCharUtf16ListFormatter();
+        public static readonly NullableCharUtf16ListFormatter Default = new();
         private static readonly NullableCharUtf16Formatter ElementFormatter = NullableCharUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Char?> value, IJsonFormatterResolver<Char> resolver)
@@ -7307,7 +7307,7 @@ namespace SpanJson.Formatters
 
     public sealed class CharUtf16ArrayFormatter : IJsonFormatter<Char[], Char>
     {
-        public static readonly CharUtf16ArrayFormatter Default = new CharUtf16ArrayFormatter();
+        public static readonly CharUtf16ArrayFormatter Default = new();
         private static readonly CharUtf16Formatter ElementFormatter = CharUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Char[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -7377,7 +7377,7 @@ namespace SpanJson.Formatters
 
     public sealed class CharUtf16ListFormatter : IJsonFormatter<List<Char>, Char>
     {
-        public static readonly CharUtf16ListFormatter Default = new CharUtf16ListFormatter();
+        public static readonly CharUtf16ListFormatter Default = new();
         private static readonly CharUtf16Formatter ElementFormatter = CharUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Char> value, IJsonFormatterResolver<Char> resolver)
@@ -7435,7 +7435,7 @@ namespace SpanJson.Formatters
     }
     public sealed class CharUtf8Formatter : IJsonFormatter<Char, Byte>
     {
-        public static readonly CharUtf8Formatter Default = new CharUtf8Formatter();
+        public static readonly CharUtf8Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Byte> writer, Char value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -7449,7 +7449,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableCharUtf8Formatter : IJsonFormatter<Char?, Byte>
     {
-        public static readonly NullableCharUtf8Formatter Default = new NullableCharUtf8Formatter();
+        public static readonly NullableCharUtf8Formatter Default = new();
         private static readonly CharUtf8Formatter ElementFormatter = CharUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Char? value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -7475,7 +7475,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableCharUtf8ArrayFormatter : IJsonFormatter<Char?[], Byte>
     {
-        public static readonly NullableCharUtf8ArrayFormatter Default = new NullableCharUtf8ArrayFormatter();
+        public static readonly NullableCharUtf8ArrayFormatter Default = new();
         private static readonly NullableCharUtf8Formatter ElementFormatter = NullableCharUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Char?[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -7545,7 +7545,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableCharUtf8ListFormatter : IJsonFormatter<List<Char?>, Byte>
     {
-        public static readonly NullableCharUtf8ListFormatter Default = new NullableCharUtf8ListFormatter();
+        public static readonly NullableCharUtf8ListFormatter Default = new();
         private static readonly NullableCharUtf8Formatter ElementFormatter = NullableCharUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Char?> value, IJsonFormatterResolver<Byte> resolver)
@@ -7604,7 +7604,7 @@ namespace SpanJson.Formatters
 
     public sealed class CharUtf8ArrayFormatter : IJsonFormatter<Char[], Byte>
     {
-        public static readonly CharUtf8ArrayFormatter Default = new CharUtf8ArrayFormatter();
+        public static readonly CharUtf8ArrayFormatter Default = new();
         private static readonly CharUtf8Formatter ElementFormatter = CharUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Char[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -7674,7 +7674,7 @@ namespace SpanJson.Formatters
 
     public sealed class CharUtf8ListFormatter : IJsonFormatter<List<Char>, Byte>
     {
-        public static readonly CharUtf8ListFormatter Default = new CharUtf8ListFormatter();
+        public static readonly CharUtf8ListFormatter Default = new();
         private static readonly CharUtf8Formatter ElementFormatter = CharUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Char> value, IJsonFormatterResolver<Byte> resolver)
@@ -7732,7 +7732,7 @@ namespace SpanJson.Formatters
     }
     public sealed class DateTimeUtf16Formatter : IJsonFormatter<DateTime, Char>
     {
-        public static readonly DateTimeUtf16Formatter Default = new DateTimeUtf16Formatter();
+        public static readonly DateTimeUtf16Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Char> writer, DateTime value, IJsonFormatterResolver<Char> resolver)
         {
@@ -7746,7 +7746,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableDateTimeUtf16Formatter : IJsonFormatter<DateTime?, Char>
     {
-        public static readonly NullableDateTimeUtf16Formatter Default = new NullableDateTimeUtf16Formatter();
+        public static readonly NullableDateTimeUtf16Formatter Default = new();
         private static readonly DateTimeUtf16Formatter ElementFormatter = DateTimeUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, DateTime? value, IJsonFormatterResolver<Char> resolver)
         {
@@ -7772,7 +7772,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableDateTimeUtf16ArrayFormatter : IJsonFormatter<DateTime?[], Char>
     {
-        public static readonly NullableDateTimeUtf16ArrayFormatter Default = new NullableDateTimeUtf16ArrayFormatter();
+        public static readonly NullableDateTimeUtf16ArrayFormatter Default = new();
         private static readonly NullableDateTimeUtf16Formatter ElementFormatter = NullableDateTimeUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, DateTime?[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -7842,7 +7842,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableDateTimeUtf16ListFormatter : IJsonFormatter<List<DateTime?>, Char>
     {
-        public static readonly NullableDateTimeUtf16ListFormatter Default = new NullableDateTimeUtf16ListFormatter();
+        public static readonly NullableDateTimeUtf16ListFormatter Default = new();
         private static readonly NullableDateTimeUtf16Formatter ElementFormatter = NullableDateTimeUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<DateTime?> value, IJsonFormatterResolver<Char> resolver)
@@ -7901,7 +7901,7 @@ namespace SpanJson.Formatters
 
     public sealed class DateTimeUtf16ArrayFormatter : IJsonFormatter<DateTime[], Char>
     {
-        public static readonly DateTimeUtf16ArrayFormatter Default = new DateTimeUtf16ArrayFormatter();
+        public static readonly DateTimeUtf16ArrayFormatter Default = new();
         private static readonly DateTimeUtf16Formatter ElementFormatter = DateTimeUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, DateTime[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -7971,7 +7971,7 @@ namespace SpanJson.Formatters
 
     public sealed class DateTimeUtf16ListFormatter : IJsonFormatter<List<DateTime>, Char>
     {
-        public static readonly DateTimeUtf16ListFormatter Default = new DateTimeUtf16ListFormatter();
+        public static readonly DateTimeUtf16ListFormatter Default = new();
         private static readonly DateTimeUtf16Formatter ElementFormatter = DateTimeUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<DateTime> value, IJsonFormatterResolver<Char> resolver)
@@ -8029,7 +8029,7 @@ namespace SpanJson.Formatters
     }
     public sealed class DateTimeUtf8Formatter : IJsonFormatter<DateTime, Byte>
     {
-        public static readonly DateTimeUtf8Formatter Default = new DateTimeUtf8Formatter();
+        public static readonly DateTimeUtf8Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Byte> writer, DateTime value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -8043,7 +8043,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableDateTimeUtf8Formatter : IJsonFormatter<DateTime?, Byte>
     {
-        public static readonly NullableDateTimeUtf8Formatter Default = new NullableDateTimeUtf8Formatter();
+        public static readonly NullableDateTimeUtf8Formatter Default = new();
         private static readonly DateTimeUtf8Formatter ElementFormatter = DateTimeUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, DateTime? value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -8069,7 +8069,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableDateTimeUtf8ArrayFormatter : IJsonFormatter<DateTime?[], Byte>
     {
-        public static readonly NullableDateTimeUtf8ArrayFormatter Default = new NullableDateTimeUtf8ArrayFormatter();
+        public static readonly NullableDateTimeUtf8ArrayFormatter Default = new();
         private static readonly NullableDateTimeUtf8Formatter ElementFormatter = NullableDateTimeUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, DateTime?[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -8139,7 +8139,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableDateTimeUtf8ListFormatter : IJsonFormatter<List<DateTime?>, Byte>
     {
-        public static readonly NullableDateTimeUtf8ListFormatter Default = new NullableDateTimeUtf8ListFormatter();
+        public static readonly NullableDateTimeUtf8ListFormatter Default = new();
         private static readonly NullableDateTimeUtf8Formatter ElementFormatter = NullableDateTimeUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<DateTime?> value, IJsonFormatterResolver<Byte> resolver)
@@ -8198,7 +8198,7 @@ namespace SpanJson.Formatters
 
     public sealed class DateTimeUtf8ArrayFormatter : IJsonFormatter<DateTime[], Byte>
     {
-        public static readonly DateTimeUtf8ArrayFormatter Default = new DateTimeUtf8ArrayFormatter();
+        public static readonly DateTimeUtf8ArrayFormatter Default = new();
         private static readonly DateTimeUtf8Formatter ElementFormatter = DateTimeUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, DateTime[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -8268,7 +8268,7 @@ namespace SpanJson.Formatters
 
     public sealed class DateTimeUtf8ListFormatter : IJsonFormatter<List<DateTime>, Byte>
     {
-        public static readonly DateTimeUtf8ListFormatter Default = new DateTimeUtf8ListFormatter();
+        public static readonly DateTimeUtf8ListFormatter Default = new();
         private static readonly DateTimeUtf8Formatter ElementFormatter = DateTimeUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<DateTime> value, IJsonFormatterResolver<Byte> resolver)
@@ -8326,7 +8326,7 @@ namespace SpanJson.Formatters
     }
     public sealed class DateTimeOffsetUtf16Formatter : IJsonFormatter<DateTimeOffset, Char>
     {
-        public static readonly DateTimeOffsetUtf16Formatter Default = new DateTimeOffsetUtf16Formatter();
+        public static readonly DateTimeOffsetUtf16Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Char> writer, DateTimeOffset value, IJsonFormatterResolver<Char> resolver)
         {
@@ -8340,7 +8340,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableDateTimeOffsetUtf16Formatter : IJsonFormatter<DateTimeOffset?, Char>
     {
-        public static readonly NullableDateTimeOffsetUtf16Formatter Default = new NullableDateTimeOffsetUtf16Formatter();
+        public static readonly NullableDateTimeOffsetUtf16Formatter Default = new();
         private static readonly DateTimeOffsetUtf16Formatter ElementFormatter = DateTimeOffsetUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, DateTimeOffset? value, IJsonFormatterResolver<Char> resolver)
         {
@@ -8366,7 +8366,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableDateTimeOffsetUtf16ArrayFormatter : IJsonFormatter<DateTimeOffset?[], Char>
     {
-        public static readonly NullableDateTimeOffsetUtf16ArrayFormatter Default = new NullableDateTimeOffsetUtf16ArrayFormatter();
+        public static readonly NullableDateTimeOffsetUtf16ArrayFormatter Default = new();
         private static readonly NullableDateTimeOffsetUtf16Formatter ElementFormatter = NullableDateTimeOffsetUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, DateTimeOffset?[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -8436,7 +8436,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableDateTimeOffsetUtf16ListFormatter : IJsonFormatter<List<DateTimeOffset?>, Char>
     {
-        public static readonly NullableDateTimeOffsetUtf16ListFormatter Default = new NullableDateTimeOffsetUtf16ListFormatter();
+        public static readonly NullableDateTimeOffsetUtf16ListFormatter Default = new();
         private static readonly NullableDateTimeOffsetUtf16Formatter ElementFormatter = NullableDateTimeOffsetUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<DateTimeOffset?> value, IJsonFormatterResolver<Char> resolver)
@@ -8495,7 +8495,7 @@ namespace SpanJson.Formatters
 
     public sealed class DateTimeOffsetUtf16ArrayFormatter : IJsonFormatter<DateTimeOffset[], Char>
     {
-        public static readonly DateTimeOffsetUtf16ArrayFormatter Default = new DateTimeOffsetUtf16ArrayFormatter();
+        public static readonly DateTimeOffsetUtf16ArrayFormatter Default = new();
         private static readonly DateTimeOffsetUtf16Formatter ElementFormatter = DateTimeOffsetUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, DateTimeOffset[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -8565,7 +8565,7 @@ namespace SpanJson.Formatters
 
     public sealed class DateTimeOffsetUtf16ListFormatter : IJsonFormatter<List<DateTimeOffset>, Char>
     {
-        public static readonly DateTimeOffsetUtf16ListFormatter Default = new DateTimeOffsetUtf16ListFormatter();
+        public static readonly DateTimeOffsetUtf16ListFormatter Default = new();
         private static readonly DateTimeOffsetUtf16Formatter ElementFormatter = DateTimeOffsetUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<DateTimeOffset> value, IJsonFormatterResolver<Char> resolver)
@@ -8623,7 +8623,7 @@ namespace SpanJson.Formatters
     }
     public sealed class DateTimeOffsetUtf8Formatter : IJsonFormatter<DateTimeOffset, Byte>
     {
-        public static readonly DateTimeOffsetUtf8Formatter Default = new DateTimeOffsetUtf8Formatter();
+        public static readonly DateTimeOffsetUtf8Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Byte> writer, DateTimeOffset value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -8637,7 +8637,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableDateTimeOffsetUtf8Formatter : IJsonFormatter<DateTimeOffset?, Byte>
     {
-        public static readonly NullableDateTimeOffsetUtf8Formatter Default = new NullableDateTimeOffsetUtf8Formatter();
+        public static readonly NullableDateTimeOffsetUtf8Formatter Default = new();
         private static readonly DateTimeOffsetUtf8Formatter ElementFormatter = DateTimeOffsetUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, DateTimeOffset? value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -8663,7 +8663,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableDateTimeOffsetUtf8ArrayFormatter : IJsonFormatter<DateTimeOffset?[], Byte>
     {
-        public static readonly NullableDateTimeOffsetUtf8ArrayFormatter Default = new NullableDateTimeOffsetUtf8ArrayFormatter();
+        public static readonly NullableDateTimeOffsetUtf8ArrayFormatter Default = new();
         private static readonly NullableDateTimeOffsetUtf8Formatter ElementFormatter = NullableDateTimeOffsetUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, DateTimeOffset?[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -8733,7 +8733,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableDateTimeOffsetUtf8ListFormatter : IJsonFormatter<List<DateTimeOffset?>, Byte>
     {
-        public static readonly NullableDateTimeOffsetUtf8ListFormatter Default = new NullableDateTimeOffsetUtf8ListFormatter();
+        public static readonly NullableDateTimeOffsetUtf8ListFormatter Default = new();
         private static readonly NullableDateTimeOffsetUtf8Formatter ElementFormatter = NullableDateTimeOffsetUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<DateTimeOffset?> value, IJsonFormatterResolver<Byte> resolver)
@@ -8792,7 +8792,7 @@ namespace SpanJson.Formatters
 
     public sealed class DateTimeOffsetUtf8ArrayFormatter : IJsonFormatter<DateTimeOffset[], Byte>
     {
-        public static readonly DateTimeOffsetUtf8ArrayFormatter Default = new DateTimeOffsetUtf8ArrayFormatter();
+        public static readonly DateTimeOffsetUtf8ArrayFormatter Default = new();
         private static readonly DateTimeOffsetUtf8Formatter ElementFormatter = DateTimeOffsetUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, DateTimeOffset[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -8862,7 +8862,7 @@ namespace SpanJson.Formatters
 
     public sealed class DateTimeOffsetUtf8ListFormatter : IJsonFormatter<List<DateTimeOffset>, Byte>
     {
-        public static readonly DateTimeOffsetUtf8ListFormatter Default = new DateTimeOffsetUtf8ListFormatter();
+        public static readonly DateTimeOffsetUtf8ListFormatter Default = new();
         private static readonly DateTimeOffsetUtf8Formatter ElementFormatter = DateTimeOffsetUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<DateTimeOffset> value, IJsonFormatterResolver<Byte> resolver)
@@ -8920,7 +8920,7 @@ namespace SpanJson.Formatters
     }
     public sealed class TimeSpanUtf16Formatter : IJsonFormatter<TimeSpan, Char>
     {
-        public static readonly TimeSpanUtf16Formatter Default = new TimeSpanUtf16Formatter();
+        public static readonly TimeSpanUtf16Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Char> writer, TimeSpan value, IJsonFormatterResolver<Char> resolver)
         {
@@ -8934,7 +8934,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableTimeSpanUtf16Formatter : IJsonFormatter<TimeSpan?, Char>
     {
-        public static readonly NullableTimeSpanUtf16Formatter Default = new NullableTimeSpanUtf16Formatter();
+        public static readonly NullableTimeSpanUtf16Formatter Default = new();
         private static readonly TimeSpanUtf16Formatter ElementFormatter = TimeSpanUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, TimeSpan? value, IJsonFormatterResolver<Char> resolver)
         {
@@ -8960,7 +8960,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableTimeSpanUtf16ArrayFormatter : IJsonFormatter<TimeSpan?[], Char>
     {
-        public static readonly NullableTimeSpanUtf16ArrayFormatter Default = new NullableTimeSpanUtf16ArrayFormatter();
+        public static readonly NullableTimeSpanUtf16ArrayFormatter Default = new();
         private static readonly NullableTimeSpanUtf16Formatter ElementFormatter = NullableTimeSpanUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, TimeSpan?[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -9030,7 +9030,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableTimeSpanUtf16ListFormatter : IJsonFormatter<List<TimeSpan?>, Char>
     {
-        public static readonly NullableTimeSpanUtf16ListFormatter Default = new NullableTimeSpanUtf16ListFormatter();
+        public static readonly NullableTimeSpanUtf16ListFormatter Default = new();
         private static readonly NullableTimeSpanUtf16Formatter ElementFormatter = NullableTimeSpanUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<TimeSpan?> value, IJsonFormatterResolver<Char> resolver)
@@ -9089,7 +9089,7 @@ namespace SpanJson.Formatters
 
     public sealed class TimeSpanUtf16ArrayFormatter : IJsonFormatter<TimeSpan[], Char>
     {
-        public static readonly TimeSpanUtf16ArrayFormatter Default = new TimeSpanUtf16ArrayFormatter();
+        public static readonly TimeSpanUtf16ArrayFormatter Default = new();
         private static readonly TimeSpanUtf16Formatter ElementFormatter = TimeSpanUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, TimeSpan[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -9159,7 +9159,7 @@ namespace SpanJson.Formatters
 
     public sealed class TimeSpanUtf16ListFormatter : IJsonFormatter<List<TimeSpan>, Char>
     {
-        public static readonly TimeSpanUtf16ListFormatter Default = new TimeSpanUtf16ListFormatter();
+        public static readonly TimeSpanUtf16ListFormatter Default = new();
         private static readonly TimeSpanUtf16Formatter ElementFormatter = TimeSpanUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<TimeSpan> value, IJsonFormatterResolver<Char> resolver)
@@ -9217,7 +9217,7 @@ namespace SpanJson.Formatters
     }
     public sealed class TimeSpanUtf8Formatter : IJsonFormatter<TimeSpan, Byte>
     {
-        public static readonly TimeSpanUtf8Formatter Default = new TimeSpanUtf8Formatter();
+        public static readonly TimeSpanUtf8Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Byte> writer, TimeSpan value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -9231,7 +9231,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableTimeSpanUtf8Formatter : IJsonFormatter<TimeSpan?, Byte>
     {
-        public static readonly NullableTimeSpanUtf8Formatter Default = new NullableTimeSpanUtf8Formatter();
+        public static readonly NullableTimeSpanUtf8Formatter Default = new();
         private static readonly TimeSpanUtf8Formatter ElementFormatter = TimeSpanUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, TimeSpan? value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -9257,7 +9257,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableTimeSpanUtf8ArrayFormatter : IJsonFormatter<TimeSpan?[], Byte>
     {
-        public static readonly NullableTimeSpanUtf8ArrayFormatter Default = new NullableTimeSpanUtf8ArrayFormatter();
+        public static readonly NullableTimeSpanUtf8ArrayFormatter Default = new();
         private static readonly NullableTimeSpanUtf8Formatter ElementFormatter = NullableTimeSpanUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, TimeSpan?[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -9327,7 +9327,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableTimeSpanUtf8ListFormatter : IJsonFormatter<List<TimeSpan?>, Byte>
     {
-        public static readonly NullableTimeSpanUtf8ListFormatter Default = new NullableTimeSpanUtf8ListFormatter();
+        public static readonly NullableTimeSpanUtf8ListFormatter Default = new();
         private static readonly NullableTimeSpanUtf8Formatter ElementFormatter = NullableTimeSpanUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<TimeSpan?> value, IJsonFormatterResolver<Byte> resolver)
@@ -9386,7 +9386,7 @@ namespace SpanJson.Formatters
 
     public sealed class TimeSpanUtf8ArrayFormatter : IJsonFormatter<TimeSpan[], Byte>
     {
-        public static readonly TimeSpanUtf8ArrayFormatter Default = new TimeSpanUtf8ArrayFormatter();
+        public static readonly TimeSpanUtf8ArrayFormatter Default = new();
         private static readonly TimeSpanUtf8Formatter ElementFormatter = TimeSpanUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, TimeSpan[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -9456,7 +9456,7 @@ namespace SpanJson.Formatters
 
     public sealed class TimeSpanUtf8ListFormatter : IJsonFormatter<List<TimeSpan>, Byte>
     {
-        public static readonly TimeSpanUtf8ListFormatter Default = new TimeSpanUtf8ListFormatter();
+        public static readonly TimeSpanUtf8ListFormatter Default = new();
         private static readonly TimeSpanUtf8Formatter ElementFormatter = TimeSpanUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<TimeSpan> value, IJsonFormatterResolver<Byte> resolver)
@@ -9514,7 +9514,7 @@ namespace SpanJson.Formatters
     }
     public sealed class GuidUtf16Formatter : IJsonFormatter<Guid, Char>
     {
-        public static readonly GuidUtf16Formatter Default = new GuidUtf16Formatter();
+        public static readonly GuidUtf16Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Char> writer, Guid value, IJsonFormatterResolver<Char> resolver)
         {
@@ -9528,7 +9528,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableGuidUtf16Formatter : IJsonFormatter<Guid?, Char>
     {
-        public static readonly NullableGuidUtf16Formatter Default = new NullableGuidUtf16Formatter();
+        public static readonly NullableGuidUtf16Formatter Default = new();
         private static readonly GuidUtf16Formatter ElementFormatter = GuidUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Guid? value, IJsonFormatterResolver<Char> resolver)
         {
@@ -9554,7 +9554,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableGuidUtf16ArrayFormatter : IJsonFormatter<Guid?[], Char>
     {
-        public static readonly NullableGuidUtf16ArrayFormatter Default = new NullableGuidUtf16ArrayFormatter();
+        public static readonly NullableGuidUtf16ArrayFormatter Default = new();
         private static readonly NullableGuidUtf16Formatter ElementFormatter = NullableGuidUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Guid?[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -9624,7 +9624,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableGuidUtf16ListFormatter : IJsonFormatter<List<Guid?>, Char>
     {
-        public static readonly NullableGuidUtf16ListFormatter Default = new NullableGuidUtf16ListFormatter();
+        public static readonly NullableGuidUtf16ListFormatter Default = new();
         private static readonly NullableGuidUtf16Formatter ElementFormatter = NullableGuidUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Guid?> value, IJsonFormatterResolver<Char> resolver)
@@ -9683,7 +9683,7 @@ namespace SpanJson.Formatters
 
     public sealed class GuidUtf16ArrayFormatter : IJsonFormatter<Guid[], Char>
     {
-        public static readonly GuidUtf16ArrayFormatter Default = new GuidUtf16ArrayFormatter();
+        public static readonly GuidUtf16ArrayFormatter Default = new();
         private static readonly GuidUtf16Formatter ElementFormatter = GuidUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Guid[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -9753,7 +9753,7 @@ namespace SpanJson.Formatters
 
     public sealed class GuidUtf16ListFormatter : IJsonFormatter<List<Guid>, Char>
     {
-        public static readonly GuidUtf16ListFormatter Default = new GuidUtf16ListFormatter();
+        public static readonly GuidUtf16ListFormatter Default = new();
         private static readonly GuidUtf16Formatter ElementFormatter = GuidUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Guid> value, IJsonFormatterResolver<Char> resolver)
@@ -9811,7 +9811,7 @@ namespace SpanJson.Formatters
     }
     public sealed class GuidUtf8Formatter : IJsonFormatter<Guid, Byte>
     {
-        public static readonly GuidUtf8Formatter Default = new GuidUtf8Formatter();
+        public static readonly GuidUtf8Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Byte> writer, Guid value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -9825,7 +9825,7 @@ namespace SpanJson.Formatters
     }
     public sealed class NullableGuidUtf8Formatter : IJsonFormatter<Guid?, Byte>
     {
-        public static readonly NullableGuidUtf8Formatter Default = new NullableGuidUtf8Formatter();
+        public static readonly NullableGuidUtf8Formatter Default = new();
         private static readonly GuidUtf8Formatter ElementFormatter = GuidUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Guid? value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -9851,7 +9851,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableGuidUtf8ArrayFormatter : IJsonFormatter<Guid?[], Byte>
     {
-        public static readonly NullableGuidUtf8ArrayFormatter Default = new NullableGuidUtf8ArrayFormatter();
+        public static readonly NullableGuidUtf8ArrayFormatter Default = new();
         private static readonly NullableGuidUtf8Formatter ElementFormatter = NullableGuidUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Guid?[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -9921,7 +9921,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableGuidUtf8ListFormatter : IJsonFormatter<List<Guid?>, Byte>
     {
-        public static readonly NullableGuidUtf8ListFormatter Default = new NullableGuidUtf8ListFormatter();
+        public static readonly NullableGuidUtf8ListFormatter Default = new();
         private static readonly NullableGuidUtf8Formatter ElementFormatter = NullableGuidUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Guid?> value, IJsonFormatterResolver<Byte> resolver)
@@ -9980,7 +9980,7 @@ namespace SpanJson.Formatters
 
     public sealed class GuidUtf8ArrayFormatter : IJsonFormatter<Guid[], Byte>
     {
-        public static readonly GuidUtf8ArrayFormatter Default = new GuidUtf8ArrayFormatter();
+        public static readonly GuidUtf8ArrayFormatter Default = new();
         private static readonly GuidUtf8Formatter ElementFormatter = GuidUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Guid[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -10050,7 +10050,7 @@ namespace SpanJson.Formatters
 
     public sealed class GuidUtf8ListFormatter : IJsonFormatter<List<Guid>, Byte>
     {
-        public static readonly GuidUtf8ListFormatter Default = new GuidUtf8ListFormatter();
+        public static readonly GuidUtf8ListFormatter Default = new();
         private static readonly GuidUtf8Formatter ElementFormatter = GuidUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Guid> value, IJsonFormatterResolver<Byte> resolver)
@@ -10108,7 +10108,7 @@ namespace SpanJson.Formatters
     }
     public sealed class StringUtf16Formatter : IJsonFormatter<String, Char>
     {
-        public static readonly StringUtf16Formatter Default = new StringUtf16Formatter();
+        public static readonly StringUtf16Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Char> writer, String value, IJsonFormatterResolver<Char> resolver)
         {
@@ -10128,7 +10128,7 @@ namespace SpanJson.Formatters
 
     public sealed class StringUtf16ArrayFormatter : IJsonFormatter<String[], Char>
     {
-        public static readonly StringUtf16ArrayFormatter Default = new StringUtf16ArrayFormatter();
+        public static readonly StringUtf16ArrayFormatter Default = new();
         private static readonly StringUtf16Formatter ElementFormatter = StringUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, String[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -10198,7 +10198,7 @@ namespace SpanJson.Formatters
 
     public sealed class StringUtf16ListFormatter : IJsonFormatter<List<String>, Char>
     {
-        public static readonly StringUtf16ListFormatter Default = new StringUtf16ListFormatter();
+        public static readonly StringUtf16ListFormatter Default = new();
         private static readonly StringUtf16Formatter ElementFormatter = StringUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<String> value, IJsonFormatterResolver<Char> resolver)
@@ -10256,7 +10256,7 @@ namespace SpanJson.Formatters
     }
     public sealed class StringUtf8Formatter : IJsonFormatter<String, Byte>
     {
-        public static readonly StringUtf8Formatter Default = new StringUtf8Formatter();
+        public static readonly StringUtf8Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Byte> writer, String value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -10276,7 +10276,7 @@ namespace SpanJson.Formatters
 
     public sealed class StringUtf8ArrayFormatter : IJsonFormatter<String[], Byte>
     {
-        public static readonly StringUtf8ArrayFormatter Default = new StringUtf8ArrayFormatter();
+        public static readonly StringUtf8ArrayFormatter Default = new();
         private static readonly StringUtf8Formatter ElementFormatter = StringUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, String[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -10346,7 +10346,7 @@ namespace SpanJson.Formatters
 
     public sealed class StringUtf8ListFormatter : IJsonFormatter<List<String>, Byte>
     {
-        public static readonly StringUtf8ListFormatter Default = new StringUtf8ListFormatter();
+        public static readonly StringUtf8ListFormatter Default = new();
         private static readonly StringUtf8Formatter ElementFormatter = StringUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<String> value, IJsonFormatterResolver<Byte> resolver)
@@ -10404,7 +10404,7 @@ namespace SpanJson.Formatters
     }
     public sealed class VersionUtf16Formatter : IJsonFormatter<Version, Char>
     {
-        public static readonly VersionUtf16Formatter Default = new VersionUtf16Formatter();
+        public static readonly VersionUtf16Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Char> writer, Version value, IJsonFormatterResolver<Char> resolver)
         {
@@ -10424,7 +10424,7 @@ namespace SpanJson.Formatters
 
     public sealed class VersionUtf16ArrayFormatter : IJsonFormatter<Version[], Char>
     {
-        public static readonly VersionUtf16ArrayFormatter Default = new VersionUtf16ArrayFormatter();
+        public static readonly VersionUtf16ArrayFormatter Default = new();
         private static readonly VersionUtf16Formatter ElementFormatter = VersionUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Version[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -10494,7 +10494,7 @@ namespace SpanJson.Formatters
 
     public sealed class VersionUtf16ListFormatter : IJsonFormatter<List<Version>, Char>
     {
-        public static readonly VersionUtf16ListFormatter Default = new VersionUtf16ListFormatter();
+        public static readonly VersionUtf16ListFormatter Default = new();
         private static readonly VersionUtf16Formatter ElementFormatter = VersionUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Version> value, IJsonFormatterResolver<Char> resolver)
@@ -10552,7 +10552,7 @@ namespace SpanJson.Formatters
     }
     public sealed class VersionUtf8Formatter : IJsonFormatter<Version, Byte>
     {
-        public static readonly VersionUtf8Formatter Default = new VersionUtf8Formatter();
+        public static readonly VersionUtf8Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Byte> writer, Version value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -10572,7 +10572,7 @@ namespace SpanJson.Formatters
 
     public sealed class VersionUtf8ArrayFormatter : IJsonFormatter<Version[], Byte>
     {
-        public static readonly VersionUtf8ArrayFormatter Default = new VersionUtf8ArrayFormatter();
+        public static readonly VersionUtf8ArrayFormatter Default = new();
         private static readonly VersionUtf8Formatter ElementFormatter = VersionUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Version[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -10642,7 +10642,7 @@ namespace SpanJson.Formatters
 
     public sealed class VersionUtf8ListFormatter : IJsonFormatter<List<Version>, Byte>
     {
-        public static readonly VersionUtf8ListFormatter Default = new VersionUtf8ListFormatter();
+        public static readonly VersionUtf8ListFormatter Default = new();
         private static readonly VersionUtf8Formatter ElementFormatter = VersionUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Version> value, IJsonFormatterResolver<Byte> resolver)
@@ -10700,7 +10700,7 @@ namespace SpanJson.Formatters
     }
     public sealed class UriUtf16Formatter : IJsonFormatter<Uri, Char>
     {
-        public static readonly UriUtf16Formatter Default = new UriUtf16Formatter();
+        public static readonly UriUtf16Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Char> writer, Uri value, IJsonFormatterResolver<Char> resolver)
         {
@@ -10720,7 +10720,7 @@ namespace SpanJson.Formatters
 
     public sealed class UriUtf16ArrayFormatter : IJsonFormatter<Uri[], Char>
     {
-        public static readonly UriUtf16ArrayFormatter Default = new UriUtf16ArrayFormatter();
+        public static readonly UriUtf16ArrayFormatter Default = new();
         private static readonly UriUtf16Formatter ElementFormatter = UriUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, Uri[] value, IJsonFormatterResolver<Char> resolver)
         {
@@ -10790,7 +10790,7 @@ namespace SpanJson.Formatters
 
     public sealed class UriUtf16ListFormatter : IJsonFormatter<List<Uri>, Char>
     {
-        public static readonly UriUtf16ListFormatter Default = new UriUtf16ListFormatter();
+        public static readonly UriUtf16ListFormatter Default = new();
         private static readonly UriUtf16Formatter ElementFormatter = UriUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<Uri> value, IJsonFormatterResolver<Char> resolver)
@@ -10848,7 +10848,7 @@ namespace SpanJson.Formatters
     }
     public sealed class UriUtf8Formatter : IJsonFormatter<Uri, Byte>
     {
-        public static readonly UriUtf8Formatter Default = new UriUtf8Formatter();
+        public static readonly UriUtf8Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Byte> writer, Uri value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -10868,7 +10868,7 @@ namespace SpanJson.Formatters
 
     public sealed class UriUtf8ArrayFormatter : IJsonFormatter<Uri[], Byte>
     {
-        public static readonly UriUtf8ArrayFormatter Default = new UriUtf8ArrayFormatter();
+        public static readonly UriUtf8ArrayFormatter Default = new();
         private static readonly UriUtf8Formatter ElementFormatter = UriUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, Uri[] value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -10938,7 +10938,7 @@ namespace SpanJson.Formatters
 
     public sealed class UriUtf8ListFormatter : IJsonFormatter<List<Uri>, Byte>
     {
-        public static readonly UriUtf8ListFormatter Default = new UriUtf8ListFormatter();
+        public static readonly UriUtf8ListFormatter Default = new();
         private static readonly UriUtf8Formatter ElementFormatter = UriUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<Uri> value, IJsonFormatterResolver<Byte> resolver)

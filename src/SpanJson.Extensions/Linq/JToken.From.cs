@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using SpanJson.Document;
 using SpanJson.Dynamic;
 using SpanJson.Resolvers;
+using SpanJson.Serialization;
 using NJsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace SpanJson.Linq
@@ -18,7 +19,7 @@ namespace SpanJson.Linq
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static JToken From<T>(T input)
         {
-            return FromInternal<T, IncludeNullsOriginalCaseResolver<char>>(input);
+            return From<T, IncludeNullsOriginalCaseResolver<char>>(input);
         }
 
         /// <summary>Creates a <see cref="JToken"/> from an object.</summary>
@@ -28,17 +29,11 @@ namespace SpanJson.Linq
         public static JToken From<T, TResolver>(T input)
             where TResolver : IJsonFormatterResolver<char, TResolver>, new()
         {
-            return FromInternal<T, TResolver>(input);
-        }
+            if (TryReadJsonDynamic(input, out var token)) { return token; }
 
-        internal static JToken FromInternal<T, TResolver>(T o)
-            where TResolver : IJsonFormatterResolver<char, TResolver>, new()
-        {
-            if (o is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.o); }
+            if (input is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.input); }
 
-            if (TryReadJsonDynamic(o, out var token)) { return token; }
-
-            var utf16Json = JsonSerializer.Generic.Utf16.SerializeToCharArray<T, TResolver>(o);
+            var utf16Json = JsonSerializer.Generic.Utf16.SerializeToCharArray<T, TResolver>(input);
             return Parse(utf16Json);
         }
 
@@ -52,7 +47,7 @@ namespace SpanJson.Linq
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static JToken FromDynamic(object o)
         {
-            return FromDynamicInternal<IncludeNullsOriginalCaseResolver<char>>(o);
+            return FromDynamic<IncludeNullsOriginalCaseResolver<char>>(o);
         }
 
         /// <summary>Creates a <see cref="JToken"/> from an object.</summary>
@@ -62,15 +57,9 @@ namespace SpanJson.Linq
         public static JToken FromDynamic<TResolver>(object o)
             where TResolver : IJsonFormatterResolver<char, TResolver>, new()
         {
-            return FromDynamicInternal<TResolver>(o);
-        }
-
-        internal static JToken FromDynamicInternal<TResolver>(object o)
-            where TResolver : IJsonFormatterResolver<char, TResolver>, new()
-        {
-            if (o is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.o); }
-
             if (TryReadJsonDynamic(o, out var token)) { return token; }
+
+            if (o is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.o); }
 
             var utf16Json = JsonSerializer.NonGeneric.Utf16.SerializeToCharArray<TResolver>(o);
             return Parse(utf16Json);
@@ -85,10 +74,14 @@ namespace SpanJson.Linq
         /// <returns>A <see cref="JToken"/> with the value of the specified object.</returns>
         public static JToken FromObject(object o)
         {
+            if (TryReadJsonDynamic(o, out var token)) { return token; }
+
+            if (o is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.o); }
+
             var jsonSerializer = DefaultSerializerPool.Take();
             try
             {
-                return FromObjectInternal(o, jsonSerializer);
+                return FromObjectInternal0(o, jsonSerializer);
             }
             finally
             {
@@ -101,10 +94,14 @@ namespace SpanJson.Linq
         /// <returns>A <see cref="JToken"/> with the value of the specified object.</returns>
         public static JToken FromPolymorphicObject(object o)
         {
+            if (TryReadJsonDynamic(o, out var token)) { return token; }
+
+            if (o is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.o); }
+
             var jsonSerializer = PolymorphicSerializerPool.Take();
             try
             {
-                return FromObjectInternal(o, jsonSerializer);
+                return FromObjectInternal0(o, jsonSerializer);
             }
             finally
             {
@@ -118,23 +115,19 @@ namespace SpanJson.Linq
         /// <returns>A <see cref="JToken"/> with the value of the specified object.</returns>
         public static JToken FromObject(object o, NJsonSerializer jsonSerializer)
         {
-            return FromObjectInternal(o, jsonSerializer);
-        }
-
-        internal static JToken FromObjectInternal(object o, NJsonSerializer jsonSerializer)
-        {
             if (TryReadJsonDynamic(o, out var token)) { return token; }
 
             if (o is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.o); }
             if (jsonSerializer is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.jsonSerializer); }
 
-            using (JTokenWriter jsonWriter = new JTokenWriter())
-            {
-                jsonSerializer.Serialize(jsonWriter, o);
-                token = jsonWriter.Token!;
-            }
+            return FromObjectInternal0(o, jsonSerializer);
+        }
 
-            return token;
+        private static JToken FromObjectInternal0(object o, NJsonSerializer jsonSerializer)
+        {
+            using JTokenWriter jsonWriter = new();
+            jsonSerializer.Serialize(jsonWriter, o);
+            return jsonWriter.Token!;
         }
 
         internal static bool HasJsonDynamic(IEnumerable content)
@@ -149,13 +142,13 @@ namespace SpanJson.Linq
                     case JsonElement element when element.ValueKind == JsonValueKind.Object || element.ValueKind == JsonValueKind.Array:
                         return true;
 
-                    case JsonProperty property:
+                    case JsonProperty:
                         return true;
 
-                    case SpanJsonDynamicObject dynamicObject:
+                    case SpanJsonDynamicObject:
                         return true;
 
-                    case ISpanJsonDynamicArray dynamicArray:
+                    case ISpanJsonDynamicArray:
                         return true;
                 }
             }
@@ -369,7 +362,7 @@ namespace SpanJson.Linq
 
         private static JObject ReadObject(in JsonElement element)
         {
-            JObject jObject = new JObject();
+            JObject jObject = new();
             foreach (var item in element.EnumerateObject())
             {
                 jObject.Add(ReadProperty(item));
@@ -380,7 +373,7 @@ namespace SpanJson.Linq
 
         private static JArray ReadArray(in JsonElement element)
         {
-            JArray jArray = new JArray();
+            JArray jArray = new();
             foreach (var item in element.EnumerateArray())
             {
                 ReadTokenFrom(item, jArray);
@@ -391,7 +384,7 @@ namespace SpanJson.Linq
 
         private static JProperty ReadProperty(in JsonProperty property)
         {
-            JProperty jProperty = new JProperty(property.Name);
+            JProperty jProperty = new(property.Name);
 
             ReadTokenFrom(property.Value, jProperty);
 

@@ -15,7 +15,7 @@ namespace SpanJson.Serialization
             if (input is null) { return JsonSerializer.Generic.Utf16.Serialize<object?>(null); }
 
             var inputType = input.GetType();
-            if (IsPolymorphically(inputType))
+            if (JsonMetadata.IsPolymorphic(inputType))
             {
                 return SerializerPool.SerializeObject(input, inputType);
             }
@@ -31,7 +31,7 @@ namespace SpanJson.Serialization
             if (input is null) { return JsonSerializer.Generic.Utf16.SerializeToCharArray<object?>(null); }
 
             var inputType = input.GetType();
-            if (IsPolymorphically(inputType))
+            if (JsonMetadata.IsPolymorphic(inputType))
             {
                 return SerializerPool.SerializeObject(input, inputType).ToCharArray();
             }
@@ -48,7 +48,7 @@ namespace SpanJson.Serialization
             if (input is null) { return JsonSerializer.Generic.Utf16.SerializeToArrayPool<object?>(null); }
 
             var inputType = input.GetType();
-            if (IsPolymorphically(inputType))
+            if (JsonMetadata.IsPolymorphic(inputType))
             {
                 var token = JToken.FromPolymorphicObject(input);
                 return JsonSerializer.Generic.Inner<JToken, char, TUtf16Resolver>.InnerSerializeToCharArrayPool(token);
@@ -67,7 +67,7 @@ namespace SpanJson.Serialization
             if (input is null) { return JsonSerializer.Generic.Utf16.SerializeAsync<object?>(null, writer, cancellationToken); }
 
             var inputType = input.GetType();
-            if (IsPolymorphically(inputType))
+            if (JsonMetadata.IsPolymorphic(inputType))
             {
                 SerializerPool.SerializeToWriter(writer, input, inputType);
                 return default;
@@ -88,7 +88,7 @@ namespace SpanJson.Serialization
         {
             if (type is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.type); }
 
-            if (IsPolymorphically(type))
+            if (JsonMetadata.IsPolymorphic(type))
             {
                 return DeserializerPool.DeserializeObject(input, type);
             }
@@ -108,7 +108,7 @@ namespace SpanJson.Serialization
         {
             if (type is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.type); }
 
-            if (IsPolymorphically(type))
+            if (JsonMetadata.IsPolymorphic(type))
             {
                 return DeserializerPool.DeserializeObject(input.AsSpan().ToString(), type);
             }
@@ -124,7 +124,7 @@ namespace SpanJson.Serialization
         {
             if (type is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.type); }
 
-            if (IsPolymorphically(type))
+            if (JsonMetadata.IsPolymorphic(type))
             {
                 return DeserializerPool.DeserializeObject(input.AsSpan().ToString(), type);
             }
@@ -140,7 +140,7 @@ namespace SpanJson.Serialization
         {
             if (type is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.type); }
 
-            if (IsPolymorphically(type))
+            if (JsonMetadata.IsPolymorphic(type))
             {
                 return DeserializerPool.DeserializeObject(input.ToString(), type);
             }
@@ -156,7 +156,7 @@ namespace SpanJson.Serialization
         {
             if (type is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.type); }
 
-            if (IsPolymorphically(type))
+            if (JsonMetadata.IsPolymorphic(type))
             {
                 return DeserializerPool.DeserializeObject(input.ToString(), type);
             }
@@ -173,7 +173,7 @@ namespace SpanJson.Serialization
         {
             if (type is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.type); }
 
-            if (IsPolymorphically(type))
+            if (JsonMetadata.IsPolymorphic(type))
             {
                 var result = DeserializerPool.DeserializeFromReader(reader, type);
                 return new ValueTask<object?>(result);
@@ -194,7 +194,7 @@ namespace SpanJson.Serialization
             if (input is null) { return JsonSerializer.Generic.Utf8.Serialize<object?>(null); }
 
             var inputType = input.GetType();
-            if (IsPolymorphically(inputType))
+            if (JsonMetadata.IsPolymorphic(inputType))
             {
                 return SerializerPool.SerializeToByteArray(input, inputType);
             }
@@ -211,7 +211,7 @@ namespace SpanJson.Serialization
             if (input is null) { return JsonSerializer.Generic.Utf8.SerializeToArrayPool<object?>(null); }
 
             var inputType = input.GetType();
-            if (IsPolymorphically(inputType))
+            if (JsonMetadata.IsPolymorphic(inputType))
             {
                 return SerializerPool.SerializeToMemoryPool(input, inputType);
             }
@@ -229,7 +229,7 @@ namespace SpanJson.Serialization
             if (input is null) { return JsonSerializer.Generic.Utf8.SerializeAsync<object?>(null, stream, cancellationToken); }
 
             var inputType = input.GetType();
-            if (IsPolymorphically(inputType))
+            if (JsonMetadata.IsPolymorphic(inputType))
             {
                 SerializerPool.SerializeToStream(stream, input, inputType);
                 return default;
@@ -249,7 +249,7 @@ namespace SpanJson.Serialization
         {
             if (type is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.type); }
 
-            if (IsPolymorphically(type))
+            if (JsonMetadata.IsPolymorphic(type))
             {
                 return DeserializerPool.DeserializeFromByteArray(input, type);
             }
@@ -265,7 +265,7 @@ namespace SpanJson.Serialization
         {
             if (type is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.type); }
 
-            if (IsPolymorphically(type))
+            if (JsonMetadata.IsPolymorphic(type))
             {
                 return DeserializerPool.DeserializeFromByteArray(input.Array!, input.Offset, input.Count, type);
             }
@@ -281,7 +281,7 @@ namespace SpanJson.Serialization
         {
             if (type is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.type); }
 
-            if (IsPolymorphically(type))
+            if (JsonMetadata.IsPolymorphic(type))
             {
                 if (MemoryMarshal.TryGetArray(input, out ArraySegment<byte> segment))
                 {
@@ -304,7 +304,7 @@ namespace SpanJson.Serialization
         {
             if (type is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.type); }
 
-            if (IsPolymorphically(type))
+            if (JsonMetadata.IsPolymorphic(type))
             {
                 return DeserializerPool.DeserializeFromByteArray(input.ToArray(), type);
             }
@@ -321,7 +321,7 @@ namespace SpanJson.Serialization
         {
             if (type is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.type); }
 
-            if (IsPolymorphically(type))
+            if (JsonMetadata.IsPolymorphic(type))
             {
                 var result = DeserializerPool.DeserializeFromStream(stream, type);
                 return new ValueTask<object?>(result);

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using SpanJson.Serialization;
+﻿using SpanJson.Serialization;
 using Xunit;
 
 namespace SpanJson.Tests
@@ -9,7 +7,7 @@ namespace SpanJson.Tests
     {
         static RuntimePolymorphicallyAttrTests()
         {
-            typeof(Shape).AddRuntimeAttributes(new JsonPolymorphicallyAttribute());
+            typeof(Shape).AddRuntimeAttributes(new JsonPolymorphismAttribute());
         }
 
         [Fact]
@@ -24,8 +22,8 @@ namespace SpanJson.Tests
                     new Circle { Radius = 5 }
                 }
             };
-            var utf16Json = JsonComplexSerializer.Instance.SerializeObject(drawing);
-            var deserialized = JsonComplexSerializer.Instance.Deserialize<Drawing>(utf16Json);
+            var utf16Json = JsonComplexSerializer.Default.SerializeObject(drawing);
+            var deserialized = JsonComplexSerializer.Default.Deserialize<Drawing>(utf16Json);
             Assert.NotNull(deserialized);
             Assert.Equal(3, deserialized.Shapes.Count);
             Assert.Equal(typeof(Square), deserialized.Shapes[0].GetType());
@@ -48,8 +46,8 @@ namespace SpanJson.Tests
                     new Circle { Radius = 5 }
                 }
             };
-            var utf8Json = JsonComplexSerializer.Instance.SerializeObjectToUtf8Bytes(drawing);
-            var deserialized = JsonComplexSerializer.Instance.Deserialize<Drawing>(utf8Json);
+            var utf8Json = JsonComplexSerializer.Default.SerializeObjectToUtf8Bytes(drawing);
+            var deserialized = JsonComplexSerializer.Default.Deserialize<Drawing>(utf8Json);
             Assert.NotNull(deserialized);
             Assert.Equal(3, deserialized.Shapes.Count);
             Assert.Equal(typeof(Square), deserialized.Shapes[0].GetType());
@@ -72,8 +70,8 @@ namespace SpanJson.Tests
                     new Circle { Radius = 5 }
                 }
             };
-            var utf16Json = JsonComplexSerializer.Instance.SerializeObject(drawing);
-            var deserialized = JsonComplexSerializer.Instance.Deserialize<Drawing>(utf16Json);
+            var utf16Json = JsonComplexSerializer.Default.SerializeObject(drawing);
+            var deserialized = JsonComplexSerializer.Default.Deserialize<Drawing>(utf16Json);
             Assert.NotNull(deserialized);
             Assert.Equal(3, deserialized.Shapes.Count);
             Assert.Equal(typeof(Square), deserialized.Shapes[0].GetType());
@@ -96,8 +94,8 @@ namespace SpanJson.Tests
                     new Circle { Radius = 5 }
                 }
             };
-            var utf8Json = JsonComplexSerializer.Instance.SerializeObjectToUtf8Bytes(drawing);
-            var deserialized = JsonComplexSerializer.Instance.Deserialize<Drawing>(utf8Json);
+            var utf8Json = JsonComplexSerializer.Default.SerializeObjectToUtf8Bytes(drawing);
+            var deserialized = JsonComplexSerializer.Default.Deserialize<Drawing>(utf8Json);
             Assert.NotNull(deserialized);
             Assert.Equal(3, deserialized.Shapes.Count);
             Assert.Equal(typeof(Square), deserialized.Shapes[0].GetType());

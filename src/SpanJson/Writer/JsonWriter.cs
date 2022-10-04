@@ -137,6 +137,16 @@
             _capacity = _borrowedBuffer.Length;
         }
 
+        /// <summary>缓存不回收</summary>
+        internal void Clear()
+        {
+            _borrowedBuffer = null!;
+            _utf8Buffer = null!;
+            _utf8Span = default;
+            _utf16Buffer = null!;
+            _utf16Span = default;
+        }
+
         public void Dispose()
         {
             var toReturn = Interlocked.Exchange(ref _borrowedBuffer!, null);

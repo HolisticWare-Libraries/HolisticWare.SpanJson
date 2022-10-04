@@ -9,7 +9,7 @@ namespace SpanJson.Formatters
 {
     public sealed class CombGuidUtf16Formatter : IJsonFormatter<CombGuid, Char>
     {
-        public static readonly CombGuidUtf16Formatter Default = new CombGuidUtf16Formatter();
+        public static readonly CombGuidUtf16Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Char> writer, CombGuid value, IJsonFormatterResolver<Char> resolver)
         {
@@ -24,7 +24,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableCombGuidUtf16Formatter : IJsonFormatter<CombGuid?, Char>
     {
-        public static readonly NullableCombGuidUtf16Formatter Default = new NullableCombGuidUtf16Formatter();
+        public static readonly NullableCombGuidUtf16Formatter Default = new();
         private static readonly CombGuidUtf16Formatter ElementFormatter = CombGuidUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, CombGuid? value, IJsonFormatterResolver<Char> resolver)
         {
@@ -50,7 +50,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableCombGuidUtf16ArrayFormatter : IJsonFormatter<CombGuid?[], Char>
     {
-        public static readonly NullableCombGuidUtf16ArrayFormatter Default = new NullableCombGuidUtf16ArrayFormatter();
+        public static readonly NullableCombGuidUtf16ArrayFormatter Default = new();
         private static readonly NullableCombGuidUtf16Formatter ElementFormatter = NullableCombGuidUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, CombGuid?[]? value, IJsonFormatterResolver<Char> resolver)
         {
@@ -120,7 +120,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableCombGuidUtf16ListFormatter : IJsonFormatter<List<CombGuid?>, Char>
     {
-        public static readonly NullableCombGuidUtf16ListFormatter Default = new NullableCombGuidUtf16ListFormatter();
+        public static readonly NullableCombGuidUtf16ListFormatter Default = new();
         private static readonly NullableCombGuidUtf16Formatter ElementFormatter = NullableCombGuidUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<CombGuid?>? value, IJsonFormatterResolver<Char> resolver)
@@ -165,7 +165,7 @@ namespace SpanJson.Formatters
 
     public sealed class CombGuidUtf16ArrayFormatter : IJsonFormatter<CombGuid[], Char>
     {
-        public static readonly CombGuidUtf16ArrayFormatter Default = new CombGuidUtf16ArrayFormatter();
+        public static readonly CombGuidUtf16ArrayFormatter Default = new();
         private static readonly CombGuidUtf16Formatter ElementFormatter = CombGuidUtf16Formatter.Default;
         public void Serialize(ref JsonWriter<Char> writer, CombGuid[]? value, IJsonFormatterResolver<Char> resolver)
         {
@@ -235,7 +235,7 @@ namespace SpanJson.Formatters
 
     public sealed class CombGuidUtf16ListFormatter : IJsonFormatter<List<CombGuid>, Char>
     {
-        public static readonly CombGuidUtf16ListFormatter Default = new CombGuidUtf16ListFormatter();
+        public static readonly CombGuidUtf16ListFormatter Default = new();
         private static readonly CombGuidUtf16Formatter ElementFormatter = CombGuidUtf16Formatter.Default;
 
         public void Serialize(ref JsonWriter<Char> writer, List<CombGuid>? value, IJsonFormatterResolver<Char> resolver)
@@ -280,7 +280,7 @@ namespace SpanJson.Formatters
 
     public sealed class CombGuidUtf8Formatter : IJsonFormatter<CombGuid, Byte>
     {
-        public static readonly CombGuidUtf8Formatter Default = new CombGuidUtf8Formatter();
+        public static readonly CombGuidUtf8Formatter Default = new();
 
         public void Serialize(ref JsonWriter<Byte> writer, CombGuid value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -295,7 +295,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableCombGuidUtf8Formatter : IJsonFormatter<CombGuid?, Byte>
     {
-        public static readonly NullableCombGuidUtf8Formatter Default = new NullableCombGuidUtf8Formatter();
+        public static readonly NullableCombGuidUtf8Formatter Default = new();
         private static readonly CombGuidUtf8Formatter ElementFormatter = CombGuidUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, CombGuid? value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -321,7 +321,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableCombGuidUtf8ArrayFormatter : IJsonFormatter<CombGuid?[], Byte>
     {
-        public static readonly NullableCombGuidUtf8ArrayFormatter Default = new NullableCombGuidUtf8ArrayFormatter();
+        public static readonly NullableCombGuidUtf8ArrayFormatter Default = new();
         private static readonly NullableCombGuidUtf8Formatter ElementFormatter = NullableCombGuidUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, CombGuid?[]? value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -391,7 +391,7 @@ namespace SpanJson.Formatters
 
     public sealed class NullableCombGuidUtf8ListFormatter : IJsonFormatter<List<CombGuid?>, Byte>
     {
-        public static readonly NullableCombGuidUtf8ListFormatter Default = new NullableCombGuidUtf8ListFormatter();
+        public static readonly NullableCombGuidUtf8ListFormatter Default = new();
         private static readonly NullableCombGuidUtf8Formatter ElementFormatter = NullableCombGuidUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<CombGuid?>? value, IJsonFormatterResolver<Byte> resolver)
@@ -436,7 +436,7 @@ namespace SpanJson.Formatters
 
     public sealed class CombGuidUtf8ArrayFormatter : IJsonFormatter<CombGuid[], Byte>
     {
-        public static readonly CombGuidUtf8ArrayFormatter Default = new CombGuidUtf8ArrayFormatter();
+        public static readonly CombGuidUtf8ArrayFormatter Default = new();
         private static readonly CombGuidUtf8Formatter ElementFormatter = CombGuidUtf8Formatter.Default;
         public void Serialize(ref JsonWriter<Byte> writer, CombGuid[]? value, IJsonFormatterResolver<Byte> resolver)
         {
@@ -506,7 +506,7 @@ namespace SpanJson.Formatters
 
     public sealed class CombGuidUtf8ListFormatter : IJsonFormatter<List<CombGuid>, Byte>
     {
-        public static readonly CombGuidUtf8ListFormatter Default = new CombGuidUtf8ListFormatter();
+        public static readonly CombGuidUtf8ListFormatter Default = new();
         private static readonly CombGuidUtf8Formatter ElementFormatter = CombGuidUtf8Formatter.Default;
 
         public void Serialize(ref JsonWriter<Byte> writer, List<CombGuid>? value, IJsonFormatterResolver<Byte> resolver)

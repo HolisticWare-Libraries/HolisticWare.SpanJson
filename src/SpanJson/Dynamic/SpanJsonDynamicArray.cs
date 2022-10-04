@@ -12,7 +12,7 @@ namespace SpanJson.Dynamic
     public sealed class SpanJsonDynamicArray<TSymbol> : DynamicObject, ISpanJsonDynamicArray where TSymbol : struct
     {
         private static readonly ConcurrentDictionary<Type, Func<object[], ICountableEnumerable>> Enumerables =
-            new ConcurrentDictionary<Type, Func<object[], ICountableEnumerable>>();
+            new();
 
         private readonly object[] _input;
         private readonly ArraySegment<TSymbol> _rawJson;
@@ -190,10 +190,10 @@ namespace SpanJson.Dynamic
         private static class EnumeratorFactory
         {
             private static readonly SpanJsonDynamicNumber<TSymbol>.DynamicTypeConverter NumberTypeConverter =
-                new SpanJsonDynamicNumber<TSymbol>.DynamicTypeConverter();
+                new();
 
             private static readonly SpanJsonDynamicString<TSymbol>.DynamicTypeConverter StringTypeConverter =
-                new SpanJsonDynamicString<TSymbol>.DynamicTypeConverter();
+                new();
 
             public static IEnumerator<TOutput> Create<TOutput>(object[] input)
             {

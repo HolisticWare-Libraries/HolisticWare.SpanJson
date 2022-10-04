@@ -19,7 +19,7 @@ namespace SpanJson.Internal
         // A simple lookup table for converting numbers to hex.
         private const string HexTableLower = "0123456789abcdef";
         private const string HexFormatString = "x4";
-        private static readonly StandardFormat s_hexStandardFormat = new StandardFormat('x', 4);
+        private static readonly StandardFormat s_hexStandardFormat = new('x', 4);
         public const int LastAsciiCharacter = 0x7F;
         private const uint nLastAsciiCharacter = 0x7F;
 

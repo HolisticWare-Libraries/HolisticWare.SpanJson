@@ -80,7 +80,7 @@ namespace SpanJson.Resolvers
 
         // ReSharper disable StaticMemberInGenericType
         private static readonly ConcurrentDictionary<Type, IJsonFormatter> Formatters =
-            new ConcurrentDictionary<Type, IJsonFormatter>();
+            new();
         // ReSharper restore StaticMemberInGenericType
 
         protected ResolverBase(SpanJsonOptions spanJsonOptions)
@@ -236,10 +236,11 @@ namespace SpanJson.Resolvers
             var declaredConstructors = type.GetTypeInfo().DeclaredConstructors.Where(c => !c.IsStatic && c.IsPublic).ToArray();
 
             constructor = declaredConstructors
-                .FirstOrDefault(a => a.FirstAttribute<JsonConstructorAttribute>() is not null);
+                .FirstOrDefault(a => a.HasAttribute<JsonConstructorAttribute>() || a.HasAttributeNamed("JsonConstructor"));
             if (constructor is not null)
             {
                 attribute = constructor.FirstAttribute<JsonConstructorAttribute>();
+                if (attribute is null) { attribute = JsonConstructorAttribute.Default; }
                 return;
             }
 
@@ -251,7 +252,7 @@ namespace SpanJson.Resolvers
                 return;
             }
 
-            attribute = type.FirstAttribute<JsonConstructorAttribute>();
+            attribute = type.FirstAttribute<JsonConstructorAttribute>(); // 检查动态特性
             if (attribute is not null)
             {
                 var parameterNames = attribute.ParameterNames;
@@ -685,7 +686,7 @@ namespace SpanJson.Resolvers
         private const int Locked = 1;
         private const int Unlocked = 0;
         private static int s_isFreezed = Unlocked;
-        private static List<ICustomJsonFormatterResolver> s_resolvers = new List<ICustomJsonFormatterResolver>();
+        private static List<ICustomJsonFormatterResolver> s_resolvers = new();
 
         /// <summary>Only support for custom formatters.</summary>
         public bool IsSupportedType(Type type)

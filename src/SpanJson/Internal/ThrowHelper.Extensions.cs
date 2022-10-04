@@ -119,7 +119,7 @@ namespace SpanJson
 
     #endregion
 
-    partial class ThrowHelper
+    static partial class ThrowHelper
     {
         #region -- Exception --
 

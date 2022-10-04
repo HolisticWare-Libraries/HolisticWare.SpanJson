@@ -174,10 +174,10 @@ namespace SpanJson.Tests
         [Fact]
         public static void IsPolymorphically()
         {
-            Assert.False(JsonComplexSerializer.IsPolymorphically<TestClassWithCycle>());
-            Assert.False(JsonComplexSerializer.IsPolymorphically<TestClassWithArrayOfElementsOfTheSameClass>());
-            Assert.False(JsonComplexSerializer.IsPolymorphically<CycleRoot>());
-            Assert.True(JsonComplexSerializer.IsPolymorphically<CycleRootA>());
+            Assert.False(JsonMetadata.IsPolymorphic<TestClassWithCycle>());
+            Assert.False(JsonMetadata.IsPolymorphic<TestClassWithArrayOfElementsOfTheSameClass>());
+            Assert.False(JsonMetadata.IsPolymorphic<CycleRoot>());
+            Assert.True(JsonMetadata.IsPolymorphic<CycleRootA>());
         }
     }
 }

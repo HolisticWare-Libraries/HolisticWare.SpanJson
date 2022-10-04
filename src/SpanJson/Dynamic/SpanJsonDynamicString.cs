@@ -6,9 +6,9 @@ namespace SpanJson.Dynamic
 {
     public abstract partial class SpanJsonDynamicString<TSymbol> : SpanJsonDynamic<TSymbol> where TSymbol : struct
     {
-        private static readonly DynamicTypeConverter DynamicConverter = new DynamicTypeConverter();
+        private static readonly DynamicTypeConverter DynamicConverter = new();
 
-        private static readonly HashSet<Type> NumberTypes = new HashSet<Type>
+        private static readonly HashSet<Type> NumberTypes = new()
         {
             typeof(sbyte),
             typeof(short),

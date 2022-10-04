@@ -8,7 +8,7 @@ namespace SpanJson.Internal
     {
         #region -- GetUnescapedTextFromUtf8WithCache --
 
-        static readonly AsymmetricKeyHashTable<string> s_utf8StringCache = new AsymmetricKeyHashTable<string>(StringReadOnlySpanByteAscymmetricEqualityComparer.Instance);
+        static readonly AsymmetricKeyHashTable<string> s_utf8StringCache = new(StringReadOnlySpanByteAscymmetricEqualityComparer.Instance);
 
         /// <summary> <see cref="JsonReader{TSymbol}.ReadUtf8VerbatimNameSpan(out int)"/> or <see cref="JsonReader{TSymbol}.ReadUtf8VerbatimStringSpan(out int)"/> </summary>
         public static string GetUnescapedTextFromUtf8WithCache(in ReadOnlySpan<byte> escapedUtf8Source, int idx)
@@ -40,7 +40,7 @@ namespace SpanJson.Internal
 
         #region -- GetUnescapedTextFromUtf16WithCache --
 
-        static readonly AsymmetricKeyHashTable<string> s_utf16StringCache = new AsymmetricKeyHashTable<string>(StringReadOnlySpanByteAscymmetricEqualityComparer.Instance);
+        static readonly AsymmetricKeyHashTable<string> s_utf16StringCache = new(StringReadOnlySpanByteAscymmetricEqualityComparer.Instance);
 
         /// <summary> <see cref="JsonReader{TSymbol}.ReadUtf8VerbatimNameSpan(out int)"/> or <see cref="JsonReader{TSymbol}.ReadUtf8VerbatimStringSpan(out int)"/> </summary>
         public static string GetUnescapedTextFromUtf16WithCache(in ReadOnlySpan<char> escapedUtf16Source, int escapedCharSize)

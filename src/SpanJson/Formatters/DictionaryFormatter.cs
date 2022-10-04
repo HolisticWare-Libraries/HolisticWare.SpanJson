@@ -27,7 +27,7 @@ namespace SpanJson.Formatters
         private static readonly AssignKvpDelegate AssignKvpFunctor = BuildAssignKvpFunctor();
 
         public static readonly DictionaryFormatter<TDictionary, TWritableDictionary, TKey, TValue, TSymbol, TResolver> Default =
-            new DictionaryFormatter<TDictionary, TWritableDictionary, TKey, TValue, TSymbol, TResolver>();
+            new();
 
         private static readonly IJsonFormatter<TKey, TSymbol> KeyFormatter = GetKeyFormatter();
 

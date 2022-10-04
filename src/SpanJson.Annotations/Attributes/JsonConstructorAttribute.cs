@@ -4,6 +4,8 @@
     [AttributeUsage(AttributeTargets.Constructor, AllowMultiple = false)]
     public class JsonConstructorAttribute : JsonAttribute
     {
+        internal static readonly JsonConstructorAttribute Default = new();
+
         /// <summary>The names of the constructor's parameters need to match the member names of the type (case-insensitive), the order is not relevant.</summary>
         public JsonConstructorAttribute() { }
 

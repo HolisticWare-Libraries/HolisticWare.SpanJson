@@ -1,41 +1,41 @@
 <Project>
   <!-- Versioning properties -->
   <PropertyGroup>
-    <AssemblyVersion>3.2.0.0</AssemblyVersion>
-    <VersionPrefix Condition=" '$(VersionPrefix)'=='' ">3.2.5</VersionPrefix>
+    <AssemblyVersion>3.6.0.0</AssemblyVersion>
+    <VersionPrefix Condition=" '$(VersionPrefix)'=='' ">3.6.0</VersionPrefix>
     <VersionSuffix Condition=" '$(VersionSuffix)'=='' ">rtm</VersionSuffix>
-    <VersionDateSuffix Condition=" '$(VersionDateSuffix)'=='' ">220930-01</VersionDateSuffix>
+    <VersionDateSuffix Condition=" '$(VersionDateSuffix)'=='' ">221002-05</VersionDateSuffix>
     <VersionSuffix Condition=" '$(VersionDateSuffix)'!='' ">$(VersionSuffix)-$(VersionDateSuffix)</VersionSuffix>
   </PropertyGroup>
   <Choose>
     <When Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
       <PropertyGroup>
-        <FileVersion>3.2.5.1000</FileVersion>
+        <FileVersion>3.6.0.1000</FileVersion>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
       <PropertyGroup>
-        <FileVersion>3.2.5.1100</FileVersion>
+        <FileVersion>3.6.0.1100</FileVersion>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
       <PropertyGroup>
-        <FileVersion>3.2.5.2100</FileVersion>
+        <FileVersion>3.6.0.2100</FileVersion>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
       <PropertyGroup>
-        <FileVersion>3.2.5.3100</FileVersion>
+        <FileVersion>3.6.0.3100</FileVersion>
       </PropertyGroup>
     </When>
     <When Condition=" '$(TargetFramework)' == 'net6.0' ">
       <PropertyGroup>
-        <FileVersion>3.2.5.5000</FileVersion>
+        <FileVersion>3.6.0.5000</FileVersion>
       </PropertyGroup>
     </When>
     <Otherwise>
       <PropertyGroup>
-        <FileVersion>3.2.5.9000</FileVersion>
+        <FileVersion>3.6.0.9000</FileVersion>
       </PropertyGroup>
     </Otherwise>
   </Choose>

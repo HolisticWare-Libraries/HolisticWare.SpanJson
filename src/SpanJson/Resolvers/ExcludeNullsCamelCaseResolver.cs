@@ -2,13 +2,8 @@
 {
     public sealed class ExcludeNullsCamelCaseResolver<TSymbol> : ResolverBase<TSymbol, ExcludeNullsCamelCaseResolver<TSymbol>> where TSymbol : struct
     {
-        public ExcludeNullsCamelCaseResolver() : base(new SpanJsonOptions
-        {
-            NullOption = NullOptions.ExcludeNulls,
-            EnumOption = EnumOptions.String,
-            ExtensionDataNamingPolicy = JsonNamingPolicy.CamelCase,
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        })
+        public ExcludeNullsCamelCaseResolver()
+            : base(new SpanJsonOptions(NullOptions.ExcludeNulls, EnumOptions.String, JsonNamingPolicy.CamelCase, JsonNamingPolicy.CamelCase, JsonNamingPolicy.CamelCase))
         {
         }
     }

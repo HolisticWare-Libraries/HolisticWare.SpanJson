@@ -5,7 +5,7 @@ namespace SpanJson.Dynamic
 {
     public abstract partial class SpanJsonDynamicNumber<TSymbol> : SpanJsonDynamic<TSymbol> where TSymbol : struct
     {
-        private static readonly DynamicTypeConverter DynamicConverter = new DynamicTypeConverter();
+        private static readonly DynamicTypeConverter DynamicConverter = new();
 
         protected SpanJsonDynamicNumber(in ReadOnlySpan<TSymbol> span, bool isFloat) : base(span, isFloat) { }
 

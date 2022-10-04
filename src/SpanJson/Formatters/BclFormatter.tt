@@ -188,7 +188,7 @@ namespace SpanJson.Formatters
 #>
     public sealed class <#= t.Name #><#= utfName #>Formatter : IJsonFormatter<<#= t.Name #>, <#= symbol.Name #>>
     {
-        public static readonly <#= t.Name #><#= utfName #>Formatter Default = new <#= t.Name #><#= utfName #>Formatter();
+        public static readonly <#= t.Name #><#= utfName #>Formatter Default = new();
 
         public void Serialize(ref JsonWriter<<#= symbol.Name #>> writer, <#= t.Name #> value, IJsonFormatterResolver<<#= symbol.Name #>> resolver)
         {
@@ -228,7 +228,7 @@ namespace SpanJson.Formatters
 <# if(t.IsValueType) { #>
     public sealed class Nullable<#= t.Name #><#= utfName #>Formatter : IJsonFormatter<<#= t.Name #>?, <#= symbol.Name #>>
     {
-        public static readonly Nullable<#= t.Name #><#= utfName #>Formatter Default = new Nullable<#= t.Name #><#= utfName #>Formatter();
+        public static readonly Nullable<#= t.Name #><#= utfName #>Formatter Default = new();
         private static readonly <#= t.Name #><#= utfName #>Formatter ElementFormatter = <#= t.Name #><#= utfName #>Formatter.Default;
         public void Serialize(ref JsonWriter<<#= symbol.Name #>> writer, <#= t.Name #>? value, IJsonFormatterResolver<<#= symbol.Name #>> resolver)
         {
@@ -254,7 +254,7 @@ namespace SpanJson.Formatters
 
     public sealed class Nullable<#= t.Name #><#= utfName #>ArrayFormatter : IJsonFormatter<<#= t.Name #>?[], <#= symbol.Name #>>
     {
-        public static readonly Nullable<#= t.Name #><#= utfName #>ArrayFormatter Default = new Nullable<#= t.Name #><#= utfName #>ArrayFormatter();
+        public static readonly Nullable<#= t.Name #><#= utfName #>ArrayFormatter Default = new();
         private static readonly Nullable<#= t.Name #><#= utfName #>Formatter ElementFormatter = Nullable<#= t.Name #><#= utfName #>Formatter.Default;
         public void Serialize(ref JsonWriter<<#= symbol.Name #>> writer, <#= t.Name #>?[] value, IJsonFormatterResolver<<#= symbol.Name #>> resolver)
         {
@@ -273,7 +273,7 @@ namespace SpanJson.Formatters
 
     public sealed class Nullable<#= t.Name #><#= utfName #>ListFormatter : IJsonFormatter<List<<#= t.Name #>?>, <#= symbol.Name #>>
     {
-        public static readonly Nullable<#= t.Name #><#= utfName #>ListFormatter Default = new Nullable<#= t.Name #><#= utfName #>ListFormatter();
+        public static readonly Nullable<#= t.Name #><#= utfName #>ListFormatter Default = new();
         private static readonly Nullable<#= t.Name #><#= utfName #>Formatter ElementFormatter = Nullable<#= t.Name #><#= utfName #>Formatter.Default;
 
         public void Serialize(ref JsonWriter<<#= symbol.Name #>> writer, List<<#= t.Name #>?> value, IJsonFormatterResolver<<#= symbol.Name #>> resolver)
@@ -294,7 +294,7 @@ namespace SpanJson.Formatters
 
     public sealed class <#= t.Name #><#= utfName #>ArrayFormatter : IJsonFormatter<<#= t.Name #>[], <#= symbol.Name #>>
     {
-        public static readonly <#= t.Name #><#= utfName #>ArrayFormatter Default = new <#= t.Name #><#= utfName #>ArrayFormatter();
+        public static readonly <#= t.Name #><#= utfName #>ArrayFormatter Default = new();
         private static readonly <#= t.Name #><#= utfName #>Formatter ElementFormatter = <#= t.Name #><#= utfName #>Formatter.Default;
         public void Serialize(ref JsonWriter<<#= symbol.Name #>> writer, <#= t.Name #>[] value, IJsonFormatterResolver<<#= symbol.Name #>> resolver)
         {
@@ -313,7 +313,7 @@ namespace SpanJson.Formatters
 
     public sealed class <#= t.Name #><#= utfName #>ListFormatter : IJsonFormatter<List<<#= t.Name #>>, <#= symbol.Name #>>
     {
-        public static readonly <#= t.Name #><#= utfName #>ListFormatter Default = new <#= t.Name #><#= utfName #>ListFormatter();
+        public static readonly <#= t.Name #><#= utfName #>ListFormatter Default = new();
         private static readonly <#= t.Name #><#= utfName #>Formatter ElementFormatter = <#= t.Name #><#= utfName #>Formatter.Default;
 
         public void Serialize(ref JsonWriter<<#= symbol.Name #>> writer, List<<#= t.Name #>> value, IJsonFormatterResolver<<#= symbol.Name #>> resolver)

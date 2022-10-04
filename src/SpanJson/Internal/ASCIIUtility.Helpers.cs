@@ -15,7 +15,7 @@ using System.Runtime.Intrinsics.X86;
 
 namespace SpanJson.Internal
 {
-    partial class ASCIIUtility
+    static partial class ASCIIUtility
     {
         /// <summary>
         /// A mask which selects only the high bit of each byte of the given <see cref="uint"/>.

@@ -13,7 +13,7 @@ namespace SpanJson.Linq
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public new static JObject From<T>(T input)
         {
-            JToken token = FromInternal<T, IncludeNullsOriginalCaseResolver<char>>(input);
+            JToken token = JToken.From<T, IncludeNullsOriginalCaseResolver<char>>(input);
 
             return AsObject(token);
         }
@@ -25,7 +25,7 @@ namespace SpanJson.Linq
         public new static JObject From<T, TResolver>(T input)
             where TResolver : IJsonFormatterResolver<char, TResolver>, new()
         {
-            JToken token = FromInternal<T, TResolver>(input);
+            JToken token = JToken.From<T, TResolver>(input);
 
             return AsObject(token);
         }
@@ -36,7 +36,7 @@ namespace SpanJson.Linq
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public new static JObject FromDynamic(object o)
         {
-            JToken token = FromDynamicInternal<IncludeNullsOriginalCaseResolver<char>>(o);
+            JToken token = JToken.FromDynamic<IncludeNullsOriginalCaseResolver<char>>(o);
 
             return AsObject(token);
         }
@@ -48,7 +48,7 @@ namespace SpanJson.Linq
         public new static JObject FromDynamic<TResolver>(object o)
             where TResolver : IJsonFormatterResolver<char, TResolver>, new()
         {
-            JToken token = FromDynamicInternal<TResolver>(o);
+            JToken token = JToken.FromDynamic<TResolver>(o);
 
             return AsObject(token);
         }
@@ -58,17 +58,9 @@ namespace SpanJson.Linq
         /// <returns>A <see cref="JObject"/> with the value of the specified object.</returns>
         public new static JObject FromObject(object o)
         {
-            var jsonSerializer = DefaultSerializerPool.Take();
-            try
-            {
-                JToken token = FromObjectInternal(o, jsonSerializer);
+            JToken token = JToken.FromObject(o);
 
-                return AsObject(token);
-            }
-            finally
-            {
-                DefaultSerializerPool.Return(jsonSerializer);
-            }
+            return AsObject(token);
         }
 
         /// <summary>Creates a <see cref="JObject"/> from an object.</summary>
@@ -76,17 +68,9 @@ namespace SpanJson.Linq
         /// <returns>A <see cref="JObject"/> with the value of the specified object.</returns>
         public new static JObject FromPolymorphicObject(object o)
         {
-            var jsonSerializer = PolymorphicSerializerPool.Take();
-            try
-            {
-                JToken token = FromObjectInternal(o, jsonSerializer);
+            JToken token = JToken.FromPolymorphicObject(o);
 
-                return AsObject(token);
-            }
-            finally
-            {
-                PolymorphicSerializerPool.Return(jsonSerializer);
-            }
+            return AsObject(token);
         }
 
         /// <summary>Creates a <see cref="JObject"/> from an object using the specified <see cref="NJsonSerializer"/>.</summary>
@@ -95,7 +79,7 @@ namespace SpanJson.Linq
         /// <returns>A <see cref="JObject"/> with the value of the specified object.</returns>
         public new static JObject FromObject(object o, NJsonSerializer jsonSerializer)
         {
-            JToken token = FromObjectInternal(o, jsonSerializer);
+            JToken token = JToken.FromObject(o, jsonSerializer);
 
             return AsObject(token);
         }
@@ -114,10 +98,10 @@ namespace SpanJson.Linq
             return AsObject(token);
         }
 
-        #region == AsObject ==
+        #region ** AsObject **
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static JObject AsObject(JToken token)
+        private static JObject AsObject(JToken token)
         {
             if (token.Type != JTokenType.Object)
             {

@@ -16,7 +16,7 @@ namespace SpanJson.Formatters
         private static readonly T? ZeroFlag = GetZeroFlag();
 
         public static readonly EnumStringFlagsFormatter<T, TEnumBase, TSymbol, TResolver> Default =
-            new EnumStringFlagsFormatter<T, TEnumBase, TSymbol, TResolver>();
+            new();
 
         public T Deserialize(ref JsonReader<TSymbol> reader, IJsonFormatterResolver<TSymbol> resolver)
         {

@@ -14,7 +14,7 @@ using System.Text;
 
 namespace SpanJson.Internal
 {
-    partial class JsonReaderHelper
+    static partial class JsonReaderHelper
     {
         public static bool TryGetUnescapedBase64Bytes(in ReadOnlySpan<byte> utf8Source, int idx, [MaybeNullWhen(false)] out byte[] bytes)
         {

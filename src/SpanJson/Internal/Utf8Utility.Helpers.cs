@@ -16,7 +16,7 @@ using System.Runtime.Intrinsics.X86;
 
 namespace SpanJson.Internal
 {
-    partial class Utf8Utility
+    static partial class Utf8Utility
     {
         /// <summary>
         /// Given a machine-endian DWORD which four bytes of UTF-8 data, interprets the

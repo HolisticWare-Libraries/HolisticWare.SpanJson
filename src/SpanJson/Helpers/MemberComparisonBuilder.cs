@@ -36,15 +36,20 @@ namespace SpanJson.Helpers
                     {
                         result.Add(memberInfo.MemberName, memberInfo);
                     }
-                    var camelCaseName = StringMutator.ToCamelCaseWithCache(memberInfo.MemberName);
+                    var camelCaseName = StringMutator.ToCamelCase(memberInfo.MemberName);
                     if (!result.TryGetValue(camelCaseName, out _))
                     {
                         result.Add(camelCaseName, memberInfo);
                     }
-                    var snakeCaseName = StringMutator.ToSnakeCaseWithCache(memberInfo.MemberName);
+                    var snakeCaseName = StringMutator.ToSnakeCase(memberInfo.MemberName);
                     if (!result.TryGetValue(snakeCaseName, out _))
                     {
                         result.Add(snakeCaseName, memberInfo);
+                    }
+                    var flatcaseName = memberInfo.MemberName.ToLowerInvariant();
+                    if (!result.TryGetValue(flatcaseName, out _))
+                    {
+                        result.Add(flatcaseName, memberInfo);
                     }
                     var alias = memberInfo.Alias;
                     if (alias is not null)
@@ -53,15 +58,20 @@ namespace SpanJson.Helpers
                         {
                             result.Add(alias, memberInfo);
                         }
-                        camelCaseName = StringMutator.ToCamelCaseWithCache(alias);
+                        camelCaseName = StringMutator.ToCamelCase(alias);
                         if (!result.TryGetValue(camelCaseName, out _))
                         {
                             result.Add(camelCaseName, memberInfo);
                         }
-                        snakeCaseName = StringMutator.ToSnakeCaseWithCache(alias);
+                        snakeCaseName = StringMutator.ToSnakeCase(alias);
                         if (!result.TryGetValue(snakeCaseName, out _))
                         {
                             result.Add(snakeCaseName, memberInfo);
+                        }
+                        flatcaseName = alias.ToLowerInvariant();
+                        if (!result.TryGetValue(flatcaseName, out _))
+                        {
+                            result.Add(flatcaseName, memberInfo);
                         }
                     }
                 }

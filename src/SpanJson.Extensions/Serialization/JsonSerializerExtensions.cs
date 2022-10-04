@@ -143,6 +143,16 @@ namespace SpanJson.Serialization
         /// <summary>Deserializes the JSON to the specified .NET type using <see cref="NJsonSerializer"/>.</summary>
         /// <param name="jsonSerializer">The <see cref="NJsonSerializer"/> used to deserialize the object.</param>
         /// <param name="value">The JSON to deserialize.</param>
+        /// <returns>The deserialized object from the JSON string.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? DeserializeObject<T>(this NJsonSerializer jsonSerializer, string value)
+        {
+            return (T?)jsonSerializer.DeserializeObject(value, typeof(T));
+        }
+
+        /// <summary>Deserializes the JSON to the specified .NET type using <see cref="NJsonSerializer"/>.</summary>
+        /// <param name="jsonSerializer">The <see cref="NJsonSerializer"/> used to deserialize the object.</param>
+        /// <param name="value">The JSON to deserialize.</param>
         /// <param name="type">The type of the object to deserialize to.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
         public static object? DeserializeObject(this NJsonSerializer jsonSerializer, string value, Type? type = null)
@@ -170,6 +180,16 @@ namespace SpanJson.Serialization
             {
                 if (isCheckAdditionalContentNoSet) { jsonSerializer.SetCheckAdditionalContent(); }
             }
+        }
+
+        /// <summary>Deserializes the JSON to the specified .NET type using <see cref="NJsonSerializer"/>.</summary>
+        /// <param name="jsonSerializerPool">The <see cref="NJsonSerializer"/> pool used to deserialize the object.</param>
+        /// <param name="value">The JSON to deserialize.</param>
+        /// <returns>The deserialized object from the JSON string.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? DeserializeObject<T>(this ObjectPool<NJsonSerializer> jsonSerializerPool, string value)
+        {
+            return (T?)jsonSerializerPool.DeserializeObject(value, typeof(T));
         }
 
         /// <summary>Deserializes the JSON to the specified .NET type using <see cref="NJsonSerializer"/>.</summary>
@@ -467,6 +487,26 @@ namespace SpanJson.Serialization
         /// <summary>Deserializes the JSON to the specified .NET type using <see cref="NJsonSerializer"/>.</summary>
         /// <param name="jsonSerializer">The <see cref="NJsonSerializer"/> used to deserialize the object.</param>
         /// <param name="value">The JSON to deserialize.</param>
+        /// <returns>The deserialized object from the JSON string.</returns>
+        public static T? DeserializeFromByteArray<T>(this NJsonSerializer jsonSerializer, byte[] value)
+        {
+            return (T?)jsonSerializer.DeserializeFromByteArray(value, typeof(T));
+        }
+
+        /// <summary>Deserializes the JSON to the specified .NET type using <see cref="NJsonSerializer"/>.</summary>
+        /// <param name="jsonSerializer">The <see cref="NJsonSerializer"/> used to deserialize the object.</param>
+        /// <param name="value">The JSON to deserialize.</param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <returns>The deserialized object from the JSON string.</returns>
+        public static T? DeserializeFromByteArray<T>(this NJsonSerializer jsonSerializer, byte[] value, int offset, int count)
+        {
+            return (T?)jsonSerializer.DeserializeFromByteArray(value, offset, count, typeof(T));
+        }
+
+        /// <summary>Deserializes the JSON to the specified .NET type using <see cref="NJsonSerializer"/>.</summary>
+        /// <param name="jsonSerializer">The <see cref="NJsonSerializer"/> used to deserialize the object.</param>
+        /// <param name="value">The JSON to deserialize.</param>
         /// <param name="type">The type of the object to deserialize to.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
         public static object? DeserializeFromByteArray(this NJsonSerializer jsonSerializer, byte[] value, Type? type = null)
@@ -506,6 +546,26 @@ namespace SpanJson.Serialization
             {
                 if (isCheckAdditionalContentNoSet) { jsonSerializer.SetCheckAdditionalContent(); }
             }
+        }
+
+        /// <summary>Deserializes the JSON to the specified .NET type using <see cref="NJsonSerializer"/>.</summary>
+        /// <param name="jsonSerializerPool">The <see cref="NJsonSerializer"/> pool used to deserialize the object.</param>
+        /// <param name="value">The JSON to deserialize.</param>
+        /// <returns>The deserialized object from the JSON string.</returns>
+        public static T? DeserializeFromByteArray<T>(this ObjectPool<NJsonSerializer> jsonSerializerPool, byte[] value)
+        {
+            return (T?)jsonSerializerPool.DeserializeFromByteArray(value, typeof(T));
+        }
+
+        /// <summary>Deserializes the JSON to the specified .NET type using <see cref="NJsonSerializer"/>.</summary>
+        /// <param name="jsonSerializerPool">The <see cref="NJsonSerializer"/> pool used to deserialize the object.</param>
+        /// <param name="value">The JSON to deserialize.</param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <returns>The deserialized object from the JSON string.</returns>
+        public static T? DeserializeFromByteArray<T>(this ObjectPool<NJsonSerializer> jsonSerializerPool, byte[] value, int offset, int count)
+        {
+            return (T?)jsonSerializerPool.DeserializeFromByteArray(value, offset, count, typeof(T));
         }
 
         /// <summary>Deserializes the JSON to the specified .NET type using <see cref="NJsonSerializer"/>.</summary>
@@ -664,6 +724,15 @@ namespace SpanJson.Serialization
         /// <summary>Deserializes the JSON to the specified .NET type using <see cref="NJsonSerializer"/>.</summary>
         /// <param name="jsonSerializer">The <see cref="NJsonSerializer"/> used to deserialize the object.</param>
         /// <param name="inputStream">The JSON to deserialize.</param>
+        /// <returns>The deserialized object from the JSON string.</returns>
+        public static T? DeserializeFromStream<T>(this NJsonSerializer jsonSerializer, Stream inputStream)
+        {
+            return (T?)jsonSerializer.DeserializeFromStream(inputStream, typeof(T));
+        }
+
+        /// <summary>Deserializes the JSON to the specified .NET type using <see cref="NJsonSerializer"/>.</summary>
+        /// <param name="jsonSerializer">The <see cref="NJsonSerializer"/> used to deserialize the object.</param>
+        /// <param name="inputStream">The JSON to deserialize.</param>
         /// <param name="type">The type of the object to deserialize to.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
         public static object? DeserializeFromStream(this NJsonSerializer jsonSerializer, Stream inputStream, Type? type = null)
@@ -689,6 +758,16 @@ namespace SpanJson.Serialization
             {
                 if (isCheckAdditionalContentNoSet) { jsonSerializer.SetCheckAdditionalContent(); }
             }
+        }
+
+        /// <summary>Deserializes the JSON to the specified .NET type using <see cref="NJsonSerializer"/>.</summary>
+        /// <param name="jsonSerializerPool">The <see cref="NJsonSerializer"/> pool used to deserialize the object.</param>
+        /// <param name="inputStream">The JSON to deserialize.</param>
+        /// <returns>The deserialized object from the JSON string.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? DeserializeFromStream<T>(this ObjectPool<NJsonSerializer> jsonSerializerPool, Stream inputStream)
+        {
+            return (T?)jsonSerializerPool.DeserializeFromStream(inputStream, typeof(T));
         }
 
         /// <summary>Deserializes the JSON to the specified .NET type using <see cref="NJsonSerializer"/>.</summary>
@@ -817,6 +896,16 @@ namespace SpanJson.Serialization
         /// <summary>Deserializes the JSON to the specified .NET type using <see cref="NJsonSerializer"/>.</summary>
         /// <param name="jsonSerializer">The <see cref="NJsonSerializer"/> used to deserialize the object.</param>
         /// <param name="textReader">The JSON to deserialize.</param>
+        /// <returns>The deserialized object from the JSON string.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? DeserializeFromReader<T>(this NJsonSerializer jsonSerializer, TextReader textReader)
+        {
+            return (T?)jsonSerializer.DeserializeFromReader(textReader, typeof(T));
+        }
+
+        /// <summary>Deserializes the JSON to the specified .NET type using <see cref="NJsonSerializer"/>.</summary>
+        /// <param name="jsonSerializer">The <see cref="NJsonSerializer"/> used to deserialize the object.</param>
+        /// <param name="textReader">The JSON to deserialize.</param>
         /// <param name="type">The type of the object to deserialize to.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
         public static object? DeserializeFromReader(this NJsonSerializer jsonSerializer, TextReader textReader, Type? type = null)
@@ -842,6 +931,16 @@ namespace SpanJson.Serialization
             {
                 if (isCheckAdditionalContentNoSet) { jsonSerializer.SetCheckAdditionalContent(); }
             }
+        }
+
+        /// <summary>Deserializes the JSON to the specified .NET type using <see cref="NJsonSerializer"/>.</summary>
+        /// <param name="jsonSerializerPool">The <see cref="NJsonSerializer"/> pool used to deserialize the object.</param>
+        /// <param name="textReader">The JSON to deserialize.</param>
+        /// <returns>The deserialized object from the JSON string.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? DeserializeFromReader<T>(this ObjectPool<NJsonSerializer> jsonSerializerPool, TextReader textReader)
+        {
+            return (T?)jsonSerializerPool.DeserializeFromReader(textReader, typeof(T));
         }
 
         /// <summary>Deserializes the JSON to the specified .NET type using <see cref="NJsonSerializer"/>.</summary>

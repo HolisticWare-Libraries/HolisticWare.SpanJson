@@ -21,7 +21,7 @@ namespace SpanJson.Internal
 
     internal sealed class StringReadOnlySpanByteAscymmetricEqualityComparer : IAsymmetricEqualityComparer
     {
-        public static readonly StringReadOnlySpanByteAscymmetricEqualityComparer Instance = new StringReadOnlySpanByteAscymmetricEqualityComparer();
+        public static readonly StringReadOnlySpanByteAscymmetricEqualityComparer Instance = new();
 
         public bool Equals(byte[] x, byte[] y)
         {
@@ -63,7 +63,7 @@ namespace SpanJson.Internal
         Entry[] buckets;
         int size; // only use in writer lock
 
-        readonly object writerLock = new object();
+        readonly object writerLock = new();
         readonly float loadFactor;
         readonly IAsymmetricEqualityComparer comparer;
 

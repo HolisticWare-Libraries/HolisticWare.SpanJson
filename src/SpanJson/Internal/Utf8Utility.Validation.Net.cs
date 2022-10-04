@@ -15,7 +15,7 @@ using System.Runtime.Intrinsics.X86;
 
 namespace SpanJson.Internal
 {
-    unsafe partial class Utf8Utility
+    static unsafe partial class Utf8Utility
     {
         // Returns &inputBuffer[inputLength] if the input buffer is valid.
         /// <summary>
