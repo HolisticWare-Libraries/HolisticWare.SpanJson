@@ -53,20 +53,20 @@ namespace SpanJson.Linq
             };
             var jonsConverters = new List<Newtonsoft.Json.JsonConverter>
             {
-                new SpanJson.Converters.DynamicObjectConverter(),
-                new SpanJson.Converters.DynamicUtf16ArrayConverter(),
-                new SpanJson.Converters.DynamicUtf16NumberConverter(),
-                new SpanJson.Converters.DynamicUtf16StringConverter(),
-                new SpanJson.Converters.DynamicUtf8ArrayConverter(),
-                new SpanJson.Converters.DynamicUtf8NumberConverter(),
-                new SpanJson.Converters.DynamicUtf8StringConverter(),
+                SpanJson.Converters.DynamicObjectConverter.Instance,
+                SpanJson.Converters.DynamicUtf16ArrayConverter.Instance,
+                SpanJson.Converters.DynamicUtf16NumberConverter.Instance,
+                SpanJson.Converters.DynamicUtf16StringConverter.Instance,
+                SpanJson.Converters.DynamicUtf8ArrayConverter.Instance,
+                SpanJson.Converters.DynamicUtf8NumberConverter.Instance,
+                SpanJson.Converters.DynamicUtf8StringConverter.Instance,
 
-                new SpanJson.Converters.JsonDocumentConverter(),
-                new SpanJson.Converters.JsonElementConverter(),
+                SpanJson.Converters.JsonDocumentConverter.Instance,
+                SpanJson.Converters.JsonElementConverter.Instance,
 
                 SpanJson.Converters.JTokenConverter.Instance,
 
-                new SpanJson.Converters.CombGuidJTokenConverter(),
+                SpanJson.Converters.CombGuidJTokenConverter.Instance,
                 Newtonsoft.Json.Converters.IPAddressConverter.Instance,
                 Newtonsoft.Json.Converters.IPEndPointConverter.Instance,
             };
@@ -77,19 +77,7 @@ namespace SpanJson.Linq
                 converters.Add(item);
             }
 
-            _polymorphicDeserializerSettings = new NJsonSerializerSettings
-            {
-                ConstructorHandling = Newtonsoft.Json.ConstructorHandling.AllowNonPublicDefaultConstructor,
-
-                DateParseHandling = Newtonsoft.Json.DateParseHandling.None,
-
-                SerializationBinder = JsonSerializationBinder.Instance,
-                TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto
-            };
-            _polymorphicDeserializerSettings.Converters.Add(Newtonsoft.Json.Converters.IPAddressConverter.Instance);
-            _polymorphicDeserializerSettings.Converters.Add(Newtonsoft.Json.Converters.IPEndPointConverter.Instance);
-            _polymorphicDeserializerSettings.Converters.Add(Newtonsoft.Json.Converters.CombGuidConverter.Instance);
-            _polymorphicDeserializerSettings.Converters.Add(SpanJson.Converters.JTokenConverter.Instance);
+            _polymorphicDeserializerSettings = JsonSerializerPool.CreateDeserializerSettings(JsonKnownNamingPolicy.Unspecified, false, true);
         }
 
         public static NJsonSerializerSettings CreateSerializerSettings(Action<NJsonSerializerSettings> configSettings)

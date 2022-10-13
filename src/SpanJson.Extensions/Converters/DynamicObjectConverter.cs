@@ -4,6 +4,10 @@ namespace SpanJson.Converters;
 
 public class DynamicObjectConverter : Newtonsoft.Json.JsonConverter
 {
+    public static readonly DynamicObjectConverter Instance = new();
+
+    protected DynamicObjectConverter() { }
+
     public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object? value, Newtonsoft.Json.JsonSerializer serializer)
     {
         switch (value)

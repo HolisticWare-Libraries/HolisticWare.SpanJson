@@ -2,8 +2,12 @@
 
 namespace SpanJson.Converters;
 
-public class DynamicUtf8NumberConverter : Newtonsoft.Json.JsonConverter
+public sealed class DynamicUtf8NumberConverter : Newtonsoft.Json.JsonConverter
 {
+    public static readonly DynamicUtf8NumberConverter Instance = new();
+
+    private DynamicUtf8NumberConverter() { }
+
     public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object? value, Newtonsoft.Json.JsonSerializer serializer)
     {
         switch (value)

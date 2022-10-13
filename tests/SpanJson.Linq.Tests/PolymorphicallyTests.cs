@@ -1,4 +1,5 @@
-﻿using SpanJson.Document;
+﻿using CuteAnt;
+using SpanJson.Document;
 using SpanJson.Internal;
 using SpanJson.Linq;
 using SpanJson.Serialization;
@@ -258,6 +259,10 @@ namespace SpanJson.Tests
         [Fact]
         public static void IsPolymorphically()
         {
+            Assert.False(JsonMetadata.IsPolymorphic<int>());
+            Assert.False(JsonMetadata.IsPolymorphic<Uri>());
+            Assert.False(JsonMetadata.IsPolymorphic<Guid>());
+            Assert.False(JsonMetadata.IsPolymorphic<CombGuid>());
             Assert.False(JsonMetadata.IsPolymorphic<LayerSettings>());
             Assert.False(JsonMetadata.IsPolymorphic<IList<string>>());
         }

@@ -2,8 +2,12 @@
 
 namespace SpanJson.Converters;
 
-public class JsonElementConverter : JsonDocumentConverter
+public sealed class JsonElementConverter : JsonDocumentConverter
 {
+    public new static readonly JsonElementConverter Instance = new();
+
+    private JsonElementConverter() { }
+
     public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object? value, Newtonsoft.Json.JsonSerializer serializer)
     {
         switch (value)

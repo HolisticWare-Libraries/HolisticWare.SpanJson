@@ -2,8 +2,11 @@
 using System.Dynamic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Xml;
+using System.Xml.Linq;
 using CuteAnt;
 using SpanJson.Helpers;
+using SpanJson.Linq;
 using SpanJson.Resolvers;
 
 namespace SpanJson.Serialization;
@@ -20,7 +23,12 @@ public static class JsonMetadata
         }
     }
 
-    private static readonly ConcurrentDictionary<Type, bool> s_polymorphicTypeCache = new ConcurrentDictionary<Type, bool>();
+    private static readonly ConcurrentDictionary<Type, bool> s_polymorphicTypeCache;
+
+    static JsonMetadata()
+    {
+        s_polymorphicTypeCache = new();
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsPolymorphic<T>() => PolymorphicContainer<T>.IsPolymorphic;
@@ -69,20 +77,19 @@ public static class JsonMetadata
 
         Type implementedType = GetUnderlyingTypeLocal(type, parentType, memberInfo);
 
-        if (typeof(IDynamicMetaObjectProvider).IsAssignableFrom(implementedType))
+        if (implementedType.HasAttribute<JsonPolymorphismAttribute>(false))
         {
-            result = false;
+            result = true;
         }
         else if (implementedType == TypeConstants.ObjectType)
         {
             result = true;
         }
-        else if (implementedType.HasAttribute<JsonPolymorphismAttribute>(false))
+        else if (ShouldBeSkipped(implementedType))
         {
-            result = true;
+            result = false;
         }
-        // 只判断是否已经注册自定义 Formatter，IncludeNullsOriginalCaseResolver 作为默认的 Resolver，会确保应用程序所用的 custom formatter
-        else if (StandardResolvers.GetResolver<char, IncludeNullsOriginalCaseResolver<char>>().IsSupportedType(implementedType))
+        else if (IsSupportedType(implementedType))
         {
             result = false;
         }
@@ -96,7 +103,8 @@ public static class JsonMetadata
 
                     var fieldType = GetUnderlyingTypeLocal(fi.FieldType, type, fi);
 
-                    if (StandardResolvers.GetResolver<char, IncludeNullsOriginalCaseResolver<char>>().IsSupportedType(fieldType)) { continue; }
+                    if (ShouldBeSkipped(fieldType)) { continue; }
+                    if (IsSupportedType(fieldType)) { continue; }
 
                     if (fieldType.IsAbstract || fieldType.IsInterface) { result = true; break; }
 
@@ -116,7 +124,8 @@ public static class JsonMetadata
 
                     var propertyType = GetUnderlyingTypeLocal(pi.PropertyType, type, pi);
 
-                    if (StandardResolvers.GetResolver<char, IncludeNullsOriginalCaseResolver<char>>().IsSupportedType(propertyType)) { continue; }
+                    if (ShouldBeSkipped(propertyType)) { continue; }
+                    if (IsSupportedType(propertyType)) { continue; }
 
                     if (propertyType.IsAbstract || propertyType.IsInterface) { result = true; break; }
 
@@ -139,5 +148,80 @@ public static class JsonMetadata
         }
 
         return result;
+    }
+
+    private static bool ShouldBeSkipped(Type type)
+    {
+        if (typeof(IDynamicMetaObjectProvider).IsAssignableFrom(type))
+        {
+            return true;
+        }
+        else if (typeof(XObject).IsAssignableFrom(type))
+        {
+            return true;
+        }
+        else if (typeof(XmlNode).IsAssignableFrom(type))
+        {
+            return true;
+        }
+        else if (IsAnonymousType(type))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private static bool IsSupportedType(Type objectType)
+    {
+        if (IsBuiltInType(objectType)) { return true; }
+
+        if (StandardResolvers.GetResolver<char, IncludeNullsOriginalCaseResolver<char>>().IsSupportedType(objectType)) { return true; }
+
+        var converters = JToken.DefaultSerializerSettings.Converters;
+        if (converters is not null)
+        {
+            for (int i = 0; i < converters.Count; i++)
+            {
+                var converter = converters[i];
+
+                if (converter.CanConvert(objectType))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static Type[]? _allTypes;
+    private static bool IsBuiltInType(Type type)
+    {
+        _allTypes ??= typeof(ResolverBase).Assembly.GetTypes().Where(a => a.IsPublic).ToArray();
+        var allTypes = _allTypes;
+        foreach (var candidate in allTypes)
+        {
+            if (candidate.TryGetTypeOfGenericInterface(typeof(ICustomJsonFormatter<>), out _))
+            {
+                continue; // if it's a custom formatter, we skip it
+            }
+
+            if (candidate.TryGetTypeOfGenericInterface(typeof(IJsonFormatter<,>), out var argumentTypes) && argumentTypes.Length == 2)
+            {
+                if (argumentTypes[0] == type && (argumentTypes[1] == typeof(byte) || argumentTypes[1] == typeof(char)))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static bool IsAnonymousType(Type type)
+    {
+        return type.IsGenericType && type.Name.Contains("AnonymousType")
+               && (type.Name.StartsWith("<>", StringComparison.Ordinal) || type.Name.StartsWith("VB$", StringComparison.Ordinal))
+               && (type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic;
     }
 }

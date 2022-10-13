@@ -21,6 +21,14 @@ namespace SpanJson.Serialization
             s_defaultJsonSerializerPool = _defaultObjectPoolProvider.Create(new JsonSerializerObjectPolicy(null));
             s_jsonSerializerPoolCache = new DictionaryCache<NJsonSerializerSettings, ObjectPool<NJsonSerializer>>(DictionaryCacheConstants.SIZE_SMALL);
 
+            s_camelCaseResolver = new() { NamingStrategy = new CamelCaseNamingStrategy() };
+            s_snakeCaseResolver = new() { NamingStrategy = new SnakeCaseNamingStrategy() };
+            s_adaCaseResolver = new() { NamingStrategy = new AdaCaseNamingStrategy() };
+            s_macroCaseResolver = new() { NamingStrategy = new MacroCaseNamingStrategy() };
+            s_kebabCaseResolver = new() { NamingStrategy = new KebabCaseNamingStrategy() };
+            s_trainCaseResolver = new() { NamingStrategy = new TrainCaseNamingStrategy() };
+            s_cobolCaseResolver = new() { NamingStrategy = new CobolCaseNamingStrategy() };
+
             DefaultSerializerSettings = CreateSerializerSettings(JsonKnownNamingPolicy.Unspecified, excludeNulls: true, isPolymorphic: false);
             DefaultDeserializerSettings = CreateDeserializerSettings(JsonKnownNamingPolicy.Unspecified, excludeNulls: true, isPolymorphic: false);
             CamelCaseSerializerSettings = CreateSerializerSettings(JsonKnownNamingPolicy.CamelCase, excludeNulls: true, isPolymorphic: false);
@@ -109,6 +117,8 @@ namespace SpanJson.Serialization
             return _camelCaseDeserializerPool;
         }
 
+        private static readonly NDefaultContractResolver s_camelCaseResolver;
+
         sealed class CamelCaseNamingStrategy : NNamingStrategy
         {
             public CamelCaseNamingStrategy() : this(true, false, false) { }
@@ -156,6 +166,8 @@ namespace SpanJson.Serialization
             Interlocked.CompareExchange(ref _snakeCaseDeserializerPool, GetJsonSerializerPool(SnakeCaseDeserializerSettings), null);
             return _snakeCaseDeserializerPool;
         }
+
+        private static readonly NDefaultContractResolver s_snakeCaseResolver;
 
         sealed class SnakeCaseNamingStrategy : NNamingStrategy
         {
@@ -205,6 +217,8 @@ namespace SpanJson.Serialization
             return _adaCaseDeserializerPool;
         }
 
+        private static readonly NDefaultContractResolver s_adaCaseResolver;
+
         sealed class AdaCaseNamingStrategy : NNamingStrategy
         {
             public AdaCaseNamingStrategy() : this(true, false, false) { }
@@ -252,6 +266,8 @@ namespace SpanJson.Serialization
             Interlocked.CompareExchange(ref _macroCaseDeserializerPool, GetJsonSerializerPool(MacroCaseDeserializerSettings), null);
             return _macroCaseDeserializerPool;
         }
+
+        private static readonly NDefaultContractResolver s_macroCaseResolver;
 
         sealed class MacroCaseNamingStrategy : NNamingStrategy
         {
@@ -301,6 +317,8 @@ namespace SpanJson.Serialization
             return _kebabCaseDeserializerPool;
         }
 
+        private static readonly NDefaultContractResolver s_kebabCaseResolver;
+
         sealed class KebabCaseNamingStrategy : NNamingStrategy
         {
             public KebabCaseNamingStrategy() : this(true, false, false) { }
@@ -348,6 +366,8 @@ namespace SpanJson.Serialization
             Interlocked.CompareExchange(ref _trainCaseDeserializerPool, GetJsonSerializerPool(TrainCaseDeserializerSettings), null);
             return _trainCaseDeserializerPool;
         }
+
+        private static readonly NDefaultContractResolver s_trainCaseResolver;
 
         sealed class TrainCaseNamingStrategy : NNamingStrategy
         {
@@ -397,6 +417,8 @@ namespace SpanJson.Serialization
             return _cobolCaseDeserializerPool;
         }
 
+        private static readonly NDefaultContractResolver s_cobolCaseResolver;
+
         sealed class CobolCaseNamingStrategy : NNamingStrategy
         {
             public CobolCaseNamingStrategy() : this(true, false, false) { }
@@ -438,29 +460,38 @@ namespace SpanJson.Serialization
             converters.Add(Newtonsoft.Json.Converters.IPEndPointConverter.Instance);
             converters.Add(Newtonsoft.Json.Converters.CombGuidConverter.Instance);
             converters.Add(SpanJson.Converters.JTokenConverter.Instance);
+            converters.Add(SpanJson.Converters.JsonDocumentConverter.Instance);
+            converters.Add(SpanJson.Converters.JsonElementConverter.Instance);
+            converters.Add(SpanJson.Converters.DynamicObjectConverter.Instance);
+            converters.Add(SpanJson.Converters.DynamicUtf16ArrayConverter.Instance);
+            converters.Add(SpanJson.Converters.DynamicUtf16NumberConverter.Instance);
+            converters.Add(SpanJson.Converters.DynamicUtf16StringConverter.Instance);
+            converters.Add(SpanJson.Converters.DynamicUtf8ArrayConverter.Instance);
+            converters.Add(SpanJson.Converters.DynamicUtf8NumberConverter.Instance);
+            converters.Add(SpanJson.Converters.DynamicUtf8StringConverter.Instance);
 
             switch (namingPolicy)
             {
                 case JsonKnownNamingPolicy.CamelCase:
-                    serializerSettings.ContractResolver = new NDefaultContractResolver { NamingStrategy = new CamelCaseNamingStrategy() };
+                    serializerSettings.ContractResolver = s_camelCaseResolver;
                     break;
                 case JsonKnownNamingPolicy.SnakeCase:
-                    serializerSettings.ContractResolver = new NDefaultContractResolver { NamingStrategy = new SnakeCaseNamingStrategy() };
+                    serializerSettings.ContractResolver = s_snakeCaseResolver;
                     break;
                 case JsonKnownNamingPolicy.AdaCase:
-                    serializerSettings.ContractResolver = new NDefaultContractResolver { NamingStrategy = new AdaCaseNamingStrategy() };
+                    serializerSettings.ContractResolver = s_adaCaseResolver;
                     break;
                 case JsonKnownNamingPolicy.MacroCase:
-                    serializerSettings.ContractResolver = new NDefaultContractResolver { NamingStrategy = new MacroCaseNamingStrategy() };
+                    serializerSettings.ContractResolver = s_macroCaseResolver;
                     break;
                 case JsonKnownNamingPolicy.KebabCase:
-                    serializerSettings.ContractResolver = new NDefaultContractResolver { NamingStrategy = new KebabCaseNamingStrategy() };
+                    serializerSettings.ContractResolver = s_kebabCaseResolver;
                     break;
                 case JsonKnownNamingPolicy.TrainCase:
-                    serializerSettings.ContractResolver = new NDefaultContractResolver { NamingStrategy = new TrainCaseNamingStrategy() };
+                    serializerSettings.ContractResolver = s_trainCaseResolver;
                     break;
                 case JsonKnownNamingPolicy.CobolCase:
-                    serializerSettings.ContractResolver = new NDefaultContractResolver { NamingStrategy = new CobolCaseNamingStrategy() };
+                    serializerSettings.ContractResolver = s_cobolCaseResolver;
                     break;
             }
             serializerSettings.SerializationBinder = JsonSerializationBinder.Instance;
@@ -504,25 +535,25 @@ namespace SpanJson.Serialization
             switch (namingPolicy)
             {
                 case JsonKnownNamingPolicy.CamelCase:
-                    serializerSettings.ContractResolver = new NDefaultContractResolver { NamingStrategy = new CamelCaseNamingStrategy() };
+                    serializerSettings.ContractResolver = s_camelCaseResolver;
                     break;
                 case JsonKnownNamingPolicy.SnakeCase:
-                    serializerSettings.ContractResolver = new NDefaultContractResolver { NamingStrategy = new SnakeCaseNamingStrategy() };
+                    serializerSettings.ContractResolver = s_snakeCaseResolver;
                     break;
                 case JsonKnownNamingPolicy.AdaCase:
-                    serializerSettings.ContractResolver = new NDefaultContractResolver { NamingStrategy = new AdaCaseNamingStrategy() };
+                    serializerSettings.ContractResolver = s_adaCaseResolver;
                     break;
                 case JsonKnownNamingPolicy.MacroCase:
-                    serializerSettings.ContractResolver = new NDefaultContractResolver { NamingStrategy = new MacroCaseNamingStrategy() };
+                    serializerSettings.ContractResolver = s_macroCaseResolver;
                     break;
                 case JsonKnownNamingPolicy.KebabCase:
-                    serializerSettings.ContractResolver = new NDefaultContractResolver { NamingStrategy = new KebabCaseNamingStrategy() };
+                    serializerSettings.ContractResolver = s_kebabCaseResolver;
                     break;
                 case JsonKnownNamingPolicy.TrainCase:
-                    serializerSettings.ContractResolver = new NDefaultContractResolver { NamingStrategy = new TrainCaseNamingStrategy() };
+                    serializerSettings.ContractResolver = s_trainCaseResolver;
                     break;
                 case JsonKnownNamingPolicy.CobolCase:
-                    serializerSettings.ContractResolver = new NDefaultContractResolver { NamingStrategy = new CobolCaseNamingStrategy() };
+                    serializerSettings.ContractResolver = s_cobolCaseResolver;
                     break;
             }
             serializerSettings.SerializationBinder = JsonSerializationBinder.Instance;
