@@ -1,16 +1,16 @@
 # SpanJson
 
 ```
-dotnet build src/SpanJson/SpanJson.Netstandard.csproj
-dotnet build src/SpanJson/SpanJson.csproj
-dotnet build src/SpanJson.Extensions/SpanJson.Extensions.csproj 
-dotnet build src/SpanJson.Extensions/SpanJson.Extensions.Netstandard.csproj 
+dotnet build --configuration Release src/SpanJson/SpanJson.Netstandard.csproj
+dotnet build --configuration Release src/SpanJson/SpanJson.csproj
+dotnet build --configuration Release src/SpanJson.Extensions/SpanJson.Extensions.csproj 
+dotnet build --configuration Release src/SpanJson.Extensions/SpanJson.Extensions.Netstandard.csproj 
 
 
-dotnet pack src/SpanJson/SpanJson.Netstandard.csproj
-dotnet pack src/SpanJson/SpanJson.csproj
-dotnet pack src/SpanJson.Extensions/SpanJson.Extensions.csproj 
-dotnet pack src/SpanJson.Extensions/SpanJson.Extensions.Netstandard.csproj 
+dotnet pack --configuration Release src/SpanJson/SpanJson.Netstandard.csproj
+dotnet pack --configuration Release src/SpanJson/SpanJson.csproj
+dotnet pack --configuration Release src/SpanJson.Extensions/SpanJson.Extensions.csproj 
+dotnet pack --configuration Release src/SpanJson.Extensions/SpanJson.Extensions.Netstandard.csproj 
 
 
 dotnet build SpanJson.sln
