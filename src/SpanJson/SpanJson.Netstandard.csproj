@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet">
-    <PackageId>HolisticWare.SpanJson.Unofficial</PackageId>
+    <PackageId>HolisticWare.SpanJson.netstandard</PackageId>
     <Title>SpanJson (Unofficial).</Title>
     <Description>SpanJson(Unofficial) is a JSON serializer for .Net451+</Description>
     <PackageTags>JSON</PackageTags>
