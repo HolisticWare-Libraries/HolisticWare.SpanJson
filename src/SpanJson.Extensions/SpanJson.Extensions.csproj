@@ -8,10 +8,11 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Nullable>enable</Nullable>
     <NoWarn>$(NoWarn);1701;1702</NoWarn>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet">
-    <PackageId>SpanJson.Extensions</PackageId>
+    <PackageId>HolisticWare.SpanJson.Extensions</PackageId>
     <Title>SpanJson.Extensions.</Title>
     <Description>SpanJson ASP.NET Core Formatter is the ASP.NET Core formatter package for SpanJson for ASP.NET Core 2.1+</Description>
     <PackageTags>JSON;aspnetcore</PackageTags>

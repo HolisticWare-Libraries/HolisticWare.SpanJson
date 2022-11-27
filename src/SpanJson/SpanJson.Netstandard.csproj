@@ -7,10 +7,11 @@
     <AssemblyName>SpanJson</AssemblyName>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <NoWarn>$(NoWarn);1701;1702;</NoWarn>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet">
-    <PackageId>SpanJson.Unofficial</PackageId>
+    <PackageId>HolisticWare.SpanJson.Unofficial</PackageId>
     <Title>SpanJson (Unofficial).</Title>
     <Description>SpanJson(Unofficial) is a JSON serializer for .Net451+</Description>
     <PackageTags>JSON</PackageTags>

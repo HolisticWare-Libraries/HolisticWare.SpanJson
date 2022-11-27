@@ -2,6 +2,8 @@
   <!-- Set the repository root into a variable -->
   <PropertyGroup>
     <SourceRoot>$(MSBuildThisFileDirectory)</SourceRoot>
+    <PackageOutputPath>../../output/</PackageOutputPath>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <Import Project="$(SourceRoot)/build/Dependencies.props" />

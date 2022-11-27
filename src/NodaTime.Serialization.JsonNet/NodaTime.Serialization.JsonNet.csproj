@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet">
-    <PackageId>NodaTime.Serialization.JsonNet.Unofficial</PackageId>
+    <PackageId>HolisticWare.NodaTime.Serialization.JsonNet.Unofficial</PackageId>
     <Title>NodaTime.Serialization.JsonNet (Unofficial).</Title>
     <Description>Provides serialization support between Noda Time and Json.NET.</Description>
     <PackageTags>nodatime;json;jsonnet</PackageTags>

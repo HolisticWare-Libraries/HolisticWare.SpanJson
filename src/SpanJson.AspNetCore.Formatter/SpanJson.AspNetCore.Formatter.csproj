@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet">
-    <PackageId>SpanJson.AspNetCore.Formatter.Unofficial</PackageId>
+    <PackageId>HolisticWare.SpanJson.AspNetCore.Formatter</PackageId>
     <Title>SpanJson.AspNetCore.Formatter (Unofficial).</Title>
     <Description>SpanJson ASP.NET Core Formatter is the ASP.NET Core formatter package for SpanJson for ASP.NET Core 2.1+</Description>
     <PackageTags>JSON;aspnetcore</PackageTags>

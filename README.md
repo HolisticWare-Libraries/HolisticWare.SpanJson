@@ -1,4 +1,23 @@
 # SpanJson
+
+```
+dotnet build src/SpanJson/SpanJson.Netstandard.csproj
+dotnet build src/SpanJson/SpanJson.csproj
+dotnet build src/SpanJson.Extensions/SpanJson.Extensions.csproj 
+dotnet build src/SpanJson.Extensions/SpanJson.Extensions.Netstandard.csproj 
+
+
+dotnet pack src/SpanJson/SpanJson.Netstandard.csproj
+dotnet pack src/SpanJson/SpanJson.csproj
+dotnet pack src/SpanJson.Extensions/SpanJson.Extensions.csproj 
+dotnet pack src/SpanJson.Extensions/SpanJson.Extensions.Netstandard.csproj 
+
+
+dotnet build SpanJson.sln
+dotnet build SpanJson.CrossPlatform.sln
+dotnet pack SpanJson.CrossPlatform.sln
+```
+
 [![Build status](https://ci.appveyor.com/api/projects/status/h49loskhn09g03in/branch/master?svg=true)](https://ci.appveyor.com/project/Tornhoof/spanjson/branch/master)
 [![NuGet](https://img.shields.io/nuget/v/SpanJson.svg)](https://www.nuget.org/packages/SpanJson)
 
