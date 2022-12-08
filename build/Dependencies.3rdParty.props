@@ -3,22 +3,24 @@
   <PropertyGroup>
     <!-- Common packages -->
     <BenDemystifierPackageVersion>0.4.1</BenDemystifierPackageVersion>
+    <ClosedXMLPackageVersion>0.97.0</ClosedXMLPackageVersion>
     <CommandLineParserPackageVersion>2.8.0</CommandLineParserPackageVersion>
-    <CronExpressionDescriptorPackageVersion>2.16.0</CronExpressionDescriptorPackageVersion>
+    <CronExpressionDescriptorPackageVersion>2.17.2</CronExpressionDescriptorPackageVersion>
     <FastMemberSigned13PackageVersion>1.3.0</FastMemberSigned13PackageVersion>
     <FastMemberSignedPackageVersion>1.5.0</FastMemberSignedPackageVersion>
     <IdentityModelPackageVersion>6.0.0</IdentityModelPackageVersion>
     <MoreLinq2PackageVersion>2.10.0</MoreLinq2PackageVersion>
     <MoreLinqPackageVersion>3.3.2</MoreLinqPackageVersion>
-    <NodaTimePackageVersion>3.1.2</NodaTimePackageVersion>
+    <NodaTimePackageVersion>3.1.6</NodaTimePackageVersion>
     <NCrontabSignedPackageVersion>3.3.2</NCrontabSignedPackageVersion>
     <OptionalPackageVersion>4.0.0</OptionalPackageVersion>
     <SystemLinqDynamicCorePackageVersion>1.2.18</SystemLinqDynamicCorePackageVersion>
     <SuperpowerPackageVersion>3.0.0</SuperpowerPackageVersion>
-    <ZStringPackageVersion>2.4.4</ZStringPackageVersion>
+    <ZStringPackageVersion>2.5.0</ZStringPackageVersion>
 
-    <NullablePackageVersion>1.3.0</NullablePackageVersion>
+    <NullablePackageVersion>1.3.1</NullablePackageVersion>
     <NullabilityInfoPackageVersion>1.0.7</NullabilityInfoPackageVersion>
+    <NullabilityPackageVersion>2.0.4</NullabilityPackageVersion>
     <IsExternalInitPackageVersion>1.0.3</IsExternalInitPackageVersion>
 
     <AutoMapperPackageVersion>11.0.1</AutoMapperPackageVersion>
@@ -54,18 +56,18 @@
     <Lz4netNETCoreSignedPackageVersion>1.0.15.93</Lz4netNETCoreSignedPackageVersion>
 
     <!-- Database related packages -->
-    <CsvHelperPackageVersion>27.2.1</CsvHelperPackageVersion>
-    <DocumentFormatOpenXmlPackageVersion>2.16.0</DocumentFormatOpenXmlPackageVersion>
+    <CsvHelperPackageVersion>29.0.0</CsvHelperPackageVersion>
+    <DocumentFormatOpenXmlPackageVersion>2.18.0</DocumentFormatOpenXmlPackageVersion>
     <ExcelNumberFormatPackageVersion>1.1.0</ExcelNumberFormatPackageVersion>
     <RemotionLinqPackageVersion>2.2.0</RemotionLinqPackageVersion>
-    <ConsulPackageVersion>1.6.10.6</ConsulPackageVersion>
+    <ConsulPackageVersion>1.6.10.7</ConsulPackageVersion>
     <DapperStrongNamePackageVersion>2.0.123</DapperStrongNamePackageVersion>
-    <MicrosoftSqlServerTypesPackageVersion>160.600.9-ctp2p0</MicrosoftSqlServerTypesPackageVersion>
-    <MongoDBBsonPackageVersion>2.16.0</MongoDBBsonPackageVersion>
-    <MongoDBDriverCorePackageVersion>2.16.0</MongoDBDriverCorePackageVersion>
-    <MongoDBDriverPackageVersion>2.16.0</MongoDBDriverPackageVersion>
-    <MongoDBDriverGridFSPackageVersion>2.16.0</MongoDBDriverGridFSPackageVersion>
-    <mongocsharpdriverPackageVersion>2.16.0</mongocsharpdriverPackageVersion>
+    <MicrosoftSqlServerTypesPackageVersion>160.900.6-rc0</MicrosoftSqlServerTypesPackageVersion>
+    <MongoDBBsonPackageVersion>2.17.1</MongoDBBsonPackageVersion>
+    <MongoDBDriverCorePackageVersion>2.17.1</MongoDBDriverCorePackageVersion>
+    <MongoDBDriverPackageVersion>2.17.1</MongoDBDriverPackageVersion>
+    <MongoDBDriverGridFSPackageVersion>2.17.1</MongoDBDriverGridFSPackageVersion>
+    <mongocsharpdriverPackageVersion>2.17.1</mongocsharpdriverPackageVersion>
     <MongoDBBsonSignedPackageVersion>2.14.1</MongoDBBsonSignedPackageVersion>
     <MongoDBDriverCoreSignedPackageVersion>2.14.1</MongoDBDriverCoreSignedPackageVersion>
     <MongoDBDriverSignedPackageVersion>2.14.1</MongoDBDriverSignedPackageVersion>
@@ -75,10 +77,10 @@
     <MongoDBDriverStrongNamePackageVersion>2.9.3</MongoDBDriverStrongNamePackageVersion>
     <MongoDBDriverGridFSStrongNamePackageVersion>2.9.3</MongoDBDriverGridFSStrongNamePackageVersion>
     <mongocsharpdriverStrongNamePackageVersion>2.9.3</mongocsharpdriverStrongNamePackageVersion>
-    <MySqlConnectorPackageVersion>2.1.10</MySqlConnectorPackageVersion>
-    <NpgsqlPackageVersion>6.0.4</NpgsqlPackageVersion>
+    <MySqlConnectorPackageVersion>2.1.13</MySqlConnectorPackageVersion>
+    <NpgsqlPackageVersion>6.0.7</NpgsqlPackageVersion>
     <OracleManagedDataAccessCorePackageVersion>3.21.61</OracleManagedDataAccessCorePackageVersion>
-    <StackExchangeRedisPackageVersion>2.6.48</StackExchangeRedisPackageVersion>
+    <StackExchangeRedisPackageVersion>2.6.66</StackExchangeRedisPackageVersion>
     <SystemDataSQLiteCorePackageVersion>1.0.116</SystemDataSQLiteCorePackageVersion>
 
     <!-- Hosting related packages -->
@@ -88,26 +90,26 @@
     <TopshelfSerilogPackageVersion>4.3.0</TopshelfSerilogPackageVersion>
 
     <!-- Logging related packages -->
-    <NLogPackageVersion>5.0.4</NLogPackageVersion>
-    <NLogDevPackageVersion>5.0.4</NLogDevPackageVersion>
-    <NLogExtensionsHostingPackageVersion>5.0.4</NLogExtensionsHostingPackageVersion>
-    <NLogExtensionsLoggingPackageVersion>5.0.4</NLogExtensionsLoggingPackageVersion>
-    <NLogWebAspNetCorePackageVersion>5.1.4</NLogWebAspNetCorePackageVersion>
+    <NLogPackageVersion>5.1.0</NLogPackageVersion>
+    <NLogDevPackageVersion>5.1.0</NLogDevPackageVersion>
+    <NLogExtensionsHostingPackageVersion>5.2.0</NLogExtensionsHostingPackageVersion>
+    <NLogExtensionsLoggingPackageVersion>5.2.0</NLogExtensionsLoggingPackageVersion>
+    <NLogWebAspNetCorePackageVersion>5.2.0</NLogWebAspNetCorePackageVersion>
 
-    <SerilogPackageVersion>2.11.0</SerilogPackageVersion>
-    <SerilogDevPackageVersion>2.11.0</SerilogDevPackageVersion>
-    <SerilogAspNetCorePackageVersion>6.0.1</SerilogAspNetCorePackageVersion>
+    <SerilogPackageVersion>2.12.0</SerilogPackageVersion>
+    <SerilogDevPackageVersion>2.12.0</SerilogDevPackageVersion>
+    <SerilogAspNetCorePackageVersion>6.1.0</SerilogAspNetCorePackageVersion>
     <SerilogExtensionsLoggingPackageVersion>3.1.0</SerilogExtensionsLoggingPackageVersion>
     <SerilogExtensionsHostingPackageVersion>5.0.1</SerilogExtensionsHostingPackageVersion>
     <SerilogExtensionsLoggingFilePackageVersion>3.0.0</SerilogExtensionsLoggingFilePackageVersion>
     <SerilogFormattingCompactPackageVersion>1.1.1-dev-00944</SerilogFormattingCompactPackageVersion>
     <SerilogSinksAsyncPackageVersion>1.5.0</SerilogSinksAsyncPackageVersion>
-    <SerilogSinksConsolePackageVersion>4.0.1</SerilogSinksConsolePackageVersion>
+    <SerilogSinksConsolePackageVersion>4.1.0</SerilogSinksConsolePackageVersion>
     <SerilogSinksDebugPackageVersion>2.0.0</SerilogSinksDebugPackageVersion>
     <SerilogSinksFilePackageVersion>5.0.1-dev-00947</SerilogSinksFilePackageVersion>
 
     <SerilogSettingsAppSettingsPackageVersion>2.2.3-dev-00066</SerilogSettingsAppSettingsPackageVersion>
-    <SerilogSettingsConfigurationPackageVersion>3.3.1-dev-00337</SerilogSettingsConfigurationPackageVersion>
+    <SerilogSettingsConfigurationPackageVersion>3.4.0</SerilogSettingsConfigurationPackageVersion>
 
     <SerilogEnrichersEnvironmentPackageVersion>2.2.0</SerilogEnrichersEnvironmentPackageVersion>
     <SerilogEnrichersProcessPackageVersion>2.0.2</SerilogEnrichersProcessPackageVersion>
@@ -149,8 +151,8 @@
     <LibuvPackageVersion>1.10.0</LibuvPackageVersion>
     <LibuvSharedPackageVersion>1.42.0.448</LibuvSharedPackageVersion>
 
-    <MimeKitPackageVersion>3.4.1</MimeKitPackageVersion>
-    <MailKitPackageVersion>3.4.1</MailKitPackageVersion>
+    <MimeKitPackageVersion>3.4.3</MimeKitPackageVersion>
+    <MailKitPackageVersion>3.4.3</MailKitPackageVersion>
 
     <!-- Serialization related packages -->
     <GoogleApiCommonProtosPackageVersion>2.3.0</GoogleApiCommonProtosPackageVersion>
@@ -160,8 +162,8 @@
     <MessagePackPackageVersion>2.2.85</MessagePackPackageVersion>
     <MessagePackAnalyzerPackageVersion>2.2.85</MessagePackAnalyzerPackageVersion>
     <NewtonsoftJsonBsonPackageVersion>1.0.2</NewtonsoftJsonBsonPackageVersion>
-    <NewtonsoftJsonPackageVersion>13.0.1</NewtonsoftJsonPackageVersion>
-    <NJsonSchemaPackageVersion>10.7.2</NJsonSchemaPackageVersion>
+    <NewtonsoftJsonPackageVersion>13.0.2</NewtonsoftJsonPackageVersion>
+    <NJsonSchemaPackageVersion>10.8.0</NJsonSchemaPackageVersion>
     <ProtobufNet2PackageVersion>2.4.6</ProtobufNet2PackageVersion>
     <ProtobufNetPackageVersion>3.1.4</ProtobufNetPackageVersion>
     <ProtobufNetDataPackageVersion>4.0.0</ProtobufNetDataPackageVersion>

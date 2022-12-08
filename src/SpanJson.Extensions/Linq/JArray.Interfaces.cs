@@ -52,7 +52,7 @@ namespace SpanJson.Linq
         /// </exception>
         public void Insert(int index, JToken item)
         {
-            InsertItem(index, item, false);
+            InsertItem(index, item, false, copyAnnotations: true);
         }
 
         /// <summary>

@@ -54,7 +54,7 @@ namespace SpanJson.Linq
 
         void IList<JToken>.Insert(int index, JToken item)
         {
-            InsertItem(index, item, false);
+            InsertItem(index, item, false, copyAnnotations: true);
         }
 
         void IList<JToken>.RemoveAt(int index)
@@ -126,7 +126,7 @@ namespace SpanJson.Linq
 
         void IList.Insert(int index, object? value)
         {
-            InsertItem(index, JContainer.EnsureValue(value), false);
+            InsertItem(index, JContainer.EnsureValue(value), false, copyAnnotations: false);
         }
 
         bool IList.IsFixedSize => false;

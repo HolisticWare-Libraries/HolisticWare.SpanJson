@@ -38,9 +38,9 @@ namespace SpanJson.Linq
             return ValuesEquals(this, other);
         }
 
-        internal override JToken CloneToken()
+        internal override JToken CloneToken(JsonCloneSettings? settings)
         {
-            return new JValue(this);
+            return new JValue(this, settings);
         }
 
         /// <summary>Creates a <see cref="JValue"/> comment with the given value.</summary>

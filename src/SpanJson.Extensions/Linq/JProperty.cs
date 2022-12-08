@@ -155,7 +155,7 @@ namespace SpanJson.Linq
 
                 if (_content._token is null)
                 {
-                    InsertItem(0, newValue, false);
+                    InsertItem(0, newValue, false, copyAnnotations: true);
                 }
                 else
                 {
@@ -167,7 +167,13 @@ namespace SpanJson.Linq
         /// <summary>Initializes a new instance of the <see cref="JProperty"/> class from another <see cref="JProperty"/> object.</summary>
         /// <param name="other">A <see cref="JProperty"/> object to copy from.</param>
         public JProperty(JProperty other)
-            : base(other)
+            : base(other, settings: null)
+        {
+            _name = other.Name;
+        }
+
+        internal JProperty(JProperty other, JsonCloneSettings? settings)
+            : base(other, settings)
         {
             _name = other.Name;
         }
@@ -209,14 +215,14 @@ namespace SpanJson.Linq
             return _content.IndexOf(item);
         }
 
-        internal override bool InsertItem(int index, JToken? item, bool skipParentCheck)
+        internal override bool InsertItem(int index, JToken? item, bool skipParentCheck, bool copyAnnotations)
         {
             // don't add comments to JProperty
             if (item is not null && item.Type == JTokenType.Comment) { return false; }
 
             if (Value is not null) { ThrowHelper2.ThrowJsonException_Cannot_have_multiple_values_JProperty(); }
 
-            return base.InsertItem(0, item, false);
+            return base.InsertItem(0, item, false, copyAnnotations);
         }
 
         internal override bool ContainsItem(JToken? item)
@@ -244,9 +250,9 @@ namespace SpanJson.Linq
             return (node is JProperty t && _name == t.Name && ContentsEqual(t));
         }
 
-        internal override JToken CloneToken()
+        internal override JToken CloneToken(JsonCloneSettings? settings)
         {
-            return new JProperty(this);
+            return new JProperty(this, settings);
         }
 
         /// <summary>Gets the node type for this <see cref="JToken"/>.</summary>

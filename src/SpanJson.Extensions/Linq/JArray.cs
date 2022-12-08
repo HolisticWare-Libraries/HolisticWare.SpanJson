@@ -49,7 +49,15 @@ namespace SpanJson.Linq
 
         /// <summary>Initializes a new instance of the <see cref="JArray"/> class from another <see cref="JArray"/> object.</summary>
         /// <param name="other">A <see cref="JArray"/> object to copy from.</param>
-        public JArray(JArray other) : base(other) { }
+        public JArray(JArray other)
+            : base(other, settings: null)
+        {
+        }
+
+        internal JArray(JArray other, JsonCloneSettings? settings)
+            : base(other, settings)
+        {
+        }
 
         /// <summary>Initializes a new instance of the <see cref="JArray"/> class with the specified content.</summary>
         /// <param name="content">The contents of the array.</param>
@@ -66,7 +74,7 @@ namespace SpanJson.Linq
             {
                 if (token.Type == JTokenType.Array)
                 {
-                    AddContainer((JArray)token);
+                    AddContainer((JArray)token, settings: null);
                 }
                 else
                 {
@@ -84,9 +92,9 @@ namespace SpanJson.Linq
             return (node is JArray t && ContentsEqual(t));
         }
 
-        internal override JToken CloneToken()
+        internal override JToken CloneToken(JsonCloneSettings? settings = null)
         {
-            return new JArray(this);
+            return new JArray(this, settings);
         }
 
         /// <summary>Gets the <see cref="JToken"/> with the specified key.</summary>

@@ -11,10 +11,20 @@
         /// <returns>A new instance of the <see cref="JToken"/>.</returns>
         public JToken DeepClone()
         {
-            return CloneToken();
+            return CloneToken(settings: null);
         }
 
-        internal abstract JToken CloneToken();
+        /// <summary>
+        /// Creates a new instance of the <see cref="JToken"/>. All child tokens are recursively cloned.
+        /// </summary>
+        /// <param name="settings">A <see cref="JsonCloneSettings"/> object to configure cloning settings.</param>
+        /// <returns>A new instance of the <see cref="JToken"/>.</returns>
+        public JToken DeepClone(JsonCloneSettings settings)
+        {
+            return CloneToken(settings);
+        }
+
+        internal abstract JToken CloneToken(JsonCloneSettings? settings);
 
         /// <summary>Compares the values of two tokens, including the values of all descendant tokens.</summary>
         /// <param name="t1">The first <see cref="JToken"/> to compare.</param>

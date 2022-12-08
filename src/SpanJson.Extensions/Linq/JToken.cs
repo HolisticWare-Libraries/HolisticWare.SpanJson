@@ -162,22 +162,22 @@ namespace SpanJson.Linq
 
         /// <summary>Adds the specified content immediately after this token.</summary>
         /// <param name="content">A content object that contains simple content or a collection of content objects to be added after this token.</param>
-        public void AddAfterSelf(object content)
+        public void AddAfterSelf(object? content)
         {
             if (_parent is null) { ThrowHelper2.ThrowInvalidOperationException_The_parent_is_missing(); }
 
             int index = _parent.IndexOfItem(this);
-            _ = _parent.TryAddInternal(index + 1, content, false);
+            _ = _parent.TryAddInternal(index + 1, content, false, copyAnnotations: true);
         }
 
         /// <summary>Adds the specified content immediately before this token.</summary>
         /// <param name="content">A content object that contains simple content or a collection of content objects to be added before this token.</param>
-        public void AddBeforeSelf(object content)
+        public void AddBeforeSelf(object? content)
         {
             if (_parent is null) { ThrowHelper2.ThrowInvalidOperationException_The_parent_is_missing(); }
 
             int index = _parent.IndexOfItem(this);
-            _ = _parent.TryAddInternal(index, content, false);
+            _ = _parent.TryAddInternal(index, content, false, copyAnnotations: true);
         }
 
         /// <summary>Gets the <see cref="JToken"/> with the specified key.</summary>

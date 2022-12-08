@@ -41,24 +41,29 @@ namespace SpanJson.Linq
 
         internal JContainer() { }
 
-        internal JContainer(JContainer other)
+        internal JContainer(JContainer other, JsonCloneSettings? settings)
             : this()
         {
-            AddContainer(other);
+            AddContainer(other, settings);
         }
 
-        internal void AddContainer(JContainer other)
+        internal void AddContainer(JContainer other, JsonCloneSettings? settings)
         {
             if (other is null) { ThrowHelper.ThrowArgumentNullException(ExceptionArgument.other); }
+
+            bool copyAnnotations = settings?.CopyAnnotations ?? true;
+
+            if (copyAnnotations)
+            {
+                CopyAnnotations(this, other);
+            }
 
             int i = 0;
             foreach (JToken child in other)
             {
-                _ = TryAddInternal(i, child, false);
+                _ = TryAddInternal(i, child, false, copyAnnotations);
                 i++;
             }
-
-            CopyAnnotations(this, other);
         }
 
         internal static IEnumerable? CastMultiContent(IEnumerable? content)
@@ -200,7 +205,7 @@ namespace SpanJson.Linq
             _ => false,
         };
 
-        internal JToken EnsureParentToken(JToken? item, bool skipParentCheck)
+        internal JToken EnsureParentToken(JToken? item, bool skipParentCheck, bool copyAnnotations)
         {
             if (item is null)
             {
@@ -218,7 +223,12 @@ namespace SpanJson.Linq
             // the item is being added to the root parent of itself
             if (item.Parent is not null || item == this || (item.HasValues && Root == item))
             {
-                item = item.CloneToken();
+                // Avoid allocating settings when copy annotations is false.
+                JsonCloneSettings? settings = copyAnnotations
+                    ? null
+                    : JsonCloneSettings.SkipCopyAnnotations;
+
+                item = item.CloneToken(settings);
             }
 
             return item;
@@ -226,7 +236,7 @@ namespace SpanJson.Linq
 
         internal abstract int IndexOfItem(JToken? item);
 
-        internal virtual bool InsertItem(int index, JToken? item, bool skipParentCheck)
+        internal virtual bool InsertItem(int index, JToken? item, bool skipParentCheck, bool copyAnnotations)
         {
             IList<JToken> children = ChildrenTokens;
 
@@ -237,7 +247,7 @@ namespace SpanJson.Linq
 
             CheckReentrancy();
 
-            item = EnsureParentToken(item, skipParentCheck);
+            item = EnsureParentToken(item, skipParentCheck, copyAnnotations);
 
             JToken? previous = (0u >= (uint)index) ? null : children[index - 1];
             // haven't inserted new token yet so next token is still at the inserting index
@@ -354,7 +364,7 @@ namespace SpanJson.Linq
 
             CheckReentrancy();
 
-            item = EnsureParentToken(item, false);
+            item = EnsureParentToken(item, false, copyAnnotations: true);
 
             ValidateToken(item, existing);
 
@@ -477,27 +487,27 @@ namespace SpanJson.Linq
         /// <param name="content">The content to be added.</param>
         public virtual void Add(object? content)
         {
-            _ = TryAddInternal(ChildrenTokens.Count, content, false);
+            _ = TryAddInternal(ChildrenTokens.Count, content, false, copyAnnotations: true);
         }
 
         internal bool TryAdd(object? content)
         {
-            return TryAddInternal(ChildrenTokens.Count, content, false);
+            return TryAddInternal(ChildrenTokens.Count, content, false, copyAnnotations: true);
         }
 
         internal void AddAndSkipParentCheck(JToken token)
         {
-            _ = TryAddInternal(ChildrenTokens.Count, token, true);
+            _ = TryAddInternal(ChildrenTokens.Count, token, true, copyAnnotations: true);
         }
 
         /// <summary>Adds the specified content as the first children of this <see cref="JToken"/>.</summary>
         /// <param name="content">The content to be added.</param>
         public void AddFirst(object content)
         {
-            _ = TryAddInternal(0, content, false);
+            _ = TryAddInternal(0, content, false, copyAnnotations: true);
         }
 
-        internal bool TryAddInternal(int index, object? content, bool skipParentCheck)
+        internal bool TryAddInternal(int index, object? content, bool skipParentCheck, bool copyAnnotations)
         {
             if (JContainer.IsMultiContent(content))
             {
@@ -506,7 +516,7 @@ namespace SpanJson.Linq
                 int multiIndex = index;
                 foreach (var c in enumerable)
                 {
-                    TryAddInternal(multiIndex, c, skipParentCheck);
+                    TryAddInternal(multiIndex, c, skipParentCheck, copyAnnotations);
                     multiIndex++;
                 }
                 return true;
@@ -515,7 +525,7 @@ namespace SpanJson.Linq
             {
                 JToken item = CreateFromContent(content);
 
-                return InsertItem(index, item, skipParentCheck);
+                return InsertItem(index, item, skipParentCheck, copyAnnotations);
             }
         }
 

@@ -31,7 +31,15 @@ namespace SpanJson.Linq
     {
         /// <summary>Initializes a new instance of the <see cref="JRaw"/> class from another <see cref="JRaw"/> object.</summary>
         /// <param name="other">A <see cref="JRaw"/> object to copy from.</param>
-        public JRaw(JRaw other) : base(other) { }
+        public JRaw(JRaw other)
+            : base(other, settings: null)
+        {
+        }
+
+        internal JRaw(JRaw other, JsonCloneSettings? settings)
+            : base(other, settings)
+        {
+        }
 
         /// <summary>Initializes a new instance of the <see cref="JRaw"/> class.</summary>
         /// <param name="rawJson">The raw json.</param>
@@ -41,6 +49,9 @@ namespace SpanJson.Linq
         /// <param name="utf8Json">The raw json.</param>
         public JRaw(byte[]? utf8Json) : base(utf8Json, JTokenType.Raw) { }
 
-        internal override JToken CloneToken() => new JRaw(this);
+        internal override JToken CloneToken(JsonCloneSettings? settings)
+        {
+            return new JRaw(this, settings);
+        }
     }
 }

@@ -26,20 +26,30 @@
 namespace SpanJson.Linq
 {
     /// <summary>
-    /// Specifies how JSON arrays are merged together.
+    /// Specifies the settings used when cloning JSON.
     /// </summary>
-    public enum MergeArrayHandling
+    public class JsonCloneSettings
     {
-        /// <summary>Concatenate arrays.</summary>
-        Concat = 0,
+        internal static readonly JsonCloneSettings SkipCopyAnnotations = new JsonCloneSettings
+        {
+            CopyAnnotations = false
+        };
 
-        /// <summary>Union arrays, skipping items that already exist.</summary>
-        Union = 1,
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JsonCloneSettings"/> class.
+        /// </summary>
+        public JsonCloneSettings()
+        {
+            CopyAnnotations = true;
+        }
 
-        /// <summary>Replace all array items.</summary>
-        Replace = 2,
-
-        /// <summary>Merge array items together, matched by index.</summary>
-        Merge = 3
+        /// <summary>
+        /// Gets or sets a flag that indicates whether to copy annotations when cloning a <see cref="JToken"/>.
+        /// The default value is <c>true</c>.
+        /// </summary>
+        /// <value>
+        /// A flag that indicates whether to copy annotations when cloning a <see cref="JToken"/>.
+        /// </value>
+        public bool CopyAnnotations { get; set; }
     }
 }

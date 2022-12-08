@@ -2,10 +2,10 @@
   <!-- Shared Package Versions -->
   <PropertyGroup>
     <!-- Test related packages -->
-    <MicrosoftNetTestSdkPackageVersion>17.3.1</MicrosoftNetTestSdkPackageVersion>
-    <MicrosoftNetTestSdkDevPackageVersion>17.3.1</MicrosoftNetTestSdkDevPackageVersion>
-    <MicrosoftTestPlatformTestHostPackageVersion>17.3.1</MicrosoftTestPlatformTestHostPackageVersion>
-    <MicrosoftTestPlatformObjectModelPackageVersion>17.3.1</MicrosoftTestPlatformObjectModelPackageVersion>
+    <MicrosoftNetTestSdkPackageVersion>17.4.0</MicrosoftNetTestSdkPackageVersion>
+    <MicrosoftNetTestSdkDevPackageVersion>17.4.0</MicrosoftNetTestSdkDevPackageVersion>
+    <MicrosoftTestPlatformTestHostPackageVersion>17.4.0</MicrosoftTestPlatformTestHostPackageVersion>
+    <MicrosoftTestPlatformObjectModelPackageVersion>17.4.0</MicrosoftTestPlatformObjectModelPackageVersion>
     <MSTestTestAdapterPackageVersion>2.2.10</MSTestTestAdapterPackageVersion>
     <MSTestTestFrameworkPackageVersion>2.2.10</MSTestTestFrameworkPackageVersion>
 
@@ -18,13 +18,13 @@
     <FluentAssertions4PackageVersion>4.19.4</FluentAssertions4PackageVersion>
     <FluentAssertions5PackageVersion>6.7.0</FluentAssertions5PackageVersion>
     <FluentAssertionsPackageVersion>6.7.0</FluentAssertionsPackageVersion>
-    <MoqPackageVersion>4.18.2</MoqPackageVersion>
+    <MoqPackageVersion>4.18.3</MoqPackageVersion>
     <NSubstitutePackageVersion>4.3.0</NSubstitutePackageVersion>
     <ReportGeneratorPackageVersion>5.1.4</ReportGeneratorPackageVersion>
     <ShouldlyPackageVersion>4.1.0</ShouldlyPackageVersion>
 
     <xUnitPackageVersion>2.4.2</xUnitPackageVersion>
-    <xUnitAnalyzersPackageVersion>1.0.0</xUnitAnalyzersPackageVersion>
+    <xUnitAnalyzersPackageVersion>1.1.0</xUnitAnalyzersPackageVersion>
     <xUnitRunnerVsPackageVersion>2.4.5</xUnitRunnerVsPackageVersion>
     <xUnitRunnerConsolePackageVersion>2.4.2</xUnitRunnerConsolePackageVersion>
     <xUnitRunnerUtilityPackageVersion>2.4.2</xUnitRunnerUtilityPackageVersion>
@@ -36,11 +36,11 @@
     <NUnit2TestAdapterPackageVersion>2.2.0</NUnit2TestAdapterPackageVersion>
     <NUnitPackageVersion>3.13.3</NUnitPackageVersion>
     <NUnitLitePackageVersion>3.13.3</NUnitLitePackageVersion>
-    <NUnit3TestAdapterPackageVersion>4.2.1</NUnit3TestAdapterPackageVersion>
+    <NUnit3TestAdapterPackageVersion>4.3.0</NUnit3TestAdapterPackageVersion>
     <MonoCecilPackageVersion>0.11.4</MonoCecilPackageVersion>
 
     <NUnitDevPackageVersion>3.13.3</NUnitDevPackageVersion>
-    <NUnit3TestAdapterDevPackageVersion>4.2.1</NUnit3TestAdapterDevPackageVersion>
+    <NUnit3TestAdapterDevPackageVersion>4.3.0</NUnit3TestAdapterDevPackageVersion>
 
     <DockerDotNetPackageVersion>3.125.10</DockerDotNetPackageVersion>
     <SquadronAzureCloudPackageVersion>0.17.0</SquadronAzureCloudPackageVersion>
@@ -60,7 +60,7 @@
     <SquadronSFtpServerPackageVersion>0.17.0</SquadronSFtpServerPackageVersion>
     <SquadronSqlServerPackageVersion>0.17.0</SquadronSqlServerPackageVersion>
 	
-    <SimpleFixtureNSubstitutePackageVersion>4.0.0-Nightly188</SimpleFixtureNSubstitutePackageVersion>
-    <SimpleFixturexUnitPackageVersion>4.0.0-Nightly188</SimpleFixturexUnitPackageVersion>
+    <SimpleFixtureNSubstitutePackageVersion>4.0.0-RC190</SimpleFixtureNSubstitutePackageVersion>
+    <SimpleFixturexUnitPackageVersion>4.0.0-RC190</SimpleFixturexUnitPackageVersion>
   </PropertyGroup>
 </Project>

@@ -47,12 +47,18 @@ namespace SpanJson.Linq
             _valueType = type;
         }
 
+        internal JValue(JValue other, JsonCloneSettings? settings)
+            : this(other.Value, other.Type)
+        {
+            if (settings?.CopyAnnotations ?? true)
+            {
+                CopyAnnotations(this, other);
+            }
+        }
+
         /// <summary>Initializes a new instance of the <see cref="JValue"/> class from another <see cref="JValue"/> object.</summary>
         /// <param name="other">A <see cref="JValue"/> object to copy from.</param>
-        public JValue(JValue other) : this(other.Value, other.Type)
-        {
-            CopyAnnotations(this, other);
-        }
+        public JValue(JValue other) : this(other.Value, other.Type) { }
 
         /// <summary>Initializes a new instance of the <see cref="JValue"/> class with the given value.</summary>
         /// <param name="value">The value.</param>

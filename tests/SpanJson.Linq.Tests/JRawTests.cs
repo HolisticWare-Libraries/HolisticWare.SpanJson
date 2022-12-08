@@ -45,7 +45,7 @@ namespace SpanJson.Tests
         public void RawClone()
         {
             JRaw r1 = new JRaw("\"raw1\"");
-            JToken r2 = r1.CloneToken();
+            JToken r2 = r1.DeepClone();
 
             Assert.IsType<JRaw>(r2);
         }
