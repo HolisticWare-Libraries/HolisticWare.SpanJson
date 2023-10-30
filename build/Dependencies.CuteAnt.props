@@ -8,19 +8,20 @@
     <CuteAntRuntimePackageVersion>3.1.0-rtm-220612-01</CuteAntRuntimePackageVersion>
 
     <LinqOptimizerCSharpStrongNamePackageVersion>0.7.0-rtm-1912022030</LinqOptimizerCSharpStrongNamePackageVersion>
+    <ParlotUnofficialPackageVersion>0.0.24-rtm-230804-01</ParlotUnofficialPackageVersion>
 
     <!-- Database related packages -->
-    <GraphQLParserUnofficialPackageVersion>8.1.0-rtm-221108-01</GraphQLParserUnofficialPackageVersion>
-    <GraphQLUnofficialPackageVersion>7.1.0-rtm-221108-01</GraphQLUnofficialPackageVersion>
-    <GraphQLDataLoaderUnofficialPackageVersion>7.1.0-rtm-221108-01</GraphQLDataLoaderUnofficialPackageVersion>
-    <GraphQLMemoryCacheUnofficialPackageVersion>7.1.0-rtm-221108-01</GraphQLMemoryCacheUnofficialPackageVersion>
-    <GraphQLMicrosoftDIUnofficialPackageVersion>7.1.0-rtm-221108-01</GraphQLMicrosoftDIUnofficialPackageVersion>
-    <GraphQLSerializationPackageVersion>7.1.0-rtm-221108-01</GraphQLSerializationPackageVersion>
-    <GraphQLTransportsAspNetCoreUnofficialPackageVersion>7.1.0-rtm-221108-01</GraphQLTransportsAspNetCoreUnofficialPackageVersion>
-    <GraphQLUiAltairUnofficial>7.0.0-rtm-220826-01</GraphQLUiAltairUnofficial>
-    <GraphQLUiGraphiQLUnofficial>7.0.0-rtm-220826-01</GraphQLUiGraphiQLUnofficial>
-    <GraphQLUiPlaygroundUnofficial>7.0.0-rtm-220826-01</GraphQLUiPlaygroundUnofficial>
-    <GraphQLUiVoyagerUnofficial>7.0.0-rtm-220826-01</GraphQLUiVoyagerUnofficial>
+    <GraphQLParserUnofficialPackageVersion>9.2.0-rtm-230810-01</GraphQLParserUnofficialPackageVersion>
+    <GraphQLUnofficialPackageVersion>7.6.1-rtm-230810-01</GraphQLUnofficialPackageVersion>
+    <GraphQLDataLoaderUnofficialPackageVersion>7.6.1-rtm-230810-01</GraphQLDataLoaderUnofficialPackageVersion>
+    <GraphQLMemoryCacheUnofficialPackageVersion>7.6.1-rtm-230810-01</GraphQLMemoryCacheUnofficialPackageVersion>
+    <GraphQLMicrosoftDIUnofficialPackageVersion>7.6.1-rtm-230810-01</GraphQLMicrosoftDIUnofficialPackageVersion>
+    <GraphQLSerializationPackageVersion>7.6.1-rtm-230810-01</GraphQLSerializationPackageVersion>
+    <GraphQLTransportsAspNetCoreUnofficialPackageVersion>7.6.0-rtm-230810-01</GraphQLTransportsAspNetCoreUnofficialPackageVersion>
+    <GraphQLUiAltairUnofficial>7.6.0-rtm-230810-01</GraphQLUiAltairUnofficial>
+    <GraphQLUiGraphiQLUnofficial>7.6.0-rtm-230810-01</GraphQLUiGraphiQLUnofficial>
+    <GraphQLUiPlaygroundUnofficial>7.6.0-rtm-230810-01</GraphQLUiPlaygroundUnofficial>
+    <GraphQLUiVoyagerUnofficial>7.6.0-rtm-230810-01</GraphQLUiVoyagerUnofficial>
     <CuteAntKendoPackageVersion>1.0.0-rtm-221012-01</CuteAntKendoPackageVersion>
     <CuteAntWingsPackageVersion>6.1.0-rtm-221012-01</CuteAntWingsPackageVersion>
     <CuteAntWingsAbstractionsPackageVersion>6.1.0-rtm-221012-01</CuteAntWingsAbstractionsPackageVersion>
@@ -57,7 +58,7 @@
     <ServiceStackTextUnofficialPackageVersion>6.1.1-rtm-220629-01</ServiceStackTextUnofficialPackageVersion>
     <SpanJsonAnnotationsPackageVersion>3.6.0-rtm-221002-01</SpanJsonAnnotationsPackageVersion>
     <SpanJsonUnofficialPackageVersion>3.6.0-rtm-221002-01</SpanJsonUnofficialPackageVersion>
-    <SpanJsonExtensionsPackageVersion>3.6.0-rtm-221002-06</SpanJsonExtensionsPackageVersion>
+    <SpanJsonExtensionsPackageVersion>3.6.0-rtm-221207-01</SpanJsonExtensionsPackageVersion>
     <SpanJsonAspNetCoreFormatterUnofficialPackageVersion>3.6.0-rtm-221002-01</SpanJsonAspNetCoreFormatterUnofficialPackageVersion>
 
     <NodaTimeSerializationJsonNetUnofficialPackageVersion>3.6.0-rtm-221002-01</NodaTimeSerializationJsonNetUnofficialPackageVersion>

@@ -30,7 +30,7 @@
     <!-- Compatibility packages -->
     <MicrosoftWin32Registry3PackageVersion>4.7.0</MicrosoftWin32Registry3PackageVersion>
     <MicrosoftWin32RegistryAccessControl3PackageVersion>4.7.0</MicrosoftWin32RegistryAccessControl3PackageVersion>
-    <MicrosoftWindowsCompatibility3PackageVersion>3.1.0</MicrosoftWindowsCompatibility3PackageVersion>
+    <MicrosoftWindowsCompatibility3PackageVersion>3.1.4</MicrosoftWindowsCompatibility3PackageVersion>
     <MicrosoftWindowsCompatibilityShims3PackageVersion>2.0.1</MicrosoftWindowsCompatibilityShims3PackageVersion>
     <SystemCodeDom3PackageVersion>4.7.0</SystemCodeDom3PackageVersion>
     <SystemComponentModelAnnotations3PackageVersion>4.7.0</SystemComponentModelAnnotations3PackageVersion>

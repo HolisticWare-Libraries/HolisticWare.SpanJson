@@ -7,7 +7,7 @@
 
     <MicrosoftAspNetCoreAntiforgery2PackageVersion>2.2.0</MicrosoftAspNetCoreAntiforgery2PackageVersion>
     <MicrosoftAspNetCoreApplicationInsightsHostingStartup2PackageVersion>2.2.0</MicrosoftAspNetCoreApplicationInsightsHostingStartup2PackageVersion>
-	
+  
     <MicrosoftAspNetCoreAuthentication2PackageVersion>2.2.0</MicrosoftAspNetCoreAuthentication2PackageVersion>
     <MicrosoftAspNetCoreAuthenticationAbstractions2PackageVersion>2.2.0</MicrosoftAspNetCoreAuthenticationAbstractions2PackageVersion>
     <MicrosoftAspNetCoreAuthenticationAzureADUI2PackageVersion>2.2.0</MicrosoftAspNetCoreAuthenticationAzureADUI2PackageVersion>

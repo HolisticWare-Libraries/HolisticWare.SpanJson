@@ -1,15 +1,98 @@
 <Project>
-  <!-- Shared Package Versions -->
-  <PropertyGroup>
-    <MicrosoftExtensionsPackageVersion>6.0.11</MicrosoftExtensionsPackageVersion>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
+    <MicrosoftExtensionsPackageVersion>7.0.10</MicrosoftExtensionsPackageVersion>
 
-    <MicrosoftExtensionsApiDescriptionClientPackageVersion>6.0.11</MicrosoftExtensionsApiDescriptionClientPackageVersion>
-    <MicrosoftExtensionsApiDescriptionServerPackageVersion>6.0.11</MicrosoftExtensionsApiDescriptionServerPackageVersion>
+    <MicrosoftExtensionsApiDescriptionClientPackageVersion>7.0.11</MicrosoftExtensionsApiDescriptionClientPackageVersion>
+    <MicrosoftExtensionsApiDescriptionServerPackageVersion>7.0.11</MicrosoftExtensionsApiDescriptionServerPackageVersion>
+	
+    <MicrosoftExtensionsCachingAbstractionsPackageVersion>7.0.0</MicrosoftExtensionsCachingAbstractionsPackageVersion>
+    <MicrosoftExtensionsCachingMemoryPackageVersion>7.0.0</MicrosoftExtensionsCachingMemoryPackageVersion>
+    <MicrosoftExtensionsCachingStackExchangeRedisPackageVersion>7.0.11</MicrosoftExtensionsCachingStackExchangeRedisPackageVersion>
+    <MicrosoftExtensionsCachingSqlServerPackageVersion>7.0.11</MicrosoftExtensionsCachingSqlServerPackageVersion>
+    <MicrosoftExtensionsConfigurationAbstractionsPackageVersion>7.0.0</MicrosoftExtensionsConfigurationAbstractionsPackageVersion>
+    <MicrosoftExtensionsConfigurationAzureKeyVaultPackageVersion>7.0.0</MicrosoftExtensionsConfigurationAzureKeyVaultPackageVersion>
+    <MicrosoftExtensionsConfigurationBinderPackageVersion>7.0.11</MicrosoftExtensionsConfigurationBinderPackageVersion>
+    <MicrosoftExtensionsConfigurationCommandLinePackageVersion>7.0.0</MicrosoftExtensionsConfigurationCommandLinePackageVersion>
+    <MicrosoftExtensionsConfigurationEnvironmentVariablesPackageVersion>7.0.0</MicrosoftExtensionsConfigurationEnvironmentVariablesPackageVersion>
+    <MicrosoftExtensionsConfigurationFileExtensionsPackageVersion>7.0.0</MicrosoftExtensionsConfigurationFileExtensionsPackageVersion>
+    <MicrosoftExtensionsConfigurationIniPackageVersion>7.0.0</MicrosoftExtensionsConfigurationIniPackageVersion>
+    <MicrosoftExtensionsConfigurationJsonPackageVersion>7.0.0</MicrosoftExtensionsConfigurationJsonPackageVersion>
+    <MicrosoftExtensionsConfigurationKeyPerFilePackageVersion>7.0.11</MicrosoftExtensionsConfigurationKeyPerFilePackageVersion>
+    <MicrosoftExtensionsConfigurationNewtonsoftJsonPackageVersion>7.0.0</MicrosoftExtensionsConfigurationNewtonsoftJsonPackageVersion>
+    <MicrosoftExtensionsConfigurationPackageVersion>7.0.0</MicrosoftExtensionsConfigurationPackageVersion>
+    <MicrosoftExtensionsConfigurationUserSecretsPackageVersion>7.0.0</MicrosoftExtensionsConfigurationUserSecretsPackageVersion>
+    <MicrosoftExtensionsConfigurationXmlPackageVersion>7.0.0</MicrosoftExtensionsConfigurationXmlPackageVersion>
+    <MicrosoftExtensionsDependencyInjectionAbstractionsPackageVersion>7.0.0</MicrosoftExtensionsDependencyInjectionAbstractionsPackageVersion>
+    <MicrosoftExtensionsDependencyInjectionPackageVersion>7.0.0</MicrosoftExtensionsDependencyInjectionPackageVersion>
+
+    <MicrosoftExtensionsDependencyModelPackageVersion>7.0.0</MicrosoftExtensionsDependencyModelPackageVersion>
+
+    <MicrosoftExtensionsDiagnosticAdapterPackageVersion>7.0.0</MicrosoftExtensionsDiagnosticAdapterPackageVersion>
+    <MicrosoftExtensionsDiagnosticsHealthChecksAbstractionsPackageVersion>7.0.11</MicrosoftExtensionsDiagnosticsHealthChecksAbstractionsPackageVersion>
+    <MicrosoftExtensionsDiagnosticsHealthChecksEntityFrameworkCorePackageVersion>7.0.11</MicrosoftExtensionsDiagnosticsHealthChecksEntityFrameworkCorePackageVersion>
+    <MicrosoftExtensionsDiagnosticsHealthChecksPackageVersion>7.0.11</MicrosoftExtensionsDiagnosticsHealthChecksPackageVersion>
+    <MicrosoftExtensionsFeaturesPackageVersion>7.0.11</MicrosoftExtensionsFeaturesPackageVersion>
+    <MicrosoftExtensionsFileProvidersAbstractionsPackageVersion>7.0.0</MicrosoftExtensionsFileProvidersAbstractionsPackageVersion>
+    <MicrosoftExtensionsFileProvidersCompositePackageVersion>7.0.0</MicrosoftExtensionsFileProvidersCompositePackageVersion>
+    <MicrosoftExtensionsFileProvidersEmbeddedPackageVersion>7.0.11</MicrosoftExtensionsFileProvidersEmbeddedPackageVersion>
+    <MicrosoftExtensionsFileProvidersPhysicalPackageVersion>7.0.0</MicrosoftExtensionsFileProvidersPhysicalPackageVersion>
+    <MicrosoftExtensionsFileSystemGlobbingPackageVersion>7.0.0</MicrosoftExtensionsFileSystemGlobbingPackageVersion>
+    <MicrosoftExtensionsHostingAbstractionsPackageVersion>7.0.0</MicrosoftExtensionsHostingAbstractionsPackageVersion>
+    <MicrosoftExtensionsHostingPackageVersion>7.0.1</MicrosoftExtensionsHostingPackageVersion>
+    <MicrosoftExtensionsHostingWindowsServicesPackageVersion>7.0.0</MicrosoftExtensionsHostingWindowsServicesPackageVersion>
+    <MicrosoftExtensionsHttpPackageVersion>7.0.0</MicrosoftExtensionsHttpPackageVersion>
+    <MicrosoftExtensionsHttpPollyPackageVersion>7.0.11</MicrosoftExtensionsHttpPollyPackageVersion>
+    <MicrosoftExtensionsLocalizationAbstractionsPackageVersion>7.0.11</MicrosoftExtensionsLocalizationAbstractionsPackageVersion>
+    <MicrosoftExtensionsLocalizationPackageVersion>7.0.11</MicrosoftExtensionsLocalizationPackageVersion>
+    <MicrosoftExtensionsLoggingAbstractionsPackageVersion>7.0.0</MicrosoftExtensionsLoggingAbstractionsPackageVersion>
+    <MicrosoftExtensionsLoggingAzureAppServicesPackageVersion>7.0.11</MicrosoftExtensionsLoggingAzureAppServicesPackageVersion>
+    <MicrosoftExtensionsLoggingConfigurationPackageVersion>7.0.0</MicrosoftExtensionsLoggingConfigurationPackageVersion>
+    <MicrosoftExtensionsLoggingConsolePackageVersion>7.0.0</MicrosoftExtensionsLoggingConsolePackageVersion>
+    <MicrosoftExtensionsLoggingDebugPackageVersion>7.0.0</MicrosoftExtensionsLoggingDebugPackageVersion>
+    <MicrosoftExtensionsLoggingEventSourcePackageVersion>7.0.0</MicrosoftExtensionsLoggingEventSourcePackageVersion>
+    <MicrosoftExtensionsLoggingPackageVersion>7.0.0</MicrosoftExtensionsLoggingPackageVersion>
+    <MicrosoftExtensionsLoggingTestingPackageVersion>7.0.0</MicrosoftExtensionsLoggingTestingPackageVersion>
+    <MicrosoftExtensionsLoggingTraceSourcePackageVersion>7.0.0</MicrosoftExtensionsLoggingTraceSourcePackageVersion>
+    <MicrosoftExtensionsObjectPoolPackageVersion>7.0.11</MicrosoftExtensionsObjectPoolPackageVersion>
+    <MicrosoftExtensionsOptionsConfigurationExtensionsPackageVersion>7.0.0</MicrosoftExtensionsOptionsConfigurationExtensionsPackageVersion>
+    <MicrosoftExtensionsOptionsDataAnnotationsPackageVersion>7.0.0</MicrosoftExtensionsOptionsDataAnnotationsPackageVersion>
+    <MicrosoftExtensionsOptionsPackageVersion>7.0.1</MicrosoftExtensionsOptionsPackageVersion>
+    <MicrosoftExtensionsPrimitivesPackageVersion>7.0.0</MicrosoftExtensionsPrimitivesPackageVersion>
+
+    <MicrosoftExtensionsIdentityCorePackageVersion>7.0.11</MicrosoftExtensionsIdentityCorePackageVersion>
+    <MicrosoftExtensionsIdentityStoresPackageVersion>7.0.11</MicrosoftExtensionsIdentityStoresPackageVersion>
+    <MicrosoftExtensionsWebEncodersPackageVersion>7.0.11</MicrosoftExtensionsWebEncodersPackageVersion>
+
+    <MicrosoftDataSqliteCorePackageVersion>7.0.11</MicrosoftDataSqliteCorePackageVersion>
+    <MicrosoftDataSqlitePackageVersion>7.0.11</MicrosoftDataSqlitePackageVersion>
+
+    <MicrosoftNETCorePlatformsPackageVersion>7.0.0</MicrosoftNETCorePlatformsPackageVersion>
+
+    <MicrosoftEntityFrameworkCorePackageVersion>7.0.11</MicrosoftEntityFrameworkCorePackageVersion>
+    <MicrosoftEntityFrameworkCoreAbstractionsPackageVersion>7.0.11</MicrosoftEntityFrameworkCoreAbstractionsPackageVersion>
+    <MicrosoftEntityFrameworkCoreAnalyzersPackageVersion>7.0.11</MicrosoftEntityFrameworkCoreAnalyzersPackageVersion>
+    <MicrosoftEntityFrameworkCoreDesignPackageVersion>7.0.11</MicrosoftEntityFrameworkCoreDesignPackageVersion>
+    <MicrosoftEntityFrameworkCoreInMemoryPackageVersion>7.0.11</MicrosoftEntityFrameworkCoreInMemoryPackageVersion>
+    <MicrosoftEntityFrameworkCoreRelationalPackageVersion>7.0.11</MicrosoftEntityFrameworkCoreRelationalPackageVersion>
+    <MicrosoftEntityFrameworkCoreSqlitePackageVersion>7.0.11</MicrosoftEntityFrameworkCoreSqlitePackageVersion>
+    <MicrosoftEntityFrameworkCoreSqliteCorePackageVersion>7.0.11</MicrosoftEntityFrameworkCoreSqliteCorePackageVersion>
+    <MicrosoftEntityFrameworkCoreSqlServerPackageVersion>7.0.11</MicrosoftEntityFrameworkCoreSqlServerPackageVersion>
+    <MicrosoftEntityFrameworkCoreToolsPackageVersion>7.0.11</MicrosoftEntityFrameworkCoreToolsPackageVersion>
+
+    <MicrosoftJSInteropPackageVersion>7.0.11</MicrosoftJSInteropPackageVersion>
+    <MicrosoftJSInteropWebAssemblyPackageVersion>7.0.11</MicrosoftJSInteropWebAssemblyPackageVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
+    <MicrosoftExtensionsPackageVersion>6.0.22</MicrosoftExtensionsPackageVersion>
+
+    <MicrosoftExtensionsApiDescriptionClientPackageVersion>6.0.22</MicrosoftExtensionsApiDescriptionClientPackageVersion>
+    <MicrosoftExtensionsApiDescriptionServerPackageVersion>6.0.22</MicrosoftExtensionsApiDescriptionServerPackageVersion>
 	
     <MicrosoftExtensionsCachingAbstractionsPackageVersion>6.0.0</MicrosoftExtensionsCachingAbstractionsPackageVersion>
     <MicrosoftExtensionsCachingMemoryPackageVersion>6.0.1</MicrosoftExtensionsCachingMemoryPackageVersion>
-    <MicrosoftExtensionsCachingStackExchangeRedisPackageVersion>6.0.11</MicrosoftExtensionsCachingStackExchangeRedisPackageVersion>
-    <MicrosoftExtensionsCachingSqlServerPackageVersion>6.0.11</MicrosoftExtensionsCachingSqlServerPackageVersion>
+    <MicrosoftExtensionsCachingStackExchangeRedisPackageVersion>6.0.22</MicrosoftExtensionsCachingStackExchangeRedisPackageVersion>
+    <MicrosoftExtensionsCachingSqlServerPackageVersion>6.0.22</MicrosoftExtensionsCachingSqlServerPackageVersion>
     <MicrosoftExtensionsConfigurationAbstractionsPackageVersion>6.0.0</MicrosoftExtensionsConfigurationAbstractionsPackageVersion>
     <MicrosoftExtensionsConfigurationAzureKeyVaultPackageVersion>6.0.0</MicrosoftExtensionsConfigurationAzureKeyVaultPackageVersion>
     <MicrosoftExtensionsConfigurationBinderPackageVersion>6.0.0</MicrosoftExtensionsConfigurationBinderPackageVersion>
@@ -18,7 +101,7 @@
     <MicrosoftExtensionsConfigurationFileExtensionsPackageVersion>6.0.0</MicrosoftExtensionsConfigurationFileExtensionsPackageVersion>
     <MicrosoftExtensionsConfigurationIniPackageVersion>6.0.0</MicrosoftExtensionsConfigurationIniPackageVersion>
     <MicrosoftExtensionsConfigurationJsonPackageVersion>6.0.0</MicrosoftExtensionsConfigurationJsonPackageVersion>
-    <MicrosoftExtensionsConfigurationKeyPerFilePackageVersion>6.0.11</MicrosoftExtensionsConfigurationKeyPerFilePackageVersion>
+    <MicrosoftExtensionsConfigurationKeyPerFilePackageVersion>6.0.22</MicrosoftExtensionsConfigurationKeyPerFilePackageVersion>
     <MicrosoftExtensionsConfigurationNewtonsoftJsonPackageVersion>6.0.0</MicrosoftExtensionsConfigurationNewtonsoftJsonPackageVersion>
     <MicrosoftExtensionsConfigurationPackageVersion>6.0.0</MicrosoftExtensionsConfigurationPackageVersion>
     <MicrosoftExtensionsConfigurationUserSecretsPackageVersion>6.0.1</MicrosoftExtensionsConfigurationUserSecretsPackageVersion>
@@ -26,28 +109,27 @@
     <MicrosoftExtensionsDependencyInjectionAbstractionsPackageVersion>6.0.0</MicrosoftExtensionsDependencyInjectionAbstractionsPackageVersion>
     <MicrosoftExtensionsDependencyInjectionPackageVersion>6.0.1</MicrosoftExtensionsDependencyInjectionPackageVersion>
 
-    <MicrosoftDotNetPlatformAbstractionsPackageVersion>3.1.6</MicrosoftDotNetPlatformAbstractionsPackageVersion>
     <MicrosoftExtensionsDependencyModelPackageVersion>6.0.0</MicrosoftExtensionsDependencyModelPackageVersion>
 
     <MicrosoftExtensionsDiagnosticAdapterPackageVersion>6.0.0</MicrosoftExtensionsDiagnosticAdapterPackageVersion>
-    <MicrosoftExtensionsDiagnosticsHealthChecksAbstractionsPackageVersion>6.0.11</MicrosoftExtensionsDiagnosticsHealthChecksAbstractionsPackageVersion>
-    <MicrosoftExtensionsDiagnosticsHealthChecksEntityFrameworkCorePackageVersion>6.0.11</MicrosoftExtensionsDiagnosticsHealthChecksEntityFrameworkCorePackageVersion>
-    <MicrosoftExtensionsDiagnosticsHealthChecksPackageVersion>6.0.11</MicrosoftExtensionsDiagnosticsHealthChecksPackageVersion>
-    <MicrosoftExtensionsFeaturesPackageVersion>6.0.11</MicrosoftExtensionsFeaturesPackageVersion>
+    <MicrosoftExtensionsDiagnosticsHealthChecksAbstractionsPackageVersion>6.0.22</MicrosoftExtensionsDiagnosticsHealthChecksAbstractionsPackageVersion>
+    <MicrosoftExtensionsDiagnosticsHealthChecksEntityFrameworkCorePackageVersion>6.0.22</MicrosoftExtensionsDiagnosticsHealthChecksEntityFrameworkCorePackageVersion>
+    <MicrosoftExtensionsDiagnosticsHealthChecksPackageVersion>6.0.22</MicrosoftExtensionsDiagnosticsHealthChecksPackageVersion>
+    <MicrosoftExtensionsFeaturesPackageVersion>6.0.22</MicrosoftExtensionsFeaturesPackageVersion>
     <MicrosoftExtensionsFileProvidersAbstractionsPackageVersion>6.0.0</MicrosoftExtensionsFileProvidersAbstractionsPackageVersion>
     <MicrosoftExtensionsFileProvidersCompositePackageVersion>6.0.0</MicrosoftExtensionsFileProvidersCompositePackageVersion>
-    <MicrosoftExtensionsFileProvidersEmbeddedPackageVersion>6.0.11</MicrosoftExtensionsFileProvidersEmbeddedPackageVersion>
+    <MicrosoftExtensionsFileProvidersEmbeddedPackageVersion>6.0.22</MicrosoftExtensionsFileProvidersEmbeddedPackageVersion>
     <MicrosoftExtensionsFileProvidersPhysicalPackageVersion>6.0.0</MicrosoftExtensionsFileProvidersPhysicalPackageVersion>
     <MicrosoftExtensionsFileSystemGlobbingPackageVersion>6.0.0</MicrosoftExtensionsFileSystemGlobbingPackageVersion>
     <MicrosoftExtensionsHostingAbstractionsPackageVersion>6.0.0</MicrosoftExtensionsHostingAbstractionsPackageVersion>
     <MicrosoftExtensionsHostingPackageVersion>6.0.1</MicrosoftExtensionsHostingPackageVersion>
     <MicrosoftExtensionsHostingWindowsServicesPackageVersion>6.0.1</MicrosoftExtensionsHostingWindowsServicesPackageVersion>
     <MicrosoftExtensionsHttpPackageVersion>6.0.0</MicrosoftExtensionsHttpPackageVersion>
-    <MicrosoftExtensionsHttpPollyPackageVersion>6.0.11</MicrosoftExtensionsHttpPollyPackageVersion>
-    <MicrosoftExtensionsLocalizationAbstractionsPackageVersion>6.0.11</MicrosoftExtensionsLocalizationAbstractionsPackageVersion>
-    <MicrosoftExtensionsLocalizationPackageVersion>6.0.11</MicrosoftExtensionsLocalizationPackageVersion>
-    <MicrosoftExtensionsLoggingAbstractionsPackageVersion>6.0.2</MicrosoftExtensionsLoggingAbstractionsPackageVersion>
-    <MicrosoftExtensionsLoggingAzureAppServicesPackageVersion>6.0.11</MicrosoftExtensionsLoggingAzureAppServicesPackageVersion>
+    <MicrosoftExtensionsHttpPollyPackageVersion>6.0.22</MicrosoftExtensionsHttpPollyPackageVersion>
+    <MicrosoftExtensionsLocalizationAbstractionsPackageVersion>6.0.22</MicrosoftExtensionsLocalizationAbstractionsPackageVersion>
+    <MicrosoftExtensionsLocalizationPackageVersion>6.0.22</MicrosoftExtensionsLocalizationPackageVersion>
+    <MicrosoftExtensionsLoggingAbstractionsPackageVersion>6.0.3</MicrosoftExtensionsLoggingAbstractionsPackageVersion>
+    <MicrosoftExtensionsLoggingAzureAppServicesPackageVersion>6.0.22</MicrosoftExtensionsLoggingAzureAppServicesPackageVersion>
     <MicrosoftExtensionsLoggingConfigurationPackageVersion>6.0.0</MicrosoftExtensionsLoggingConfigurationPackageVersion>
     <MicrosoftExtensionsLoggingConsolePackageVersion>6.0.0</MicrosoftExtensionsLoggingConsolePackageVersion>
     <MicrosoftExtensionsLoggingDebugPackageVersion>6.0.0</MicrosoftExtensionsLoggingDebugPackageVersion>
@@ -55,33 +137,33 @@
     <MicrosoftExtensionsLoggingPackageVersion>6.0.0</MicrosoftExtensionsLoggingPackageVersion>
     <MicrosoftExtensionsLoggingTestingPackageVersion>6.0.0</MicrosoftExtensionsLoggingTestingPackageVersion>
     <MicrosoftExtensionsLoggingTraceSourcePackageVersion>6.0.0</MicrosoftExtensionsLoggingTraceSourcePackageVersion>
-    <MicrosoftExtensionsObjectPoolPackageVersion>6.0.11</MicrosoftExtensionsObjectPoolPackageVersion>
+    <MicrosoftExtensionsObjectPoolPackageVersion>6.0.22</MicrosoftExtensionsObjectPoolPackageVersion>
     <MicrosoftExtensionsOptionsConfigurationExtensionsPackageVersion>6.0.0</MicrosoftExtensionsOptionsConfigurationExtensionsPackageVersion>
     <MicrosoftExtensionsOptionsDataAnnotationsPackageVersion>6.0.0</MicrosoftExtensionsOptionsDataAnnotationsPackageVersion>
     <MicrosoftExtensionsOptionsPackageVersion>6.0.0</MicrosoftExtensionsOptionsPackageVersion>
     <MicrosoftExtensionsPrimitivesPackageVersion>6.0.0</MicrosoftExtensionsPrimitivesPackageVersion>
 
-    <MicrosoftExtensionsIdentityCorePackageVersion>6.0.11</MicrosoftExtensionsIdentityCorePackageVersion>
-    <MicrosoftExtensionsIdentityStoresPackageVersion>6.0.11</MicrosoftExtensionsIdentityStoresPackageVersion>
-    <MicrosoftExtensionsWebEncodersPackageVersion>6.0.11</MicrosoftExtensionsWebEncodersPackageVersion>
+    <MicrosoftExtensionsIdentityCorePackageVersion>6.0.22</MicrosoftExtensionsIdentityCorePackageVersion>
+    <MicrosoftExtensionsIdentityStoresPackageVersion>6.0.22</MicrosoftExtensionsIdentityStoresPackageVersion>
+    <MicrosoftExtensionsWebEncodersPackageVersion>6.0.22</MicrosoftExtensionsWebEncodersPackageVersion>
 
-    <MicrosoftDataSqliteCorePackageVersion>6.0.11</MicrosoftDataSqliteCorePackageVersion>
-    <MicrosoftDataSqlitePackageVersion>6.0.11</MicrosoftDataSqlitePackageVersion>
+    <MicrosoftDataSqliteCorePackageVersion>6.0.22</MicrosoftDataSqliteCorePackageVersion>
+    <MicrosoftDataSqlitePackageVersion>6.0.22</MicrosoftDataSqlitePackageVersion>
 
-    <MicrosoftNETCorePlatformsPackageVersion>6.0.4</MicrosoftNETCorePlatformsPackageVersion>
+    <MicrosoftNETCorePlatformsPackageVersion>6.0.7</MicrosoftNETCorePlatformsPackageVersion>
 
-    <MicrosoftEntityFrameworkCorePackageVersion>6.0.11</MicrosoftEntityFrameworkCorePackageVersion>
-    <MicrosoftEntityFrameworkCoreAbstractionsPackageVersion>6.0.11</MicrosoftEntityFrameworkCoreAbstractionsPackageVersion>
-    <MicrosoftEntityFrameworkCoreAnalyzersPackageVersion>6.0.11</MicrosoftEntityFrameworkCoreAnalyzersPackageVersion>
-    <MicrosoftEntityFrameworkCoreDesignPackageVersion>6.0.11</MicrosoftEntityFrameworkCoreDesignPackageVersion>
-    <MicrosoftEntityFrameworkCoreInMemoryPackageVersion>6.0.11</MicrosoftEntityFrameworkCoreInMemoryPackageVersion>
-    <MicrosoftEntityFrameworkCoreRelationalPackageVersion>6.0.11</MicrosoftEntityFrameworkCoreRelationalPackageVersion>
-    <MicrosoftEntityFrameworkCoreSqlitePackageVersion>6.0.11</MicrosoftEntityFrameworkCoreSqlitePackageVersion>
-    <MicrosoftEntityFrameworkCoreSqliteCorePackageVersion>6.0.11</MicrosoftEntityFrameworkCoreSqliteCorePackageVersion>
-    <MicrosoftEntityFrameworkCoreSqlServerPackageVersion>6.0.11</MicrosoftEntityFrameworkCoreSqlServerPackageVersion>
-    <MicrosoftEntityFrameworkCoreToolsPackageVersion>6.0.11</MicrosoftEntityFrameworkCoreToolsPackageVersion>
+    <MicrosoftEntityFrameworkCorePackageVersion>6.0.22</MicrosoftEntityFrameworkCorePackageVersion>
+    <MicrosoftEntityFrameworkCoreAbstractionsPackageVersion>6.0.22</MicrosoftEntityFrameworkCoreAbstractionsPackageVersion>
+    <MicrosoftEntityFrameworkCoreAnalyzersPackageVersion>6.0.22</MicrosoftEntityFrameworkCoreAnalyzersPackageVersion>
+    <MicrosoftEntityFrameworkCoreDesignPackageVersion>6.0.22</MicrosoftEntityFrameworkCoreDesignPackageVersion>
+    <MicrosoftEntityFrameworkCoreInMemoryPackageVersion>6.0.22</MicrosoftEntityFrameworkCoreInMemoryPackageVersion>
+    <MicrosoftEntityFrameworkCoreRelationalPackageVersion>6.0.22</MicrosoftEntityFrameworkCoreRelationalPackageVersion>
+    <MicrosoftEntityFrameworkCoreSqlitePackageVersion>6.0.22</MicrosoftEntityFrameworkCoreSqlitePackageVersion>
+    <MicrosoftEntityFrameworkCoreSqliteCorePackageVersion>6.0.22</MicrosoftEntityFrameworkCoreSqliteCorePackageVersion>
+    <MicrosoftEntityFrameworkCoreSqlServerPackageVersion>6.0.22</MicrosoftEntityFrameworkCoreSqlServerPackageVersion>
+    <MicrosoftEntityFrameworkCoreToolsPackageVersion>6.0.22</MicrosoftEntityFrameworkCoreToolsPackageVersion>
 
-    <MicrosoftJSInteropPackageVersion>6.0.11</MicrosoftJSInteropPackageVersion>
-    <MicrosoftJSInteropWebAssemblyPackageVersion>6.0.11</MicrosoftJSInteropWebAssemblyPackageVersion>
+    <MicrosoftJSInteropPackageVersion>6.0.22</MicrosoftJSInteropPackageVersion>
+    <MicrosoftJSInteropWebAssemblyPackageVersion>6.0.22</MicrosoftJSInteropWebAssemblyPackageVersion>
   </PropertyGroup>
 </Project>
