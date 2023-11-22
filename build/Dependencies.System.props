@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup Condition="$(TargetFramework) == 'net7.0'">
-    <FSharpCorePackageVersion>7.0.400</FSharpCorePackageVersion>
+    <FSharpCorePackageVersion>7.0.404</FSharpCorePackageVersion>
     <FSharpCoreNet45PackageVersion>4.7.2</FSharpCoreNet45PackageVersion>
 
     <!-- Compatibility packages -->
@@ -142,17 +142,17 @@
 
   <PropertyGroup>
     <!-- IdentityModel packages -->
-    <MicrosoftIdentityModelKeyVaultExtensionsPackageVersion>7.0.2</MicrosoftIdentityModelKeyVaultExtensionsPackageVersion>
-    <MicrosoftIdentityModelLoggingPackageVersion>7.0.2</MicrosoftIdentityModelLoggingPackageVersion>
-    <MicrosoftIdentityModelManagedKeyVaultSecurityKeyPackageVersion>7.0.2</MicrosoftIdentityModelManagedKeyVaultSecurityKeyPackageVersion>
-    <MicrosoftIdentityModelJsonWebTokensPackageVersion>7.0.2</MicrosoftIdentityModelJsonWebTokensPackageVersion>
-    <MicrosoftIdentityModelProtocolsPackageVersion>7.0.2</MicrosoftIdentityModelProtocolsPackageVersion>
-    <MicrosoftIdentityModelProtocolsOpenIdConnectPackageVersion>7.0.2</MicrosoftIdentityModelProtocolsOpenIdConnectPackageVersion>
-    <MicrosoftIdentityModelProtocolsWsFederationPackageVersion>7.0.2</MicrosoftIdentityModelProtocolsWsFederationPackageVersion>
-    <MicrosoftIdentityModelTokensPackageVersion>7.0.2</MicrosoftIdentityModelTokensPackageVersion>
-    <MicrosoftIdentityModelTokensSamlPackageVersion>7.0.2</MicrosoftIdentityModelTokensSamlPackageVersion>
-    <MicrosoftIdentityModelXmlPackageVersion>7.0.2</MicrosoftIdentityModelXmlPackageVersion>
-    <SystemIdentityModelTokensJwtPackageVersion>7.0.2</SystemIdentityModelTokensJwtPackageVersion>
+    <MicrosoftIdentityModelKeyVaultExtensionsPackageVersion>7.0.3</MicrosoftIdentityModelKeyVaultExtensionsPackageVersion>
+    <MicrosoftIdentityModelLoggingPackageVersion>7.0.3</MicrosoftIdentityModelLoggingPackageVersion>
+    <MicrosoftIdentityModelManagedKeyVaultSecurityKeyPackageVersion>7.0.3</MicrosoftIdentityModelManagedKeyVaultSecurityKeyPackageVersion>
+    <MicrosoftIdentityModelJsonWebTokensPackageVersion>7.0.3</MicrosoftIdentityModelJsonWebTokensPackageVersion>
+    <MicrosoftIdentityModelProtocolsPackageVersion>7.0.3</MicrosoftIdentityModelProtocolsPackageVersion>
+    <MicrosoftIdentityModelProtocolsOpenIdConnectPackageVersion>7.0.3</MicrosoftIdentityModelProtocolsOpenIdConnectPackageVersion>
+    <MicrosoftIdentityModelProtocolsWsFederationPackageVersion>7.0.3</MicrosoftIdentityModelProtocolsWsFederationPackageVersion>
+    <MicrosoftIdentityModelTokensPackageVersion>7.0.3</MicrosoftIdentityModelTokensPackageVersion>
+    <MicrosoftIdentityModelTokensSamlPackageVersion>7.0.3</MicrosoftIdentityModelTokensSamlPackageVersion>
+    <MicrosoftIdentityModelXmlPackageVersion>7.0.3</MicrosoftIdentityModelXmlPackageVersion>
+    <SystemIdentityModelTokensJwtPackageVersion>7.0.3</SystemIdentityModelTokensJwtPackageVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -166,12 +166,12 @@
     <RxPackageVersion>6.0.0</RxPackageVersion>
     <SystemReactivePackageVersion>6.0.0</SystemReactivePackageVersion>
 
-    <SystemPrivateServiceModelPackageVersion>4.10.2</SystemPrivateServiceModelPackageVersion>
-    <SystemServiceModelDuplexPackageVersion>4.10.2</SystemServiceModelDuplexPackageVersion>
-    <SystemServiceModelHttpPackageVersion>4.10.2</SystemServiceModelHttpPackageVersion>
-    <SystemServiceModelNetTcpPackageVersion>4.10.2</SystemServiceModelNetTcpPackageVersion>
-    <SystemServiceModelPrimitivesPackageVersion>4.10.2</SystemServiceModelPrimitivesPackageVersion>
-    <SystemServiceModelSecurityPackageVersion>4.10.2</SystemServiceModelSecurityPackageVersion>
+    <SystemPrivateServiceModelPackageVersion>4.10.3</SystemPrivateServiceModelPackageVersion>
+    <SystemServiceModelDuplexPackageVersion>4.10.3</SystemServiceModelDuplexPackageVersion>
+    <SystemServiceModelHttpPackageVersion>4.10.3</SystemServiceModelHttpPackageVersion>
+    <SystemServiceModelNetTcpPackageVersion>4.10.3</SystemServiceModelNetTcpPackageVersion>
+    <SystemServiceModelPrimitivesPackageVersion>4.10.3</SystemServiceModelPrimitivesPackageVersion>
+    <SystemServiceModelSecurityPackageVersion>4.10.3</SystemServiceModelSecurityPackageVersion>
 
     <!-- Obsolete packages -->
     <SystemCollectionsPackageVersion>4.3.0</SystemCollectionsPackageVersion>

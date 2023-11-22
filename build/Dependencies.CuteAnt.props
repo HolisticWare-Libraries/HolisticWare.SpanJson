@@ -58,7 +58,7 @@
     <ServiceStackTextUnofficialPackageVersion>6.1.1-rtm-220629-01</ServiceStackTextUnofficialPackageVersion>
     <SpanJsonAnnotationsPackageVersion>3.6.0-rtm-221002-01</SpanJsonAnnotationsPackageVersion>
     <SpanJsonUnofficialPackageVersion>3.6.0-rtm-221002-01</SpanJsonUnofficialPackageVersion>
-    <SpanJsonExtensionsPackageVersion>3.6.0-rtm-221207-01</SpanJsonExtensionsPackageVersion>
+    <SpanJsonExtensionsPackageVersion>3.6.0-rtm-231030-01</SpanJsonExtensionsPackageVersion>
     <SpanJsonAspNetCoreFormatterUnofficialPackageVersion>3.6.0-rtm-221002-01</SpanJsonAspNetCoreFormatterUnofficialPackageVersion>
 
     <NodaTimeSerializationJsonNetUnofficialPackageVersion>3.6.0-rtm-221002-01</NodaTimeSerializationJsonNetUnofficialPackageVersion>

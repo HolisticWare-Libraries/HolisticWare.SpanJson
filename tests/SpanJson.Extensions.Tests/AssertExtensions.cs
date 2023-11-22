@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 using Xunit.Sdk;
 using System.Linq;
 
@@ -210,7 +211,7 @@ namespace System
             else
                 return $"{message} {userMessage}";
         }
-        
+
         /// <summary>
         /// Tests whether the specified string contains the specified substring
         /// and throws an exception if the substring does not occur within the
@@ -321,7 +322,7 @@ namespace System
         /// </summary>
         /// <param name="expected">The array that <paramref name="actual"/> should be equal to.</param>
         /// <param name="actual"></param>
-        public static void Equal<T>(T[] expected, T[] actual) where T: IEquatable<T>
+        public static void Equal<T>(T[] expected, T[] actual) where T : IEquatable<T>
         {
             // Use the SequenceEqual to compare the arrays for better performance. The default Assert.Equal method compares
             // the arrays by boxing each element that is very slow for large arrays.
@@ -329,7 +330,7 @@ namespace System
             {
                 string expectedString = string.Join(", ", expected);
                 string actualString = string.Join(", ", actual);
-                throw new AssertActualExpectedException(expectedString, actualString, null);
+                throw new XunitException(expectedString + actualString);
             }
         }
 

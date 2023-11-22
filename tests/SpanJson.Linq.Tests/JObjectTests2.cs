@@ -351,6 +351,17 @@ namespace SpanJson.Tests
             Assert.True(jObj.DeepEquals(JObject.Parse(utf16Json)));
         }
 
+        [Fact]
+        public void WorkflowExpressionTest()
+        {
+            var jObj = new JObject();
+            jObj["Subject"] = JToken.FromObject(new WorkflowExpression<string>("Test"));
+            var item = jObj["Subject"];
+            Assert.IsType<JObject>(item);
+            var result = item.ToObject<WorkflowExpression<string>>();
+            Assert.Equal("Test", result.Expression);
+        }
+
         public class BasicJson
         {
             public int Age { get; set; }
@@ -365,6 +376,26 @@ namespace SpanJson.Tests
             public string Street { get; set; }
             public string City { get; set; }
             public int Zip { get; set; }
+        }
+
+        public class WorkflowExpression<T>
+        {
+            public WorkflowExpression()
+            {
+            }
+
+            [JsonConstructor]
+            public WorkflowExpression(string expression)
+            {
+                Expression = expression;
+            }
+
+            public string Expression { get; set; }
+
+            public override string ToString()
+            {
+                return Expression;
+            }
         }
     }
 }

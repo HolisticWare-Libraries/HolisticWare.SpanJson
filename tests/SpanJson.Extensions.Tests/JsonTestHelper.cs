@@ -748,12 +748,12 @@ namespace SpanJson
 
             if (ex == null)
             {
-                throw new ThrowsException(typeof(E));
+                throw ThrowsException.ForNoException(typeof(E));
             }
 
             if (!(ex is E))
             {
-                throw new ThrowsException(typeof(E), ex);
+                throw ThrowsException.ForIncorrectExceptionType(typeof(E), ex);
             }
         }
 
@@ -778,12 +778,12 @@ namespace SpanJson
 
             if (ex == null)
             {
-                throw new ThrowsException(typeof(E));
+                throw ThrowsException.ForNoException(typeof(E));
             }
 
             if (ex.GetType() != typeof(E))
             {
-                throw new ThrowsException(typeof(E), ex);
+                throw ThrowsException.ForIncorrectExceptionType(typeof(E), ex);
             }
         }
 

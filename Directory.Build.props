@@ -35,7 +35,7 @@
     <Deterministic>true</Deterministic>
     <ImplicitUsings>enable</ImplicitUsings>
     <DefineConstants>$(DefineConstants);NET_3_5_GREATER;SIGNED</DefineConstants>
-    <NoWarn>$(NoWarn);CS1591;NU1803</NoWarn>
+    <NoWarn>$(NoWarn);CS1591;NU1803;NU1902;NU1903;NU1904</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 

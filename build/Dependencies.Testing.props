@@ -2,10 +2,10 @@
   <!-- Shared Package Versions -->
   <PropertyGroup>
     <!-- Test related packages -->
-    <MicrosoftNetTestSdkPackageVersion>17.7.2</MicrosoftNetTestSdkPackageVersion>
-    <MicrosoftNetTestSdkDevPackageVersion>17.7.2</MicrosoftNetTestSdkDevPackageVersion>
-    <MicrosoftTestPlatformTestHostPackageVersion>17.7.2</MicrosoftTestPlatformTestHostPackageVersion>
-    <MicrosoftTestPlatformObjectModelPackageVersion>17.7.2</MicrosoftTestPlatformObjectModelPackageVersion>
+    <MicrosoftNetTestSdkPackageVersion>17.8.0</MicrosoftNetTestSdkPackageVersion>
+    <MicrosoftNetTestSdkDevPackageVersion>17.8.0</MicrosoftNetTestSdkDevPackageVersion>
+    <MicrosoftTestPlatformTestHostPackageVersion>17.8.0</MicrosoftTestPlatformTestHostPackageVersion>
+    <MicrosoftTestPlatformObjectModelPackageVersion>17.8.0</MicrosoftTestPlatformObjectModelPackageVersion>
     <MSTestTestAdapterPackageVersion>3.1.1</MSTestTestAdapterPackageVersion>
     <MSTestTestFrameworkPackageVersion>3.1.1</MSTestTestFrameworkPackageVersion>
 

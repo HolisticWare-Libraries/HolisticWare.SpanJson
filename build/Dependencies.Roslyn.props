@@ -17,8 +17,8 @@
     <MicrosoftNetCompilersPackageVersion>4.2.0</MicrosoftNetCompilersPackageVersion>
     <MicrosoftNETCoreCompilersPackageVersion>4.2.0</MicrosoftNETCoreCompilersPackageVersion>
 
-    <RoslynatorAnalyzersPackageVersion>4.5.0</RoslynatorAnalyzersPackageVersion>
-    <RoslynatorCodeAnalysisAnalyzersPackageVersion>4.5.0</RoslynatorCodeAnalysisAnalyzersPackageVersion>
-    <RoslynatorFormattingAnalyzersPackageVersion>4.5.0</RoslynatorFormattingAnalyzersPackageVersion>
+    <RoslynatorAnalyzersPackageVersion>4.6.2</RoslynatorAnalyzersPackageVersion>
+    <RoslynatorCodeAnalysisAnalyzersPackageVersion>4.6.2</RoslynatorCodeAnalysisAnalyzersPackageVersion>
+    <RoslynatorFormattingAnalyzersPackageVersion>4.6.2</RoslynatorFormattingAnalyzersPackageVersion>
   </PropertyGroup>
 </Project>
